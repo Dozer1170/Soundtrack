@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -rf '/mnt/c/World of Warcraft/_retail_/Interface/Addons/Soundtrack'
+cp -Rv src/Soundtrack '/mnt/c/World of Warcraft/_retail_/Interface/Addons/'
