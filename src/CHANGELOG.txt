@@ -1,0 +1,36 @@
+2.9.1
+Fixed:
+-Playback Frame Border added and moveable
+-TrackFrame Info Window is movable again
+
+2.9.0
+Shadowlands Release
+Fixed:
+-UI Frames and made movable again
+-Added GoTest2 fixes to Battle and Zone events
+-Clicking on Sorting Headers in Track List error has been fixed
+-Highlight in  Events List has highlight bar as Track List
+
+2.8.3
+Fixed:
+-Victory Music triggers
+-Battle Escalation tweak (Thanks again GoTest!)
+
+2.8.2
+Fixed: 
+-Tooltips display again
+-Added back Expand and Collapse graphic button on Event List
+-Users report Generated MyTrack.lua not showing Track in game (should be fixed)
+-Addon is no longer 'OUT OF DATE'
+
+To do:
+Playback controls and track information do not move.
+Battle music switches between normal/elite during combat.
+Other Events may Be broken
+Pet Battle at Meneragie causes an Error due to location. (didn't have time to debug this)
+
+
+2.8.1
+Fixed: 
+Updated default tracks for 8.0.1
+

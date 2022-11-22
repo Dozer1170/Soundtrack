@@ -1,0 +1,28 @@
+## Interface: 90001
+## Title: Soundtrack
+## Version: 2.9.1
+## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz
+## Notes: Music customization system.
+## OptionalDeps: myAddOns
+## RequiredDeps: 
+## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events
+Bindings.xml
+Soundtrack.xml
+Soundtrack.lua
+SoundtrackFrame.xml
+SoundtrackFrame.lua
+SoundtrackFix.lua
+SoundtrackBattleFrame.xml
+SoundtrackBattleEvents.lua
+SoundtrackCustomFrame.xml
+SoundtrackCustomEvents.lua
+SoundtrackMiscFrame.xml
+SoundtrackPetBattlesFrame.xml
+SoundtrackPetBattlesEvents.lua
+SoundtrackDanceFrame.xml
+SoundtrackMountFrame.xml
+SoundtrackZoneFrame.xml
+SoundtrackMinimap.xml
+SoundtrackNowPlayingFrame.xml
+SoundtrackControlFrame.xml
+SoundtrackReportFrame.xml
