@@ -10,7 +10,6 @@
     <Script file="SoundtrackTimers.lua"/>
     <Script file="SoundtrackLibrary.lua" />
     <Script file="SoundtrackEvents.lua" />
-	<Script file="MyTracks.lua" />
     <Script file="DefaultTracks.lua" />
 	<Script file="SoundtrackFix.lua" />
     <Script file="Soundtrack.lua" />
