@@ -28,10 +28,11 @@ local difficulties =
 	"4 Tough",	-- orange
     "5 Impossible"	-- red
 }
-	-- Initialize difficulties only once. Prevents de-escalations during combat. -Gotest
-	local highestlevel = 1
-	local highestDifficulty = 1
-	local highestClassification = 1
+
+-- Initialize difficulties only once. Prevents de-escalations during combat. -Gotest
+local highestlevel = 1
+local highestDifficulty = 1
+local highestClassification = 1
 
 -- Battle event priority for mob types
 local battleEvents = {
@@ -95,45 +96,20 @@ end
 -- compared to the players level. (also known as the color of the mob).
 -- TESTING NEW WAY SUBMITTED BY "GOTEST"
 local function GetDifficulty(target, targetLevel)
-local playerLevel = UnitLevel("player")
-local levelDiff = targetLevel - playerLevel 
-if UnitIsTrivial(target) then
-return GetDifficultyFromText("1 Trivial")
-elseif (GetQuestDifficultyColor(targetLevel).r == 1 and GetQuestDifficultyColor(targetLevel).g == 0.1 and GetQuestDifficultyColor(targetLevel).b == 0.1) or targetLevel == -1 or targetLevel >= playerLevel + 10 then
-return GetDifficultyFromText("5 Impossible")
-
-elseif (GetQuestDifficultyColor(targetLevel).r == 1 and GetQuestDifficultyColor(targetLevel).g == 0.5 and GetQuestDifficultyColor(targetLevel).b == 0.25) or (levelDiff >=5 and levelDiff <=10) then
-return GetDifficultyFromText("4 Tough")
-
-elseif (GetQuestDifficultyColor(targetLevel).r == 1 and GetQuestDifficultyColor(targetLevel).g == 0.82 and GetQuestDifficultyColor(targetLevel).b == 0) or (levelDiff >=-3 and levelDiff <=4) then
-return GetDifficultyFromText("3 Normal")
-
-else
-return GetDifficultyFromText("2 Easy")
+	local playerLevel = UnitLevel("player")
+	local levelDiff = targetLevel - playerLevel
+	if UnitIsTrivial(target) then
+		return GetDifficultyFromText("1 Trivial")
+	elseif (GetQuestDifficultyColor(targetLevel).r == 1 and GetQuestDifficultyColor(targetLevel).g == 0.1 and GetQuestDifficultyColor(targetLevel).b == 0.1) or targetLevel == -1 or targetLevel >= playerLevel + 10 then
+		return GetDifficultyFromText("5 Impossible")
+	elseif (GetQuestDifficultyColor(targetLevel).r == 1 and GetQuestDifficultyColor(targetLevel).g == 0.5 and GetQuestDifficultyColor(targetLevel).b == 0.25) or (levelDiff >=5 and levelDiff <=10) then
+		return GetDifficultyFromText("4 Tough")
+	elseif (GetQuestDifficultyColor(targetLevel).r == 1 and GetQuestDifficultyColor(targetLevel).g == 0.82 and GetQuestDifficultyColor(targetLevel).b == 0) or (levelDiff >=-3 and levelDiff <=4) then
+		return GetDifficultyFromText("3 Normal")
+	else
+		return GetDifficultyFromText("2 Easy")
+	end
 end
-end
-
-
---[[ OLD WAY 
-local function GetDifficulty(target, targetLevel)
-    local playerLevel = UnitLevel("player")
-    if UnitIsTrivial(target) then 
-        return GetDifficultyFromText("1 Trivial")
-		
-    elseif playerLevel <= targetLevel-5 then
-        return GetDifficultyFromText("5 Impossible")
-		
-    elseif playerLevel == targetLevel-4 or playerLevel == targetLevel-3 then
-        return GetDifficultyFromText("4 Tough")
-		
-    elseif playerLevel >= targetLevel-2 and playerLevel <= targetLevel+2 then
-        return GetDifficultyFromText("3 Normal")    
-		
-    else
-        return GetDifficultyFromText("2 Easy")
-    end
-end
-]]--
 
 -- Calculates the highest enemy level amongs all the party members and pet
 -- targets. Thanks to Athame!
