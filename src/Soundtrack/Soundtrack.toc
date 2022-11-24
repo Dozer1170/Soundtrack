@@ -6,6 +6,7 @@
 ## OptionalDeps: myAddOns
 ## RequiredDeps: 
 ## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events
+Bindings.xml
 Soundtrack.xml
 Soundtrack.lua
 SoundtrackFrame.xml
