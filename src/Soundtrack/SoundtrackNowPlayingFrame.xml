@@ -16,14 +16,6 @@
   </Script>
   <!-- These frames are shown when the current track changes -->
   <Frame name="NowPlayingTextFrame" movable="true" enableMouse="true" parent="UIParent" frameStrata="LOW" toplevel="true">
-      <TitleRegion>
-          <Size>
-              <AbsDimension x="100" y="20" />
-          </Size>
-          <Anchors>
-              <Anchor point="TOPLEFT" />
-          </Anchors>
-      </TitleRegion>
     <Anchors>
       <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
     </Anchors>

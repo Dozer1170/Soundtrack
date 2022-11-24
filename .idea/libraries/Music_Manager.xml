@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Music_Manager">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Music Manager/Music_Manager.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

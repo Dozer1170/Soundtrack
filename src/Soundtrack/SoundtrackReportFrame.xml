@@ -15,19 +15,6 @@
         <Size>
             <AbsDimension x="160" y="260"/>
         </Size>
-        <TitleRegion setAllPoints="true"/>
-
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-            <BackgroundInsets>
-                <AbsInset left="11" right="12" top="12" bottom="11"/>
-            </BackgroundInsets>
-            <TileSize>
-                <AbsValue val="32"/>
-            </TileSize>
-            <EdgeSize>
-                <AbsValue val="32"/>
-            </EdgeSize>
-        </Backdrop>
         <HitRectInsets>
             <AbsInset left="0" right="30" top="0" bottom="45"/>
         </HitRectInsets>

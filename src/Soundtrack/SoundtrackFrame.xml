@@ -91,7 +91,7 @@
                     </Layer>
                 </Layers>
             </Frame>
-            <CheckButton name="$parentCheckBox" inherits="OptionsCheckButtonTemplate">
+            <CheckButton name="$parentCheckBox" inherits="InterfaceOptionsCheckButtonTemplate">
                 <Size> <AbsDimension x="16" y="16" /> </Size>
                 <Anchors>
                     <Anchor point="TOPLEFT"> <Offset> <AbsDimension x="16" y="0"/> </Offset> </Anchor>
@@ -162,7 +162,7 @@
                     </Layer>
                 </Layers>
             </Frame>
-            <CheckButton name="$parentCheckBox" inherits="OptionsCheckButtonTemplate">
+            <CheckButton name="$parentCheckBox" inherits="InterfaceOptionsCheckButtonTemplate">
                 <Size>
                     <AbsDimension x="16" y="16" />
                 </Size>
@@ -406,13 +406,6 @@
         <Anchors>
             <Anchor point="TOPLEFT"> <Offset> <AbsDimension x="0" y="-104"/> </Offset> </Anchor>
         </Anchors>
-        <TitleRegion setAllPoints="true"/>
-
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-            <BackgroundInsets> <AbsInset left="11" right="12" top="12" bottom="11"/> </BackgroundInsets>
-            <TileSize> <AbsValue val="32"/> </TileSize>
-            <EdgeSize> <AbsValue val="32"/> </EdgeSize>
-        </Backdrop>
 
         <HitRectInsets>
             <AbsInset left="0" right="30" top="0" bottom="45"/>
@@ -585,11 +578,6 @@
                                 <Offset> <AbsDimension x="16" y="-40" /> </Offset>
                             </Anchor>
                         </Anchors>
-                        <Backdrop bgFile="Interface/ChatFrame/ChatFrameBackground" edgeFile="Interface/Buttons/UI-SliderBar-Border" tile="true">
-                            <BackgroundInsets> <AbsInset left="3" right="3" top="6" bottom="6" /> </BackgroundInsets>
-                            <TileSize> <AbsValue val="16" /> </TileSize>
-                            <EdgeSize> <AbsValue val="9" /> </EdgeSize>
-                        </Backdrop>
                         <Layers>
                             <Layer level="ARTWORK">
                                 <FontString inherits="GameFontNormal" text="Events">
@@ -959,11 +947,6 @@
                                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame" relativePoint="TOPLEFT">
                                         <Offset> <AbsDimension x="225" y="-40" /> </Offset> </Anchor>
                                 </Anchors>
-                                <Backdrop bgFile="Interface/ChatFrame/ChatFrameBackground" edgeFile="Interface/Buttons/UI-SliderBar-Border" tile="true">
-                                    <BackgroundInsets> <AbsInset left="3" right="3" top="6" bottom="6" /> </BackgroundInsets>
-                                    <TileSize> <AbsValue val="16" /> </TileSize>
-                                    <EdgeSize> <AbsValue val="9" /> </EdgeSize>
-                                </Backdrop>
                                 <Layers>
                                     <Layer level="ARTWORK">
                                         <FontString inherits="GameFontNormal" text="Track Library">
@@ -1189,11 +1172,6 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTrackList" relativePoint="BOTTOMLEFT" />
                                 </Anchors>
-                                <Backdrop bgFile="Interface/ChatFrame/ChatFrameBackground" edgeFile="Interface/Buttons/UI-SliderBar-Border" tile="true">
-                                    <BackgroundInsets> <AbsInset left="3" right="3" top="6" bottom="6" /> </BackgroundInsets>
-                                    <TileSize> <AbsValue val="16" /> </TileSize>
-                                    <EdgeSize> <AbsValue val="9" /> </EdgeSize>
-                                </Backdrop>
                                 <Frames>
 									<!-- ASSIGNED TRACKS HEADER -->
                                     <Button name="SoundtrackFrameColumnHeaderAssignedTracks" inherits="SoundtrackFrameColumnHeaderTemplate2" text="Assigned Tracks">
@@ -1362,7 +1340,7 @@
                                                 </Scripts>
                                             </EditBox>
 
-                                            <CheckButton name="SoundtrackFrame_RandomCheckButton" inherits="OptionsCheckButtonTemplate">
+                                            <CheckButton name="SoundtrackFrame_RandomCheckButton" inherits="InterfaceOptionsCheckButtonTemplate">
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringName" relativePoint="BOTTOMLEFT">
 														<Offset> <AbsDimension x="0" y="-5" /> </Offset> </Anchor>
@@ -1375,7 +1353,7 @@
                                                 </Scripts>
                                             </CheckButton>
 
-                                            <CheckButton name="SoundtrackFrame_SoundEffectCheckBox" inherits="OptionsCheckButtonTemplate">
+                                            <CheckButton name="SoundtrackFrame_SoundEffectCheckBox" inherits="InterfaceOptionsCheckButtonTemplate">
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_RandomCheckButton" relativePoint="BOTTOMLEFT" />
                                                 </Anchors>
@@ -1387,7 +1365,7 @@
                                                 </Scripts>
                                             </CheckButton>
 
-                                            <CheckButton name="SoundtrackFrame_ContinuousCheckBox" inherits="OptionsCheckButtonTemplate">
+                                            <CheckButton name="SoundtrackFrame_ContinuousCheckBox" inherits="InterfaceOptionsCheckButtonTemplate">
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_SoundEffectCheckBox" relativePoint="BOTTOMLEFT" />
                                                 </Anchors>
@@ -1482,7 +1460,7 @@
                                         <Offset> <AbsDimension x="16" y="0"/> </Offset> </Anchor>
                                 </Anchors>
                             </EditBox>
-                            <CheckButton name="SoundtrackFrame_CustomContinuous" inherits="OptionsCheckButtonTemplate">
+                            <CheckButton name="SoundtrackFrame_CustomContinuous" inherits="InterfaceOptionsCheckButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeTo="SoundtrackFrame_Priority" relativePoint="RIGHT">
                                         <Offset> <AbsDimension x="16" y="0"/> </Offset> </Anchor>
@@ -1500,12 +1478,6 @@
                                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringScript" relativePoint="BOTTOMLEFT">
                                         <Offset> <AbsDimension x="0" y="-5"/> </Offset> </Anchor>
                                 </Anchors>
-                                <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
-                                    <BackgroundInsets> <AbsInset left="3" right="3" top="6" bottom="6" /> </BackgroundInsets>
-                                    <TileSize> <AbsValue val="16" /> </TileSize>
-                                    <EdgeSize> <AbsValue val="9" /> </EdgeSize>
-                                </Backdrop>
-
                                 <Frames>
 
                                     <ScrollFrame name="SoundtrackFrame_EventEditScrollFrame" inherits="UIPanelScrollFrameTemplate">
@@ -1618,7 +1590,7 @@
                 </Layers>
                 <Frames>
                     <!-- OPTIONS -->
-                    <CheckButton name="SoundtrackFrame_EnableMinimapButton" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_EnableMinimapButton" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringUIOptions" relativePoint="BOTTOMLEFT">
                                 <Offset> <AbsDimension x="0" y="-10"/> </Offset> </Anchor>
@@ -1630,7 +1602,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_ShowPlaybackControls" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_ShowPlaybackControls" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableMinimapButton" relativePoint="BOTTOMLEFT" />
                         </Anchors>
@@ -1641,7 +1613,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-					<CheckButton name="SoundtrackFrame_LockPlaybackControls" inherits="OptionsCheckButtonTemplate">
+					<CheckButton name="SoundtrackFrame_LockPlaybackControls" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_ShowPlaybackControls" relativePoint="BOTTOMLEFT">
 								<Offset> <Absdimension x="10" y="0"/> </Offset> </Anchor>
@@ -1653,7 +1625,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_ShowTrackInformation" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_ShowTrackInformation" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LockPlaybackControls" relativePoint="BOTTOMLEFT">
 								<Offset> <Absdimension x="-10" y="0"/> </Offset></Anchor>
@@ -1665,7 +1637,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-					<CheckButton name="SoundtrackFrame_LockNowPlayingFrame" inherits="OptionsCheckButtonTemplate">
+					<CheckButton name="SoundtrackFrame_LockNowPlayingFrame" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_ShowTrackInformation" relativePoint="BOTTOMLEFT">
 								<Offset> <Absdimension x="10" y="0"/> </Offset> </Anchor>
@@ -1677,7 +1649,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_ShowDefaultMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_ShowDefaultMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LockNowPlayingFrame" relativePoint="BOTTOMLEFT">
 								<Offset> <Absdimension x="-10" y="0"/> </Offset> </Anchor>
@@ -1689,7 +1661,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_HidePlaybackButtons" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_HidePlaybackButtons" inherits="InterfaceOptionsCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_ShowDefaultMusic" relativePoint="BOTTOMLEFT">
 								<Offset> <AbsDimension x="0" y="-10" /> </Offset> </Anchor>
@@ -1726,7 +1698,7 @@
 						</Scripts>
 					</Frame>
 			   
-                    <CheckButton name="SoundtrackFrame_AutoAddZones" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_AutoAddZones" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringEventOptions" relativePoint="BOTTOMLEFT">
                                 <Offset> <AbsDimension x="0" y="-10"/> </Offset> </Anchor>
@@ -1739,7 +1711,7 @@
                         </Scripts>
                     </CheckButton>
 
-                    <CheckButton name="SoundtrackFrame_AutoEscalateBattleMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_AutoEscalateBattleMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_AutoAddZones" relativePoint="BOTTOMLEFT" />
                         </Anchors>
@@ -1750,7 +1722,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-					<CheckButton name="SoundtrackFrame_YourEnemyLevelOnly" inherits="OptionsCheckButtonTemplate">
+					<CheckButton name="SoundtrackFrame_YourEnemyLevelOnly" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_AutoEscalateBattleMusic" relativePoint="BOTTOMLEFT" />
                         </Anchors>
@@ -1807,7 +1779,7 @@
                         </Scripts>
                     </Frame>
 					
-                    <CheckButton name="SoundtrackFrame_LoopMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_LoopMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LowHealthPercentDropDown" relativePoint="BOTTOMLEFT">
                                 <Offset> <AbsDimension x="0" y="-10"/> </Offset> </Anchor>
@@ -1842,7 +1814,7 @@
                         </Scripts>
                     </Frame>
 
-					<CheckButton name="SoundtrackFrame_EnableDebugMode" inherits="OptionsCheckButtonTemplate">
+					<CheckButton name="SoundtrackFrame_EnableDebugMode" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringDebugOptions" relativePoint="BOTTOMLEFT">
                                 <Offset> <AbsDimension x="0" y="-10"/> </Offset> </Anchor>
@@ -1854,7 +1826,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_ShowEventStack" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_ShowEventStack" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableDebugMode" relativePoint="BOTTOMLEFT" />
                         </Anchors>
@@ -1867,7 +1839,7 @@
                     </CheckButton>
      
 
-                    <CheckButton name="SoundtrackFrame_EnableZoneMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_EnableZoneMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringEnableEventsOptions" relativePoint="BOTTOMLEFT">
                                 <Offset> <AbsDimension x="0" y="-10"/> </Offset> </Anchor>
@@ -1886,7 +1858,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_EnableBattleMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_EnableBattleMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableZoneMusic" relativePoint="BOTTOMLEFT" />
                         </Anchors>
@@ -1897,7 +1869,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_EnableMiscMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_EnableMiscMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableBattleMusic" relativePoint="BOTTOMLEFT" />
                         </Anchors>
@@ -1908,7 +1880,7 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </CheckButton>
-                    <CheckButton name="SoundtrackFrame_EnableCustomMusic" inherits="OptionsCheckButtonTemplate">
+                    <CheckButton name="SoundtrackFrame_EnableCustomMusic" inherits="InterfaceOptionsCheckButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableMiscMusic" relativePoint="BOTTOMLEFT" />
                         </Anchors>
