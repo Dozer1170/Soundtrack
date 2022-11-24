@@ -5,6 +5,8 @@ EVENTS_ITEM_HEIGHT = 21
 
 --DEBUG = 1
 
+local emptyTexture = nil
+
 local SEVT = 
 {
     SelectedEventsTable = nil,
@@ -1527,63 +1529,61 @@ function SoundtrackFrame_RefreshEvents()
                 local expandable = eventNode.nodes and #eventNode.nodes >= 1
                 if expandable then
 					if event.expanded then
-					local eventText = button:GetText()
-					button:SetNormalTexture("Interface/Buttons/UI-MinusButton-Up")
-					--fo:SetText("[_] "..GetLeafText(eventName))
-					fo:SetText("    "..GetLeafText(eventName))
-					button:SetWidth(16);
+                          button:SetNormalTexture("Interface/Buttons/UI-MinusButton-Up")
+                          fo:SetText("    "..GetLeafText(eventName))
                     else
-					button:SetNormalTexture("Interface/Buttons/UI-PlusButton-Up")
-					--fo:SetText("[+] "..GetLeafText(eventName))
-					fo:SetText("    "..GetLeafText(eventName))
-					button:SetWidth(16);
+                          button:SetNormalTexture("Interface/Buttons/UI-PlusButton-Up")
+                          fo:SetText("    "..GetLeafText(eventName))
                     end
                     button:UnlockHighlight()
                 else
 					button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
-					button:SetNormalTexture("")
-                end     
-			
+
+                    if emptyTexture == nil then
+                        emptyTexture = SoundtrackFrame:CreateTexture()
+                    end
+					button:SetNormalTexture(emptyTexture)
+                end
+
                 -- Show number ofassigned tracks
 				local assignedText = _G["SoundtrackFrameEventButton"..buttonIndex.."ButtonTextAssigned"]
 				--local assignedText = _G["SoundtrackFrameEventButton"..buttonIndex.."ButtonTextDuration"]
-               if event then 
-					local numAssignedTracks = table.maxn(event.tracks)
-					if (numAssignedTracks == 0) then
-					local tempText= button:GetText()
-					button:SetWidth(180);
-					button:SetHeight(16);
-					if expandable then
-					 button:SetWidth(16);
-					end
-					fo:SetText(tempText.."   ")
-					
-					else
-					--assignedText:SetText("("..numAssignedTracks..")")
-					button:SetWidth(180);
-					
-					 if expandable then
-					 button:SetWidth(16);
-					 end
-					local tempText= button:GetText()
-					fo:SetText(tempText.." ("..numAssignedTracks..")")
+                if event then
+                    local numAssignedTracks = table.maxn(event.tracks)
+                    if (numAssignedTracks == 0) then
+                        local tempText= button:GetText()
+                        button:SetHeight(16);
+                        if expandable then
+                            button:SetWidth(16);
+                        else
+                            button:SetWidth(180);
+                        end
+                        fo:SetText(tempText.."   ")
+                    else
+                        --assignedText:SetText("("..numAssignedTracks..")")
+                        button:SetWidth(180);
+
+                        if expandable then
+                            button:SetWidth(16);
+                        end
+                        local tempText= button:GetText()
+                        fo:SetText(tempText.." ("..numAssignedTracks..")")
 
                     end
                 end
-                
+
                 icon = _G["SoundtrackFrameEventButton"..buttonIndex.."Icon"]
                 icon:Hide()
-                
+
                 -- Update the highlight if that track is active for the event.
                 -- Todo : does this work?
                 if (eventName == SoundtrackFrame_SelectedEvent) then
                     button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
-					button:LockHighlight()
-					
+                    button:LockHighlight()
                 else
                     button:UnlockHighlight()
                 end
-                
+
                 -- Update the icon
                 if currentEvent == eventName then
                     icon:Show()
