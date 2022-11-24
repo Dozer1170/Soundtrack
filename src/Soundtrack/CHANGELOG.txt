@@ -1,3 +1,7 @@
+3.0.0
+Dragonflight release
+-Fix errors when loading, update some things to work with DF UI changes
+
 2.9.1
 Fixed:
 -Playback Frame Border added and moveable

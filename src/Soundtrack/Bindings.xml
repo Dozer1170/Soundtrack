@@ -1,5 +1,5 @@
 <Bindings>
-    <Binding name="Toggle soundtrack window" header="SOUNDTRACK">
+    <Binding name="Toggle soundtrack window">
         SoundtrackFrame_Toggle();
     </Binding>
     <Binding name="Play/Pause track">
