@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OUT_FILE=$1
+
+rm $OUT_FILE
+cd src
+zip -r ../$OUT_FILE Soundtrack SoundtrackMusic
+cd ..
+
