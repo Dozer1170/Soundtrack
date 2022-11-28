@@ -21,6 +21,9 @@ SOUNDTRACK_TRACK_FILTER_TIP = "Permet le filtrage des pistes. Le filtre est comp
 SOUNDTRACK_EVENT_SETTINGS = "Reglages des Evenements"
 SOUNDTRACK_EVENT_SETTINGS_TIP = "Permet de modifier les parametres de l'evenement selectionne, telles que son nom, et le comportement de lecture."
 
+SOUNDTRACK_EVENT_FILTER = "Filtre D'événement"
+SOUNDTRACK_EVENT_FILTER_TIP = "Permet de filtrer les événements. Le filtre est comparé au nom de l'événement. Décochez la case pour afficher à nouveau la liste complète des événements."
+
 SOUNDTRACK_ALL = "Toutes les Pistes"
 SOUNDTRACK_ALL_TIP = "Ajoute toutes les pistes disponibles a des pistes assignees de cette manifestation. Utile si vous souhaitez creer une playlist ou un autre evenement qui jouera l'une de vos chansons."
 
@@ -99,8 +102,8 @@ SOUNDTRACK_ADD_ZONE_TIP = "Ajoute votre emplacement actuel a la liste de zone af
 SOUNDTRACK_REMOVE_ZONE = "Supprimer le Lieu"
 SOUNDTRACK_REMOVE_ZONE_TIP = "Supprime le lieu selectionne."
 
-SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Collapses all expandable zones."
-SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Expands all expandable zones."
+SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Réduit tous les nœuds de zone réductibles."
+SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Développe tous les nœuds de zone extensibles."
 
 SOUNDTRACK_INSTANCES = "Instances"
 SOUNDTRACK_PVP = "PvP"

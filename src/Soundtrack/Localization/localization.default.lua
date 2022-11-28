@@ -19,6 +19,9 @@ SOUNDTRACK_CLOSE_TIP = "Closes Soundtrack's main window. If a track was being pr
 SOUNDTRACK_TRACK_FILTER = "Track Filter"
 SOUNDTRACK_TRACK_FILTER_TIP = "Allows filtering of the tracks. The filter is compared against the track file names, paths, title, artist and album name. Clear the box to show the full list of tracks again."
 
+SOUNDTRACK_EVENT_FILTER = "Event Filter"
+SOUNDTRACK_EVENT_FILTER_TIP = "Allows filtering of the events. The filter is compared against the event name. Clear the box to show the full list of events again."
+
 SOUNDTRACK_EVENT_SETTINGS = "Event Settings"
 SOUNDTRACK_EVENT_SETTINGS_TIP = "Allows editing of the selected event's settings such as its name, and playback behavior."
 
@@ -100,8 +103,8 @@ SOUNDTRACK_ADD_ZONE_TIP = "Adds your current locations to the zone list so that 
 SOUNDTRACK_REMOVE_ZONE = "Remove Zone"
 SOUNDTRACK_REMOVE_ZONE_TIP = "Removes the selected zone."
 
-SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Collapses all expandable zones."
-SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Expands all expandable zones."
+SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Collapses all collapsable zone nodes."
+SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Expands all expandable zone nodes."
 
 SOUNDTRACK_INSTANCES = "Instances"
 SOUNDTRACK_PVP = "PvP"

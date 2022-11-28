@@ -1427,6 +1427,11 @@ function SoundtrackFrame_OnFilterChanged()
     Soundtrack.SortTracks()
 end
 
+function SoundtrackFrame_OnEventFilterChanged()
+    Soundtrack.eventFilter = SoundtrackFrame_EventFilter:GetText()
+    Soundtrack.SortAllEvents()
+end
+
 function SoundtrackFrame_DisableAllEventButtons()
     for i = 1, EVENTS_TO_DISPLAY, 1 do
         local button = _G["SoundtrackFrameEventButton"..i]

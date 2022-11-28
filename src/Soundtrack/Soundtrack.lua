@@ -389,10 +389,8 @@ local function OnVariablesLoaded(self)
 	Soundtrack.Timers.AddTimer("PurgeEvents", 10, PurgeEvents)
 	
     -- sort all the tables
-    for i,eventTabName in ipairs(Soundtrack_EventTabs) do
-        Soundtrack_SortEvents(eventTabName)
-    end
-    
+    Soundtrack.SortAllEvents()
+
     Soundtrack.SortTracks()
     SetUserEventsToCorrectLevel()
 	
@@ -425,6 +423,11 @@ StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"] = {
     whileDead = 1,
 }
 
+function Soundtrack.SortAllEvents()
+    for i,eventTabName in ipairs(Soundtrack_EventTabs) do
+        Soundtrack_SortEvents(eventTabName)
+    end
+end
 
 function Soundtrack.GetTableFromEvent(eventName)
     for i,eventTabName in ipairs(Soundtrack_EventTabs) do
@@ -704,7 +707,11 @@ function Soundtrack_SortEvents(eventTableName)
 
     for k,v in pairs(Soundtrack_Events[eventTableName]) do
         if k ~= "Preview" then -- Hide internal events
-            table.insert(Soundtrack_FlatEvents[eventTableName], k)
+            if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
+                table.insert(Soundtrack_FlatEvents[eventTableName], k)
+            elseif string.find(k, Soundtrack.eventFilter) ~= nil then
+                table.insert(Soundtrack_FlatEvents[eventTableName], k)
+            end
         end
     end
     
@@ -714,7 +721,7 @@ function Soundtrack_SortEvents(eventTableName)
     -- Construct the event node tree, after events have been sorted
     local rootNode = {name = eventTableName, nodes = {}, tag = nil }
     for i,e in ipairs(Soundtrack_FlatEvents[eventTableName]) do
-       AddEventNode(rootNode, e)
+        AddEventNode(rootNode, e)
     end
     Soundtrack_EventNodes[eventTableName] = rootNode
     

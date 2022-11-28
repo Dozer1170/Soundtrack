@@ -588,6 +588,19 @@
                             </Layer>
                         </Layers>
                         <Frames>
+                            <EditBox name="SoundtrackFrame_EventFilter" inherits="SoundtrackFrame_EditBoxTemplate">
+                                <Size><AbsDimension x="100" y="22"/></Size>
+                                <Anchors>
+                                    <Anchor point="TOPRIGHT" relativeTo="SoundtrackFrameEventList" relativePoint="TOPRIGHT">
+                                        <Offset> <AbsDimension x="-5" y="-6"/> </Offset>
+                                    </Anchor>
+                            </Anchors>
+                                <Scripts>
+                                    <OnTextChanged> SoundtrackFrame_OnEventFilterChanged() </OnTextChanged>
+                                    <OnEnter> Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_FILTER, SOUNDTRACK_EVENT_FILTER_TIP) </OnEnter>
+                                    <OnLeave> Soundtrack.HideTip() </OnLeave>
+                                </Scripts>
+                            </EditBox>
                             <ScrollFrame name="SoundtrackFrameEventScrollFrame" inherits="FauxScrollFrameTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT"> <Offset> <AbsDimension x="0" y="-7"/> </Offset> </Anchor>
