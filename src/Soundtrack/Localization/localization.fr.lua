@@ -51,6 +51,8 @@ SOUNDTRACK_REMOVE_TRACK = "Supprimer la Piste"
 -- Button Names
 SOUNDTRACK_ADD_BUTTON = "Ajouter"
 SOUNDTRACK_REMOVE_BUTTON = "Supprimer"
+SOUNDTRACK_COLLAPSE_ALL_BUTTON = "Réduire Tout"
+SOUNDTRACK_EXPAND_ALL_BUTTON = "Développer Tout"
 SOUNDTRACK_EDIT_BUTTON = "Editer"
 SOUNDTRACK_RENAME_BUTTON = "Renommer"
 
@@ -96,6 +98,9 @@ SOUNDTRACK_ADD_ZONE_TIP = "Ajoute votre emplacement actuel a la liste de zone af
 
 SOUNDTRACK_REMOVE_ZONE = "Supprimer le Lieu"
 SOUNDTRACK_REMOVE_ZONE_TIP = "Supprime le lieu selectionne."
+
+SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Collapses all expandable zones."
+SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Expands all expandable zones."
 
 SOUNDTRACK_INSTANCES = "Instances"
 SOUNDTRACK_PVP = "PvP"

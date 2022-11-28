@@ -832,6 +832,30 @@
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
                     </Button>
+                    <Button name="SoundtrackFrameExpandAllZoneButton" inherits="UIPanelButtonTemplate" text="Expand All">
+                        <Size> <AbsDimension x="100" y="22"/> </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameAddZoneButton" />
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>SoundtrackFrameExpandAllZoneButton.Text:SetText(SOUNDTRACK_EXPAND_ALL_BUTTON)</OnLoad>
+                            <OnClick>SoundtrackFrameExpandAllZoneButton_OnClick()</OnClick>
+                            <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EXPAND_ALL_BUTTON, SOUNDTRACK_EXPAND_ALL_ZONE_TIP)</OnEnter>
+                            <OnLeave>Soundtrack.HideTip()</OnLeave>
+                        </Scripts>
+                    </Button>
+                    <Button name="SoundtrackFrameCollapseAllZoneButton" inherits="UIPanelButtonTemplate" text="Collapse All">
+                        <Size> <AbsDimension x="100" y="22"/> </Size>
+                        <Anchors>
+                            <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="SoundtrackFrameExpandAllZoneButton" />
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>SoundtrackFrameCollapseAllZoneButton.Text:SetText(SOUNDTRACK_COLLAPSE_ALL_BUTTON)</OnLoad>
+                            <OnClick>SoundtrackFrameCollapseAllZoneButton_OnClick()</OnClick>
+                            <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COLLAPSE_ALL_BUTTON, SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP)</OnEnter>
+                            <OnLeave>Soundtrack.HideTip()</OnLeave>
+                        </Scripts>
+                    </Button>
                     <Button name="SoundtrackFrameAddBossTargetButton" inherits="UIPanelButtonTemplate" text="Add Party Boss">
                         <Size> <AbsDimension x="110" y="22"/> </Size>
                         <Anchors>

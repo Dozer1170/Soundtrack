@@ -54,6 +54,8 @@ SOUNDTRACK_REMOVE_TRACK = "Eliminar cancion"
 -- Button Names
 SOUNDTRACK_ADD_BUTTON = "Adjuntar"
 SOUNDTRACK_REMOVE_BUTTON = "Alejar"
+SOUNDTRACK_COLLAPSE_ALL_BUTTON = "Desplegar Todo"
+SOUNDTRACK_EXPAND_ALL_BUTTON = "Expandir Todo"
 SOUNDTRACK_EDIT_BUTTON = "Editar"
 SOUNDTRACK_RENAME_BUTTON = "Llamar"
 
@@ -100,6 +102,9 @@ SOUNDTRACK_ADD_ZONE_TIP = "Adds your current locations to the zone list so that 
 
 SOUNDTRACK_REMOVE_ZONE = "Remove Zone"
 SOUNDTRACK_REMOVE_ZONE_TIP = "Removes the selected zone."
+
+SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Collapses all expandable zones."
+SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Expands all expandable zones."
 
 SOUNDTRACK_INSTANCES = "Instances"
 SOUNDTRACK_PVP = "PvP"

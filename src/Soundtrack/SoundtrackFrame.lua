@@ -853,6 +853,24 @@ function SoundtrackFrameAddZoneButton_OnClick()
     SoundtrackFrame_RefreshEvents()
 end
 
+function SoundtrackFrameCollapseAllZoneButton_OnClick()
+    Soundtrack.TraceFrame("Collapsing all zone events")
+    for key, eventNode in pairs(Soundtrack_Events["Zone"]) do
+        eventNode.expanded = false
+    end
+    Soundtrack_OnTreeChanged("Zone")
+    SoundtrackFrame_RefreshEvents()
+end
+
+function SoundtrackFrameExpandAllZoneButton_OnClick()
+    Soundtrack.TraceFrame("Expanding all zone events")
+    for key, eventNode in pairs(Soundtrack_Events["Zone"]) do
+        eventNode.expanded = true
+    end
+    Soundtrack_OnTreeChanged("Zone")
+    SoundtrackFrame_RefreshEvents()
+end
+
 function SoundtrackFrameAddBossTargetButton_OnClick()
     local targetName = UnitName("target")
     if targetName then
@@ -1343,9 +1361,13 @@ function SoundtrackFrame_OnTabChanged()
         if SEVT.SelectedEventsTable == "Zone" then
             SoundtrackFrameAddZoneButton:Show()
 			SoundtrackFrameRemoveZoneButton:Show()
+            SoundtrackFrameCollapseAllZoneButton:Show()
+            SoundtrackFrameExpandAllZoneButton:Show()
         else
             SoundtrackFrameAddZoneButton:Hide()
 			SoundtrackFrameRemoveZoneButton:Hide()
+            SoundtrackFrameCollapseAllZoneButton:Hide()
+            SoundtrackFrameExpandAllZoneButton:Hide()
         end
         
 		if SEVT.SelectedEventsTable == "Pet Battles" then
@@ -1454,6 +1476,7 @@ end
 
 function SoundtrackFrame_RefreshEvents()
     if not SoundtrackFrame:IsVisible() or not SEVT.SelectedEventsTable then
+        Soundtrack.TraceFrame("Skipping event refresh")
         return
     end
     
