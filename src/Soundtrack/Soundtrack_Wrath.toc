@@ -1,4 +1,4 @@
-## Interface: 100002
+## Interface: 30400
 ## Title: Soundtrack
 ## Version: 3.0.0
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
@@ -6,7 +6,13 @@
 ## OptionalDeps: myAddOns
 ## RequiredDeps: 
 ## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events
+Shims_Wrath.lua
 Soundtrack.xml
+Localization/Wrath/localization.default.lua
+Localization/Wrath/localization.de.lua
+Localization/Wrath/localization.fr.lua
+Localization/Wrath/localization.es.lua
+Localization/Wrath/localization.lua
 Soundtrack.lua
 SoundtrackFrame.xml
 SoundtrackFrame.lua

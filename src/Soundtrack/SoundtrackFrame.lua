@@ -1453,7 +1453,13 @@ function SoundtrackFrame_DisableAllAssignedTrackButtons()
     end
 end
 
-
+function SoundtrackFrame_SetText(uiElement, text)
+    if uiElement.text then
+        uiElement.text:SetText(text)
+    else
+        uiElement.Text:SetText(text)
+    end
+end
 
 -- Replaces each folder in an event path with spaces
 local function GetLeafText(eventPath)
@@ -2563,4 +2569,4 @@ function SoundtrackFramePasteCopiedTracksButton_OnClick()
 end
 function SoundtrackFrameClearCopiedTracksButton_OnClick()
 	CopiedTracks = {}
-end	
+end

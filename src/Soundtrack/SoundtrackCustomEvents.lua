@@ -121,6 +121,8 @@ end
 
 
 function Soundtrack.CustomEvents.RegisterBuffEvent(eventName, tableName, _spellId, _priority, _continuous, _soundEffect)
+	if not eventName then return end
+
     if tableName == ST_CUSTOM then
         Soundtrack_CustomEvents[eventName] = 
         { 
