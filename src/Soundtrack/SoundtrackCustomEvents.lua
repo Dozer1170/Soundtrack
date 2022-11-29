@@ -100,25 +100,21 @@ function Soundtrack.CustomEvents.UpdateActiveAuras()
 		local n, __, __, __, __, __, __, __, __, spellId = UnitBuff("player", i)
 		if spellId ~= nil then	
 			Soundtrack.ActiveAuras[spellId] = spellId
+			debug("Adding active buff aura spellid: "..spellId)
 		end
 		local n, __, __, __, __, __, __, __, __, spellId = UnitDebuff("player", i)
 		if spellId ~= nil then	
 			Soundtrack.ActiveAuras[spellId] = spellId
+			debug("Adding active debuff aura spellid: "..spellId)
 		end
 	end
 end --]]
 
 -- Returns the spellID of the buff, else nil
 function Soundtrack.CustomEvents.IsAuraActive(spellId)
+	debug("Is aura active spellid: "..spellId)
 	return Soundtrack.ActiveAuras[spellId]
 end
-function Soundtrack.CustomEvents.IsBuffActive(_spellId)
-	return Soundtrack.ActiveAuras[spellId]
-end
-function Soundtrack.CustomEvents.IsDebuffActive(_spellId)
-	return Soundtrack.ActiveAuras[spellId]
-end
-
 
 function Soundtrack.CustomEvents.RegisterBuffEvent(eventName, tableName, _spellId, _priority, _continuous, _soundEffect)
     if tableName == ST_CUSTOM then
@@ -804,6 +800,15 @@ function Soundtrack.CustomEvents.CustomInitialize(self)
 	
 	-- Register events for custom events
 	for k,v in pairs(Soundtrack_CustomEvents) do
+
+		-- Fix for buff or debuff events that have the spellId stored as string
+		if (v.eventtype == "Buff" or v.eventtype == "Debuff") and type(v.spellId) == "string" then
+			local parsedSpellId = tonumber(v.spellId)
+			if parsedSpellId then
+				v.spellId = parsedSpellId
+			end
+		end
+
 	    Soundtrack.AddEvent(ST_CUSTOM, k, v.priority, v.continuous, v.soundEffect)
 		if v.eventtype == "Event Script" then
 			self:RegisterEvent(v.trigger)
@@ -848,7 +853,8 @@ end
 -- MiscEvents
 function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
 	st_arg1, st_arg2, st_arg3, st_arg4, st_arg5, st_arg6, st_arg7, st_arg8, st_arg9, st_arg10, st_arg11, st_arg12, st_arg13, st_arg14, st_arg15, st_arg16, st_arg17, st_arg18, st_arg19, st_arg20, st_arg21, st_arg22, st_arg23, st_arg24 = ...
-	
+
+	debug("MiscOnEvent called")
 	Soundtrack.CustomEvents.UpdateActiveAuras()
 	
 	if event == "VARIABLES_LOADED" then	
@@ -917,6 +923,7 @@ end
 function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
 	st_arg1, st_arg2, st_arg3, st_arg4, st_arg5, st_arg6, st_arg7, st_arg8, st_arg9, st_arg10, st_arg11, st_arg12, st_arg13, st_arg14, st_arg15, st_arg16, st_arg17, st_arg18, st_arg19, st_arg20, st_arg21, st_arg22, st_arg23, st_arg24 = ...
 
+	debug("CustomOnEvent called")
 	Soundtrack.CustomEvents.UpdateActiveAuras()
 	
 	if event == "VARIABLES_LOADED" then	
@@ -924,14 +931,19 @@ function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
     end
 	
 	if event == "UNIT_AURA" and st_arg1 == "player" then
+		debug("UNIT_AURA event")
 		if Soundtrack.Settings.EnableCustomMusic then
+			debug("Custom music enabled")
 			for k,v in pairs(Soundtrack_CustomEvents) do
 				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
+					debug("Has spell id and tracks: "..k)
 					local isActive = Soundtrack.CustomEvents.IsAuraActive(v.spellId)
 					if not v.active and isActive then
+						debug("Not active and has aura: "..k)
 						v.active = true
 						Soundtrack_Custom_PlayEvent(ST_CUSTOM, k)
 					elseif v.active and not isActive then
+						debug("Active and doesnt have aura: "..k)
 						v.active = false
 						Soundtrack_Custom_StopEvent(ST_CUSTOM, k)
 					end

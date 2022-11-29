@@ -2428,11 +2428,11 @@ function SoundtrackFrameSaveCustomEventButton_OnClick()
 		Soundtrack.CustomEvents.RegisterTrigger(_G["SoundtrackCustomDUMMY"], customEvent.trigger)
     elseif eventType == "Buff" then
 		customEvent.eventtype = "Buff";
-        customEvent.spellId = getglobal("SoundtrackFrame_EventTrigger"):GetText()
+        customEvent.spellId = tonumber(getglobal("SoundtrackFrame_EventTrigger"):GetText())
 		Soundtrack.TraceFrame(customEvent.spellId)
 	elseif eventType == "Debuff" then
 		customEvent.eventtype = "Debuff";
-		customEvent.spellId = getglobal("SoundtrackFrame_EventTrigger"):GetText()
+		customEvent.spellId = tonumber(getglobal("SoundtrackFrame_EventTrigger"):GetText())
 		Soundtrack.TraceFrame(customEvent.spellId)
     elseif eventType == "Update Script" then
 		customEvent.eventtype = "Update Script";

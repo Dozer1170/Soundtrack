@@ -1,3 +1,6 @@
+3.0.2
+- Fix buff/debuff custom events
+
 3.0.1
 - Filter events by text
 - Collapse all and expand all buttons on the zone page
