@@ -21,12 +21,6 @@ Method A:
    If the Java applet fails to run for whatever reason, you can alternatively install
    Python 2.6 and run GenerateMyLibrary.py, located in this folder.
 
-4. Move the generated file MyTracks.lua from the SoundtrackMusic folder to the Soundtrack 
-   folder (World of Warcraft\Interface\AddOns\Soundtrack, i.e. the one this readme is in)
-
-   You're ready to go!
-
-
 Method B:
 
 1. Locate and run GenerateMyLibraryWindows.jar in Soundtrack\Music Manager.
@@ -36,11 +30,5 @@ Method B:
    shortcut to the files instead of copying them.
 
 3. When you've added everything you want, select Generate My Library.
-
-4. Move the generated file MyTracks.lua from the SoundtrackMusic folder to the Soundtrack 
-   folder (World of Warcraft\Interface\AddOns\Soundtrack, i.e. the one this readme is in)
-
-   You're ready to go!
-
 
 For further information, please check http://www.curse.com/addons/wow/soundtrack
