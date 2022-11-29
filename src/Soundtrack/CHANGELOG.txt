@@ -1,3 +1,7 @@
+3.0.1
+- Filter events by text
+- Collapse all and expand all buttons on the zone page
+
 3.0.0
 Dragonflight release
 -Fix errors when loading, update some things to work with DF UI changes
