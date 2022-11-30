@@ -4,6 +4,19 @@
     General functions.
 ]]
 
+SoundtrackAddon = LibStub("AceAddon-3.0"):NewAddon("SoundtrackAddon")
+
+function SoundtrackAddon:OnInitialize()
+    self.db = LibStub("AceDB-3.0"):New("SoundtrackDB", {
+        profile = {
+            minimap = {
+                hide = false
+            }
+        }
+    })
+    SoundtrackMinimap_Initialize()
+end
+
 Soundtrack_EventTabs = {
     "Battle", 
     "Boss",

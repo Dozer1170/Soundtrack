@@ -1,13 +1,13 @@
 ## Interface: 100002
 ## Title: Soundtrack
-## Version: 3.0.2
+## Version: 3.0.3
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: myAddOns
 ## RequiredDeps: 
-## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events
+## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
+Embeds.xml
 Soundtrack.xml
-Soundtrack.lua
 SoundtrackFrame.xml
 SoundtrackFrame.lua
 SoundtrackFix.lua
@@ -21,7 +21,7 @@ SoundtrackPetBattlesEvents.lua
 SoundtrackDanceFrame.xml
 SoundtrackMountFrame.xml
 SoundtrackZoneFrame.xml
-SoundtrackMinimap.xml
+SoundtrackMinimap.lua
 SoundtrackNowPlayingFrame.xml
 SoundtrackControlFrame.xml
 SoundtrackReportFrame.xml

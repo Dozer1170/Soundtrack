@@ -455,7 +455,7 @@ end
 function SoundtrackFrame_RefreshOptionsFrame()
     local s = Soundtrack.Settings
 
-    SoundtrackFrame_EnableMinimapButton:SetChecked(s.EnableMinimapButton)
+    SoundtrackFrame_EnableMinimapButton:SetChecked(not SoundtrackAddon.db.profile.minimap.hide)
     SoundtrackFrame_EnableDebugMode:SetChecked(s.Debug)
     SoundtrackFrame_ShowTrackInformation:SetChecked(s.ShowTrackInformation)
 	SoundtrackFrame_LockNowPlayingFrame:SetChecked(s.LockNowPlayingFrame)
@@ -496,11 +496,9 @@ function SoundtrackFrame_ToggleLoopMusic()
 end
 
 function SoundtrackFrame_ToggleMinimapButton()
-    Soundtrack.Settings.EnableMinimapButton = not Soundtrack.Settings.EnableMinimapButton
-    SoundtrackMinimap_RefreshMinimap()
+    SoundtrackMinimap_ToggleMinimap()
     
     if not Soundtrack.Settings.EnableMinimapButton then
-        Soundtrack.TraceFrame(SOUNDTRACK_MINIMAP_BUTTON_HIDDEN)
     end
 end
 
