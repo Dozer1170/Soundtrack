@@ -1,3 +1,7 @@
 .idea/
 .idea
 *.zip
+out/
+DOOM/
+OOT/
+MyTracks.lua
