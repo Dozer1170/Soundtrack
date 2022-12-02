@@ -102,17 +102,17 @@ while [ -n "$1" ]
       echo Frame size bytes: $frame_size
       frame_size=$(hex_str_to_int $frame_size)
       echo Frame Size: $frame_size
+      frame_size_characters=$(($frame_size*2))
 
       if [[ $frame_id == T* ]]
       then
-        frame_size_characters=$(($frame_size*2))
         frame_body_end_index=$(($frame_header_end_index+$frame_size_characters))
         frame_body_bytes=$(head -c$frame_body_end_index .hexdumptmp | tail -c$frame_size_characters)
         frame_body_text=$(echo $frame_body_bytes | xxd -r -p)
         echo Frame body text: $frame_body_text
       fi
 
-      i=$(($i+$frame_header_size_characters+$frame_size))
+      i=$(($i+$frame_header_size_characters+$frame_size_characters))
     done
   elif [ "$id3v1_sig" = "TAG" ]
   then
