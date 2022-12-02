@@ -5,3 +5,5 @@ out/
 DOOM/
 OOT/
 MyTracks.lua
+.hexdumptmp
+*.xxd
