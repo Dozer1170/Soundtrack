@@ -8,19 +8,30 @@
 tag_header_size_characters=20
 frame_header_size_characters=20
 
+function debug() {
+  if [ $DEBUG -eq 1 ]
+  then
+    echo "$1"
+  fi
+}
+
+function error() {
+  >&2 echo $1
+}
+
 function hex_str_to_int() {
   echo $(printf "%d" 0x$1)
 }
 
 function print_id3v2_version() {
   id3=$1
-  echo ID3 Header: $id3
+  debug "ID3 Header: $id3"
   id3v2_ver=${id3:6:2}
   id3v2_ver=$(hex_str_to_int $id3v2_ver)
 
   id3v2_rev=${id3:8:2}
   id3v2_rev=$(hex_str_to_int $id3v2_rev)
-  echo "ID3v2.$id3v2_ver.$id3v2_rev Tag present"
+  debug "ID3v2.$id3v2_ver.$id3v2_rev Tag present"
 }
 
 shifted_size=0
@@ -30,11 +41,11 @@ function read_and_shift_tag_byte() {
   character_read_start=$3
   character_read_end=$(($character_read_start+1))
   size=$(echo $id3 | cut -c$character_read_start-$character_read_end)
-  echo Before decode value: $size
+  debug "Before decode value: $size"
   size=$(hex_str_to_int $size)
-  echo Decimal size before bit shift: $size
+  debug "Decimal size before bit shift: $size"
   size=$(($size<<$shift_amount))
-  echo Decimal size after bit shift: $size
+  debug "Decimal size after bit shift: $size"
   shifted_size=$size
 }
 
@@ -52,7 +63,7 @@ function parse_id3v2_tag_size() {
   id3v2_size=$(($id3v2_size_1+$id3v2_size_2+$id3v2_size_3+$id3v2_size_4))
   id3v2_size_characters=$(($id3v2_size*2))
 
-  echo Total tag size: $id3v2_size
+  debug "Total tag size: $id3v2_size"
 }
 
 while [ -n "$1" ]
@@ -62,7 +73,7 @@ while [ -n "$1" ]
 
   if [ ! -f "$file" ]
   then
-    echo "File \"$file\" does not exist"
+    error "File \"$file\" does not exist"
     shift 1
     continue
   fi
@@ -75,7 +86,7 @@ while [ -n "$1" ]
 
   if [ "$id3v1_sig" = "TAG" ]
   then
-      echo "ID3v1.x Tag present"
+      debug "ID3v1.x Tag present"
   fi
 
   if [ "$id3v2_sig" = "ID3" ]
@@ -89,27 +100,35 @@ while [ -n "$1" ]
     while [ $i -lt $id3v2_size_characters ]
     do
       frame_header_end_index=$(($i+$frame_header_size_characters))
-      echo Getting header bytes from $i to $frame_header_end_index
+      debug "Getting header bytes from $i to $frame_header_end_index"
 
       frame_header_bytes=$(head -c$frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
-      echo Frame header bytes: $frame_header_bytes
+      debug "Frame header bytes: $frame_header_bytes"
 
       frame_id_end_index=$i+$frame_id_size
-      frame_id=$(echo "${frame_header_bytes:0:8}" | xxd -r -p)
-      echo Frame Id: $frame_id
+      frame_id=$(echo "${frame_header_bytes:0:8}" | xxd -r -p | tr -d '\0')
+      debug "Frame Id: $frame_id"
 
       frame_size=${frame_header_bytes:8:8}
-      echo Frame size bytes: $frame_size
+      debug "Frame size bytes: $frame_size"
       frame_size=$(hex_str_to_int $frame_size)
-      echo Frame Size: $frame_size
+      debug "Frame Size: $frame_size"
       frame_size_characters=$(($frame_size*2))
+
+      if [ -z "$frame_id" ] || [ $frame_size -eq 0 ]
+      then
+        error "Bailing early from $file, invalid frame id or frame size"
+        break
+      fi
 
       if [[ $frame_id == T* ]]
       then
         frame_body_end_index=$(($frame_header_end_index+$frame_size_characters))
         frame_body_bytes=$(head -c$frame_body_end_index .hexdumptmp | tail -c$frame_size_characters)
-        frame_body_text=$(echo $frame_body_bytes | xxd -r -p)
-        echo Frame body text: $frame_body_text
+        frame_body_text=$(echo $frame_body_bytes | xxd -r -p | tr -d '\0')
+        debug "Frame body text: $frame_body_text"
+
+        echo $frame_id $frame_body_text
       fi
 
       i=$(($i+$frame_header_size_characters+$frame_size_characters))

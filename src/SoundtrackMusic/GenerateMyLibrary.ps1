@@ -9,22 +9,28 @@ Get-ChildItem . -Filter *.mp3 -name -Recurse | Foreach-Object {
     $fileName = Split-Path -Leaf $_
     $folderPath = "$workingDir\$relativeFolderPath"
     $fullFilePath = "$workingDir\$_"
+    $relativeFilePath = "$_".Replace("\", "\\")
+    $escapedRelativeFolderPath = $relativeFolderPath.Replace("\", "\\")
     $shell = New-Object -COMObject Shell.Application
     $shellFolder = $shell.Namespace($folderPath)
     $shellFile = $shellFolder.ParseName($fileName)
 
-    $relativeFilePath = "$_".Replace("\", "\\")
-    $escapedRelativeFolderPath = $relativeFolderPath.Replace("\", "\\")
     $lengthHMS = $shellFolder.GetDetailsOf($shellFile, 27)
     $length = ([timespan]$lengthHMS).TotalSeconds
     $author = $shellFolder.GetDetailsOf($shellFile, 20).Replace("\", "\\")
+
+    $album = $shellFolder.GetDetailsOf($shellFile, 14).Replace("\", "\\")
+    if (!$album) {
+        $album = $escapedRelativeFolderPath
+    }
+
     $trackTitle = $shellFolder.GetDetailsOf($shellFile, 21).Replace("\", "\\")
     if (!$trackTitle) {
         $trackTitle = (Get-Item $fullFilePath).Basename.Replace("\", "\\")
     }
 
     Write-Host "$trackTitle, Length ($length), Author ($author)"
-    Write-Output "    Soundtrack.Library.AddTrack(`"$relativeFilePath`", $length, `"$trackTitle`", `"$author`", `"$escapedRelativeFolderPath`")" | Out-File -Append -FilePath .\MyTracks.lua
+    Write-Output "    Soundtrack.Library.AddTrack(`"$relativeFilePath`", $length, `"$trackTitle`", `"$author`", `"$album`")" | Out-File -Append -FilePath .\MyTracks.lua
 }
 
 Write-Output "end" | Out-File -Append -FilePath .\MyTracks.lua
