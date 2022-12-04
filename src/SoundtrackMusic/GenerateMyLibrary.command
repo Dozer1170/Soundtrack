@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+
 function parseTag {
   frame_text=$(echo "$1" | grep "$2"| tr -d "[:cntrl:]")
   if [ ! -z "$frame_text" ]

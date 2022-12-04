@@ -9,7 +9,7 @@ tag_header_size_characters=20
 frame_header_size_characters=20
 
 function debug() {
-  if [ $DEBUG -eq 1 ]
+  if [ ! -z "$DEBUG" ] && [ $DEBUG -ne 0 ]
   then
     echo "$1"
   fi

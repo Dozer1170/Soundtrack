@@ -13,6 +13,8 @@ Morrowind/
 Oblivion/
 SF/
 SWG/
+*.mp3
 MyTracks.lua
 .hexdumptmp
 *.xxd
+.DS_Store
