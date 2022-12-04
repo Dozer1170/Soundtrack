@@ -144,11 +144,11 @@
                     </OnClick>
                     <OnEnter>
                         Soundtrack.ShowTip(self, SOUNDTRACK_NEXT, SOUNDTRACK_NEXT_TIP);
-						SoundtrackControlFrame_NextButton:SetAlpha("1.0")
+						SoundtrackControlFrame_NextButton:SetAlpha(1.0)
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_NextButton:SetAlpha(".6")
+						SoundtrackControlFrame_NextButton:SetAlpha(.6)
                     </OnLeave>
                 </Scripts>
             </Button>
@@ -165,11 +165,11 @@
                     </OnClick>
                     <OnEnter>
                         Soundtrack.ShowTip(self, SOUNDTRACK_PAUSE, SOUNDTRACK_PAUSE_TIP);
-						SoundtrackControlFrame_StopButton:SetAlpha("1.0")
+						SoundtrackControlFrame_StopButton:SetAlpha(1.0)
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_StopButton:SetAlpha(".6")
+						SoundtrackControlFrame_StopButton:SetAlpha(.6)
                     </OnLeave>
                 </Scripts>
             </Button>
@@ -186,11 +186,11 @@
                     </OnClick>
                     <OnEnter>
                         Soundtrack.ShowTip(self, SOUNDTRACK_PLAY, SOUNDTRACK_PLAY_TIP);
-						SoundtrackControlFrame_PlayButton:SetAlpha("1.0")
+						SoundtrackControlFrame_PlayButton:SetAlpha(1.0)
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_PlayButton:SetAlpha(".6")
+						SoundtrackControlFrame_PlayButton:SetAlpha(.6)
                     </OnLeave>
                 </Scripts>
             </Button>			
@@ -205,11 +205,11 @@
                     </OnClick>
                     <OnEnter>
                         Soundtrack.ShowTip(self, SOUNDTRACK_PREVIOUS, SOUNDTRACK_PREVIOUS_TIP)
-						SoundtrackControlFrame_PreviousButton:SetAlpha("1.0");
+						SoundtrackControlFrame_PreviousButton:SetAlpha(1.0);
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_PreviousButton:SetAlpha(".6");
+						SoundtrackControlFrame_PreviousButton:SetAlpha(.6);
                     </OnLeave>
                 </Scripts>
             </Button>
@@ -231,11 +231,11 @@
                     </OnClick>
                     <OnEnter>
                         Soundtrack.ShowTip(self, SOUNDTRACK_STOP, SOUNDTRACK_STOP_TIP);
-						SoundtrackControlFrame_TrueStopButton:SetAlpha("1.0")
+						SoundtrackControlFrame_TrueStopButton:SetAlpha(1.0)
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_TrueStopButton:SetAlpha(".6")
+						SoundtrackControlFrame_TrueStopButton:SetAlpha(.6)
                     </OnLeave>
                 </Scripts>
             </Button>
@@ -252,12 +252,12 @@
 						SoundtrackReportFrame:Show()
                     </OnClick>
                     <OnEnter>
-						SoundtrackControlFrame_ReportButton:SetAlpha("1.0")
+						SoundtrackControlFrame_ReportButton:SetAlpha(1.0)
 						Soundtrack.ShowTip(self, SOUNDTRACK_REPORT, SOUNDTRACK_REPORT_TIP)
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_ReportButton:SetAlpha(".6")
+						SoundtrackControlFrame_ReportButton:SetAlpha(.6)
                     </OnLeave>
                 </Scripts>
             </Button>
@@ -280,7 +280,7 @@
 						end
                     </OnClick>
                     <OnEnter>
-						SoundtrackControlFrame_InfoButton:SetAlpha("1.0")
+						SoundtrackControlFrame_InfoButton:SetAlpha(1.0)
                         local currentTrackName = Soundtrack.Library.CurrentlyPlayingTrack
 						if currentTrackName ~= nil and
 						   currentTrackName ~= "None" then
@@ -292,7 +292,7 @@
                     </OnEnter>
                     <OnLeave>
                         Soundtrack.HideTip();
-						SoundtrackControlFrame_InfoButton:SetAlpha(".6")
+						SoundtrackControlFrame_InfoButton:SetAlpha(.6)
                     </OnLeave>
                 </Scripts>
             </Button>
