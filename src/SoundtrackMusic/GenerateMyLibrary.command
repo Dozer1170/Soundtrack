@@ -53,3 +53,6 @@ while IFS= read -r file; do
 done <<< "$FILES"
 
 echo "end" >> MyTracks.lua
+
+echo "Generation complete!"
+
