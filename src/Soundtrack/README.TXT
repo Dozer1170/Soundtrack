@@ -1,9 +1,11 @@
-QUICK SETUP
+Quick Setup
 
-Method A:
+NOTE: MyTracks.lua GENERATION PROCESS HAS CHANGED 12/5/2022. You no longer need to copy MyTracks.lua to the Soundtrack folder,
+and you don't need to install java or python to run the tools. See Step 3 in the readme below if you have generated a library
+before.
 
 1. Locate the folder named SoundtrackMusic in the Addons folder.
-   (World of Warcraft\Interface\AddOns\SoundtrackMusic)
+   (World of Warcraft\_retail\Interface\AddOns\SoundtrackMusic)
 
 2. Copy your mp3s to that folder, and close WoW if it's already open. 
    Files added while WoW is running won't be noticed until you restart it.
@@ -13,22 +15,19 @@ Method A:
     \SoundtrackMusic\Public Enemy\
     and so on.
 
-3. To make your mp3s available in the game, go into the Music Manager folder
-   and run GenerateMyLibraryWindows.jar. Go to Options > Generate My Library.
+3. To make your mp3s available in the game, run GenerateMyLibrary.ps1 on Windows or GenerateMyLibrary.command on Mac/Linux.
+    You should have a MyTracks.lua file in your SoundtrackMusic directory. If so then you are good to go!
 
-   Please wait until it finishes before closing the window.
+    If it fails for any reason, you can try to use one of the legacy methods of generating your library.
 
-   If the Java applet fails to run for whatever reason, you can alternatively install
-   Python 2.6 and run GenerateMyLibrary.py, located in this folder.
 
-Method B:
+Legacy Library Generation:
 
-1. Locate and run GenerateMyLibraryWindows.jar in Soundtrack\Music Manager.
+There are two additional ways you can generate the MyTracks.lua file if the above method fails.
 
-2. From there, in the Options menu, add individual mp3s or folders containing mp3s to the list. 
-   Close WoW if it's already open. Junctions are enabled by default, which is like making a 
-   shortcut to the files instead of copying them.
+Option 1. Make sure you have java installed, then open SoundtrackMusic/LegacyLibraryGeneration/MusicManager.jar.
+    a. If the UI doesnt open when you double click the MusicManager.jar, you can open it via command line if your
+        working directory is SoundtrackMusic/LegacyLibraryGeneration and you run "java -jar MusicManager.jar" from powershell or cmd.
+    b. Once the UI loads, click the Generate Library button (second from the right).
 
-3. When you've added everything you want, select Generate My Library.
-
-For further information, please check http://www.curse.com/addons/wow/soundtrack
+Option 2. Make sure you have Python 2.7 installed, then run SoundtrackMusic/LegacyLibraryGeneration/GenerateMyLibrary.py
