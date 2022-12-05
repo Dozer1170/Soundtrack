@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ZIP_FILE=$1
+
+unzip $ZIP_FILE -d "/mnt/c/World of Warcraft/_retail_/Interface/Addons/"
+

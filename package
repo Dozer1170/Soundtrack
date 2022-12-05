@@ -4,6 +4,6 @@ OUT_FILE=$1
 
 rm $OUT_FILE
 cd src
-zip -r ../$OUT_FILE Soundtrack SoundtrackMusic
+zip -r ../$OUT_FILE Soundtrack SoundtrackMusic -x "*.iml" -x "*.mp3" -x "*.hexdumptmp*" -x "*MyTracks.lua*" -x "*.pyc*" -x "*LegacyLibraryGeneration/META-INF/*" -x "*LegacyLibraryGeneration/src/*" -x "*DOOM/*" -x "*DS/*" -x "*FF/*" -x "*KOTOR/*" -x "*KOTOR_II/*" -x "*MM/*" -x "*Morrowind/*" -x "*Oblivion/*" -x "*OOT/*" -x "*SF/*" -x "*SWG/*"
 cd ..
 
