@@ -117,7 +117,7 @@ while [ -n "$1" ]
 
       if [ -z "$frame_id" ] || [ $frame_size -eq 0 ]
       then
-        error "Bailing early from $file, invalid frame id or frame size"
+        debug "Bailing early from $file, invalid frame id or frame size."
         break
       fi
 
