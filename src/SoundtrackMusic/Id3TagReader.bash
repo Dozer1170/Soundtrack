@@ -105,7 +105,6 @@ while [ -n "$1" ]
       frame_header_bytes=$(head -c$frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
       debug "Frame header bytes: $frame_header_bytes"
 
-      frame_id_end_index=$i+$frame_id_size
       frame_id=$(echo "${frame_header_bytes:0:8}" | xxd -r -p | tr -d '\0')
       debug "Frame Id: $frame_id"
 

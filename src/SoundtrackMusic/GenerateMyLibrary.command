@@ -56,3 +56,5 @@ echo "end" >> MyTracks.lua
 
 echo "Generation complete!"
 
+rm .hexdumptmp
+
