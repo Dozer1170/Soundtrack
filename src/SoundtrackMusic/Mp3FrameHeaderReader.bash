@@ -17,6 +17,13 @@ function hex_str_to_int() {
   echo $(printf "%d" 0x$1)
 }
 
+declare -A mpeg_version_map=(
+  [0]=3 # MPEG 2.5
+  # 1 is reserved
+  [2]=2 # MPEG 2
+  [3]=1 # MPEG 1
+)
+
 declare -A layer_map=(
   [1]=3 # Layer III
   [2]=2 # Layer II
@@ -94,12 +101,22 @@ do
     debug "Found potential mp3 frame: $sync_word at character $i"
     debug "  Potential Frame header: $frame_header_hex"
 
+    # Hex character 3 represents: 3 bits for sync word, 1 bit for mpeg version (1/2 of the 2 bits for mpeg version)
+    {
+      hex_character_three=${frame_header_hex:2:1}
+      character_three_int=$(hex_str_to_int $hex_character_three)
+
+      mpeg_version_bit_1=$(($character_three_int & 2#0001))
+    }
+
     # Hex character 4 represents: 1 bit for MPEG version, 2 bits for Layer index, 1 bit for protection
     {
       hex_character_four=${frame_header_hex:3:1}
       character_four_int=$(hex_str_to_int $hex_character_four)
 
-      mpeg_version_bit=$((($character_four_int & 2#1000) >> 3))
+      mpeg_version_bit_2=$((($character_four_int & 2#1000) >> 3))
+      mpeg_version_index=$((($mpeg_version_bit_1 << 1) + $mpeg_version_bit_2))
+      mpeg_version="${mpeg_version_map[$mpeg_version_index]}"
 
       layer_index=$((($character_four_int & 2#0110) >> 1))
       layer="${layer_map[$layer_index]}"
@@ -109,7 +126,11 @@ do
 
     # Hex character 5 represents: Bit rate index, need to lookup value into table of constants
     {
-      bit_rate_hex=${frame_header_hex:4:1}
+      hex_character_five=${frame_header_hex:4:1}
+      character_five_int=$(hex_str_to_int $hex_character_five)
+
+      bit_rate_key="${character_five_int}_${mpeg_version}_${layer}"
+      bit_rate=${bit_rate_map[$bit_rate_key]}
     }
 
     # Hex character 6 represents: 2 bits for sampling rate index, 1 bit for padding, 1 bit for private bit
@@ -118,7 +139,7 @@ do
       character_six_int=$(hex_str_to_int $hex_character_six)
 
       sampling_rate_index=$((($character_six_int & 2#1100) >> 2))
-      sampling_rate_key="${sampling_rate_index}_${mpeg_version_bit}"
+      sampling_rate_key="${sampling_rate_index}_${mpeg_version}"
       sampling_rate=${sampling_rate_map[$sampling_rate_key]}
 
       padding_bit=$((($character_six_int & 2#0010) >> 1))
@@ -148,13 +169,13 @@ do
       emphasis=$(($character_eight_int & 2#0011))
     }
 
-    debug "  ($hex_character_four) MPEG version: $mpeg_version_bit, Layer: $layer, Protected: $protected"
-    debug "  ($bit_rate_hex) Bit rate hex: $bit_rate_hex"
+    debug "  ($hex_character_four) MPEG version: $mpeg_version, Layer: $layer, Protected: $protected"
+    debug "  ($hex_character_five) Bit rate: (key = $bit_rate_key) $bit_rate kb/s"
     debug "  ($hex_character_six) Sampling rate: (key = $sampling_rate_key) ${sampling_rate}Hz, Padding: $padding_bit, Private: $private_bit"
     debug "  ($hex_character_seven) Channel mode: $channel_mode, Channel mode extension: $channel_mode_extension"
     debug "  ($hex_character_eight) Copyright: $copyright_bit, Original: $original_bit, Emphasis: $emphasis"
 
-    if [ $mpeg_version_bit -ne 1 ] || [ $layer -eq 0 ]
+    if [ $mpeg_version -ne 1 ] || [ $layer -eq 0 ]
     then
       debug "  This is not an mpeg1 frame header, moving to next word boundary"
       i=$(($i + 4))
