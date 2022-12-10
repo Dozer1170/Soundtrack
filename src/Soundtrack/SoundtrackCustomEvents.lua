@@ -738,14 +738,17 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_SHAMAN, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_WARRIOR, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER, ST_MISC, 0, 1, false, false);
-	
+	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER, ST_MISC, 0, 1, false, false);
+
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_COMBAT_EVENTS, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_GROUP_EVENTS, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_NPC_EVENTS, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_STATUS_EVENTS, ST_MISC, 0, 1, false, false);
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER_CAMO, ST_MISC, 90954, ST_BUFF_LVL, true, false)
-	
+
+	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER_SOAR, ST_MISC, 369536, ST_BUFF_LVL, true, false)
+
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_ROGUE_SPRINT, ST_MISC, 2983, ST_BUFF_LVL, true, false)
 	
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_DASH, ST_MISC, 1850, ST_BUFF_LVL, true, false)

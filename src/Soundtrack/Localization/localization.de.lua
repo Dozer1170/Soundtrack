@@ -217,6 +217,10 @@ SOUNDTRACK_HUNTER = "J�ger"
 n = GetSpellInfo(90954)
 SOUNDTRACK_HUNTER_CAMO = "J�ger/"..n
 
+SOUNDTRACK_EVOKER = "Evoker"
+n = GetSpellInfo(369536)
+SOUNDTRACK_EVOKER_SOAR = "Evoker/"..n
+
 SOUNDTRACK_MAGE = "Magier"
 
 SOUNDTRACK_MONK = "Monk"
