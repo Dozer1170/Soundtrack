@@ -22,7 +22,7 @@ function process_file {
   fileNameNoExtension=$(basename "$filePathWithExtension" .mp3)
   relativeFilePathNoExtension="$relativeFolderPath/$fileNameNoExtension"
 
-  length=60
+  length=$(DEBUG=0 ./Mp3FrameHeaderReader.bash "$filePathWithExtension" | grep "Duration" | cut -c9-)
 
   tags=$(DEBUG=0 ./Id3TagReader.bash "$filePathWithExtension")
   trackTitle=$(parseTag "$tags" "TIT2" "None")
