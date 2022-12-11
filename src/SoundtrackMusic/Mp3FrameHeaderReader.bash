@@ -377,13 +377,14 @@ do
     # Frame Size = ( (Samples Per Frame / 8 * Bitrate) / Sampling Rate) + Padding Size
     debug "" # newline
     debug "  Samples per frame key: $samples_per_frame_key, Samples per frame: $samples_per_frame"
+    debug "  Frame size bytes = (($samples_per_frame / 8 * $bit_rate) / $sampling_rate) + $padding_amount_bytes))"
     frame_size_bytes=$(((($samples_per_frame / 8 * $bit_rate) / $sampling_rate) + $padding_amount_bytes))
     debug "  Frame size bytes: $frame_size_bytes"
 
     frame_size_characters=$(($frame_size_bytes * 2))
     next_header_start=$(($i + $frame_header_size_characters + $frame_size_characters))
     next_frame_header_end_index=$(($next_header_start + $frame_header_size_characters))
-    debug "  Next frame start: $i + $frame_header_size_characters + $frame_size_characters = $next_header_start"
+    debug "  Next frame start character: $i + $frame_header_size_characters + $frame_size_characters = $next_header_start"
     if [ $next_frame_header_end_index -lt $file_size_characters ]
     then
       next_frame_header_hex=$(head -c$next_frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
@@ -402,7 +403,6 @@ do
         i=$(($i+4))
         debug "Sync word of next frame not valid, moving to next position"
         debug "" # newline
-        exit
         continue
       fi
     fi
