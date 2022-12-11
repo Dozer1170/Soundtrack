@@ -103,8 +103,7 @@ function bit_rate_map() {
   '1_3_2') echo 8 ;;
   '1_3_3') echo 8 ;;
 
-  \
-    '2_1_1') echo 64 ;;
+  '2_1_1') echo 64 ;;
   '2_1_2') echo 48 ;;
   '2_1_3') echo 40 ;;
   '2_2_1') echo 48 ;;
@@ -114,8 +113,7 @@ function bit_rate_map() {
   '2_3_2') echo 16 ;;
   '2_3_3') echo 16 ;;
 
-  \
-    '3_1_1') echo 96 ;;
+  '3_1_1') echo 96 ;;
   '3_1_2') echo 56 ;;
   '3_1_3') echo 48 ;;
   '3_2_1') echo 56 ;;
@@ -125,8 +123,7 @@ function bit_rate_map() {
   '3_3_2') echo 24 ;;
   '3_3_3') echo 24 ;;
 
-  \
-    '4_1_1') echo 128 ;;
+  '4_1_1') echo 128 ;;
   '4_1_2') echo 64 ;;
   '4_1_3') echo 56 ;;
   '4_2_1') echo 64 ;;
@@ -136,8 +133,7 @@ function bit_rate_map() {
   '4_3_2') echo 63 ;;
   '4_3_3') echo 32 ;;
 
-  \
-    '5_1_1') echo 160 ;;
+  '5_1_1') echo 160 ;;
   '5_1_2') echo 80 ;;
   '5_1_3') echo 64 ;;
   '5_2_1') echo 80 ;;
@@ -147,8 +143,7 @@ function bit_rate_map() {
   '5_3_2') echo 40 ;;
   '5_3_3') echo 40 ;;
 
-  \
-    '6_1_1') echo 192 ;;
+  '6_1_1') echo 192 ;;
   '6_1_2') echo 96 ;;
   '6_1_3') echo 80 ;;
   '6_2_1') echo 96 ;;
@@ -158,8 +153,7 @@ function bit_rate_map() {
   '6_3_2') echo 48 ;;
   '6_3_3') echo 48 ;;
 
-  \
-    '7_1_1') echo 224 ;;
+  '7_1_1') echo 224 ;;
   '7_1_2') echo 112 ;;
   '7_1_3') echo 96 ;;
   '7_2_1') echo 112 ;;
@@ -169,8 +163,7 @@ function bit_rate_map() {
   '7_3_2') echo 56 ;;
   '7_3_3') echo 56 ;;
 
-  \
-    '8_1_1') echo 256 ;;
+  '8_1_1') echo 256 ;;
   '8_1_2') echo 128 ;;
   '8_1_3') echo 112 ;;
   '8_2_1') echo 128 ;;
@@ -180,8 +173,7 @@ function bit_rate_map() {
   '8_3_2') echo 64 ;;
   '8_3_3') echo 64 ;;
 
-  \
-    '9_1_1') echo 288 ;;
+  '9_1_1') echo 288 ;;
   '9_1_2') echo 160 ;;
   '9_1_3') echo 128 ;;
   '9_2_1') echo 144 ;;
@@ -191,8 +183,7 @@ function bit_rate_map() {
   '9_3_2') echo 80 ;;
   '9_3_3') echo 80 ;;
 
-  \
-    '10_1_1') echo 320 ;;
+  '10_1_1') echo 320 ;;
   '10_1_2') echo 192 ;;
   '10_1_3') echo 160 ;;
   '10_2_1') echo 160 ;;
@@ -202,8 +193,7 @@ function bit_rate_map() {
   '10_3_2') echo 96 ;;
   '10_3_3') echo 96 ;;
 
-  \
-    '11_1_1') echo 352 ;;
+  '11_1_1') echo 352 ;;
   '11_1_2') echo 224 ;;
   '11_1_3') echo 192 ;;
   '11_2_1') echo 176 ;;
@@ -213,8 +203,7 @@ function bit_rate_map() {
   '11_3_2') echo 112 ;;
   '11_3_3') echo 112 ;;
 
-  \
-    '12_1_1') echo 384 ;;
+  '12_1_1') echo 384 ;;
   '12_1_2') echo 256 ;;
   '12_1_3') echo 224 ;;
   '12_2_1') echo 192 ;;
@@ -224,8 +213,7 @@ function bit_rate_map() {
   '12_3_2') echo 128 ;;
   '12_3_3') echo 128 ;;
 
-  \
-    '13_1_1') echo 416 ;;
+  '13_1_1') echo 416 ;;
   '13_1_2') echo 320 ;;
   '13_1_3') echo 256 ;;
   '13_2_1') echo 224 ;;
@@ -235,8 +223,7 @@ function bit_rate_map() {
   '13_3_2') echo 144 ;;
   '13_3_3') echo 144 ;;
 
-  \
-    '14_1_1') echo 448 ;;
+  '14_1_1') echo 448 ;;
   '14_1_2') echo 384 ;;
   '14_1_3') echo 320 ;;
   '14_2_1') echo 256 ;;
@@ -263,9 +250,11 @@ xxd -p "$file" | tr -d '\n' >.hexdumptmp
 file_size_characters=$(wc -c <.hexdumptmp)
 debug "File size in characters: $file_size_characters"
 
+valid_frames_to_count=20
+valid_frame_count=0
 found_valid_header=0
 i=0
-while [ $i -lt $file_size_characters ]; do
+while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames_to_count ]; do
   frame_header_end_index=$(($i + $frame_header_size_characters))
   header_hex_address=$(printf "%08x" $(($i / 2)))
   frame_header_hex=$(head -c$frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
@@ -297,6 +286,8 @@ while [ $i -lt $file_size_characters ]; do
       layer=$(layer_map $layer_index)
 
       protected_bit=$(($character_four_int & 2#0001))
+
+      debug "  ($hex_character_four) MPEG version: $mpeg_version, Layer: $layer, Protected bit: $protected_bit"
     }
 
     # Hex character 5 represents: Bit rate index, need to lookup value into table of constants
@@ -308,6 +299,8 @@ while [ $i -lt $file_size_characters ]; do
       bit_rate_key="${bit_rate_index}_${mpeg_version}_${layer}"
       kbit_rate=$(bit_rate_map $bit_rate_key)
       bit_rate=$((kbit_rate * 1000))
+
+      debug "  ($hex_character_five) Bit rate: (key = $bit_rate_key) $kbit_rate kb/s"
     }
 
     # Hex character 6 represents: 2 bits for sampling rate index, 1 bit for padding, 1 bit for private bit
@@ -323,6 +316,8 @@ while [ $i -lt $file_size_characters ]; do
       padding_amount_bytes=$(padding_map $padding_bit $layer)
 
       private_bit=$(($character_six_int & 2#0001))
+
+      debug "  ($hex_character_six) Sampling rate: (key = $sampling_rate_key) ${sampling_rate}Hz, Padding: $padding_bit, Padding amount bytes: $padding_amount_bytes, Private: $private_bit"
     }
 
     # Hex character 7 represents: 2 bits for channel mode, 2 bits for mode extension
@@ -333,6 +328,8 @@ while [ $i -lt $file_size_characters ]; do
       channel_mode=$((($character_seven_int & 2#1100) >> 2))
 
       channel_mode_extension=$(($character_seven_int & 2#0011))
+
+      debug "  ($hex_character_seven) Channel mode: $channel_mode, Channel mode extension: $channel_mode_extension"
     }
 
     # Hex character 8 represents: 1 bit for copyright, 1 bit for original, 2 bits for emphasis
@@ -345,16 +342,12 @@ while [ $i -lt $file_size_characters ]; do
       original_bit=$((($character_eight_int & 2#0100) >> 2))
 
       emphasis=$(($character_eight_int & 2#0011))
+
+      debug "  ($hex_character_eight) Copyright: $copyright_bit, Original: $original_bit, Emphasis: $emphasis"
     }
 
     samples_per_frame_key="${mpeg_version}_${layer}"
     samples_per_frame=$(samples_per_frame_map $samples_per_frame_key)
-
-    debug "  ($hex_character_four) MPEG version: $mpeg_version, Layer: $layer, Protected bit: $protected_bit"
-    debug "  ($hex_character_five) Bit rate: (key = $bit_rate_key) $kbit_rate kb/s"
-    debug "  ($hex_character_six) Sampling rate: (key = $sampling_rate_key) ${sampling_rate}Hz, Padding: $padding_bit, Padding amount bytes: $padding_amount_bytes, Private: $private_bit"
-    debug "  ($hex_character_seven) Channel mode: $channel_mode, Channel mode extension: $channel_mode_extension"
-    debug "  ($hex_character_eight) Copyright: $copyright_bit, Original: $original_bit, Emphasis: $emphasis"
 
     # All reserved values
     if [ $sampling_rate_index -eq 3 ] || [ $bit_rate_index -eq 15 ] || [ $mpeg_version_index -eq 1 ] || [ $layer_index -eq 0 ]; then
@@ -383,34 +376,16 @@ while [ $i -lt $file_size_characters ]; do
       debug "  Next frame header: $next_frame_header_hex at $next_header_hex_address"
       debug "  Next frame sync word: $next_sync_word"
 
-      # We already confirmed a valid header, just keep going until we dont find a sync word
-      if [ $found_valid_header -eq 1 ]; then
-        if [[ $next_sync_word == fff ]] || [[ $next_sync_word == ffe ]]; then
-          i=$next_header_start
-          frame_count=$(($frame_count + 1))
-          continue
-        elif [ $found_valid_header -eq 1 ]; then
-          debug "Sync word of next frame not valid, breaking"
-          break
-        fi
-      fi
-
       if [[ $next_sync_word == fff ]] || [[ $next_sync_word == ffe ]]; then
         debug "  CONFIRMED: Next frame starts with sync word"
         i=$next_header_start
-        found_valid_header=1
-        locked_samples_per_frame=$samples_per_frame
-        locked_sampling_rate = $sampling_rate
-        frame_count=1
+        valid_frame_count=$(($valid_frame_count + 1))
       else
         i=$(($i + 2))
         debug "Sync word of next frame not valid, moving to next position"
         debug "" # newline
-        continue
       fi
     fi
-  elif [ $found_valid_header -eq 1 ]; then
-    break
   else
     # Seek to the next byte boundary
     i=$(($i + 2))
@@ -419,6 +394,8 @@ done
 
 # Constant bit rate Duration = File Size / Bitrate * 8
 # Variable bit rate Duration = (Samples per frame * total frames) / sample rate
-duration=$((($locked_samples_per_frame * $frame_count) / $locked_sampling_rate))
+file_size_bytes=$(($file_size_characters / 2))
+duration=$(($file_size_bytes / $bit_rate * 8 ))
 
+debug "File size bytes: $file_size_bytes"
 echo "Duration $duration"
