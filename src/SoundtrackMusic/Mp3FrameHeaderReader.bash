@@ -239,11 +239,13 @@ file=$1
 
 if [ ! -f "$file" ]; then
   error "File \"$file\" does not exist"
+  exit 1
 fi
 
 valid_frames_to_count=$2
 if [ -z "$valid_frames_to_count" ]; then
   error "Provide frames to count as the 2nd argument"
+  exit 2
 fi
 
 # Constants

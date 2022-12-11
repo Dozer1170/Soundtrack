@@ -22,7 +22,7 @@ function process_file {
   fileNameNoExtension=$(basename "$filePathWithExtension" .mp3)
   relativeFilePathNoExtension="$relativeFolderPath/$fileNameNoExtension"
 
-  length=$(DEBUG=0 ./Mp3FrameHeaderReader.bash "$filePathWithExtension" | grep "Duration" | cut -c9-)
+  length=$(DEBUG=0 ./Mp3FrameHeaderReader.bash "$filePathWithExtension" 25 | grep "Duration" | cut -c9-)
 
   tags=$(DEBUG=0 ./Id3TagReader.bash "$filePathWithExtension")
   trackTitle=$(parseTag "$tags" "TIT2" "None")
@@ -30,6 +30,7 @@ function process_file {
   author=$(parseTag "$tags" "TPE1" "None")
 
   addTrackStatement="    Soundtrack.Library.AddTrack(\"$relativeFilePathNoExtension\", $length, \"$trackTitle\", \"$author\", \"$album\")"
+  addTrackStatement="${addTrackStatement//\.\//}"
   addTrackStatement="${addTrackStatement//\//\\\\}"
   echo "$addTrackStatement" >> MyTracks.lua
 }
