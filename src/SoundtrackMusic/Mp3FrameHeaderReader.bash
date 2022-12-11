@@ -273,6 +273,7 @@ do
   #debug "Character index: $i"
 
   frame_header_end_index=$(($i + $frame_header_size_characters))
+  header_hex_address=$(printf "%08x" $(($i / 2)))
   frame_header_hex=$(head -c$frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
 
 
@@ -281,7 +282,7 @@ do
 
   if [[ $sync_word == fff ]] || [[ $sync_word == ffe ]]
   then
-    debug "Found potential mp3 frame: $sync_word at character $i"
+    debug "Found potential mp3 frame: $sync_word at character $i, address $header_hex_address"
     debug "Potential Frame header: $frame_header_hex"
 
     # Hex character 3 represents: 3 bits for sync word, 1 bit for mpeg version (1/2 of the 2 bits for mpeg version)
@@ -388,7 +389,8 @@ do
       next_frame_header_hex=$(head -c$next_frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
       next_sync_word=${next_frame_header_hex:0:3}
 
-      debug "  Next frame header: $next_frame_header_hex at $next_header_start"
+      next_header_hex_address=$(printf "%08x" $(($next_header_start / 2)))
+      debug "  Next frame header: $next_frame_header_hex at $next_header_hex_address"
       debug "  Next frame sync word: $next_sync_word"
 
       if [[ $next_sync_word == fff ]] || [[ $next_sync_word == ffe ]]
