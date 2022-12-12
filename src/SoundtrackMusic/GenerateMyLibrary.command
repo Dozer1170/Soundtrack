@@ -22,12 +22,12 @@ function process_file {
   fileNameNoExtension=$(basename "$filePathWithExtension" .mp3)
   relativeFilePathNoExtension="$relativeFolderPath/$fileNameNoExtension"
 
-  length=$(DEBUG=0 ./Mp3FrameHeaderReader.bash "$filePathWithExtension" 25 | grep "Duration" | cut -c9-)
-
   tags=$(DEBUG=0 ./Id3TagReader.bash "$filePathWithExtension")
   trackTitle=$(parseTag "$tags" "TIT2" "None")
   album=$(parseTag "$tags" "TALB" "None")
   author=$(parseTag "$tags" "TPE1" "None")
+
+  length=$(DEBUG=0 ./Mp3FrameHeaderReader.bash "$filePathWithExtension" 25 1 | grep "Duration" | cut -c9-)
 
   addTrackStatement="    Soundtrack.Library.AddTrack(\"$relativeFilePathNoExtension\", $length, \"$trackTitle\", \"$author\", \"$album\")"
   addTrackStatement="${addTrackStatement//\.\//}"

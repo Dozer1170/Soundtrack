@@ -252,25 +252,35 @@ fi
 frame_header_byte_size=4
 frame_header_size_characters=$(($frame_header_byte_size * 2))
 
-xxd -p "$file" | tr -d '\n' >.hexdumptmp
+if [ ! -z $3 ]; then
+  echo "3rd arg provided so skipping xxd step"
+else
+  xxd -p "$file" | tr -d '\n' >.hexdumptmp
+fi
+
+potential_mp3_frame_headers=($(grep -Eoba "fffb|fffa" .hexdumptmp | sed -E -e 's/:fffb|:fffa//g'))
+potential_headers_array_length=${#potential_mp3_frame_headers[@]}
+potential_header_index=0
+debug "Potential headers length: $potential_headers_array_length"
 
 file_size_characters=$(wc -c <.hexdumptmp)
-#debug "File size in characters: $file_size_characters"
+debug "File size in characters: $file_size_characters"
 
+first_frame_offset=0
 valid_frame_count=0
 found_valid_header=0
 kbit_rate_sum=0
-i=0
-while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames_to_count ]; do
+i=${potential_mp3_frame_headers[$potential_header_index]}
+while [ $potential_header_index -lt $potential_headers_array_length ] && [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames_to_count ]; do
   frame_header_end_index=$(($i + $frame_header_size_characters))
   header_hex_address=$(printf "%08x" $(($i / 2)))
-  frame_header_hex=$(head -c$frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
+  frame_header_hex=$(dd if=".hexdumptmp" bs=1 skip=$i count=$frame_header_size_characters 2>/dev/null)
 
-  sync_word=${frame_header_hex:0:3}
+  sync_word=${frame_header_hex:0:4}
 
-  if [[ $sync_word == fff ]] || [[ $sync_word == ffe ]]; then
-    #debug "Found potential mp3 frame: $sync_word at character $i, address $header_hex_address"
-    #debug "Potential Frame header: $frame_header_hex"
+  if [[ $sync_word == fffb ]] || [[ $sync_word == fffa ]]; then
+    debug "Found potential mp3 frame: $sync_word at character $i, address $header_hex_address"
+    debug "Potential Frame header: $frame_header_hex"
 
     # Hex character 3 represents: 3 bits for sync word, 1 bit for mpeg version (1/2 of the 2 bits for mpeg version)
     {
@@ -294,7 +304,7 @@ while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames
 
       protected_bit=$(($character_four_int & 2#0001))
 
-      #debug "  ($hex_character_four) MPEG version: $mpeg_version, Layer: $layer, Protected bit: $protected_bit"
+      debug "  ($hex_character_four) MPEG version: $mpeg_version, Layer: $layer, Protected bit: $protected_bit"
     }
 
     # Hex character 5 represents: Bit rate index, need to lookup value into table of constants
@@ -307,7 +317,13 @@ while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames
       kbit_rate=$(bit_rate_map $bit_rate_key)
       bit_rate=$((kbit_rate * 1000))
 
-      #debug "  ($hex_character_five) Bit rate: (key = $bit_rate_key) $kbit_rate kb/s"
+      if [ $bit_rate_index -eq 0 ]; then
+        debug "Got free format bit rate, assuming invalid header"
+        i=${potential_mp3_frame_headers[$((++potential_header_index))]}
+        continue
+      fi
+
+      debug "  ($hex_character_five) Bit rate: (key = $bit_rate_key) $kbit_rate kb/s"
     }
 
     # Hex character 6 represents: 2 bits for sampling rate index, 1 bit for padding, 1 bit for private bit
@@ -324,7 +340,7 @@ while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames
 
       private_bit=$(($character_six_int & 2#0001))
 
-      #debug "  ($hex_character_six) Sampling rate: (key = $sampling_rate_key) ${sampling_rate}Hz, Padding: $padding_bit, Padding amount bytes: $padding_amount_bytes, Private: $private_bit"
+      debug "  ($hex_character_six) Sampling rate: (key = $sampling_rate_key) ${sampling_rate}Hz, Padding: $padding_bit, Padding amount bytes: $padding_amount_bytes, Private: $private_bit"
     }
 
     # Hex character 7 represents: 2 bits for channel mode, 2 bits for mode extension
@@ -336,7 +352,7 @@ while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames
 
       channel_mode_extension=$(($character_seven_int & 2#0011))
 
-      #debug "  ($hex_character_seven) Channel mode: $channel_mode, Channel mode extension: $channel_mode_extension"
+      debug "  ($hex_character_seven) Channel mode: $channel_mode, Channel mode extension: $channel_mode_extension"
     }
 
     # Hex character 8 represents: 1 bit for copyright, 1 bit for original, 2 bits for emphasis
@@ -350,7 +366,7 @@ while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames
 
       emphasis=$(($character_eight_int & 2#0011))
 
-      #debug "  ($hex_character_eight) Copyright: $copyright_bit, Original: $original_bit, Emphasis: $emphasis"
+      debug "  ($hex_character_eight) Copyright: $copyright_bit, Original: $original_bit, Emphasis: $emphasis"
     }
 
     samples_per_frame_key="${mpeg_version}_${layer}"
@@ -358,40 +374,46 @@ while [ $i -lt $file_size_characters ] && [ $valid_frame_count -lt $valid_frames
 
     # All reserved values
     if [ $sampling_rate_index -eq 3 ] || [ $bit_rate_index -eq 15 ] || [ $mpeg_version_index -eq 1 ] || [ $layer_index -eq 0 ]; then
-      i=$(($i + 2))
-      #debug "Invalid frame header, moving to next position"
-      #debug "" # newline
+      i=${potential_mp3_frame_headers[$((++potential_header_index))]}
+      debug "Invalid frame header, moving to next position"
+      debug "" # newline
       continue
     fi
 
     # Frame Size = ( (Samples Per Frame / 8 * Bitrate) / Sampling Rate) + Padding Size
-    #debug "" # newline
-    #debug "  Samples per frame key: $samples_per_frame_key, Samples per frame: $samples_per_frame"
-    #debug "  Frame size bytes = (($samples_per_frame / 8 * $bit_rate) / $sampling_rate) + $padding_amount_bytes))"
+    debug "" # newline
+    debug "  Samples per frame key: $samples_per_frame_key, Samples per frame: $samples_per_frame"
+    debug "  Frame size bytes = (($samples_per_frame / 8 * $bit_rate) / $sampling_rate) + $padding_amount_bytes))"
     frame_size_bytes=$(((($samples_per_frame / 8 * $bit_rate) / $sampling_rate) + $padding_amount_bytes))
-    #debug "  Frame size bytes: $frame_size_bytes"
+    debug "  Frame size bytes: $frame_size_bytes"
 
     frame_size_characters=$(($frame_size_bytes * 2))
     next_header_start=$(($i + $frame_size_characters))
     next_frame_header_end_index=$(($next_header_start + $frame_header_size_characters))
-    #debug "  Next frame start character: $i + $frame_size_characters = $next_header_start"
+    debug "  Next frame start character: $i + $frame_size_characters = $next_header_start"
     if [ $next_frame_header_end_index -lt $file_size_characters ]; then
-      next_frame_header_hex=$(head -c$next_frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
-      next_sync_word=${next_frame_header_hex:0:3}
+      #next_frame_header_hex=$(head -c$next_frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
+      next_frame_header_hex=$(dd if=".hexdumptmp" bs=1 skip=$next_header_start count=$frame_header_size_characters 2>/dev/null)
+      next_sync_word=${next_frame_header_hex:0:4}
 
       next_header_hex_address=$(printf "%08x" $(($next_header_start / 2)))
-      #debug "  Next frame header: $next_frame_header_hex at $next_header_hex_address"
-      #debug "  Next frame sync word: $next_sync_word"
+      debug "  Next frame header: $next_frame_header_hex at $next_header_hex_address"
+      debug "  Next frame sync word: $next_sync_word"
 
-      if [[ $next_sync_word == fff ]] || [[ $next_sync_word == ffe ]]; then
-        #debug "  CONFIRMED: Next frame starts with sync word"
+      if [[ $next_sync_word == fffb ]] || [[ $next_sync_word == fffa ]]; then
+        debug "  CONFIRMED: Next frame starts with sync word"
         i=$next_header_start
+
+        if [ $valid_frame_count -eq 0 ]; then
+          first_frame_offset=$i
+        fi
+
         valid_frame_count=$(($valid_frame_count + 1))
         kbit_rate_sum=$(($kbit_rate_sum + $kbit_rate))
       else
-        i=$(($i + 2))
-        #debug "Sync word of next frame not valid, moving to next position"
-        #debug "" # newline
+        i=${potential_mp3_frame_headers[$((++potential_header_index))]}
+        debug "Sync word of next frame not valid, moving to next position, $i"
+        debug "" # newline
       fi
     fi
   else
@@ -403,10 +425,10 @@ done
 # Constant bit rate Duration = File Size / Bitrate * 8
 # Variable bit rate Duration = (Samples per frame * total frames) / sample rate
 average_bit_rate=$(($kbit_rate_sum * 1000 / $valid_frame_count))
-#debug "Average bit rate: $average_bit_rate b/s"
+debug "Average bit rate: $average_bit_rate b/s, first frame offset: $first_first_frame_offset, potential header index: $potential_header_index"
 
-file_size_bytes=$(($file_size_characters / 2))
+file_size_bytes=$((($file_size_characters - $first_frame_offset) / 2))
 duration=$(($file_size_bytes * 8 / $average_bit_rate))
 
-#debug "File size bytes: $file_size_bytes"
+debug "File size bytes: $file_size_bytes"
 echo "Duration $duration"
