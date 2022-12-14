@@ -718,11 +718,16 @@ function Soundtrack_SortEvents(eventTableName)
 
     Soundtrack_FlatEvents[eventTableName] = {}
 
+    local lowerEventFilter = ""
+    if Soundtrack.eventFilter ~= nil then
+        lowerEventFilter = string.lower(Soundtrack.eventFilter)
+    end
+
     for k,v in pairs(Soundtrack_Events[eventTableName]) do
         if k ~= "Preview" then -- Hide internal events
             if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
                 table.insert(Soundtrack_FlatEvents[eventTableName], k)
-            elseif string.find(k, Soundtrack.eventFilter) ~= nil then
+            elseif k ~= nil and string.find(string.lower(k), lowerEventFilter) ~= nil then
                 table.insert(Soundtrack_FlatEvents[eventTableName], k)
             end
         end
