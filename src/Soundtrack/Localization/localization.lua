@@ -131,7 +131,6 @@ SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP = "Removes the currently selected event 
 SOUNDTRACK_DUEL_REQUESTED = "Duel Requested"
 SOUNDTRACK_STATUS_EVENTS = "Status"
 SOUNDTRACK_DEATH = "Status/Death"
-SOUNDTRACK_DRAGONRIDING_RACE_COUNTDOWN="Status/Dragonriding Race Countdown"
 SOUNDTRACK_DRAGONRIDING_RACE="Status/Dragonriding Race"
 SOUNDTRACK_FLIGHT = "Status/Flight Path"
 SOUNDTRACK_GHOST = "Status/Ghost"

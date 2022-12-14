@@ -133,7 +133,6 @@ SOUNDTRACK_DUEL_REQUESTED = "Duel requerido"
 
 SOUNDTRACK_STATUS_EVENTS = "Estatus"
 SOUNDTRACK_DEATH = "Estatus/Muerte"
-SOUNDTRACK_DRAGONRIDING_RACE_COUNTDOWN="Estatus/Cuenta regresiva de la carrera de equitación del dragón"
 SOUNDTRACK_DRAGONRIDING_RACE="Estatus/Carrera de equitación del dragón"
 SOUNDTRACK_FLIGHT = "Estatus/Trayectoria de vuelo"
 SOUNDTRACK_GHOST = "Estatus/Fantasma"

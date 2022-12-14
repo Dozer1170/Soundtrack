@@ -129,7 +129,6 @@ SOUNDTRACK_DUEL_REQUESTED = "Demande de Duel"
 
 SOUNDTRACK_STATUS_EVENTS = "Joueur"
 SOUNDTRACK_DEATH = "Joueur/Mort"
-SOUNDTRACK_DRAGONRIDING_RACE_COUNTDOWN="Joueur/Compte à rebours de la course d'équitation de dragon"
 SOUNDTRACK_DRAGONRIDING_RACE="Joueur/Course d'équitation de dragon"
 SOUNDTRACK_FLIGHT = "Joueur/Trajectoire de Vol"
 SOUNDTRACK_GHOST = "Joueur/Fantome"

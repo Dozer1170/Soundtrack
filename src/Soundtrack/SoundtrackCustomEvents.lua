@@ -730,8 +730,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	);
 
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE_COUNTDOWN, ST_MISC, 375810, 1, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, ST_MISC, 369968, 1, true, false)
+	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, ST_MISC, 369968, ST_BUFF_LVL, true, false)
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DK, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID, ST_MISC, 0, 1, false, false);
