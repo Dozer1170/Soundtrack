@@ -105,7 +105,7 @@ while [ -n "$1" ]
       frame_header_bytes=$(dd if=".hexdumptmp" bs=1 skip=$i count=$frame_header_size_characters 2>/dev/null)
       #debug "Frame header bytes: $frame_header_bytes"
 
-      frame_id=$(echo "${frame_header_bytes:0:8}" | xxd -r -p | tr -d '\0')
+      frame_id=$(echo "${frame_header_bytes:0:8}" | xxd -r -p | tr -d '\0' 2>/dev/null)
       #debug "Frame Id: $frame_id"
 
       frame_size=${frame_header_bytes:8:8}
@@ -123,7 +123,7 @@ while [ -n "$1" ]
       if [[ $frame_id == T* ]]
       then
         frame_body_bytes=$(dd if=".hexdumptmp" bs=1 skip="$frame_header_end_index" count=$frame_size_characters 2>/dev/null)
-        frame_body_text=$(echo "$frame_body_bytes" | xxd -r -p | tr -d '\0')
+        frame_body_text=$(echo "$frame_body_bytes" | xxd -r -p | tr -d '\0' 2>/dev/null)
         #debug "Frame body text: $frame_body_text"
 
         echo "$frame_id" "$frame_body_text"

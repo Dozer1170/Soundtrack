@@ -16,7 +16,7 @@ function get_next_header_index() {
     elif [ "$potential_headers_array_length" -gt 1000 ]; then
         potential_header_index=$(($potential_header_index + 10))
     else
-        $((++potential_header_index))
+        potential_header_index=$(($potential_header_index + 1))
     fi
 
     echo $potential_header_index
