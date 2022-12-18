@@ -4,6 +4,9 @@ NOTE: MyTracks.lua GENERATION PROCESS HAS CHANGED 12/5/2022. You no longer need 
 and you don't need to install java or python to run the tools. See Step 3 in the readme below if you have generated a library
 before.
 
+While the new GenerateMyLibrary.ps1 and GenerateMyLibrary.command scripts don't require dependencies (Python or Java) they are slower,
+so if you have a very large music library, you may want to use the Legacy Library Generation method instead.
+
 1. Locate the folder named SoundtrackMusic in the Addons folder.
    (World of Warcraft\_retail\Interface\AddOns\SoundtrackMusic)
 
