@@ -1,8 +1,8 @@
 #!/bin/sh
 
-rm -rf '/Applications/World of Warcraft/_retail_/Interface/Addons/Soundtrack'
-rm -rf '/Applications/World of Warcraft/_retail_/Interface/Addons/SoundtrackMusic/LegacyLibraryGeneration'
-#rm -rf '/mnt/c/World of Warcraft/_retail_/Interface/Addons/Soundtrack'
-#rm -rf '/mnt/c/World of Warcraft/_retail_/Interface/Addons/SoundtrackMusic/LegacyLibraryGeneration'
+#rm -rf '/Applications/World of Warcraft/_retail_/Interface/Addons/Soundtrack'
+#rm -rf '/Applications/World of Warcraft/_retail_/Interface/Addons/SoundtrackMusic/LegacyLibraryGeneration'
+rm -rf '/mnt/c/World of Warcraft/_retail_/Interface/Addons/Soundtrack'
+rm -rf '/mnt/c/World of Warcraft/_retail_/Interface/Addons/SoundtrackMusic/LegacyLibraryGeneration'
 ./package SoundtrackTest.0.4.zip
 ./installFromZip SoundtrackTest.0.4.zip

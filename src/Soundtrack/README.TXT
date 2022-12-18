@@ -18,10 +18,13 @@ so if you have a very large music library, you may want to use the Legacy Librar
     \SoundtrackMusic\Public Enemy\
     and so on.
 
-3. To make your mp3s available in the game, run GenerateMyLibrary.ps1 on Windows or GenerateMyLibrary.command on Mac/Linux.
-    You should have a MyTracks.lua file in your SoundtrackMusic directory. If so then you are good to go!
+3. To make your mp3s available in the game:
+    a. Windows: Run GenerateMyLibrary.ps1 (Right click -> Run with Powershell)
+    b. Mac/Linux: Run GenerateMyLibrary.command (In terminal, or double click in mac).
 
-    If it fails for any reason, you can try to use one of the legacy methods of generating your library.
+    You should now have a MyTracks.lua file in your SoundtrackMusic directory. If so then you are good to go!
+
+    If it fails for any reason, you can try to use one of the legacy methods below to generate your library.
 
 
 Legacy Library Generation:
