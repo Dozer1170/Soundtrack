@@ -21,7 +21,7 @@ function process_file {
   fileNameNoExtension=$(basename "$filePathWithExtension" .mp3)
   relativeFilePathNoExtension="$relativeFolderPath/$fileNameNoExtension"
 
-  tags=$(DEBUG=0 ./Id3TagReader.bash "$filePathWithExtension")
+  tags=$(DEBUG=0 BAIL_AFTER_TITLE=1 ./Id3TagReader.bash "$filePathWithExtension")
   trackTitle=$(parseTag "$tags" "TIT2" "None")
   album=$(parseTag "$tags" "TALB" "None")
   author=$(parseTag "$tags" "TPE1" "None")

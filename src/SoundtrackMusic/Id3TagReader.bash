@@ -9,29 +9,29 @@ tag_header_size_characters=20
 frame_header_size_characters=20
 
 function debug() {
-  if [ ! -z "$DEBUG" ] && [ $DEBUG -ne 0 ]
+  if [ -n "$DEBUG" ] && [ "$DEBUG" -ne 0 ]
   then
     echo "$1"
   fi
 }
 
 function error() {
-  >&2 echo $1
+  >&2 echo "$1"
 }
 
 function hex_str_to_int() {
-  echo $(printf "%d" 0x$1)
+  printf "%d" 0x"$1"
 }
 
 function print_id3v2_version() {
   id3=$1
-  debug "ID3 Header: $id3"
+  #debug "ID3 Header: $id3"
   id3v2_ver=${id3:6:2}
-  id3v2_ver=$(hex_str_to_int $id3v2_ver)
+  id3v2_ver=$(hex_str_to_int "$id3v2_ver")
 
   id3v2_rev=${id3:8:2}
-  id3v2_rev=$(hex_str_to_int $id3v2_rev)
-  debug "ID3v2.$id3v2_ver.$id3v2_rev Tag present"
+  id3v2_rev=$(hex_str_to_int "$id3v2_rev")
+  #debug "ID3v2.$id3v2_ver.$id3v2_rev Tag present"
 }
 
 shifted_size=0
@@ -39,13 +39,13 @@ function read_and_shift_tag_byte() {
   id3=$1
   shift_amount=$2
   character_read_start=$3
-  character_read_end=$(($character_read_start+1))
-  size=$(echo $id3 | cut -c$character_read_start-$character_read_end)
-  debug "Before decode value: $size"
-  size=$(hex_str_to_int $size)
-  debug "Decimal size before bit shift: $size"
-  size=$(($size<<$shift_amount))
-  debug "Decimal size after bit shift: $size"
+  character_read_end=$((character_read_start+1))
+  size=$(echo "$id3" | cut -c"$character_read_start"-$character_read_end)
+  #debug "Before decode value: $size"
+  size=$(hex_str_to_int "$size")
+  #debug "Decimal size before bit shift: $size"
+  size=$((size<<shift_amount))
+  #debug "Decimal size after bit shift: $size"
   shifted_size=$size
 }
 
@@ -63,7 +63,7 @@ function parse_id3v2_tag_size() {
   id3v2_size=$(($id3v2_size_1+$id3v2_size_2+$id3v2_size_3+$id3v2_size_4))
   id3v2_size_characters=$(($id3v2_size*2))
 
-  debug "Total tag size: $id3v2_size"
+  #debug "Total tag size: $id3v2_size"
 }
 
 while [ -n "$1" ]
@@ -93,28 +93,28 @@ while [ -n "$1" ]
   if [ "$id3v2_sig" = "ID3" ]
   then
     id3=$(head -c$tag_header_size_characters .hexdumptmp)
-    print_id3v2_version $id3
-    parse_id3v2_tag_size $id3
+    print_id3v2_version "$id3"
+    parse_id3v2_tag_size "$id3"
 
     i=$frame_header_size_characters
     while [ $i -lt $id3v2_size_characters ]
     do
-      frame_header_end_index=$(($i+$frame_header_size_characters))
-      debug "Getting header bytes from $i to $frame_header_end_index"
+      frame_header_end_index=$((i+frame_header_size_characters))
+      #debug "Getting header bytes from $i to $frame_header_end_index"
 
       frame_header_bytes=$(dd if=".hexdumptmp" bs=1 skip=$i count=$frame_header_size_characters 2>/dev/null)
-      debug "Frame header bytes: $frame_header_bytes"
+      #debug "Frame header bytes: $frame_header_bytes"
 
       frame_id=$(echo "${frame_header_bytes:0:8}" | xxd -r -p | tr -d '\0')
-      debug "Frame Id: $frame_id"
+      #debug "Frame Id: $frame_id"
 
       frame_size=${frame_header_bytes:8:8}
-      debug "Frame size bytes: $frame_size"
-      frame_size=$(hex_str_to_int $frame_size)
-      debug "Frame Size: $frame_size"
-      frame_size_characters=$(($frame_size*2))
+      #debug "Frame size bytes: $frame_size"
+      frame_size=$(hex_str_to_int "$frame_size")
+      #debug "Frame Size: $frame_size"
+      frame_size_characters=$((frame_size*2))
 
-      if [ -z "$frame_id" ] || [ $frame_size -eq 0 ]
+      if [ -z "$frame_id" ] || [ "$frame_size" -eq 0 ]
       then
         debug "Bailing early from $file, invalid frame id or frame size."
         break
@@ -122,15 +122,18 @@ while [ -n "$1" ]
 
       if [[ $frame_id == T* ]]
       then
-        frame_body_end_index=$(($frame_header_end_index+$frame_size_characters))
-        frame_body_bytes=$(head -c$frame_body_end_index .hexdumptmp | tail -c$frame_size_characters)
-        frame_body_text=$(echo $frame_body_bytes | xxd -r -p | tr -d '\0')
-        debug "Frame body text: $frame_body_text"
+        frame_body_bytes=$(dd if=".hexdumptmp" bs=1 skip="$frame_header_end_index" count=$frame_size_characters 2>/dev/null)
+        frame_body_text=$(echo "$frame_body_bytes" | xxd -r -p | tr -d '\0')
+        #debug "Frame body text: $frame_body_text"
 
-        echo $frame_id $frame_body_text
+        echo "$frame_id" "$frame_body_text"
+
+        if [ "$frame_id" == "TIT2" ] && [ "$BAIL_AFTER_TITLE" == "1" ]; then
+          exit 0
+        fi
       fi
 
-      i=$(($i+$frame_header_size_characters+$frame_size_characters))
+      i=$((i+frame_header_size_characters+frame_size_characters))
     done
   elif [ "$id3v1_sig" = "TAG" ]
   then
