@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEBUG=1
+DEBUG=0
 
 function debug() {
   if [ ! -z "$DEBUG" ] && [ $DEBUG -ne 0 ]; then
@@ -255,10 +255,10 @@ frame_header_size_characters=$(($frame_header_byte_size * 2))
 if [ ! -z $3 ]; then
   echo "3rd arg provided so skipping xxd step"
 else
-  xxd -p "$file" | tr -d '\n' >.hexdumptmp
+  xxd -p "$file" | tr -d '\n' > .hexdumptmp 2>/dev/null
 fi
 
-potential_mp3_frame_headers=($(grep -Eoba "fffb|fffa" .hexdumptmp | sed -E -e 's/:fffb|:fffa//g'))
+potential_mp3_frame_headers=($(perl -n0777e 'print pos()-length($&),"\n" while /fff/g' .hexdumptmp))
 potential_headers_array_length=${#potential_mp3_frame_headers[@]}
 potential_header_index=0
 debug "Potential headers length: $potential_headers_array_length"
@@ -276,9 +276,9 @@ while [ $potential_header_index -lt $potential_headers_array_length ] && [ $i -l
   header_hex_address=$(printf "%08x" $(($i / 2)))
   frame_header_hex=$(dd if=".hexdumptmp" bs=1 skip=$i count=$frame_header_size_characters 2>/dev/null)
 
-  sync_word=${frame_header_hex:0:4}
+  sync_word=${frame_header_hex:0:3}
 
-  if [[ $sync_word == fffb ]] || [[ $sync_word == fffa ]]; then
+  if [[ $sync_word == fff ]]; then
     debug "Found potential mp3 frame: $sync_word at character $i, address $header_hex_address"
     debug "Potential Frame header: $frame_header_hex"
 
@@ -394,13 +394,13 @@ while [ $potential_header_index -lt $potential_headers_array_length ] && [ $i -l
     if [ $next_frame_header_end_index -lt $file_size_characters ]; then
       #next_frame_header_hex=$(head -c$next_frame_header_end_index .hexdumptmp | tail -c$frame_header_size_characters)
       next_frame_header_hex=$(dd if=".hexdumptmp" bs=1 skip=$next_header_start count=$frame_header_size_characters 2>/dev/null)
-      next_sync_word=${next_frame_header_hex:0:4}
+      next_sync_word=${next_frame_header_hex:0:3}
 
       next_header_hex_address=$(printf "%08x" $(($next_header_start / 2)))
       debug "  Next frame header: $next_frame_header_hex at $next_header_hex_address"
       debug "  Next frame sync word: $next_sync_word"
 
-      if [[ $next_sync_word == fffb ]] || [[ $next_sync_word == fffa ]]; then
+      if [[ $next_sync_word == fff ]]; then
         debug "  CONFIRMED: Next frame starts with sync word"
         i=$next_header_start
 

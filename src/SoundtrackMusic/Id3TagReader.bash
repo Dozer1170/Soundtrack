@@ -78,8 +78,8 @@ while [ -n "$1" ]
     continue
   fi
 
-  tag=$(tail -c128 "$file" | tr '\0' ' ') # Replace NULL with spaces
-  id3=$(head -c10 "$file" | tr '\0' ' ') # NULLs are being omitted
+  tag=$(tail -c128 "$file" | tr '\0' ' ' 2>/dev/null) # Replace NULL with spaces
+  id3=$(head -c10 "$file" | tr '\0' ' ' 2>/dev/null) # NULLs are being omitted
 
   id3v1_sig=${tag0:3}
   id3v2_sig=${id3:0:3}
@@ -89,9 +89,9 @@ while [ -n "$1" ]
       debug "ID3v1.x Tag present"
   fi
 
+  xxd -p "$file" | tr -d '\n' > .hexdumptmp 2>/dev/null
   if [ "$id3v2_sig" = "ID3" ]
   then
-    xxd -p "$file" | tr -d '\n' > .hexdumptmp
     id3=$(head -c$tag_header_size_characters .hexdumptmp)
     print_id3v2_version $id3
     parse_id3v2_tag_size $id3
