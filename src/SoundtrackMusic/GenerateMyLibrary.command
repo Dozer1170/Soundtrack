@@ -16,7 +16,7 @@ function parseTag {
 
 function process_file {
   filePathWithExtension=$1
-  echo "$(tput sc)Processing $1"
+  echo -n "$(tput sc)Processing $1"
 
   relativeFilePath=${filePathWithExtension:2}
   relativeFolderPath=$(dirname "$relativeFilePath")
@@ -30,7 +30,7 @@ function process_file {
 
   length=$(DEBUG=0 ./Mp3FrameHeaderReader.bash "$filePathWithExtension" 25 1 | grep "Duration" | cut -c10-)
 
-  echo "$(tput rc)$(tput ed)$relativeFilePath: ${length}s, $trackTitle, $author, $album"
+  echo "$(tput rc)$(tput el)$relativeFilePath: ${length}s, $trackTitle, $author, $album"
 
   addTrackStatement="    Soundtrack.Library.AddTrack(\"$relativeFilePathNoExtension\", $length, \"$trackTitle\", \"$author\", \"$album\")"
   addTrackStatement="${addTrackStatement//\.\//}"
