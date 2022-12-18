@@ -10,6 +10,18 @@ function error() {
   echo >&2 "$1"
 }
 
+function get_next_header_index() {
+    if [ "$potential_headers_array_length" -gt 5000 ]; then
+        potential_header_index=$(($potential_header_index + 50))
+    elif [ "$potential_headers_array_length" -gt 1000 ]; then
+        potential_header_index=$(($potential_header_index + 10))
+    else
+        $((++potential_header_index))
+    fi
+
+    echo $potential_header_index
+}
+
 function hex_str_to_int() {
   printf "%d" 0x"$1"
 }
@@ -256,7 +268,7 @@ else
   xxd -p "$file" | tr -d '\n' > .hexdumptmp 2>/dev/null
 fi
 
-potential_mp3_frame_headers=($(perl -n0777e 'print pos()-length($&),"\n" while /fff/g' .hexdumptmp))
+potential_mp3_frame_headers=($(perl -n0777e 'print pos()-length($&),"\n" while /fffa|fffb|fff3/g' .hexdumptmp))
 potential_headers_array_length=${#potential_mp3_frame_headers[@]}
 potential_header_index=0
 #debug "Potential headers length: $potential_headers_array_length"
@@ -315,7 +327,8 @@ while [ $potential_header_index -lt "$potential_headers_array_length" ] && [ "$i
 
       if [ "$bit_rate_index" -eq 0 ]; then
         #debug "Got free format bit rate, assuming invalid header"
-        i=${potential_mp3_frame_headers[$((++potential_header_index))]}
+        potential_header_index=$(get_next_header_index)
+        i=${potential_mp3_frame_headers[$potential_header_index]}
         continue
       fi
 
@@ -363,14 +376,15 @@ while [ $potential_header_index -lt "$potential_headers_array_length" ] && [ "$i
       emphasis=$((character_eight_int & 2#0011))
 
       #debug "  ($hex_character_eight) Copyright: $copyright_bit, Original: $original_bit, Emphasis: $emphasis"
-    }
+  }
 
-    samples_per_frame_key="${mpeg_version}_${layer}"
-    samples_per_frame=$(samples_per_frame_map "$samples_per_frame_key")
+  samples_per_frame_key="${mpeg_version}_${layer}"
+  samples_per_frame=$(samples_per_frame_map "$samples_per_frame_key")
 
     # All reserved values
     if [ $sampling_rate_index -eq 3 ] || [ "$bit_rate_index" -eq 15 ] || [ $mpeg_version_index -eq 1 ] || [ $layer_index -eq 0 ]; then
-      i=${potential_mp3_frame_headers[$((++potential_header_index))]}
+      potential_header_index=$(get_next_header_index)
+      i=${potential_mp3_frame_headers[$potential_header_index]}
       #debug "Invalid frame header, moving to next position"
       #debug "" # newline
       continue
@@ -407,7 +421,8 @@ while [ $potential_header_index -lt "$potential_headers_array_length" ] && [ "$i
         valid_frame_count=$((valid_frame_count + 1))
         kbit_rate_sum=$((kbit_rate_sum + kbit_rate))
       else
-        i=${potential_mp3_frame_headers[$((++potential_header_index))]}
+        potential_header_index=$(get_next_header_index)
+        i=${potential_mp3_frame_headers[$potential_header_index]}
         #debug "Sync word of next frame not valid, moving to next position, $i"
         #debug "" # newline
       fi
