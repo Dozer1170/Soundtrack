@@ -2,5 +2,6 @@
 
 ZIP_FILE=$1
 
-unzip -o $ZIP_FILE -d "/mnt/c/World of Warcraft/_retail_/Interface/Addons/"
+#unzip -o $ZIP_FILE -d "/mnt/c/World of Warcraft/_retail_/Interface/Addons/"
+unzip -o $ZIP_FILE -d "/Applications/World of Warcraft/_retail_/Interface/Addons/"
 

@@ -16,6 +16,8 @@ function parseTag {
 
 function process_file {
   filePathWithExtension=$1
+  echo "Processing $1..."
+
   relativeFilePath=${filePathWithExtension:2}
   relativeFolderPath=$(dirname "$relativeFilePath")
   fileNameNoExtension=$(basename "$filePathWithExtension" .mp3)
