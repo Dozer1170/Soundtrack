@@ -1,3 +1,8 @@
+3.0.4
+- Dragonriding race misc event under Status
+- Soar misc event under Evoker
+- Library generation without needing Python 2.7 or Java
+
 3.0.3
 - Redo minimap button to lock to the minimap correctly
 
