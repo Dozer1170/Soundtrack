@@ -1,3 +1,6 @@
+3.0.7
+- Rework how to execute the bash library generator 
+
 3.0.4
 - Dragonriding race misc event under Status
 - Soar misc event under Evoker
