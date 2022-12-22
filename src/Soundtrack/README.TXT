@@ -20,7 +20,7 @@ so if you have a very large music library, you may want to use the Legacy Librar
 
 3. To make your mp3s available in the game:
     a. Windows: Run GenerateMyLibrary.ps1 (Right click -> Run with Powershell)
-    b. Mac/Linux: Run GenerateMyLibrary.command (In terminal, or double click in mac).
+    b. Mac/Linux: Run GenerateMyLibrary.bash (In terminal, cd to your SoundtrackMusic directory then run "bash GenerateMyLibrary.bash").
 
     You should now have a MyTracks.lua file in your SoundtrackMusic directory. If so then you are good to go!
 
