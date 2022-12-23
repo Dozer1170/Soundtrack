@@ -73,7 +73,7 @@ end
 -- table can be Custom or Misc. 
 function Soundtrack.CustomEvents.RegisterUpdateScript(self, name, tableName, _priority, _continuous, _script, _soundEffect)
     if tableName == ST_CUSTOM then
-        Soundtrack_CustomEvents[name] = { script = _script, eventtype = "Update Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
+        SoundtrackAddon.db.profile.customEvents[name] = { script = _script, eventtype = "Update Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
     elseif tableName == ST_MISC then
         Soundtrack_MiscEvents[name] = { script = _script, eventtype = "Update Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
     end
@@ -84,7 +84,7 @@ end
 -- table can be Custom or Misc. 
 function Soundtrack.CustomEvents.RegisterEventScript(self, name, tableName, _trigger, _priority, _continuous, _script, _soundEffect)
     if tableName == ST_CUSTOM then
-        Soundtrack_CustomEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
+        SoundtrackAddon.db.profile.customEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
     elseif tableName == ST_MISC then
         Soundtrack_MiscEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect }; 
     end
@@ -118,7 +118,7 @@ end
 
 function Soundtrack.CustomEvents.RegisterBuffEvent(eventName, tableName, _spellId, _priority, _continuous, _soundEffect)
     if tableName == ST_CUSTOM then
-        Soundtrack_CustomEvents[eventName] = 
+        SoundtrackAddon.db.profile.customEvents[eventName] =
         { 
 			spellId=_spellId, 
             stackLevel=_priority, 
@@ -804,7 +804,7 @@ function Soundtrack.CustomEvents.CustomInitialize(self)
 	self:RegisterEvent("UNIT_AURA")
 	
 	-- Register events for custom events
-	for k,v in pairs(Soundtrack_CustomEvents) do
+	for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
 
 		-- Fix for buff or debuff events that have the spellId stored as string
 		if (v.eventtype == "Buff" or v.eventtype == "Debuff") and type(v.spellId) == "string" then
@@ -834,7 +834,7 @@ end
 
 -- MiscEvents
 function Soundtrack.CustomEvents.MiscOnUpdate(self, elapsed)
-    if Soundtrack.Settings.EnableMiscMusic then
+    if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
         for k,v in pairs(Soundtrack_MiscEvents) do
             if v.eventtype == "Update Script" and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 				v.script()
@@ -844,8 +844,8 @@ function Soundtrack.CustomEvents.MiscOnUpdate(self, elapsed)
 end
 -- CustomEvents
 function Soundtrack.CustomEvents.CustomOnUpdate(self, elapsed)
-    if Soundtrack.Settings.EnableCustomMusic then
-        for k,v in pairs(Soundtrack_CustomEvents) do
+    if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
+        for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
             if v.eventtype == "Update Script" and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
 				v.script()
             end
@@ -899,7 +899,7 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
 		
     -- Handle buff/debuff events
     elseif (event == "UNIT_AURA" and st_arg1 == "player") or event == "UPDATE_SHAPESHIFT_FORM" then
-		if Soundtrack.Settings.EnableMiscMusic then
+		if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 			for k,v in pairs(Soundtrack_MiscEvents) do
 				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 					local isActive = Soundtrack.CustomEvents.IsAuraActive(v.spellId)
@@ -916,7 +916,7 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
     end
     
     -- Handle custom script events
-    if Soundtrack.Settings.EnableMiscMusic then
+    if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
         for k,v in pairs(Soundtrack_MiscEvents) do
             if v.eventtype == "Event Script" and event == v.trigger and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 				v.script();
@@ -937,9 +937,9 @@ function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
 	
 	if event == "UNIT_AURA" and st_arg1 == "player" then
 		debug("UNIT_AURA event")
-		if Soundtrack.Settings.EnableCustomMusic then
+		if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
 			debug("Custom music enabled")
-			for k,v in pairs(Soundtrack_CustomEvents) do
+			for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
 				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
 					debug("Has spell id and tracks: "..k)
 					local isActive = Soundtrack.CustomEvents.IsAuraActive(v.spellId)
@@ -958,8 +958,8 @@ function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
 	end
 	
     -- Handle custom events
-    if Soundtrack.Settings.EnableCustomMusic then
-        for k,v in pairs(Soundtrack_CustomEvents) do
+    if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
+        for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
             if v.eventtype == "Event Script" and event == v.trigger and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
 				RunScript(v.script)
             end

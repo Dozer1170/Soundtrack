@@ -55,7 +55,7 @@ function Soundtrack.Util.ChatPrint(text, cRed, cGreen, cBlue, cAlpha, holdTime)
 end
 
 function Soundtrack.Util.DebugPrint(text, cRed, cGreen, cBlue)
-    if Soundtrack.Settings.Debug then
+    if SoundtrackAddon.db.profile.settings.Debug then
         Soundtrack.Util.ChatPrint(text, cRed, cGreen, cBlue)
     end
 end

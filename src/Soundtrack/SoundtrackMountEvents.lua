@@ -53,7 +53,7 @@ function Soundtrack.MountEvents.OnUpdate(self, deltaT)
     local currentTime = GetTime()
     if currentTime >= delayTime then
 	    delayTime = currentTime + updateTime
-		if not Soundtrack.Settings.EnableMiscMusic then
+		if not SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 			return
 		end
 		

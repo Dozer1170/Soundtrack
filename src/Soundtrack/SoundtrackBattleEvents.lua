@@ -133,7 +133,7 @@ function GetGroupEnemyLevel()
     table.insert(units, "player")
     
 	-- add your party/raid members
-	if not Soundtrack.Settings.YourEnemyLevelOnly then
+	if not SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly then
 		if total > 0 then
 			local index
 			for index = 1, total do 
@@ -148,7 +148,7 @@ function GetGroupEnemyLevel()
     end
     
     -- add your party/raid pets
-	if not Soundtrack.Settings.YourEnemyLevelOnly then
+	if not SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly then
 		local index
 		for index = 0, total do
 			if UnitExists(prefix.."pet"..index) then 
@@ -209,7 +209,7 @@ function GetGroupEnemyLevel()
 			if unitCreatureType == "Critter" then
 				unitClass = unitCreatureType
 			else
-				if unitClass == "worldboss" and unitHealthPercent < Soundtrack.Settings.LowHealthPercent then
+				if unitClass == "worldboss" and unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent then
 					hasLowHealth = true
 				end
 			end
@@ -227,7 +227,7 @@ function GetGroupEnemyLevel()
 					if SoundtrackEvents_EventHasTracks(ST_BOSS, unitName) then
 						bossName = unitName
 					end
-					if unitHealthPercent < Soundtrack.Settings.LowHealthPercent then
+					if unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent then
 						hasLowHealth = true
 					end
 					if bossEvent.worldboss then
@@ -295,7 +295,7 @@ local hostileDeathCount = 0
 local currentBattleTypeIndex = 0 -- Used to determine battle priorities and escalations
 
 local function StartVictoryMusic()
-	if Soundtrack.Settings.EnableBattleMusic then
+	if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
 		if hostileDeathCount > 0 then
 			local battleEventName = Soundtrack.Events.Stack[ST_BATTLE_LVL].eventName
 			local bossEventName = Soundtrack.Events.Stack[ST_BOSS_LVL].eventName
@@ -348,12 +348,12 @@ local function AnalyzeBattleSituation()
     -- If we're in cooldown, but a higher battle is already playing, keep that one, 
     -- otherwise we can escalate the battle music.
     Soundtrack.TraceBattle("CurrentBattleTypeIndex: "..currentBattleTypeIndex.."  BattleType: "..battleType)
-    if Soundtrack.Settings.EscalateBattleMusic then Soundtrack.TraceBattle("EscalateBattleMusic enabled") end
+    if SoundtrackAddon.db.profile.settings.EscalateBattleMusic then Soundtrack.TraceBattle("EscalateBattleMusic enabled") end
 	
     -- If we are out of combat, we play the battle event.
     -- If we are in combat, we only escalate if option is turned on
     if currentBattleTypeIndex == 0 or battleType == SOUNDTRACK_BOSS_BATTLE or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE or
-	  (Soundtrack.Settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex) then
+	  (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex) then
 		if battleType == SOUNDTRACK_BOSS_BATTLE then
 			if bossName ~= nil then
 				local bossLowHealth =  bossName.." "..SOUNDTRACK_LOW_HEALTH
@@ -467,7 +467,7 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
 	Soundtrack.TraceBattle(event)
 	
     if event == "PLAYER_REGEN_DISABLED" then
-        if not Soundtrack.Settings.EnableBattleMusic then
+        if not SoundtrackAddon.db.profile.settings.EnableBattleMusic then
             return
         end
 
@@ -477,8 +477,8 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
     elseif event == "PLAYER_REGEN_ENABLED" and 
            not UnitIsCorpse("player") and 
            not UnitIsDead("player") then
-        if Soundtrack.Settings.BattleCooldown > 0 then
-            Soundtrack.Timers.AddTimer("BattleCooldown", Soundtrack.Settings.BattleCooldown, StopCombatMusic)
+        if SoundtrackAddon.db.profile.settings.BattleCooldown > 0 then
+            Soundtrack.Timers.AddTimer("BattleCooldown", SoundtrackAddon.db.profile.settings.BattleCooldown, StopCombatMusic)
         else
             StopCombatMusic()            
         end
@@ -489,7 +489,7 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
 			hostileDeathCount = hostileDeathCount + 1
 			Soundtrack.TraceBattle("Death count: "..hostileDeathCount)
 		else
-			if Soundtrack.Settings.EnableMiscMusic then
+			if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 				for k,v in pairs(Soundtrack_BattleEvents) do
 					if SoundtrackEvents_EventHasTracks(ST_MISC, v) then
 						--RunScript(v.script)

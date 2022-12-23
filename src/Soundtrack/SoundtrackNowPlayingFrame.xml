@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
   <Script>
     function SetNowPlayingText(title, artist, album)
-		if (Soundtrack.Settings.ShowTrackInformation) then
+		if (SoundtrackAddon.db.profile.settings.ShowTrackInformation) then
 			TrackTextString:SetText(title);
 			AlbumTextString:SetText(album);
 			ArtistTextString:SetText(artist);

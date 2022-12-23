@@ -1,6 +1,6 @@
 ## Interface: 100002
 ## Title: Soundtrack
-## Version: 3.0.3
+## Version: 3.0.8
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: myAddOns
@@ -8,6 +8,7 @@
 ## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
 Embeds.xml
 Soundtrack.xml
+OldSaveMigrator.lua
 SoundtrackFrame.xml
 SoundtrackFrame.lua
 SoundtrackFix.lua

@@ -5,11 +5,11 @@ Write-Output "-- Please do not edit it" | Out-File -Encoding ASCII -Append -File
 $currentDate = Get-Date
 Write-Output "SMP3_PL_VERSION =`"$currentDate`"" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
 Write-Output "function Soundtrack_LoadMyTracks()" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
-Write-Output "   if Soundtrack.Settings.MyTracksVersion == nil or Soundtrack.Settings.MyTracksVersion ~= SMP3_PL_VERSION then" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
-Write-Output "      Soundtrack.Settings.MyTracksVersion = SMP3_PL_VERSION" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
-Write-Output "      Soundtrack.Settings.MyTracksVersionSame = false" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
+Write-Output "   if SoundtrackAddon.db.profile.settings.MyTracksVersion == nil or SoundtrackAddon.db.profile.settings.MyTracksVersion ~= SMP3_PL_VERSION then" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
+Write-Output "      SoundtrackAddon.db.profile.settings.MyTracksVersion = SMP3_PL_VERSION" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
+Write-Output "      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = false" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
 Write-Output "   else" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
-Write-Output "      Soundtrack.Settings.MyTracksVersionSame = true" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
+Write-Output "      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = true" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
 Write-Output "   end" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
 
 Get-ChildItem . -Filter *.mp3 -name -Recurse | Foreach-Object {

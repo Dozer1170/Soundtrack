@@ -1657,7 +1657,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_LockPlaybackControls.Text:SetText(SOUNDTRACK_LOCK_PLAYBACK_CONTROLS)</OnLoad>
-                            <OnClick>SoundtrackControlFrame:EnableMouse(Soundtrack.Settings.LockPlaybackControls); Soundtrack.Settings.LockPlaybackControls = not Soundtrack.Settings.LockPlaybackControls</OnClick>
+                            <OnClick>SoundtrackControlFrame:EnableMouse(SoundtrackAddon.db.profile.settings.LockPlaybackControls); SoundtrackAddon.db.profile.settings.LockPlaybackControls = not SoundtrackAddon.db.profile.settings.LockPlaybackControls</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOCK_PLAYBACK_CONTROLS, SOUNDTRACK_LOCK_PLAYBACK_CONTROLS_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1681,7 +1681,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_LockNowPlayingFrame.Text:SetText(SOUNDTRACK_LOCK_NOW_PLAYING)</OnLoad>
-                            <OnClick>NowPlayingTextFrame:EnableMouse(Soundtrack.Settings.LockNowPlayingFrame); Soundtrack.Settings.LockNowPlayingFrame = not Soundtrack.Settings.LockNowPlayingFrame</OnClick>
+                            <OnClick>NowPlayingTextFrame:EnableMouse(SoundtrackAddon.db.profile.settings.LockNowPlayingFrame); SoundtrackAddon.db.profile.settings.LockNowPlayingFrame = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOCK_NOW_PLAYING, SOUNDTRACK_LOCK_NOW_PLAYING_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1693,7 +1693,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)</OnLoad>
-                            <OnClick>Soundtrack.Settings.ShowDefaultMusic = not Soundtrack.Settings.ShowDefaultMusic; SoundtrackFrame_RefreshTracks()</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.ShowDefaultMusic = not SoundtrackAddon.db.profile.settings.ShowDefaultMusic; SoundtrackFrame_RefreshTracks()</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEFAULT_MUSIC, SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1705,7 +1705,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>SoundtrackFrame_HidePlaybackButtons.Text:SetText("Hide Playback Buttons")</OnLoad>
-							<OnClick>Soundtrack.Settings.HideControlButtons = not Soundtrack.Settings.HideControlButtons; SoundtrackFrame_RefreshPlaybackControls()</OnClick>
+							<OnClick>SoundtrackAddon.db.profile.settings.HideControlButtons = not SoundtrackAddon.db.profile.settings.HideControlButtons; SoundtrackFrame_RefreshPlaybackControls()</OnClick>
 							<OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_HIDE_PLAYBACK_BUTTONS, SOUNDTRACK_HIDE_PLAYBACK_BUTTONS_TIP)</OnEnter>
 							<OnLeave>Soundtrack.HideTip()</OnLeave>
 						</Scripts>
@@ -1742,7 +1742,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_AutoAddZones.Text:SetText(SOUNDTRACK_AUTO_ADD_ZONES)</OnLoad>
-                            <OnClick>Soundtrack.Settings.AutoAddZones = not Soundtrack.Settings.AutoAddZones</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.AutoAddZones = not SoundtrackAddon.db.profile.settings.AutoAddZones</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_AUTO_ADD_ZONES, SOUNDTRACK_AUTO_ADD_ZONES_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1754,7 +1754,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_AutoEscalateBattleMusic.Text:SetText(SOUNDTRACK_ESCALATE_BATTLE)</OnLoad>
-                            <OnClick>Soundtrack.Settings.EscalateBattleMusic = not Soundtrack.Settings.EscalateBattleMusic</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.EscalateBattleMusic = not SoundtrackAddon.db.profile.settings.EscalateBattleMusic</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ESCALATE_BATTLE, SOUNDTRACK_ESCALATE_BATTLE_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1765,7 +1765,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_YourEnemyLevelOnly.Text:SetText(SOUNDTRACK_YOUR_ENEMY_LEVEL)</OnLoad>
-                            <OnClick>Soundtrack.Settings.YourEnemyLevelOnly = not Soundtrack.Settings.YourEnemyLevelOnly</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly = not SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_YOUR_ENEMY_LEVEL, SOUNDTRACK_YOUR_ENEMY_LEVEL_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip();</OnLeave>
                         </Scripts>
@@ -1884,8 +1884,8 @@
                         <Scripts>
                             <OnLoad>SoundtrackFrame_EnableZoneMusic.Text:SetText(SOUNDTRACK_ENABLE_ZONE_MUSIC)</OnLoad>
                             <OnClick>
-                                Soundtrack.Settings.EnableZoneMusic = not Soundtrack.Settings.EnableZoneMusic
-                                if Soundtrack.Settings.EnableZoneMusic == true then
+                                SoundtrackAddon.db.profile.settings.EnableZoneMusic = not SoundtrackAddon.db.profile.settings.EnableZoneMusic
+                                if SoundtrackAddon.db.profile.settings.EnableZoneMusic == true then
                                     Soundtrack.Util.DebugPrint("Zone Music ON")
                                 else
                                     Soundtrack.Util.DebugPrint("Zone Music OFF")
@@ -1901,7 +1901,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_EnableBattleMusic.Text:SetText(SOUNDTRACK_ENABLE_BATTLE_MUSIC)</OnLoad>
-                            <OnClick>Soundtrack.Settings.EnableBattleMusic = not Soundtrack.Settings.EnableBattleMusic</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.EnableBattleMusic = not SoundtrackAddon.db.profile.settings.EnableBattleMusic</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENABLE_BATTLE_MUSIC, SOUNDTRACK_ENABLE_BATTLE_MUSIC_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1912,7 +1912,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_EnableMiscMusic.Text:SetText(SOUNDTRACK_ENABLE_MISC_MUSIC)</OnLoad>
-                            <OnClick>Soundtrack.Settings.EnableMiscMusic = not Soundtrack.Settings.EnableMiscMusic</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.EnableMiscMusic = not SoundtrackAddon.db.profile.settings.EnableMiscMusic</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENABLE_MISC_MUSIC, SOUNDTRACK_ENABLE_MISC_MUSIC_TIP)</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>
@@ -1923,7 +1923,7 @@
                         </Anchors>
                         <Scripts>
                             <OnLoad>SoundtrackFrame_EnableCustomMusic.Text:SetText(SOUNDTRACK_ENABLE_CUSTOM_MUSIC);</OnLoad>
-                            <OnClick>Soundtrack.Settings.EnableCustomMusic = not Soundtrack.Settings.EnableCustomMusic</OnClick>
+                            <OnClick>SoundtrackAddon.db.profile.settings.EnableCustomMusic = not SoundtrackAddon.db.profile.settings.EnableCustomMusic</OnClick>
                             <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENABLE_CUSTOM_MUSIC, SOUNDTRACK_ENABLE_CUSTOM_MUSIC_TIP);</OnEnter>
                             <OnLeave>Soundtrack.HideTip()</OnLeave>
                         </Scripts>

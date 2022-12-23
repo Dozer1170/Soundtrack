@@ -238,7 +238,7 @@ function Soundtrack.Library.RemoveTrack(trackName)
         
         -- Remove the track from any event that assigns it
         for __,eventTab in ipairs(Soundtrack_EventTabs) do
-            for k,v in Soundtrack_Events[eventTab] do 
+            for k,v in SoundtrackAddon.db.profile.events[eventTab] do
                 for i,tn in ipairs(v.tracks) do
                     if tn == trackName then
                         debug("Removed assigned track "..trackName)

@@ -382,9 +382,9 @@ function SoundtrackFrame_ColumnHeaderNameDropDown_OnClick(self)
     SoundtrackFrame.nameHeaderType = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[self:GetID()].type
     Soundtrack.TraceFrame("Refreshing tracks with " .. SoundtrackFrame.nameHeaderType)
     if self.sortType == "name" and 
-       Soundtrack.Settings.TrackSortingCriteria == "fileName" or 
-       Soundtrack.Settings.TrackSortingCriteria == "filePath" or 
-       Soundtrack.Settings.TrackSortingCriteria == "title" then 
+       SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "fileName" or
+       SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "filePath" or
+       SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "title" then
         Soundtrack.SortTracks(SoundtrackFrame.nameHeaderType)
     else
         Soundtrack.SortTracks(self.sortType)
@@ -394,14 +394,14 @@ function SoundtrackFrame_ColumnHeaderNameDropDown_OnClick(self)
 end
 
 function SoundtrackFrame_ColumnHeaderNameDropDown_Initialize()
-    --Soundtrack.TraceFrame("Track sorting criteria: " .. Soundtrack.Settings.TrackSortingCriteria)
+    --Soundtrack.TraceFrame("Track sorting criteria: " .. SoundtrackAddon.db.profile.settings.TrackSortingCriteria)
 
     local info = UIDropDownMenu_CreateInfo()
     for i=1, #(SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST), 1 do
         info.text = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[i].name
         info.func = SoundtrackFrame_ColumnHeaderNameDropDown_OnClick
         local checked = nil
-        --[[if Soundtrack.Settings.TrackSortingCriteria == info.text then
+        --[[if SoundtrackAddon.db.profile.settings.TrackSortingCriteria == info.text then
             Soundtrack.TraceFrame(info.Text .. " is checked!")
             checked = true
         end
@@ -453,7 +453,7 @@ function SoundtrackFrame_TouchTracks()
 end
 
 function SoundtrackFrame_RefreshOptionsFrame()
-    local s = Soundtrack.Settings
+    local s = SoundtrackAddon.db.profile.settings
 
     SoundtrackFrame_EnableMinimapButton:SetChecked(not SoundtrackAddon.db.profile.minimap.hide)
     SoundtrackFrame_EnableDebugMode:SetChecked(s.Debug)
@@ -498,21 +498,21 @@ end
 function SoundtrackFrame_ToggleMinimapButton()
     SoundtrackMinimap_ToggleMinimap()
     
-    if not Soundtrack.Settings.EnableMinimapButton then
+    if not SoundtrackAddon.db.profile.settings.EnableMinimapButton then
     end
 end
 
 function SoundtrackFrame_ToggleDebugMode()
-    Soundtrack.Settings.Debug = not Soundtrack.Settings.Debug
+    SoundtrackAddon.db.profile.settings.Debug = not SoundtrackAddon.db.profile.settings.Debug
     Soundtrack.Util.InitDebugChatFrame()
 end
 
 function SoundtrackFrame_ToggleShowTrackInformation()
-    Soundtrack.Settings.ShowTrackInformation = not Soundtrack.Settings.ShowTrackInformation
+    SoundtrackAddon.db.profile.settings.ShowTrackInformation = not SoundtrackAddon.db.profile.settings.ShowTrackInformation
 end
 
 function SoundtrackFrame_ToggleShowEventStack()
-    Soundtrack.Settings.ShowEventStack = not Soundtrack.Settings.ShowEventStack
+    SoundtrackAddon.db.profile.settings.ShowEventStack = not SoundtrackAddon.db.profile.settings.ShowEventStack
     
     SoundtrackFrame_RefreshPlaybackControls()
     
@@ -528,7 +528,7 @@ function SoundtrackFrame_SetControlsButtonsPosition()
 	local infoButton = _G["SoundtrackControlFrame_InfoButton"]
 	if nextButton and playButton and stopButton and previousButton and 
 		trueStopButton and reportButton and infoButton then
-		local position = Soundtrack.Settings.PlaybackButtonsPosition
+		local position = SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition
 		SoundtrackControlFrame_NextButton:ClearAllPoints()
 		SoundtrackControlFrame_PlayButton:ClearAllPoints()
 		SoundtrackControlFrame_StopButton:ClearAllPoints()
@@ -598,7 +598,7 @@ function SoundtrackFrame_HideControlButtons()
 	local infoButton = _G["SoundtrackControlFrame_InfoButton"]
 	if nextButton and playButton and stopButton and previousButton and 
 		trueStopButton and reportButton and infoButton then
-		if Soundtrack.Settings.HideControlButtons then
+		if SoundtrackAddon.db.profile.settings.HideControlButtons then
 			SoundtrackControlFrame_NextButton:Hide()
 			SoundtrackControlFrame_PlayButton:Hide()
 			SoundtrackControlFrame_StopButton:Hide()
@@ -615,13 +615,13 @@ function SoundtrackFrame_HideControlButtons()
 			SoundtrackControlFrame_ReportButton:Show()
 			SoundtrackControlFrame_InfoButton:Show()
 		end
-		SoundtrackControlFrame_NextButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
-		SoundtrackControlFrame_PlayButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
-		SoundtrackControlFrame_StopButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
-		SoundtrackControlFrame_PreviousButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
-		SoundtrackControlFrame_TrueStopButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
-		SoundtrackControlFrame_ReportButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
-		SoundtrackControlFrame_InfoButton:EnableMouse(not Soundtrack.Settings.HideControlButtons)
+		SoundtrackControlFrame_NextButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
+		SoundtrackControlFrame_PlayButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
+		SoundtrackControlFrame_StopButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
+		SoundtrackControlFrame_PreviousButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
+		SoundtrackControlFrame_TrueStopButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
+		SoundtrackControlFrame_ReportButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
+		SoundtrackControlFrame_InfoButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
 	end
 end
 
@@ -630,7 +630,7 @@ function SoundtrackFrame_RefreshPlaybackControls()
 	SoundtrackFrame_SetControlsButtonsPosition()
 	SoundtrackFrame_HideControlButtons()
 	
-	if Soundtrack.Settings.HideControlButtons == false then
+	if SoundtrackAddon.db.profile.settings.HideControlButtons == false then
 		local stopButton = _G["SoundtrackControlFrame_StopButton"]
 		local playButton = _G["SoundtrackControlFrame_PlayButton"]
 		
@@ -662,10 +662,10 @@ function SoundtrackFrame_RefreshPlaybackControls()
     local controlFrame = _G["SoundtrackControlFrame"]
 
     if controlFrame then
-        if Soundtrack.Settings.ShowPlaybackControls then
+        if SoundtrackAddon.db.profile.settings.ShowPlaybackControls then
             controlFrame:Show()
         
-            if (Soundtrack.Settings.ShowEventStack) then
+            if (SoundtrackAddon.db.profile.settings.ShowEventStack) then
                 SoundtrackControlFrameStackTitle:Show()
                 SoundtrackControlFrameStack1:Show()
                 SoundtrackControlFrameStack2:Show()
@@ -710,7 +710,7 @@ end
 
 
 function SoundtrackFrame_ToggleShowPlaybackControls()
-    Soundtrack.Settings.ShowPlaybackControls = not Soundtrack.Settings.ShowPlaybackControls
+    SoundtrackAddon.db.profile.settings.ShowPlaybackControls = not SoundtrackAddon.db.profile.settings.ShowPlaybackControls
     SoundtrackFrame_RefreshPlaybackControls()
 end
 
@@ -751,7 +751,7 @@ end
 
 function SoundtrackFrame_RefreshCustomEvent()
       
-    local customEvent = Soundtrack_CustomEvents[SoundtrackFrame_SelectedEvent]
+    local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame_SelectedEvent]
     
     if customEvent == nil then
         return
@@ -808,7 +808,7 @@ function SoundtrackFrameEventButton_OnClick(self, mouseButton, down)
     
     -- TODO only react if clicking the expand/collapse button
     
-    local event = Soundtrack_Events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent]
+    local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent]
     if mouseButton == "RightButton" then
 		-- Do nothing
 	elseif event.expanded then
@@ -853,7 +853,7 @@ end
 
 function SoundtrackFrameCollapseAllZoneButton_OnClick()
     Soundtrack.TraceFrame("Collapsing all zone events")
-    for key, eventNode in pairs(Soundtrack_Events["Zone"]) do
+    for key, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
         eventNode.expanded = false
     end
     Soundtrack_OnTreeChanged("Zone")
@@ -862,7 +862,7 @@ end
 
 function SoundtrackFrameExpandAllZoneButton_OnClick()
     Soundtrack.TraceFrame("Expanding all zone events")
-    for key, eventNode in pairs(Soundtrack_Events["Zone"]) do
+    for key, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
         eventNode.expanded = true
     end
     Soundtrack_OnTreeChanged("Zone")
@@ -1191,7 +1191,7 @@ function SoundtrackFrameAssignedTrackCheckBox_OnClick(self, mouseButton, down)
       
     local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameAssignedTracksScrollFrame)
     
-    local assignedTracks = Soundtrack_Events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent].tracks    
+    local assignedTracks = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent].tracks
     SoundtrackFrame_SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
     
     if (SoundtrackFrame_IsTrackActive(SoundtrackFrame_SelectedTrack)) then
@@ -1235,7 +1235,7 @@ function SoundtrackFrameAssignedTrackButton_OnClick(self, mouseButton, down)
     
     local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameAssignedTracksScrollFrame)
     
-    local assignedTracks = Soundtrack_Events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent].tracks
+    local assignedTracks = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent].tracks
     
     SoundtrackFrame_SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
     
@@ -1489,7 +1489,7 @@ function SoundtrackFrame_RefreshEvents()
     
     -- The selected event was deleted, activate another one if possible
     if SEVT.SelectedEventsTable and SoundtrackFrame_SelectedEvent  then
-        if not Soundtrack_Events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent] then
+        if not SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent] then
             if table.maxn(flatEventsTable) > 0 then
                 SoundtrackFrame_SelectedEvent = flatEventsTable[1].tag
             else
@@ -1549,7 +1549,7 @@ function SoundtrackFrame_RefreshEvents()
                 button:Show()
 				--local buttontext = button:GetText()--csciguy debug
 				--Soundtrack.Message("REFRESHEVENTS-BUTTONTEXT:"..buttontext.." Index:"..buttonIndex.."!")	--csciguy debug
-                local event = Soundtrack_Events[SEVT.SelectedEventsTable][eventName]
+                local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][eventName]
 
 				-- Add expandable (+ or -) texture
                 local expandable = eventNode.nodes and #eventNode.nodes >= 1
@@ -1641,7 +1641,7 @@ end
 -- Checks if a particular track is already set for an event
 function SoundtrackFrame_IsTrackActive(trackName)
 
-    local event = Soundtrack_Events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent]
+    local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent]
     if not event then
         return false
     end
@@ -1677,7 +1677,7 @@ end
 local function GetCurrentLowHealthPercent()
     local i
     for i=1, #(lowhealthpercents), 1 do
-        if (Soundtrack.Settings.LowHealthPercent == lowhealthpercents[i]) then
+        if (SoundtrackAddon.db.profile.settings.LowHealthPercent == lowhealthpercents[i]) then
             return i
         end
     end
@@ -1705,7 +1705,7 @@ end
 local function GetCurrentBattleCooldown()
 -- TODO replace with IndexOf
     for i,c in ipairs(cooldowns) do
-        if Soundtrack.Settings.BattleCooldown == c then
+        if SoundtrackAddon.db.profile.settings.BattleCooldown == c then
             return i
         end
     end
@@ -1730,7 +1730,7 @@ end
 local function GetCurrentPlaybackButtonsLocation()
 	local i
 	for i=1, #(locations), 1 do
-		if (Soundtrack.Settings.PlaybackButtonsPosition == locations[i]) then
+		if (SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition == locations[i]) then
 			return i
 		end
 	end
@@ -1761,7 +1761,7 @@ local function GetCurrentSilence()
 -- Replace with index of
     local i
     for i=1, #(silences), 1 do
-        if (Soundtrack.Settings.Silence == silences[i]) then
+        if (SoundtrackAddon.db.profile.settings.Silence == silences[i]) then
             return i
         end
     end
@@ -1837,7 +1837,7 @@ function SoundtrackFrame_ProjectDropDown_OnClick(self)
     UIDropDownMenu_SetSelectedID(SoundtrackFrame_ProjectDropDown, self:GetID())
     SoundtrackFrame.selectedProject = self:GetID()
     -- Save settings.
-    -- Soundtrack.Settings.Silence = projects[SoundtrackFrame.selectedProject]
+    -- SoundtrackAddon.db.profile.settings.Silence = projects[SoundtrackFrame.selectedProject]
 end
 
 
@@ -1875,7 +1875,7 @@ function SoundtrackFrame_PlaybackButtonsLocationDropDown_OnClick(self)
     UIDropDownMenu_SetSelectedID(SoundtrackFrame_PlaybackButtonsLocationDropDown, self:GetID())
     SoundtrackFrame.selectedLocation = self:GetID()
     -- Save settings.
-    Soundtrack.Settings.PlaybackButtonsPosition = locations[SoundtrackFrame.selectedLocation]
+    SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = locations[SoundtrackFrame.selectedLocation]
 	SoundtrackFrame_RefreshPlaybackControls()
 end
 
@@ -1916,7 +1916,7 @@ function SoundtrackFrame_BattleCooldownDropDown_OnClick(self)
     UIDropDownMenu_SetSelectedID(SoundtrackFrame_BattleCooldownDropDown, self:GetID())
     SoundtrackFrame.selectedCooldown = self:GetID()
     -- Save settings.
-    Soundtrack.Settings.BattleCooldown = cooldowns[SoundtrackFrame.selectedCooldown]
+    SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackFrame.selectedCooldown]
 end
 
 
@@ -1956,7 +1956,7 @@ function SoundtrackFrame_LowHealthPercentDropDown_OnClick(self)
     UIDropDownMenu_SetSelectedID(SoundtrackFrame_LowHealthPercentDropDown, self:GetID())
     SoundtrackFrame.selectedLowHealthPercent = self:GetID()
     -- Save settings.
-    Soundtrack.Settings.LowHealthPercent = lowhealthpercents[SoundtrackFrame.selectedLowHealthPercent]
+    SoundtrackAddon.db.profile.settings.LowHealthPercent = lowhealthpercents[SoundtrackFrame.selectedLowHealthPercent]
 end
 
 -- end low health percent
@@ -1997,7 +1997,7 @@ function SoundtrackFrame_EventTypeDropDown_OnClick(self)
         return
     end
     
-    local customEvent = Soundtrack_CustomEvents[SoundtrackFrame_SelectedEvent]
+    local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame_SelectedEvent]
 
     customEvent.type = eventTypes[selectedId]
     
@@ -2057,7 +2057,7 @@ function SoundtrackFrame_SilenceDropDown_OnClick(self)
     UIDropDownMenu_SetSelectedID(SoundtrackFrame_SilenceDropDown, self:GetID())
     SoundtrackFrame.selectedSilence = self:GetID()
     -- Save settings.
-    Soundtrack.Settings.Silence = silences[SoundtrackFrame.selectedSilence]
+    SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackFrame.selectedSilence]
 end
 
 
@@ -2210,7 +2210,7 @@ function SoundtrackFrame_RefreshAssignedTracks()
         return
     end
     
-    local event = Soundtrack_Events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent]
+    local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][SoundtrackFrame_SelectedEvent]
     if event == nil then
        return
     end
@@ -2406,7 +2406,7 @@ end
 
 function SoundtrackFrameSaveCustomEventButton_OnClick()
     Soundtrack.TraceFrame("Saving " .. SoundtrackFrame_SelectedEvent)
-    local customEvent = Soundtrack_CustomEvents[SoundtrackFrame_SelectedEvent]
+    local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame_SelectedEvent]
     
     customEvent.priority = tonumber(getglobal("SoundtrackFrame_Priority"):GetText())
     customEvent.continuous = getglobal("SoundtrackFrame_ContinuousCheckBox"):GetChecked()
@@ -2448,7 +2448,7 @@ function SoundtrackFrameDeleteCustomEventButton_OnClick()
 	end
 end
 function SoundtrackFrame_DeleteCustom(eventName)
-	Soundtrack_CustomEvents[SoundtrackFrame_SelectedEvent] = nil
+	SoundtrackAddon.db.profile.customEvents[SoundtrackFrame_SelectedEvent] = nil
     Soundtrack.Events.DeleteEvent("Custom", eventName)
 	SoundtrackFrame_RefreshEvents()
 end

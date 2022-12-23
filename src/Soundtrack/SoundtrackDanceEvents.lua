@@ -23,7 +23,7 @@ function Soundtrack.DanceEvents.OnEvent(self, event, ...)
 	
 	Soundtrack.TraceCustom(event)
 	
-	if not Soundtrack.Settings.EnableMiscMusic then
+	if not SoundtrackAddon.db.profile.settings.EnableMiscMusic then
         return
     end
     
