@@ -1,3 +1,6 @@
+3.0.8
+- Fix some bugs with the windows powershell library generator. Shout out to Dax Belmont for bringing them to my attention.
+
 3.0.7
 - Rework how to execute the bash library generator 
 
