@@ -13,8 +13,10 @@ Morrowind/
 Oblivion/
 SF/
 SWG/
+Punchdeck/
 *.mp3
 MyTracks.lua
 .hexdumptmp
 *.xxd
 .DS_Store
+*.pyc

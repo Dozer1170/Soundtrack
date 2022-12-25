@@ -24,6 +24,9 @@ Get-ChildItem . -Filter *.mp3 -name -Recurse | Foreach-Object {
     $shellFile = $shellFolder.ParseName($fileName)
     $basename = (Get-Item Microsoft.PowerShell.Core\FileSystem::$fullFilePath).Basename.Replace("\", "\\")
     $pathWithoutExtension = "$escapedRelativeFolderPath\\$basename"
+    if ($pathWithoutExtension.StartsWith("\\")) {
+        $pathWithoutExtension = $pathWithoutExtension.Substring(2)
+    }
 
     $lengthHMS = $shellFolder.GetDetailsOf($shellFile, 27)
     $length = ([timespan]$lengthHMS).TotalSeconds
@@ -38,6 +41,7 @@ Get-ChildItem . -Filter *.mp3 -name -Recurse | Foreach-Object {
     }
 
     $trackTitle = $shellFolder.GetDetailsOf($shellFile, 21).Replace("\", "\\")
+    $trackTitle = $trackTitle.Replace("`"", "\`"")
     if (!$trackTitle) {
         $trackTitle = "None"
     }
