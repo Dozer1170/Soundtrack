@@ -402,7 +402,7 @@
 	
     <!--Main frame-->
     <Frame name="SoundtrackFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" >
-        <Size> <AbsDimension x="800" y="525"/> </Size>
+        <Size> <AbsDimension x="870" y="525"/> </Size>
         <Anchors>
             <Anchor point="TOPLEFT"> <Offset> <AbsDimension x="0" y="-104"/> </Offset> </Anchor>
         </Anchors>
@@ -486,9 +486,15 @@
                         <Offset> <AbsDimension x="-8" y="0"/> </Offset> </Anchor>
                 </Anchors>
             </Button>
-            <Button name="SoundtrackFrameTab10" inherits="SoundtrackFrameTabTemplate" id="10" text="About">
+            <Button name="SoundtrackFrameTab10" inherits="SoundtrackFrameTabTemplate" id="10" text="Profiles">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab9" relativePoint="TOPRIGHT">
+                        <Offset> <AbsDimension x="-8" y="0"/> </Offset> </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="SoundtrackFrameTab11" inherits="SoundtrackFrameTabTemplate" id="11" text="About">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab10" relativePoint="TOPRIGHT">
                         <Offset>
                             <AbsDimension x="-8" y="0"/>
                         </Offset>
@@ -1940,7 +1946,29 @@
                     <OnShow>SoundtrackFrame_RefreshOptionsFrame()</OnShow>
                 </Scripts>
 			</Frame>
-			
+
+            <!-- PROFILES TAB -->
+            <Frame name="SoundtrackFrameProfilesFrame" hidden="true" >
+                <Size>
+                    <RelDimension x="0.5" y="0.8"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="SoundtrackFrame" relativePoint="TOP" />
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <FontString name="SoundtrackFrame_FontStringUIOptions" inherits="GameFontNormal" text="Profiles">
+                            <Anchors> <Anchor point="TOPLEFT"> <Offset> <AbsDimension x="50" y="-50"/> </Offset> </Anchor> </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                </Frames>
+                <Scripts>
+                    <OnShow>SoundtrackFrame_RefreshProfilesFrame()</OnShow>
+                </Scripts>
+            </Frame>
+
 			<!-- ABOUT TAB -->
 			<Frame name="SoundtrackFrameAboutFrame" hidden="true">
                 <Size> <RelDimension x="0.5" y="0.8"/> </Size>
@@ -1961,12 +1989,12 @@
                                     <Offset> <AbsDimension x="10" y="-10"/> </Offset> </Anchor>
                             </Anchors>
                         </FontString>
-                        <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontNormal" text="Maintained by: Lunaqua, Csciguy "> 
+                        <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontNormal" text="Maintained by: Lunaqua, Csciguy, Dozer1170/Gart ">
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout2" relativePoint="BOTTOMLEFT" />
                             </Anchors>
                         </FontString>                        
-						<FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 2.9.1"> 
+						<FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 3.0.9">
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout3" relativePoint="BOTTOMLEFT" />
                             </Anchors>

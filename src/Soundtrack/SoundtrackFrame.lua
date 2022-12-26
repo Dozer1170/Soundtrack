@@ -78,7 +78,7 @@ function SoundtrackFrame_OnLoad(self)
 
     tinsert(UISpecialFrames, "SoundtrackFrame")
     
-    PanelTemplates_SetNumTabs(self, 10)
+    PanelTemplates_SetNumTabs(self, 11)
     PanelTemplates_SetTab(self, 1)
 end
 
@@ -481,6 +481,10 @@ function SoundtrackFrame_RefreshOptionsFrame()
     else
         SoundtrackFrame_LoopMusic:SetChecked(true)
     end
+end
+
+function SoundtrackFrame_RefreshProfilesFrame()
+    -- TODO update frame
 end
 
 function SoundtrackFrame_ToggleLoopMusic()
@@ -1278,67 +1282,53 @@ end
 
 
 function SoundtrackFrameTab_OnClick()
+    SEVT.SelectedEventsTable = nil
+    SoundtrackFrameEventFrame:Hide()
+    SoundtrackFrameOptionsFrame:Hide()
+    SoundtrackFrameProfilesFrame:Hide()
+    SoundtrackFrameAboutFrame:Hide()
     -- Battle events tab
     if (SoundtrackFrame.selectedTab == 1) then
         SEVT.SelectedEventsTable = "Battle"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
 	-- Boss tab
     elseif (SoundtrackFrame.selectedTab == 2) then
         SEVT.SelectedEventsTable = "Boss"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
     -- Zones tab
     elseif (SoundtrackFrame.selectedTab == 3) then
         SEVT.SelectedEventsTable = "Zone"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
     -- Pet Battles tab
     elseif (SoundtrackFrame.selectedTab == 4) then
         SEVT.SelectedEventsTable = "Pet Battles"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
 	-- Dance tab
     elseif (SoundtrackFrame.selectedTab == 5) then
         SEVT.SelectedEventsTable = "Dance"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
 	-- Misc tab
     elseif (SoundtrackFrame.selectedTab == 6) then
         SEVT.SelectedEventsTable = "Misc"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
-	
+
 	-- Custom tab
     elseif (SoundtrackFrame.selectedTab == 7) then
         SEVT.SelectedEventsTable = "Custom"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
-			
+
 	-- Playlists tab
     elseif (SoundtrackFrame.selectedTab == 8) then
         SEVT.SelectedEventsTable = "Playlists"
         SoundtrackFrameEventFrame:Show()
-        SoundtrackFrameOptionsFrame:Hide()
-		SoundtrackFrameAboutFrame:Hide()
     -- Options tab
     elseif (SoundtrackFrame.selectedTab == 9) then
-        SEVT.SelectedEventsTable = nil
-        SoundtrackFrameEventFrame:Hide()
         SoundtrackFrameOptionsFrame:Show()
-		SoundtrackFrameAboutFrame:Hide()
+    -- Profiles tab
+    elseif (SoundtrackFrame.selectedTab == 10) then
+        SoundtrackFrameProfilesFrame:Show()
 	-- About tab
-	elseif (SoundtrackFrame.selectedTab == 10) then
-		SEVT.SelectedEventsTable = nil
-        SoundtrackFrameEventFrame:Hide()
-        SoundtrackFrameOptionsFrame:Hide()
+	elseif (SoundtrackFrame.selectedTab == 11) then
 		SoundtrackFrameAboutFrame:Show()
 	end
 
