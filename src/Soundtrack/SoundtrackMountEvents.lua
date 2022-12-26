@@ -40,10 +40,6 @@ local function Soundtrack_MountEvents_StopIfTracksAvailable(tableName, eventName
 	end
 end
 
-function Soundtrack.MountEvents.OnLoad(self)
-    self:RegisterEvent("VARIABLES_LOADED")
-end
-
 local delayTime = 0
 local updateTime = .1
 local isCurrentlyFlying = false
@@ -90,12 +86,6 @@ function Soundtrack.MountEvents.OnUpdate(self, deltaT)
 				
 		end
 	end
-end
-
-function Soundtrack.MountEvents.OnEvent(self, event, ...)
-	if event == "VARIABLES_LOADED" then
-		Soundtrack.MountEvents.Initialize()
-    end
 end
 
 function Soundtrack.MountEvents.Initialize()

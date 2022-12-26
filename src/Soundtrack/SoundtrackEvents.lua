@@ -306,7 +306,7 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 				currentEventName = eventName
 				
 				-- A track is now playing, register continuity timers
-				if nextTrack then
+				if nextTrack and Soundtrack_Tracks then
 					local track = Soundtrack_Tracks[nextTrack]
 					if track then
 						local length = track.length

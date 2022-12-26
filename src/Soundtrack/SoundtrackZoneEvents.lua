@@ -293,11 +293,7 @@ function Soundtrack.ZoneEvents.OnEvent(self, event, ...)
     if not SoundtrackAddon.db.profile.settings.EnableZoneMusic then
         return
     end
-	
-	if event == "VARIABLES_LOADED" then
-		Soundtrack.ZoneEvents.Initialize()
-    end
-	
+
 	debug(event);
 	
     if event == "ZONE_CHANGED" or 

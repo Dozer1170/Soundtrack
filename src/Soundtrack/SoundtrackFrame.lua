@@ -519,6 +519,10 @@ function SoundtrackFrame_ToggleShowEventStack()
 end
 
 function SoundtrackFrame_SetControlsButtonsPosition()
+    if SoundtrackAddon == nil or SoundtrackAddon.db == nil then
+        return
+    end
+
 	local nextButton = _G["SoundtrackControlFrame_NextButton"]
 	local playButton = _G["SoundtrackControlFrame_PlayButton"]
 	local stopButton = _G["SoundtrackControlFrame_StopButton"]
@@ -626,6 +630,9 @@ function SoundtrackFrame_HideControlButtons()
 end
 
 function SoundtrackFrame_RefreshPlaybackControls()
+    if SoundtrackAddon == nil or SoundtrackAddon.db == nil then
+        return
+    end
 
 	SoundtrackFrame_SetControlsButtonsPosition()
 	SoundtrackFrame_HideControlButtons()
@@ -1677,7 +1684,7 @@ end
 local function GetCurrentLowHealthPercent()
     local i
     for i=1, #(lowhealthpercents), 1 do
-        if (SoundtrackAddon.db.profile.settings.LowHealthPercent == lowhealthpercents[i]) then
+        if  not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.LowHealthPercent == lowhealthpercents[i] then
             return i
         end
     end
@@ -1705,7 +1712,7 @@ end
 local function GetCurrentBattleCooldown()
 -- TODO replace with IndexOf
     for i,c in ipairs(cooldowns) do
-        if SoundtrackAddon.db.profile.settings.BattleCooldown == c then
+        if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.BattleCooldown == c then
             return i
         end
     end
@@ -1730,7 +1737,7 @@ end
 local function GetCurrentPlaybackButtonsLocation()
 	local i
 	for i=1, #(locations), 1 do
-		if (SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition == locations[i]) then
+		if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition == locations[i] then
 			return i
 		end
 	end
@@ -1761,7 +1768,7 @@ local function GetCurrentSilence()
 -- Replace with index of
     local i
     for i=1, #(silences), 1 do
-        if (SoundtrackAddon.db.profile.settings.Silence == silences[i]) then
+        if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.Silence == silences[i] then
             return i
         end
     end
@@ -2060,31 +2067,9 @@ function SoundtrackFrame_SilenceDropDown_OnClick(self)
     SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackFrame.selectedSilence]
 end
 
-
-
-
-function SoundtrackFrame_LoadProject_OnClick()
-	for i, projectText in pairs(GetProjects()) do
-        if SoundtrackFrame.selectedProject == i then
-			SoundtrackProject_AttemptToLoadProject(projectText)
-		end
-	end
-end
-
-
-function SoundtrackFrame_RemoveProject_OnClick()
-	for i, projectText in pairs(GetProjects()) do
-        if SoundtrackFrame.selectedProject == i then
-			SoundtrackProject_AttemptToRemoveProject(projectText)
-		end
-	end
-end
-
-
 -- TODO Anthony : Refresh when no events is selected (right now the checks from the last thing
 -- get shown and you can check things on/off anyways.
 function SoundtrackFrame_RefreshTracks()
-
     if (not SoundtrackFrame:IsVisible() or SEVT.SelectedEventsTable == nil) then
         return
     end

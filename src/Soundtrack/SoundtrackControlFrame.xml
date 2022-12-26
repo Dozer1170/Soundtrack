@@ -336,12 +336,7 @@
 				self:RegisterForDrag("LeftButton")
             </OnLoad>
 			  <OnDragStart>self:StartMoving();</OnDragStart>
-  <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
-            <OnEvent>
-                if (event=="VARIABLES_LOADED") then
-                    SoundtrackFrame_RefreshPlaybackControls();
-                end
-            </OnEvent>
+              <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
         </Scripts>
     </Frame>
 </Ui>

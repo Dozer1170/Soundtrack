@@ -4,7 +4,6 @@
 	<Frame name="SoundtrackCustomDUMMY" parent="UIParent" hidden="false">
 		<Scripts>
 			<OnUpdate>Soundtrack.CustomEvents.CustomOnUpdate(self, elapsed)</OnUpdate>
-            <OnLoad>Soundtrack.CustomEvents.CustomOnLoad(self)</OnLoad>
             <OnEvent>Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)</OnEvent>
         </Scripts>
     </Frame>

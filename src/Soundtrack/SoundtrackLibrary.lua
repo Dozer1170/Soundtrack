@@ -139,7 +139,7 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
     debug("PlayTrack(".. Soundtrack.GetPathFileName(trackName) ..")")
     
     -- Check if the track is valid
-    if not Soundtrack_Tracks[trackName] then
+    if not Soundtrack_Tracks or not Soundtrack_Tracks[trackName] then
         return
     end
     
