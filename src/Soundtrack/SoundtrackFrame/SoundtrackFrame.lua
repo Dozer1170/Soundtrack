@@ -2013,7 +2013,6 @@ function SoundtrackFrame_SilenceDropDown_OnClick(self)
     SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackFrame.selectedSilence]
 end
 
--- TODO Anthony : Refresh when no events is selected (right now the checks from the last thing
 -- get shown and you can check things on/off anyways.
 function SoundtrackFrame_RefreshTracks()
     if (not SoundtrackFrame:IsVisible() or SEVT.SelectedEventsTable == nil) then
@@ -2022,14 +2021,10 @@ function SoundtrackFrame_RefreshTracks()
 
     SoundtrackFrame_DisableAllTrackButtons()
     local numTracks = table.maxn(Soundtrack_SortedTracks)
-    local nameText
-    local name
     local icon
     local button
     local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameTrackScrollFrame)
     local buttonIndex
-    --local i=1
-    --for key,value in Soundtrack_Tracks do
     for i = 1, numTracks, 1 do
         if (i > listOffset and i < listOffset + TRACKS_TO_DISPLAY) then
             buttonIndex = i - listOffset

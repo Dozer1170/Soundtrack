@@ -51,7 +51,7 @@
     <!-- Track list item -->
     <Button name="SoundtrackFrameTrackButtonTemplate" virtual="true">
         <Size>
-            <AbsDimension x="525" y="16"/>
+            <AbsDimension x="560" y="16"/>
         </Size>
         <Layers>
             <Layer level="ARTWORK">
@@ -76,33 +76,25 @@
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="31" y="-3"/>
+                                        <AbsDimension x="31" y="-2"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
                         </FontString>
                         <FontString name="$parentArtist" justifyH="LEFT" inherits="GameFontHighlightSmall">
                             <Size>
-                                <AbsDimension x="100" y="10"/>
+                                <AbsDimension x="130" y="10"/>
                             </Size>
                             <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="231" y="-3"/>
-                                    </Offset>
-                                </Anchor>
+                                <Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="TOPRIGHT"/>
                             </Anchors>
                         </FontString>
                         <FontString name="$parentAlbum" justifyH="LEFT" inherits="GameFontHighlightSmall">
                             <Size>
-                                <AbsDimension x="175" y="10"/>
+                                <AbsDimension x="180" y="10"/>
                             </Size>
                             <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="331" y="-3"/>
-                                    </Offset>
-                                </Anchor>
+                                <Anchor point="TOPLEFT" relativeTo="$parentArtist" relativePoint="TOPRIGHT"/>
                             </Anchors>
                         </FontString>
                         <FontString name="$parentDuration" inherits="GameFontHighlightSmall" text="0:00">
@@ -110,11 +102,7 @@
                                 <AbsDimension x="40" y="10"/>
                             </Size>
                             <Anchors>
-                                <Anchor point="TOPRIGHT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-3"/>
-                                    </Offset>
-                                </Anchor>
+                                <Anchor point="TOPLEFT" relativeTo="$parentAlbum" relativePoint="TOPRIGHT"/>
                             </Anchors>
                         </FontString>
                     </Layer>
@@ -144,7 +132,7 @@
     </Button>
     <Button name="SoundtrackFrameAssignedTrackButtonTemplate" virtual="true">
         <Size>
-            <AbsDimension x="525" y="16"/>
+            <AbsDimension x="560" y="16"/>
         </Size>
         <Layers>
             <Layer level="ARTWORK">
@@ -169,42 +157,30 @@
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="31" y="-3"/>
+                                        <AbsDimension x="31" y="-2"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
                         </FontString>
                         <FontString name="$parentArtist" justifyH="LEFT" inherits="GameFontHighlightSmall">
                             <Size>
-                                <AbsDimension x="100" y="10"/>
+                                <AbsDimension x="130" y="10"/>
                             </Size>
                             <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="231" y="-3"/>
-                                    </Offset>
-                                </Anchor>
+                                <Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="TOPRIGHT"/>
                             </Anchors>
                         </FontString>
                         <FontString name="$parentAlbum" justifyH="LEFT" inherits="GameFontHighlightSmall">
                             <Size>
-                                <AbsDimension x="175" y="10"/>
+                                <AbsDimension x="180" y="10"/>
                             </Size>
                             <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="331" y="-3"/>
-                                    </Offset>
-                                </Anchor>
+                                <Anchor point="TOPLEFT" relativeTo="$parentArtist" relativePoint="TOPRIGHT"/>
                             </Anchors>
                         </FontString>
                         <FontString name="$parentDuration" inherits="GameFontHighlightSmall" text="0:00">
                             <Anchors>
-                                <Anchor point="TOPRIGHT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-3"/>
-                                    </Offset>
-                                </Anchor>
+                                <Anchor point="TOPLEFT" relativeTo="$parentAlbum" relativePoint="TOPRIGHT"/>
                             </Anchors>
                         </FontString>
                     </Layer>
