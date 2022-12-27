@@ -1497,18 +1497,12 @@ function SoundtrackFrame_RefreshEvents()
     
     SoundtrackFrame_DisableAllEventButtons()
 	local numEvents = #(flatEventsTable)
-    --local numEvents = table.maxn(flatEventsTable)
-    
-    local nameText
-    local name
+
     local button
     local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameEventScrollFrame)
     local buttonIndex
-
-	
-	
     local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
-    local currentEvent = nil
+    local currentEvent
     if stackLevel ~= 0 then
         currentEvent = Soundtrack.Events.Stack[stackLevel].eventName
     end
@@ -1531,32 +1525,26 @@ function SoundtrackFrame_RefreshEvents()
 				fo:SetHeight(16)--CSCIGUY added 8-7-18
 				button:SetFontString(fo)		   
 			   
-			   
-                -- TODO use node.name + depth space?
-			--	button:SetPoint("LEFT", SoundtrackFrameEventScrollFrame, "LEFT", 0, 0)
-             --   button:SetText(GetLeafText(eventName))
 				button:SetNormalFontObject("GameFontHighlightSmall")
 				button:SetHighlightFontObject("GameFontNormalSmall")
 					
-				--button:SetWidth(button:GetTextWidth());
-				button:SetWidth(16);
-				button:SetHeight(16);
-
                 button:SetID(buttonIndex)
                 button:Show()
-				--local buttontext = button:GetText()--csciguy debug
-				--Soundtrack.Message("REFRESHEVENTS-BUTTONTEXT:"..buttontext.." Index:"..buttonIndex.."!")	--csciguy debug
-                local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][eventName]
 
+                local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][eventName]
 				-- Add expandable (+ or -) texture
                 local expandable = eventNode.nodes and #eventNode.nodes >= 1
                 if expandable then
-					if event.expanded then
-                          button:SetNormalTexture("Interface/Buttons/UI-MinusButton-Up")
-                          fo:SetText("    "..GetLeafText(eventName))
+                    local collapserTextureFrame = _G["SoundtrackFrameEventButton"..buttonIndex.."CollapserFrame"]
+                    local expanderTextureFrame = _G["SoundtrackFrameEventButton"..buttonIndex.."CollapserFrame"]
+                    collapserTextureFrame:Hide()
+                    expanderTextureFrame:Hide()
+                    if event.expanded then
+                        collapserTextureFrame:Show()
+                        fo:SetText("    "..GetLeafText(eventName))
                     else
-                          button:SetNormalTexture("Interface/Buttons/UI-PlusButton-Up")
-                          fo:SetText("    "..GetLeafText(eventName))
+                        expanderTextureFrame:Show()
+                        fo:SetText("    "..GetLeafText(eventName))
                     end
                     button:UnlockHighlight()
                 else
@@ -1565,33 +1553,18 @@ function SoundtrackFrame_RefreshEvents()
                     if emptyTexture == nil then
                         emptyTexture = SoundtrackFrame:CreateTexture()
                     end
-					button:SetNormalTexture(emptyTexture)
+                    expanderTextureFrame:Hide()
                 end
 
-                -- Show number ofassigned tracks
-				local assignedText = _G["SoundtrackFrameEventButton"..buttonIndex.."ButtonTextAssigned"]
-				--local assignedText = _G["SoundtrackFrameEventButton"..buttonIndex.."ButtonTextDuration"]
+                -- Show number of assigned tracks
                 if event then
                     local numAssignedTracks = table.maxn(event.tracks)
                     if (numAssignedTracks == 0) then
                         local tempText= button:GetText()
-                        button:SetHeight(16);
-                        if expandable then
-                            button:SetWidth(16);
-                        else
-                            button:SetWidth(180);
-                        end
                         fo:SetText(tempText.."   ")
                     else
-                        --assignedText:SetText("("..numAssignedTracks..")")
-                        button:SetWidth(180);
-
-                        if expandable then
-                            button:SetWidth(16);
-                        end
                         local tempText= button:GetText()
                         fo:SetText(tempText.." ("..numAssignedTracks..")")
-
                     end
                 end
 

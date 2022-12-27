@@ -3,7 +3,7 @@
     <!-- Event list item -->
     <Button name="SoundtrackFrameEventButtonTemplate" hidden="false" virtual="true">
         <Size>
-            <AbsDimension x="165" y="16"/>
+            <AbsDimension x="180" y="16"/>
         </Size>
         <Layers>
             <Layer level="ARTWORK">
@@ -20,6 +20,34 @@
         </Layers>
 
         <Frames>
+            <Frame name="$parentCollapserFrame">
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture file="Interface/Buttons/UI-MinusButton-Up">
+                            <Size>
+                                <AbsDimension x="16" y="16"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+            <Frame name="$parentExpanderFrame">
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentIcon" file="Interface/Buttons/UI-MinusButton-Up">
+                            <Size>
+                                <AbsDimension x="16" y="16"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
             <Frame name="$parentButtonText">
                 <Layers>
                     <Layer level="BORDER">
