@@ -5,8 +5,6 @@ EVENTS_ITEM_HEIGHT = 21
 
 --DEBUG = 1
 
-local emptyTexture = nil
-
 local SEVT = {
     SelectedEventsTable = nil,
 }
@@ -1452,8 +1450,6 @@ function SoundtrackFrame_DisableAllAssignedTrackButtons()
     end
 end
 
-
-
 -- Replaces each folder in an event path with spaces
 local function GetLeafText(eventPath)
     if eventPath then
@@ -1535,28 +1531,31 @@ function SoundtrackFrame_RefreshEvents()
                 button:Show()
 
                 local event = SoundtrackAddon.db.profile.events[SEVT.SelectedEventsTable][eventName]
+
                 -- Add expandable (+ or -) texture
+                local collapserTexture = _G["SoundtrackFrameEventButton" .. buttonIndex .. "CollapserTexture"]
+                local expanderTexture = _G["SoundtrackFrameEventButton" .. buttonIndex .. "ExpanderTexture"]
+                collapserTexture:Hide()
+                expanderTexture:Hide()
+
+                local eventDepth = GetEventDepth(eventName)
+                expandTextureIndent = 16 * eventDepth
+                collapserTexture:SetPoint("TOPLEFT", expandTextureIndent, 0)
+                expanderTexture:SetPoint("TOPLEFT", expandTextureIndent, 0)
+
                 local expandable = eventNode.nodes and #eventNode.nodes >= 1
                 if expandable then
-                    local collapserTextureFrame = _G["SoundtrackFrameEventButton" .. buttonIndex .. "CollapserFrame"]
-                    local expanderTextureFrame = _G["SoundtrackFrameEventButton" .. buttonIndex .. "CollapserFrame"]
-                    collapserTextureFrame:Hide()
-                    expanderTextureFrame:Hide()
                     if event.expanded then
-                        collapserTextureFrame:Show()
+                        collapserTexture:Show()
                         fo:SetText("    " .. GetLeafText(eventName))
                     else
-                        expanderTextureFrame:Show()
+                        expanderTexture:Show()
                         fo:SetText("    " .. GetLeafText(eventName))
                     end
                     button:UnlockHighlight()
                 else
                     button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
-
-                    if emptyTexture == nil then
-                        emptyTexture = SoundtrackFrame:CreateTexture()
-                    end
-                    expanderTextureFrame:Hide()
+                    expanderTexture:Hide()
                 end
 
                 -- Show number of assigned tracks

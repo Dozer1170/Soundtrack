@@ -17,50 +17,30 @@
                     </Anchors>
                 </Texture>
             </Layer>
+            <Layer level="ARTWORK">
+                <Texture name="$parentCollapserTexture" file="Interface/Buttons/UI-MinusButton-Up">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture name="$parentExpanderTexture" file="Interface/Buttons/UI-PlusButton-Up">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
         </Layers>
 
         <Frames>
-            <Frame name="$parentCollapserFrame">
-                <Layers>
-                    <Layer level="ARTWORK">
-                        <Texture file="Interface/Buttons/UI-MinusButton-Up">
-                            <Size>
-                                <AbsDimension x="16" y="16"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT"/>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
-            </Frame>
-            <Frame name="$parentExpanderFrame">
-                <Layers>
-                    <Layer level="ARTWORK">
-                        <Texture name="$parentIcon" file="Interface/Buttons/UI-MinusButton-Up">
-                            <Size>
-                                <AbsDimension x="16" y="16"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT"/>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
-            </Frame>
-            <Frame name="$parentButtonText">
-                <Layers>
-                    <Layer level="BORDER">
-                        <FontString name="$parentAssigned" justifyH="LEFT" inherits="GameFontHighlightSmall" text="">
-                            <Anchors>
-                                <Anchor point="TOPRIGHT"/>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-            </Frame>
         </Frames>
-
         <Scripts>
             <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
             <OnClick>SoundtrackFrameEventButton_OnClick(self, button, down)</OnClick>
