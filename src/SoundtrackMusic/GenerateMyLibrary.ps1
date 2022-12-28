@@ -39,7 +39,7 @@ Get-ChildItem . -Filter *.mp3 -name -Recurse | Foreach-Object {
 
     $trackTitle = $shellFolder.GetDetailsOf($shellFile, 21).Replace("\", "\\")
     if (!$trackTitle) {
-        $trackTitle = "None"
+        $trackTitle = $fileName.Replace(".mp3", "")
     }
 
     Write-Host "$pathWithoutExtension, Length ($length), Author ($author)"

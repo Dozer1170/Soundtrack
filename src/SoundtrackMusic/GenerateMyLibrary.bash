@@ -637,7 +637,7 @@ function process_file {
   relativeFilePathNoExtension="$relativeFolderPath/$fileNameNoExtension"
 
   tags=$(DEBUG=0 BAIL_AFTER_TITLE=1 parse_id3v2 "$filePathWithExtension")
-  trackTitle=$(parseTag "$tags" "TIT2" "None")
+  trackTitle=$(parseTag "$tags" "TIT2" "$fileNameNoExtension")
   album=$(parseTag "$tags" "TALB" "None")
   author=$(parseTag "$tags" "TPE1" "None")
 
