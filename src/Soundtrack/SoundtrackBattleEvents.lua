@@ -460,7 +460,7 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
 	
 	local _, eventType, _, sourceGUID, _, sourceFlags, _, destGUID = CombatLogGetCurrentEventInfo() --CSCIGUY 8-10-18
 
-	Soundtrack.TraceBattle(event)
+	Soundtrack.TraceBattle(event .. " " .. tostring(eventType))
 	
     if event == "PLAYER_REGEN_DISABLED" then
         if not SoundtrackAddon.db.profile.settings.EnableBattleMusic then
