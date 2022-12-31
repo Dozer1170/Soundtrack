@@ -9,6 +9,7 @@
 Embeds.xml
 Soundtrack.xml
 OldSaveMigrator.lua
+Utils/DebugUtils.lua
 SoundtrackFrame/SoundtrackFrame.xml
 SoundtrackFrame/SoundtrackFrame.lua
 SoundtrackFix.lua

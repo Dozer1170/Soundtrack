@@ -20,6 +20,8 @@ end
 function ProfilesTab_LoadProfileDropDownItemSelected(self, profileName)
     Soundtrack.TraceProfiles("Selected: " .. profileName)
     SoundtrackAddon.db:SetProfile(profileName)
+    _TracksLoaded = false
+    SoundtrackAddon:VARIABLES_LOADED()
 end
 
 function ProfilesTab_RefreshProfilesFrame()

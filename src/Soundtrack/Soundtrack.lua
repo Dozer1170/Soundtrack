@@ -58,7 +58,6 @@ function SoundtrackAddon:VARIABLES_LOADED()
     Soundtrack.BattleEvents.Initialize()
     Soundtrack.CustomEvents.MiscInitialize()
     Soundtrack.CustomEvents.CustomInitialize()
-
 end
 
 function LoadTracks()
