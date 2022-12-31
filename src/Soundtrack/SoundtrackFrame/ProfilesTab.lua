@@ -22,8 +22,10 @@ function ProfilesTab_LoadProfileDropDownItemSelected(self, profileName)
     SoundtrackAddon.db:SetProfile(profileName)
     _TracksLoaded = false
     SoundtrackAddon:VARIABLES_LOADED()
+    ProfilesTab_RefreshProfilesFrame()
 end
 
 function ProfilesTab_RefreshProfilesFrame()
-
+    local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
+    CurrentProfileName:SetText(currentProfile)
 end
