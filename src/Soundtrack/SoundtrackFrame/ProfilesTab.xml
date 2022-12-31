@@ -9,7 +9,7 @@
         </Anchors>
         <Layers>
             <Layer level="BACKGROUND">
-                <FontString name="SoundtrackFrame_FontStringUIOptions" inherits="GameFontNormal" text="Profiles">
+                <FontString name="ProfilesTab_HeaderText" inherits="GameFontNormal" text="Profiles">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
@@ -21,9 +21,19 @@
             </Layer>
         </Layers>
         <Frames>
+            <Frame name="LoadProfileDropDown" inherits="UIDropDownMenuTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="ProfilesTab_HeaderText">
+                        <Offset>
+                            <AbsDimension x="-15" y="-10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
         </Frames>
         <Scripts>
-            <OnShow>SoundtrackFrame_RefreshProfilesFrame()</OnShow>
+            <OnShow>ProfilesTab_RefreshProfilesFrame()</OnShow>
+            <OnLoad>ProfilesTab_OnLoad()</OnLoad>
         </Scripts>
     </Frame>
 </Ui>

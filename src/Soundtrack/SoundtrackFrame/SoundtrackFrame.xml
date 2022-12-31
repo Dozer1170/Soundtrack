@@ -4,6 +4,7 @@
     <Include file="GeneralTemplates.xml"/>
     <Include file="EventsTab.xml"/>
     <Include file="OptionsTab.xml"/>
+    <Include file="ProfilesTab.lua" />
     <Include file="ProfilesTab.xml"/>
     <Include file="AboutTab.xml"/>
 

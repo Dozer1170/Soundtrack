@@ -772,6 +772,9 @@ end
 function Soundtrack.TraceCustom(text)
 	Soundtrack.Util.DebugPrint("[Custom]: " .. text, 1.0, 0.0, 0.5)
 end
+function Soundtrack.TraceProfiles(text)
+    Soundtrack.Util.DebugPrint("[Profiles]: " .. text, 0.75, 1.0, 0.25)
+end
 
 -- Sort functions
 function CompareTracksByAlbum(i1, i2)
