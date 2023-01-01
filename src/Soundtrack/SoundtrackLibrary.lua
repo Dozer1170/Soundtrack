@@ -44,27 +44,6 @@ function Soundtrack.Library.AddDefaultTrack(trackName, _length, _title, _artist,
 	end
 end
 
-function Soundtrack_Library_AddProjectTrack(trackName, _length, _title, _artist, _album, _extension)
-	if _extension == nil then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, projectTrack = true }
-	elseif _extension == ".MP3" then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, mp3 = true, projectTrack = true }
-	elseif _extension == ".OGG" then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, ogg = true, projectTrack = true}
-	elseif _extension == ".WAV" then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, wav = true, projectTrack = true}
-	end
-end
-
-function Soundtrack_Library_AddProjectTrackMp3(trackName, _length, _title, _artist, _album)
-	Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, projectTrack = true, mp3 = true}
-end
-
-function Soundtrack_Library_AddProjectTrackOgg(trackName, _length, _title, _artist, _album)
-	Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, projectTrack = true, ogg = true}
-end
-
-
 function Soundtrack.Library.StopMusic()
 	-- Remove the playback continuity timers
 	-- because we're stopping!
@@ -172,14 +151,6 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	--- <- 8.2 CSCIGUY fix
 	     --nextFileName = "" .. trackName .. "" --Pre 8.2 Csciguy
 		--nextFileName = "Sound\\Music\\" .. trackName .. ".mp3" --Pre BFA Csciguy
-    elseif nextTrackInfo.projectTrack then
-		if nextTrackInfo.ogg then
-			nextFileName = "Interface\\Addons\\"..trackName..".ogg"
-		elseif nextTrackInfo.mp3 then
-			nextFileName = "Interface\\Addons\\"..trackName..".mp3"
-		else
-			nextFileName = "Interface\\Addons\\"..trackName..".mp3"
-		end
 	else
 		if nextTrackInfo.ogg then
 			nextFileName = "Interface\\AddOns\\SoundtrackMusic\\"..trackName..".ogg"

@@ -251,7 +251,7 @@
         <Scripts>
             <OnClick>
                 PanelTemplates_Tab_OnClick(self, SoundtrackFrame);
-                SoundtrackFrameTab_OnClick();
+                SoundtrackFrame_RefreshShowingTab();
             </OnClick>
         </Scripts>
     </Button>

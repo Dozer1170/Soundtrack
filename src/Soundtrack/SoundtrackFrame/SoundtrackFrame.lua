@@ -125,16 +125,13 @@ local function SelectActiveTab()
 
     if stackLevel > 0 then
         -- Select currently playing table tab
+        Soundtrack.TraceFrame("Selecting currently playing tab")
         local tableName = Soundtrack.Events.Stack[stackLevel].tableName
         SEVT.SelectedEventsTable = tableName
         PanelTemplates_SetTab(SoundtrackFrame, GetTabIndex(tableName))
-    elseif not SEVT.SelectedEventsTable then
-        -- Select the first tab
-        SEVT.SelectedEventsTable = "Battle"
-        PanelTemplates_SetTab(SoundtrackFrame, 1)
+        SoundtrackFrame_OnTabChanged()
     end
 
-    SoundtrackFrame_OnTabChanged()
 end
 
 function SoundtrackFrame_StatusBarSetProgress(statusBarID, max, current)
@@ -747,6 +744,7 @@ end
 function SoundtrackFrame_OnShow()
     SoundtrackFrame_RefreshCurrentlyPlaying()
     SelectActiveTab()
+    SoundtrackFrame_RefreshShowingTab()
 end
 
 function SoundtrackFrame_OnHide()
@@ -1283,7 +1281,7 @@ function SoundtrackFrameClearButton_OnClick()
     SoundtrackFrame_RefreshEvents()
 end
 
-function SoundtrackFrameTab_OnClick()
+function SoundtrackFrame_RefreshShowingTab()
     SEVT.SelectedEventsTable = nil
     SoundtrackFrameEventFrame:Hide()
     SoundtrackFrameOptionsFrame:Hide()
@@ -1735,68 +1733,12 @@ local function GetCurrentSilence()
     return 1
 end
 
-local function GetProjects()
-    local projects = {}
-    for i, project in pairs(SoundtrackProjects) do
-        table.insert(projects, project.name)
-    end
-    return projects
-end
-
-local function GetCurrentProject()
-    local i
-    for i = 1, #(SoundtrackProjects), 1 do
-        if (SoundtrackFrame.selectedProject == SoundtrackProjects[i].name) then
-            return name
-        end
-    end
-
-    return ""
-end
-
 function SoundtrackFrame_Toggle()
     if (SoundtrackFrame:IsVisible()) then
         SoundtrackFrame:Hide()
     else
         SoundtrackFrame:Show()
     end
-end
-
-function SoundtrackFrame_ProjectDropDown_OnLoad(self)
-    SoundtrackFrame.selectedProject = GetCurrentProject()
-    UIDropDownMenu_SetSelectedID(self, SoundtrackFrame.selectedProject)
-    UIDropDownMenu_Initialize(self, SoundtrackFrame_ProjectDropDown_Initialize)
-    UIDropDownMenu_SetWidth(self, 130)
-end
-
-function SoundtrackFrame_ProjectDropDown_LoadProjects(projectsTexts)
-    local currentProject = SoundtrackFrame.selectedProject
-    local info
-
-    for i, projectText in pairs(projectsTexts) do
-        local checked = nil
-        if currentProject == i then
-            checked = 1
-            UIDropDownMenu_SetText(SoundtrackFrame_ProjectDropDown, projectText)
-        end
-
-        info = {}
-        info.text = projectText
-        info.func = SoundtrackFrame_ProjectDropDown_OnClick
-        info.checked = checked
-        UIDropDownMenu_AddButton(info)
-    end
-end
-
-function SoundtrackFrame_ProjectDropDown_Initialize()
-    SoundtrackFrame_ProjectDropDown_LoadProjects(GetProjects())
-end
-
-function SoundtrackFrame_ProjectDropDown_OnClick(self)
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_ProjectDropDown, self:GetID())
-    SoundtrackFrame.selectedProject = self:GetID()
-    -- Save settings.
-    -- SoundtrackAddon.db.profile.settings.Silence = projects[SoundtrackFrame.selectedProject]
 end
 
 function SoundtrackFrame_PlaybackButtonsLocationDropDown_OnLoad(self)

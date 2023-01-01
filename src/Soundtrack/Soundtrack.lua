@@ -58,6 +58,7 @@ function SoundtrackAddon:VARIABLES_LOADED()
     Soundtrack.BattleEvents.Initialize()
     Soundtrack.CustomEvents.MiscInitialize()
     Soundtrack.CustomEvents.CustomInitialize()
+    SoundtrackFrame_RefreshShowingTab()
 end
 
 function LoadTracks()

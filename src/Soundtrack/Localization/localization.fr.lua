@@ -400,15 +400,6 @@ SOUNDTRACK_LOOP_MUSIC_TIP = "Activer la lecture en boucle pour les pistes en arr
 SOUNDTRACK_MAX_SILENCE = "Silence Max."
 SOUNDTRACK_MAX_SILENCE_TIP = "Le montant maximum de silence a inserer entre les pistes pour la musique zone. Augmentez cette valeur si vous souhaitez que la musique serait de prendre une pause de temps en temps."
 
-SOUNDTRACK_PROJECT = "Project"
-SOUNDTRACK_PROJECT_TIP = "Soundtrack Project to load or remove from Soundtrack"
-
-SOUNDTRACK_PROJECT_LOAD = "Charger un Project"
-SOUNDTRACK_PROJECT_LOAD_TIP = "Loads a project's event-track settings into Soundtrack"
-
-SOUNDTRACK_PROJECT_REMOVE = "Supprimer un Project"
-SOUNDTRACK_PROJECT_REMOVE_TIP = "Removes a project's event-track settings from Soundtrack"
-
 SOUNDTRACK_ENABLE_MUSIC = "Activer Musique"
 SOUNDTRACK_ENABLE_MUSIC_TIP = "Desactiver toutes les musiques. Utilisez cette option pour desactiver temporairement l'ensemble de la musique Soundtrack."
 
