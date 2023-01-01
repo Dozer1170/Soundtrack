@@ -1,6 +1,8 @@
 
 local PROFILES_COPY_CONFIRM = "PROFILES_COPY_CONFIRM"
+local PROFILES_DELETE_CONFIRM = "PROFILES_DELETE_CONFIRM"
 local PROFILES_RESET_CONFIRM = "PROFILES_RESET_CONFIRM"
+local PROFILE_ALREADY_EXISTS = "PROFILE_ALREADY_EXISTS"
 
 function ProfilesTab_OnLoad()
     LoadProfileDropDown.initialize = function () ProfilesTab_InitDropDown(ProfilesTab_LoadProfileDropDownItemSelected, false) end
@@ -8,6 +10,9 @@ function ProfilesTab_OnLoad()
 
     CopyFromProfileDropDown.initialize = function () ProfilesTab_InitDropDown(ProfilesTab_CopyFromProfileDropDownItemSelected, true) end
     CopyFromProfileDropDownText:SetText("Copy From")
+
+    DeleteProfileDropDown.initialize = function () ProfilesTab_InitDropDown(ProfilesTab_DeleteProfileDropDownItemSelected, true) end
+    DeleteProfileDropDownText:SetText("Delete Profile")
 end
 
 function ProfilesTab_InitDropDown(func, skipCurrentProfile)
@@ -48,6 +53,44 @@ function ProfilesTab_CopyFromProfileDropDownItemSelected(self, profileName)
         hideOnEscape = true,
     }
     StaticPopup_Show(PROFILES_COPY_CONFIRM)
+end
+
+function ProfilesTab_DeleteProfileDropDownItemSelected(self, profileName)
+    Soundtrack.TraceProfiles("Selected profile to delete: " .. profileName)
+
+    StaticPopupDialogs[PROFILES_DELETE_CONFIRM] = {
+        text = "Are you sure you want to DELETE the " .. profileName .. " profile? You cannot undo this.",
+        button1 = "Yes",
+        button2 = "No",
+        OnAccept = function()
+            SoundtrackAddon.db:DeleteProfile(profileName)
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+    }
+    StaticPopup_Show(PROFILES_DELETE_CONFIRM)
+end
+
+function ProfilesTab_CreateNewProfile()
+    local profileName = NewProfileEditBox:GetText()
+    Soundtrack.TraceProfiles("Requested to create new profile: " .. profileName)
+
+    local profiles = SoundtrackAddon.db:GetProfiles()
+    if HasValue(profiles, profileName) then
+        StaticPopupDialogs[PROFILE_ALREADY_EXISTS] = {
+            text = "Profile already exists, not creating.",
+            button1 = "Ok",
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+        }
+        StaticPopup_Show(PROFILE_ALREADY_EXISTS)
+    end
+
+    SoundtrackAddon.db:SetProfile(profileName)
+    NewProfileEditBox:SetText("")
+    ProfilesTab_ReloadProfile()
 end
 
 function ProfilesTab_ResetCurrentProfile()
