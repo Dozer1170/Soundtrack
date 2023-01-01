@@ -34,7 +34,7 @@
                 <Anchors>
                     <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CurrentProfileNameLabel">
                         <Offset>
-                            <AbsDimension x="-15" y="-10"/>
+                            <AbsDimension x="0" y="-10"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -55,13 +55,13 @@
                 <Anchors>
                     <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CopyFromProfileDropDown">
                         <Offset>
-                            <AbsDimension x="0" y="-10"/>
+                            <AbsDimension x="18" y="-10"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
                 <Scripts>
                     <OnClick>ProfilesTab_ResetCurrentProfile()</OnClick>
-                    <OnEnter>Soundtrack.ShowTip(self, "Reset Current Profile", "Resets the current profile to default settings")</OnEnter>
+                    <OnEnter>Soundtrack.ShowTip(self, "Reset Current Profile", "Resets the current profile to default settings.")</OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </Button>

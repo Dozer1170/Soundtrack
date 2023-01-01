@@ -342,6 +342,7 @@ local function StopCombatMusic()
 	highestDifficulty = 1
 	highestClassification = 1
 end
+
 local function AnalyzeBattleSituation() 
     local battleType, bossName, hasLowHealth = GetBattleType()
     local battleTypeIndex = Soundtrack.IndexOf(battleEvents, battleType)
