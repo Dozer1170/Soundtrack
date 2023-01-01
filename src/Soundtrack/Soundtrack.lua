@@ -4,17 +4,119 @@
     General functions.
 ]]
 
-SoundtrackAddon = LibStub("AceAddon-3.0"):NewAddon("SoundtrackAddon")
+SoundtrackAddon = LibStub("AceAddon-3.0"):NewAddon("SoundtrackAddon", "AceEvent-3.0")
 
 function SoundtrackAddon:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SoundtrackDB", {
         profile = {
-            minimap = {
-                hide = false
+            minimap = { hide = false },
+            events = {},
+            customEvents = {},
+            settings = {
+                MinimapIconPos = 45,
+                EnableMinimapButton = true,
+                ShowTrackInformation = true,
+                ShowDefaultMusic = false,
+                ShowEventStack = false,
+                ShowPlaybackControls = false,
+                EnableBattleMusic = true,
+                EnableZoneMusic = true,
+                EnableMiscMusic = true,
+                EnableCustomMusic = true,
+                Debug = false,
+                BattleCooldown = 0,
+                Silence = 5,
+                AutoAddZones = true,
+                EscalateBattleMusic = true,
+                trackSortingCriteria = "filePath",
+                CurrentProfileBattle = "Default",
+                CurrentProfileZone = "Default",
+                CurrentProfileDance = "Default",
+                CurrentProfileMisc = "Default",
+                UseDefaultLoadMyTracks = false,
+                LockNowPlayingFrame = false,
+                LockPlaybackControls = false,
+                HideControlButtons = false,
+                PlaybackButtonsPosition = "LEFT",
+                LowHealthPercent = .25,
+                YourEnemyLevelOnly = false,
+                k = true;
             }
         }
-    })
+    }, true)
+    self:RegisterEvent("VARIABLES_LOADED")
+end
+
+function SoundtrackAddon:VARIABLES_LOADED()
     SoundtrackMinimap_Initialize()
+    Soundtrack.MigrateFromOldSavedVariables()
+    LoadTracks()
+    Soundtrack.DanceEvents.Initialize()
+    Soundtrack.PetBattlesEvents.Initialize()
+    Soundtrack.MountEvents.Initialize()
+    Soundtrack.ZoneEvents.Initialize()
+    Soundtrack.BattleEvents.Initialize()
+    Soundtrack.CustomEvents.MiscInitialize()
+    Soundtrack.CustomEvents.CustomInitialize()
+    SoundtrackFrame_RefreshShowingTab()
+end
+
+function LoadTracks()
+    Soundtrack.Util.InitDebugChatFrame()
+    Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Util.InitDebugChatFrame)
+    Soundtrack.Timers.AddTimer("InitDebugChatFrame", 2, Soundtrack.Util.InitDebugChatFrame)
+    Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Util.InitDebugChatFrame)
+
+    Soundtrack_Tracks = {}
+
+    -- Load tracks in generated script if available
+    Soundtrack_LoadDefaultTracks()
+
+    if Soundtrack_LoadMyTracks and not _TracksLoaded then
+        Soundtrack_LoadMyTracks()
+        SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = false;
+        _TracksLoaded = true
+    elseif not Soundtrack_LoadMyTracks and not SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks then
+        StaticPopup_Show("ST_NO_LOADMYTRACKS_POPUP");
+        error(SOUNDTRACK_ERROR_LOADING)
+    elseif not Soundtrack_LoadMyTracks and SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks then
+        -- User has no tracks to load, and is intentional
+    end
+
+    -- Create events table
+    for i,eventTabName in ipairs(Soundtrack_EventTabs) do
+        if not SoundtrackAddon.db.profile.events[eventTabName] then
+            Soundtrack.TraceEvents("Creating table "..eventTabName)
+            SoundtrackAddon.db.profile.events[eventTabName] = {}
+        end
+    end
+
+    _SuspendSorting = true
+    Soundtrack_SetFrameLocks()
+    _SuspendSorting = false
+
+    -- Remove obsolete predefined events
+    --PurgeEvents()
+    Soundtrack.Timers.AddTimer("PurgeEvents", 10, PurgeEvents)
+
+    -- sort all the tables
+    Soundtrack.SortAllEvents()
+
+    Soundtrack.SortTracks()
+    SetUserEventsToCorrectLevel()
+
+    local numTracks = getn(Soundtrack_SortedTracks)
+    DEFAULT_CHAT_FRAME:AddMessage("Soundtrack: Loaded with " .. numTracks.." track(s) in library.", 0.0, 1.0, 0.25)
+    --[[
+	Soundtrack.Trace("Num battle events "..getn(Soundtrack_SortedEvents["Battle"]))
+    Soundtrack.Trace("Num zone events "..getn(Soundtrack_SortedEvents["Zone"]))
+    Soundtrack.Trace("Num dance events "..getn(Soundtrack_SortedEvents["Dance"]))
+    Soundtrack.Trace("Num misc events "..getn(Soundtrack_SortedEvents["Misc"]))
+    Soundtrack.Trace("Num custom eventcustom events "..getn(Soundtrack_SortedEvents["Custom"]))
+    Soundtrack.Trace("Num playlists "..getn(Soundtrack_SortedEvents["Playlists"]))
+    --]]
+
+    SoundtrackFrame_RefreshPlaybackControls()
 end
 
 Soundtrack_EventTabs = {
@@ -28,8 +130,6 @@ Soundtrack_EventTabs = {
     "Playlists"
 }
 
-Soundtrack_Events = {}
-Soundtrack_CustomEvents = {}
 Soundtrack_BattleEvents = {}
 Soundtrack_MiscEvents = {}
 Soundtrack_FlatEvents = {} -- Event nodes, but with collapsed events removed. used to match scrolling lists
@@ -49,7 +149,7 @@ function Soundtrack.IsNullOrEmpty(text)
 end
 
 -- Removes obsolete tracks from events.
-local function PurgeEventsFromTable(eventTableName)
+function PurgeEventsFromTable(eventTableName)
     local eventTable = Soundtrack.Events.GetTable(eventTableName)
     
     for k, v in pairs(eventTable) do
@@ -71,7 +171,7 @@ local function PurgeEventsFromTable(eventTableName)
     end
 end
 
-local function CheckForPurgeEvents(eventTableName)
+function CheckForPurgeEvents(eventTableName)
 	local eventTable = Soundtrack.Events.GetTable(eventTableName)
     
     for k, v in pairs(eventTable) do
@@ -91,7 +191,7 @@ end
 
 -- Removes obsolete tracks from event assignments
 -- DONE If user forgot MyTracks.lua, this could wipe all assignments. Confirmation box?
-local function PurgeEvents()
+function PurgeEvents()
 	local eventsToPurge = false
 	for i,event in ipairs(Soundtrack_EventTabs) do
 		if CheckForPurgeEvents(event) then
@@ -102,7 +202,7 @@ local function PurgeEvents()
 		StaticPopup_Show("SOUNDTRACK_PURGE_POPUP");
 	end
 end
-local function PurgeEventsConfirmed()
+function PurgeEventsConfirmed()
     for i,event in ipairs(Soundtrack_EventTabs) do
         PurgeEventsFromTable(event)
     end
@@ -135,58 +235,7 @@ StaticPopupDialogs["SOUNDTRACK_NO_PURGE_POPUP"] = {
     hideOnEscape = 1
 }
 
--- Default values for the Soundtrack.Settings table
-local _DefaultSettings = 
-{
-    MinimapIconPos = 45,
-    EnableMinimapButton = true,
-    ShowTrackInformation = true,
-    ShowDefaultMusic = false,
-    ShowEventStack = false,
-    ShowPlaybackControls = false,
-    EnableBattleMusic = true,
-    EnableZoneMusic = true,
-    EnableMiscMusic = true,
-    EnableCustomMusic = true,
-    Debug = false,
-    BattleCooldown = 0,
-    Silence = 5,
-    AutoAddZones = true,
-    EscalateBattleMusic = true,
-    trackSortingCriteria = "filePath",
-	getTime = 0,
-	CurrentProfileBattle = "Default",
-	CurrentProfileZone = "Default",
-	CurrentProfileDance = "Default",
-	CurrentProfileMisc = "Default",
-	UseDefaultLoadMyTracks = false,
-	LockNowPlayingFrame = false,
-	LockPlaybackControls = false,
-	HideControlButtons = false,
-	PlaybackButtonsPosition = "LEFT",
-	LowHealthPercent = .25,
-	YourEnemyLevelOnly = false,
-	k = true;
-}
-
--- Transfers default settings from _DefaultSettings to Soundtrack.Settings 
--- if the options are missing.
-local function InitDefaultSettings()
-    -- Add missing values
-    for k,v in pairs(_DefaultSettings) do
-		--[[if Soundtrack.Settings.k == nil then
-			Soundtrack.Settings.k = v
-		end
-		--]]
-        if Soundtrack.Settings[k] == nil then
-			print(k, Soundtrack.Settings[k])
-			Soundtrack.Settings[k] = v
-		end
-    end
-	Soundtrack.Settings.getTime = GetTime();
-end
-
-local function GetPathFileNameRecursive(filePath)
+function GetPathFileNameRecursive(filePath)
     local index1 = string.find(filePath, "/")
     if not index1 then
         return filePath
@@ -332,16 +381,16 @@ function Soundtrack.AssignTrack(eventName, trackName)
     table.insert(eventTable[eventName].tracks, trackName)
 end
 
-local function Soundtrack_SetFrameLocks()
+function Soundtrack_SetFrameLocks()
 	-- If option true, then disable mouse.
-	local enableMouse = not Soundtrack.Settings.LockNowPlayingFrame
+	local enableMouse = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame
 	NowPlayingTextFrame:EnableMouse(enableMouse)
 	
-	enableMouse = not Soundtrack.Settings.LockPlaybackControls
+	enableMouse = not SoundtrackAddon.db.profile.settings.LockPlaybackControls
 	SoundtrackControlFrame:EnableMouse(enableMouse)
 end
 
-local function SetUserEventsToCorrectLevel()
+function SetUserEventsToCorrectLevel()
 		local tableName = Soundtrack.Events.GetTable("Boss")
 		for j, eventName in pairs(tableName) do		
 			tableName[j].priority = ST_BOSS_LVL
@@ -355,82 +404,17 @@ local function SetUserEventsToCorrectLevel()
 		end
 end
 
-local function OnVariablesLoaded(self)
-
-    if not Soundtrack_Settings then
-        Soundtrack_Settings = {}
-    end
-    
-    Soundtrack.Settings = Soundtrack_Settings
-	Soundtrack.Util.InitDebugChatFrame()
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Util.InitDebugChatFrame)
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 2, Soundtrack.Util.InitDebugChatFrame)
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Util.InitDebugChatFrame)
-	
-    InitDefaultSettings()
-
-    Soundtrack_Tracks = {}
-    
-    -- Load tracks in generated script if available
-    Soundtrack_LoadDefaultTracks()
-
-	if Soundtrack_LoadMyTracks and not _TracksLoaded then
-        Soundtrack_LoadMyTracks()
-		Soundtrack.Settings.UseDefaultLoadMyTracks = false;
-		_TracksLoaded = true
-	elseif not Soundtrack_LoadMyTracks and not Soundtrack.Settings.UseDefaultLoadMyTracks then 
-		StaticPopup_Show("ST_NO_LOADMYTRACKS_POPUP");
-		error(SOUNDTRACK_ERROR_LOADING) 
-	elseif not Soundtrack_LoadMyTracks and Soundtrack.Settings.UseDefaultLoadMyTracks then
-	    -- User has no tracks to load, and is intentional
-	end   
-
-    -- Create events table
-    for i,eventTabName in ipairs(Soundtrack_EventTabs) do
-        if not Soundtrack_Events[eventTabName] then
-            Soundtrack.TraceEvents("Creating table "..eventTabName)
-            Soundtrack_Events[eventTabName] = {}
-        end
-    end
-    
-    _SuspendSorting = true
-	Soundtrack_SetFrameLocks()
-    _SuspendSorting = false
-        
-    -- Remove obsolete predefined events
-	--PurgeEvents()
-	Soundtrack.Timers.AddTimer("PurgeEvents", 10, PurgeEvents)
-	
-    -- sort all the tables
-    Soundtrack.SortAllEvents()
-
-    Soundtrack.SortTracks()
-    SetUserEventsToCorrectLevel()
-	
-    local numTracks = getn(Soundtrack_SortedTracks)
-    DEFAULT_CHAT_FRAME:AddMessage("Soundtrack: Loaded with " .. numTracks.." track(s) in library.", 0.0, 1.0, 0.25)
-    --[[
-	Soundtrack.Trace("Num battle events "..getn(Soundtrack_SortedEvents["Battle"]))
-    Soundtrack.Trace("Num zone events "..getn(Soundtrack_SortedEvents["Zone"]))
-    Soundtrack.Trace("Num dance events "..getn(Soundtrack_SortedEvents["Dance"]))
-    Soundtrack.Trace("Num misc events "..getn(Soundtrack_SortedEvents["Misc"]))
-    Soundtrack.Trace("Num custom eventcustom events "..getn(Soundtrack_SortedEvents["Custom"]))
-    Soundtrack.Trace("Num playlists "..getn(Soundtrack_SortedEvents["Playlists"]))
-    --]]
-	
-    SoundtrackFrame_RefreshPlaybackControls()
-end
 StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"] = {
 	preferredIndex = 3,
     text = SOUNDTRACK_NO_MYTRACKS,
     button1 = ACCEPT,
     button2 = CANCEL,
     OnAccept = function() 
-		Soundtrack.Settings.UseDefaultLoadMyTracks = true;
-		OnVariablesLoaded()
+		SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true;
+        LoadTracks()
     end,
 	OnCancel = function()
-		Soundtrack.Settings.UseDefaultLoadMyTracks = false;
+		SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = false;
 	end,
     timeout = 0,
     whileDead = 1,
@@ -606,7 +590,7 @@ function StringSplit(text, delimiter)
   return list
 end
 
-local function StringSplit(str, delim, maxNb)
+function StringSplit(str, delim, maxNb)
     -- Eliminate bad cases...
     if string.find(str, delim) == nil then
         return { str }
@@ -634,7 +618,7 @@ end
 -- event node : name, tag, nodes
 
 -- Returns a child node if the name matches
-local function GetChildNode(rootNode, childNodeName)
+function GetChildNode(rootNode, childNodeName)
     
     if not rootNode then return nil end
 
@@ -647,7 +631,7 @@ local function GetChildNode(rootNode, childNodeName)
     return nil
 end
 
-local function AddEventNode(rootNode, eventPath)
+function AddEventNode(rootNode, eventPath)
     if not rootNode then
         error("rootNode is nil")
     end
@@ -669,7 +653,7 @@ local function AddEventNode(rootNode, eventPath)
     end
 end
 
-local function PrintEventNode(node)
+function PrintEventNode(node)
     Soundtrack.TraceFrame("Node: " .. node.name)
     
     for i, n in ipairs(node.nodes) do
@@ -678,13 +662,13 @@ local function PrintEventNode(node)
 end
 
 -- Returns a flat list of tree nodes, based on whether each level is expanded or not
-local function GetFlattenedEventNodes(eventTableName, rootNode, list)
+function GetFlattenedEventNodes(eventTableName, rootNode, list)
 
     table.insert(list, rootNode)
     
     -- if expandable
     if table.getn(rootNode.nodes) >= 1 then    
-        local event = Soundtrack_Events[eventTableName][rootNode.tag] or error("Cannot locate event " .. rootNode.name)
+        local event = SoundtrackAddon.db.profile.events[eventTableName][rootNode.tag] or error("Cannot locate event " .. rootNode.name)
         if not event then return end
         
         -- By default every event is expanded
@@ -723,7 +707,7 @@ function Soundtrack_SortEvents(eventTableName)
         lowerEventFilter = string.lower(Soundtrack.eventFilter)
     end
 
-    for k,v in pairs(Soundtrack_Events[eventTableName]) do
+    for k,v in pairs(SoundtrackAddon.db.profile.events[eventTableName]) do
         if k ~= "Preview" then -- Hide internal events
             if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
                 table.insert(Soundtrack_FlatEvents[eventTableName], k)
@@ -788,21 +772,24 @@ end
 function Soundtrack.TraceCustom(text)
 	Soundtrack.Util.DebugPrint("[Custom]: " .. text, 1.0, 0.0, 0.5)
 end
+function Soundtrack.TraceProfiles(text)
+    Soundtrack.Util.DebugPrint("[Profiles]: " .. text, 0.75, 1.0, 0.25)
+end
 
 -- Sort functions
-local function CompareTracksByAlbum(i1, i2)
+function CompareTracksByAlbum(i1, i2)
     return Soundtrack_Tracks[i1].album < Soundtrack_Tracks[i2].album
 end
-local function CompareTracksByArtist(i1, i2)
+function CompareTracksByArtist(i1, i2)
     return Soundtrack_Tracks[i1].artist < Soundtrack_Tracks[i2].artist
 end
-local function CompareTracksByTitle(i1, i2)
+function CompareTracksByTitle(i1, i2)
     return Soundtrack_Tracks[i1].title < Soundtrack_Tracks[i2].title
 end
-local function CompareTracksByFileName(i1, i2)
+function CompareTracksByFileName(i1, i2)
     return Soundtrack.GetPathFileName(i1) < Soundtrack.GetPathFileName(i2)
 end
-local function MatchTrack(trackName, track, filter)
+function MatchTrack(trackName, track, filter)
     local lowerFilter = string.lower(filter)
     local index = string.find(string.lower(trackName), lowerFilter)
     if index then return true end
@@ -832,7 +819,7 @@ function Soundtrack.SortTracks(sortCriteria)
     
     Soundtrack_SortedTracks = {}
     for k,v in pairs(Soundtrack_Tracks) do
-        if not v.defaultTrack or Soundtrack.Settings.ShowDefaultMusic then
+        if not v.defaultTrack or SoundtrackAddon.db.profile.settings.ShowDefaultMusic then
             if not Soundtrack.trackFilter then 
                 table.insert(Soundtrack_SortedTracks, k)
             elseif MatchTrack(k, v, Soundtrack.trackFilter) then
@@ -878,7 +865,7 @@ function Soundtrack_OnLoad(self)
 	SLASH_SOUNDTRACK1, SLASH_SOUNDTRACK2 = '/soundtrack', '/st'
 	local function SoundtrackSlashCmd(msg)
 		if msg == 'debug' then
-			Soundtrack.Settings.Debug = not Soundtrack.Settings.Debug
+			SoundtrackAddon.db.profile.settings.Debug = not SoundtrackAddon.db.profile.settings.Debug
 			Soundtrack.Util.InitDebugChatFrame()
 		elseif msg == 'reset' then
 			SoundtrackFrame:ClearAllPoints()
@@ -893,21 +880,12 @@ function Soundtrack_OnLoad(self)
 		end
 	end
     SlashCmdList["SOUNDTRACK"] = SoundtrackSlashCmd
-	
-    -- Register events
-    self:RegisterEvent("VARIABLES_LOADED")
-	
+
 	Soundtrack.Events.OnLoad(self)
 end
 
 
 function Soundtrack_OnEvent(self, event, ...)
-
-    if event == "VARIABLES_LOADED" then
-		--Soundtrack.Fix()
-        OnVariablesLoaded(self)
-    end
-	
 	-- 5.4.1 IsDisabledByParentalControls() Taint fix
 	UIParent:HookScript("OnEvent", function(s, e, a1, a2) if e:find("ACTION_FORBIDDEN") and ((a1 or "")..(a2 or "")):find("IsDisabledByParentalControls") then StaticPopup_Hide(e) end; end)
 

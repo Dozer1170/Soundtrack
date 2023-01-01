@@ -73,7 +73,7 @@ end
 -- table can be Custom or Misc. 
 function Soundtrack.CustomEvents.RegisterUpdateScript(self, name, tableName, _priority, _continuous, _script, _soundEffect)
     if tableName == ST_CUSTOM then
-        Soundtrack_CustomEvents[name] = { script = _script, eventtype = "Update Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
+        SoundtrackAddon.db.profile.customEvents[name] = { script = _script, eventtype = "Update Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
     elseif tableName == ST_MISC then
         Soundtrack_MiscEvents[name] = { script = _script, eventtype = "Update Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
     end
@@ -84,7 +84,7 @@ end
 -- table can be Custom or Misc. 
 function Soundtrack.CustomEvents.RegisterEventScript(self, name, tableName, _trigger, _priority, _continuous, _script, _soundEffect)
     if tableName == ST_CUSTOM then
-        Soundtrack_CustomEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
+        SoundtrackAddon.db.profile.customEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
     elseif tableName == ST_MISC then
         Soundtrack_MiscEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect }; 
     end
@@ -112,13 +112,12 @@ end --]]
 
 -- Returns the spellID of the buff, else nil
 function Soundtrack.CustomEvents.IsAuraActive(spellId)
-	debug("Is aura active spellid: "..spellId)
 	return Soundtrack.ActiveAuras[spellId]
 end
 
 function Soundtrack.CustomEvents.RegisterBuffEvent(eventName, tableName, _spellId, _priority, _continuous, _soundEffect)
     if tableName == ST_CUSTOM then
-        Soundtrack_CustomEvents[eventName] = 
+        SoundtrackAddon.db.profile.customEvents[eventName] =
         { 
 			spellId=_spellId, 
             stackLevel=_priority, 
@@ -178,27 +177,27 @@ hooksecurefunc("JumpOrAscendStart",
 );
 
 -- MiscEvents
-function Soundtrack.CustomEvents.MiscInitialize(self)
+function Soundtrack.CustomEvents.MiscInitialize()
 
 	debug("Initializing misc. events...")
 	
-	self:RegisterEvent("UNIT_AURA")
-    self:RegisterEvent("AUCTION_HOUSE_CLOSED")
-    self:RegisterEvent("AUCTION_HOUSE_SHOW")
-    self:RegisterEvent("BANKFRAME_CLOSED")
-    self:RegisterEvent("BANKFRAME_OPENED")
-    self:RegisterEvent("MERCHANT_CLOSED")
-    self:RegisterEvent("MERCHANT_SHOW")
-	self:RegisterEvent("TAXIMAP_CLOSED")
-    self:RegisterEvent("TAXIMAP_OPENED")
-    self:RegisterEvent("BARBER_SHOP_OPEN")
-    self:RegisterEvent("BARBER_SHOP_CLOSE")
-    self:RegisterEvent("TRAINER_SHOW")
-    self:RegisterEvent("TRAINER_CLOSED")
+	SoundtrackMiscDUMMY:RegisterEvent("UNIT_AURA")
+    SoundtrackMiscDUMMY:RegisterEvent("AUCTION_HOUSE_CLOSED")
+    SoundtrackMiscDUMMY:RegisterEvent("AUCTION_HOUSE_SHOW")
+    SoundtrackMiscDUMMY:RegisterEvent("BANKFRAME_CLOSED")
+    SoundtrackMiscDUMMY:RegisterEvent("BANKFRAME_OPENED")
+    SoundtrackMiscDUMMY:RegisterEvent("MERCHANT_CLOSED")
+    SoundtrackMiscDUMMY:RegisterEvent("MERCHANT_SHOW")
+	SoundtrackMiscDUMMY:RegisterEvent("TAXIMAP_CLOSED")
+    SoundtrackMiscDUMMY:RegisterEvent("TAXIMAP_OPENED")
+    SoundtrackMiscDUMMY:RegisterEvent("BARBER_SHOP_OPEN")
+    SoundtrackMiscDUMMY:RegisterEvent("BARBER_SHOP_CLOSE")
+    SoundtrackMiscDUMMY:RegisterEvent("TRAINER_SHOW")
+    SoundtrackMiscDUMMY:RegisterEvent("TRAINER_CLOSED")
 	
     -- Add fixed custom events
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Jump
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_JUMP, 
         ST_MISC,
         ST_SFX_LVL,
@@ -209,7 +208,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	);
     Soundtrack.CustomEvents.RegisterUpdateScript(	-- Swimming
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_SWIMMING, 
         ST_MISC,
         ST_STATUS_LVL,
@@ -230,7 +229,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		false
 	);
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Auction House  
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_AUCTION_HOUSE, 
         ST_MISC,
         ST_NPC_LVL,
@@ -251,7 +250,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		false
 	    );
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Bank  
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_BANK, 
         ST_MISC,
         ST_NPC_LVL,
@@ -273,7 +272,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		false
 	    );
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Merchant
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_MERCHANT, 
         ST_MISC,
         ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
@@ -294,7 +293,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		false
 	    );	   
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- FlightMaster
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_FLIGHTMASTER, 
         ST_MISC,
         ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
@@ -315,7 +314,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		false
 	    );	   
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Trainer
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_TRAINER, 
         ST_MISC,
         ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
@@ -337,7 +336,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	    );	   
 
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Barbershop
-		self,
+		SoundtrackMiscDUMMY,
 		SOUNDTRACK_BARBERSHOP,
 		ST_MISC,
 		ST_NPC_LVL,
@@ -358,7 +357,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		false
 		);
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Cinematic
-		self,
+		SoundtrackMiscDUMMY,
 		SOUNDTRACK_CINEMATIC,
 		ST_MISC,
 		ST_NPC_LVL,
@@ -380,7 +379,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		);
 	
 	Soundtrack.CustomEvents.RegisterEventScript(	-- NPC Emote
-		self,
+		SoundtrackMiscDUMMY,
 		SOUNDTRACK_NPC_EMOTE,
 		ST_MISC,
 		"CHAT_MSG_MONSTER_EMOTE",
@@ -392,7 +391,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 		);
 	Soundtrack.CustomEvents.RegisterEventScript(	-- NPC Say
-		self,
+		SoundtrackMiscDUMMY,
 		SOUNDTRACK_NPC_SAY,
 		ST_MISC,
 		"CHAT_MSG_MONSTER_SAY",
@@ -404,7 +403,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 		);
 	Soundtrack.CustomEvents.RegisterEventScript(	-- NPC Whisper
-		self,
+		SoundtrackMiscDUMMY,
 		SOUNDTRACK_NPC_WHISPER,
 		ST_MISC,
 		"CHAT_MSG_MONSTER_WHISPER",
@@ -416,7 +415,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 		);
 	Soundtrack.CustomEvents.RegisterEventScript(	-- NPC Yell
-		self,
+		SoundtrackMiscDUMMY,
 		SOUNDTRACK_NPC_YELL,
 		ST_MISC,
 		"CHAT_MSG_MONSTER_YELL",
@@ -429,7 +428,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		);
 	
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Level Up
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_LEVEL_UP,
 	    ST_MISC,
 	    "PLAYER_LEVEL_UP",
@@ -441,7 +440,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	    );
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Join Party
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_JOIN_PARTY,
 	    ST_MISC,
 	    "GROUP_ROSTER_UPDATE",
@@ -461,7 +460,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	    );
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Join Raid
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_JOIN_RAID,
 	    ST_MISC,
 	    "GROUP_ROSTER_UPDATE",
@@ -482,7 +481,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Death Knight Change Presence
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_DK_CHANGE,
 	    ST_MISC,
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -500,7 +499,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Druid Change Form
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_DRUID_CHANGE,
 	    "Misc",
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -519,7 +518,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	);
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Druid Prowl
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_DRUID_PROWL, 
         ST_MISC,
         ST_BUFF_LVL,
@@ -543,7 +542,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Paladin Change Auras
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_PALADIN_CHANGE,
 	    ST_MISC,
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -561,7 +560,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Priest Change Shadowform
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_PRIEST_CHANGE,
 	    ST_MISC,
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -579,7 +578,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Rogue Change Stealth
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_ROGUE_CHANGE,
 	    ST_MISC,
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -596,7 +595,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	);
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Rogue Stealth
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_ROGUE_STEALTH, 
         ST_MISC,
         ST_BUFF_LVL,
@@ -620,7 +619,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Shaman Change Ghost Wolf
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_SHAMAN_CHANGE,
 	    ST_MISC,
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -638,7 +637,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Warrior Change Stances
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_WARRIOR_CHANGE,
 	    ST_MISC,
 	    "UPDATE_SHAPESHIFT_FORM",
@@ -656,7 +655,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 	
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Duel Requested
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_DUEL_REQUESTED,
 	    ST_MISC,
 	    "DUEL_REQUESTED",
@@ -668,7 +667,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 		true
 	    );
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Quest Complete
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_QUEST_COMPLETE,
 	    ST_MISC,
 	    "QUEST_COMPLETE",
@@ -682,7 +681,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 
 	-- Thanks to zephus67 for the code!
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- Stealthed
-		self,
+		SoundtrackMiscDUMMY,
         SOUNDTRACK_STEALTHED, 
         ST_MISC,
         ST_AURA_LVL,
@@ -705,7 +704,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	
 	-- Thanks to sgtrama!
 	Soundtrack.CustomEvents.RegisterEventScript(	-- LFG Complete
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_LFG_COMPLETE,
 	    ST_MISC,
 	    "LFG_COMPLETION_REWARD",
@@ -718,7 +717,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	);
 
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Achievement
-		self,
+		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_ACHIEVEMENT,
 	    ST_MISC,
 	    "ACHIEVEMENT_EARNED",
@@ -767,7 +766,7 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_AQUATIC, ST_MISC, 0, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_FLIGHT, ST_MISC, 0, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- SOUNDTRACK_DRUID_TRAVEL
-	    self, 
+	    SoundtrackMiscDUMMY,
 		SOUNDTRACK_DRUID_TRAVEL, 
 		ST_MISC, 
 		--"UNIT_AURA",
@@ -799,12 +798,13 @@ function Soundtrack.CustomEvents.MiscInitialize(self)
 	
     Soundtrack_SortEvents(ST_MISC)
 end
+
 -- CustomEvents
-function Soundtrack.CustomEvents.CustomInitialize(self)
-	self:RegisterEvent("UNIT_AURA")
+function Soundtrack.CustomEvents.CustomInitialize()
+	SoundtrackCustomDUMMY:RegisterEvent("UNIT_AURA")
 	
 	-- Register events for custom events
-	for k,v in pairs(Soundtrack_CustomEvents) do
+	for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
 
 		-- Fix for buff or debuff events that have the spellId stored as string
 		if (v.eventtype == "Buff" or v.eventtype == "Debuff") and type(v.spellId) == "string" then
@@ -816,7 +816,7 @@ function Soundtrack.CustomEvents.CustomInitialize(self)
 
 	    Soundtrack.AddEvent(ST_CUSTOM, k, v.priority, v.continuous, v.soundEffect)
 		if v.eventtype == "Event Script" then
-			self:RegisterEvent(v.trigger)
+			SoundtrackCustomDUMMY:RegisterEvent(v.trigger)
 		end
 	end 
 	
@@ -824,17 +824,8 @@ function Soundtrack.CustomEvents.CustomInitialize(self)
 end
 
 -- MiscEvents
-function Soundtrack.CustomEvents.MiscOnLoad(self)
-	self:RegisterEvent("VARIABLES_LOADED")
-end
--- CustomEvents
-function Soundtrack.CustomEvents.CustomOnLoad(self)
-	self:RegisterEvent("VARIABLES_LOADED")
-end
-
--- MiscEvents
 function Soundtrack.CustomEvents.MiscOnUpdate(self, elapsed)
-    if Soundtrack.Settings.EnableMiscMusic then
+    if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
         for k,v in pairs(Soundtrack_MiscEvents) do
             if v.eventtype == "Update Script" and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 				v.script()
@@ -844,8 +835,8 @@ function Soundtrack.CustomEvents.MiscOnUpdate(self, elapsed)
 end
 -- CustomEvents
 function Soundtrack.CustomEvents.CustomOnUpdate(self, elapsed)
-    if Soundtrack.Settings.EnableCustomMusic then
-        for k,v in pairs(Soundtrack_CustomEvents) do
+    if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
+        for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
             if v.eventtype == "Update Script" and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
 				v.script()
             end
@@ -861,12 +852,6 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
 
 	debug("MiscOnEvent called")
 	Soundtrack.CustomEvents.UpdateActiveAuras()
-	
-	if event == "VARIABLES_LOADED" then	
-		Soundtrack.CustomEvents.MiscInitialize(self)
-		event = "UNIT_AURA"
-		st_arg1 = "player"
-    end
 	
     if event == "AUCTION_HOUSE_SHOW" then
         Soundtrack.AuctionHouse = true
@@ -899,7 +884,7 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
 		
     -- Handle buff/debuff events
     elseif (event == "UNIT_AURA" and st_arg1 == "player") or event == "UPDATE_SHAPESHIFT_FORM" then
-		if Soundtrack.Settings.EnableMiscMusic then
+		if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 			for k,v in pairs(Soundtrack_MiscEvents) do
 				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 					local isActive = Soundtrack.CustomEvents.IsAuraActive(v.spellId)
@@ -916,7 +901,7 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
     end
     
     -- Handle custom script events
-    if Soundtrack.Settings.EnableMiscMusic then
+    if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
         for k,v in pairs(Soundtrack_MiscEvents) do
             if v.eventtype == "Event Script" and event == v.trigger and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 				v.script();
@@ -930,16 +915,12 @@ function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
 
 	debug("CustomOnEvent called")
 	Soundtrack.CustomEvents.UpdateActiveAuras()
-	
-	if event == "VARIABLES_LOADED" then	
-		Soundtrack.CustomEvents.CustomInitialize(self)
-    end
-	
+
 	if event == "UNIT_AURA" and st_arg1 == "player" then
 		debug("UNIT_AURA event")
-		if Soundtrack.Settings.EnableCustomMusic then
+		if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
 			debug("Custom music enabled")
-			for k,v in pairs(Soundtrack_CustomEvents) do
+			for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
 				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
 					debug("Has spell id and tracks: "..k)
 					local isActive = Soundtrack.CustomEvents.IsAuraActive(v.spellId)
@@ -958,8 +939,8 @@ function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
 	end
 	
     -- Handle custom events
-    if Soundtrack.Settings.EnableCustomMusic then
-        for k,v in pairs(Soundtrack_CustomEvents) do
+    if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
+        for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
             if v.eventtype == "Event Script" and event == v.trigger and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
 				RunScript(v.script)
             end

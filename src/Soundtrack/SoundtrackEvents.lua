@@ -306,7 +306,7 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 				currentEventName = eventName
 				
 				-- A track is now playing, register continuity timers
-				if nextTrack then
+				if nextTrack and Soundtrack_Tracks then
 					local track = Soundtrack_Tracks[nextTrack]
 					if track then
 						local length = track.length
@@ -319,8 +319,8 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 								end
 							else
 								local randomSilence = 0
-								if Soundtrack.Settings.Silence > 0 then
-									randomSilence = random(5, Soundtrack.Settings.Silence)
+								if SoundtrackAddon.db.profile.settings.Silence > 0 then
+									randomSilence = random(5, SoundtrackAddon.db.profile.settings.Silence)
 								end
 								Soundtrack.Timers.AddTimer("TrackFinished", length + randomSilence, trackFinished)
 								if track.length > 20 then
@@ -347,7 +347,7 @@ function Soundtrack.Events.GetTable(eventTableName)
         return
     end
     
-    local eventTable = Soundtrack_Events[eventTableName]
+    local eventTable = SoundtrackAddon.db.profile.events[eventTableName]
     if not eventTable then
         Soundtrack.Error("Attempt to access invalid event table ("..eventTableName..")")
         return nil
@@ -430,7 +430,7 @@ function Soundtrack.Events.RenameEvent(tableName, oldName, newName)
         return
     end
 
-    local eventTable = Soundtrack_Events[tableName]
+    local eventTable = SoundtrackAddon.db.profile.events[tableName]
     if eventTable and eventTable[oldName] then
         Soundtrack.TraceEvents("Renaming event: " .. oldName .. " => " .. newName)
         local event = eventTable[oldName]
@@ -440,10 +440,10 @@ function Soundtrack.Events.RenameEvent(tableName, oldName, newName)
     end     
     
     -- Also rename event in CustomEvents
-    if Soundtrack_CustomEvents[oldName] then
-        local event = Soundtrack_CustomEvents[oldName]
-        Soundtrack_CustomEvents[newName] = event
-        Soundtrack_CustomEvents[oldName] = nil
+    if SoundtrackAddon.db.profile.customEvents[oldName] then
+        local event = SoundtrackAddon.db.profile.customEvents[oldName]
+        SoundtrackAddon.db.profile.customEvents[newName] = event
+        SoundtrackAddon.db.profile.customEvents[oldName] = nil
     end
     
     if Soundtrack_MiscEvents[oldName] then

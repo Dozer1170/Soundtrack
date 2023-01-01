@@ -44,27 +44,6 @@ function Soundtrack.Library.AddDefaultTrack(trackName, _length, _title, _artist,
 	end
 end
 
-function Soundtrack_Library_AddProjectTrack(trackName, _length, _title, _artist, _album, _extension)
-	if _extension == nil then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, projectTrack = true }
-	elseif _extension == ".MP3" then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, mp3 = true, projectTrack = true }
-	elseif _extension == ".OGG" then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, ogg = true, projectTrack = true}
-	elseif _extension == ".WAV" then
-		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, wav = true, projectTrack = true}
-	end
-end
-
-function Soundtrack_Library_AddProjectTrackMp3(trackName, _length, _title, _artist, _album)
-	Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, projectTrack = true, mp3 = true}
-end
-
-function Soundtrack_Library_AddProjectTrackOgg(trackName, _length, _title, _artist, _album)
-	Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, projectTrack = true, ogg = true}
-end
-
-
 function Soundtrack.Library.StopMusic()
 	-- Remove the playback continuity timers
 	-- because we're stopping!
@@ -139,7 +118,7 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
     debug("PlayTrack(".. Soundtrack.GetPathFileName(trackName) ..")")
     
     -- Check if the track is valid
-    if not Soundtrack_Tracks[trackName] then
+    if not Soundtrack_Tracks or not Soundtrack_Tracks[trackName] then
         return
     end
     
@@ -172,14 +151,6 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	--- <- 8.2 CSCIGUY fix
 	     --nextFileName = "" .. trackName .. "" --Pre 8.2 Csciguy
 		--nextFileName = "Sound\\Music\\" .. trackName .. ".mp3" --Pre BFA Csciguy
-    elseif nextTrackInfo.projectTrack then
-		if nextTrackInfo.ogg then
-			nextFileName = "Interface\\Addons\\"..trackName..".ogg"
-		elseif nextTrackInfo.mp3 then
-			nextFileName = "Interface\\Addons\\"..trackName..".mp3"
-		else
-			nextFileName = "Interface\\Addons\\"..trackName..".mp3"
-		end
 	else
 		if nextTrackInfo.ogg then
 			nextFileName = "Interface\\AddOns\\SoundtrackMusic\\"..trackName..".ogg"
@@ -238,7 +209,7 @@ function Soundtrack.Library.RemoveTrack(trackName)
         
         -- Remove the track from any event that assigns it
         for __,eventTab in ipairs(Soundtrack_EventTabs) do
-            for k,v in Soundtrack_Events[eventTab] do 
+            for k,v in SoundtrackAddon.db.profile.events[eventTab] do
                 for i,tn in ipairs(v.tracks) do
                     if tn == trackName then
                         debug("Removed assigned track "..trackName)

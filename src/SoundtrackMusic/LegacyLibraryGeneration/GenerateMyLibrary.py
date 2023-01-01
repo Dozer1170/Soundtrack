@@ -372,11 +372,11 @@ def main(argv, stdout, environ):
     f.write(time.ctime())
     f.write(u'"\n')
     f.write(u'function Soundtrack_LoadMyTracks()\n')
-    f.write(u'   if Soundtrack.Settings.MyTracksVersion == nil or Soundtrack.Settings.MyTracksVersion ~= SMP3_PL_VERSION then\n')
-    f.write(u'      Soundtrack.Settings.MyTracksVersion = SMP3_PL_VERSION\n')
-    f.write(u'      Soundtrack.Settings.MyTracksVersionSame = false\n')
+    f.write(u'   if SoundtrackAddon.db.profile.settings.MyTracksVersion == nil or SoundtrackAddon.db.profile.settings.MyTracksVersion ~= SMP3_PL_VERSION then\n')
+    f.write(u'      SoundtrackAddon.db.profile.settings.MyTracksVersion = SMP3_PL_VERSION\n')
+    f.write(u'      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = false\n')
     f.write(u'   else\n')
-    f.write(u'      Soundtrack.Settings.MyTracksVersionSame = true\n')
+    f.write(u'      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = true\n')
     f.write(u'   end\n')
     
     print 'Scanning ' + mp3Path

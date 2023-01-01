@@ -402,15 +402,6 @@ SOUNDTRACK_LOOP_MUSIC_TIP = "Enable to continuously play background music. This 
 SOUNDTRACK_MAX_SILENCE = "Maximum Silence"
 SOUNDTRACK_MAX_SILENCE_TIP = "The maximum amount of silence to insert between tracks for zone music. Increase this value if you wish the music would take a break once in a while."
 
-SOUNDTRACK_PROJECT = "Project"
-SOUNDTRACK_PROJECT_TIP = "Soundtrack Project to load or remove from Soundtrack"
-
-SOUNDTRACK_PROJECT_LOAD = "Load Project"
-SOUNDTRACK_PROJECT_LOAD_TIP = "Loads a project's event-track settings into Soundtrack"
-
-SOUNDTRACK_PROJECT_REMOVE = "Remove Project"
-SOUNDTRACK_PROJECT_REMOVE_TIP = "Removes a project's event-track settings from Soundtrack"
-
 SOUNDTRACK_ENABLE_MUSIC = "Enable Music"
 SOUNDTRACK_ENABLE_MUSIC_TIP = "Master toggle to turn off all music. Use this to temporarily disable all of Soundtrack's music."
 

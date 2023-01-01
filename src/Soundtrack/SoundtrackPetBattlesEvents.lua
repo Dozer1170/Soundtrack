@@ -43,7 +43,6 @@ function Soundtrack.PetBattlesEvents.OnLoad(self)
 	self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSAL_ACCEPTED")
 	self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSAL_DECLINED")
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
-    self:RegisterEvent("VARIABLES_LOADED")
 end
 
 local isPVPDuel = false
@@ -53,13 +52,8 @@ local hasTracks = false --used to fall back to the Players/Named NPCs subheading
 local targetName = nil 
 
 function Soundtrack.PetBattlesEvents.OnEvent(self, event, ...)
-	
 	Soundtrack.TracePetBattles(event)
-	
-	if event == "VARIABLES_LOADED" then
-		Soundtrack.PetBattlesEvents.Initialize()
-    end
-		
+
 	if event == "PET_BATTLE_OPENING_START" then
 		Soundtrack.PetBattlesEvents.BattleEngaged()
 	end	

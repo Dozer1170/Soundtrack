@@ -7,6 +7,11 @@ end
 local icon = LibStub("LibDBIcon-1.0")
 
 function SoundtrackMinimap_Initialize()
+    if icon:IsRegistered("SoundtrackAddon") then
+        icon:Refresh("SoundtrackAddon", SoundtrackAddon.db.profile.minimap)
+        return
+    end
+
     local soundtrackMinimapLDB = LibStub("LibDataBroker-1.1"):NewDataObject("SoundtrackMinimap", {
         type = "data source",
         text = "Soundtrack",
@@ -16,7 +21,7 @@ function SoundtrackMinimap_Initialize()
     })
 
     icon:Register("SoundtrackAddon", soundtrackMinimapLDB, SoundtrackAddon.db.profile.minimap)
-end
+    end
 
 function SoundtrackMinimap_IconFrame_OnClick(self, button)
     debug("Minimap button OnClick")

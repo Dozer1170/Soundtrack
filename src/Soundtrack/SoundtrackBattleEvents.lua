@@ -133,7 +133,7 @@ function GetGroupEnemyLevel()
     table.insert(units, "player")
     
 	-- add your party/raid members
-	if not Soundtrack.Settings.YourEnemyLevelOnly then
+	if not SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly then
 		if total > 0 then
 			local index
 			for index = 1, total do 
@@ -148,7 +148,7 @@ function GetGroupEnemyLevel()
     end
     
     -- add your party/raid pets
-	if not Soundtrack.Settings.YourEnemyLevelOnly then
+	if not SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly then
 		local index
 		for index = 0, total do
 			if UnitExists(prefix.."pet"..index) then 
@@ -209,7 +209,7 @@ function GetGroupEnemyLevel()
 			if unitCreatureType == "Critter" then
 				unitClass = unitCreatureType
 			else
-				if unitClass == "worldboss" and unitHealthPercent < Soundtrack.Settings.LowHealthPercent then
+				if unitClass == "worldboss" and unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent then
 					hasLowHealth = true
 				end
 			end
@@ -227,7 +227,7 @@ function GetGroupEnemyLevel()
 					if SoundtrackEvents_EventHasTracks(ST_BOSS, unitName) then
 						bossName = unitName
 					end
-					if unitHealthPercent < Soundtrack.Settings.LowHealthPercent then
+					if unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent then
 						hasLowHealth = true
 					end
 					if bossEvent.worldboss then
@@ -295,7 +295,7 @@ local hostileDeathCount = 0
 local currentBattleTypeIndex = 0 -- Used to determine battle priorities and escalations
 
 local function StartVictoryMusic()
-	if Soundtrack.Settings.EnableBattleMusic then
+	if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
 		if hostileDeathCount > 0 then
 			local battleEventName = Soundtrack.Events.Stack[ST_BATTLE_LVL].eventName
 			local bossEventName = Soundtrack.Events.Stack[ST_BOSS_LVL].eventName
@@ -342,18 +342,19 @@ local function StopCombatMusic()
 	highestDifficulty = 1
 	highestClassification = 1
 end
+
 local function AnalyzeBattleSituation() 
     local battleType, bossName, hasLowHealth = GetBattleType()
     local battleTypeIndex = Soundtrack.IndexOf(battleEvents, battleType)
     -- If we're in cooldown, but a higher battle is already playing, keep that one, 
     -- otherwise we can escalate the battle music.
     Soundtrack.TraceBattle("CurrentBattleTypeIndex: "..currentBattleTypeIndex.."  BattleType: "..battleType)
-    if Soundtrack.Settings.EscalateBattleMusic then Soundtrack.TraceBattle("EscalateBattleMusic enabled") end
+    if SoundtrackAddon.db.profile.settings.EscalateBattleMusic then Soundtrack.TraceBattle("EscalateBattleMusic enabled") end
 	
     -- If we are out of combat, we play the battle event.
     -- If we are in combat, we only escalate if option is turned on
     if currentBattleTypeIndex == 0 or battleType == SOUNDTRACK_BOSS_BATTLE or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE or
-	  (Soundtrack.Settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex) then
+	  (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex) then
 		if battleType == SOUNDTRACK_BOSS_BATTLE then
 			if bossName ~= nil then
 				local bossLowHealth =  bossName.." "..SOUNDTRACK_LOW_HEALTH
@@ -437,7 +438,6 @@ function Soundtrack.BattleEvents.OnLoad(self)
     self:RegisterEvent("PLAYER_DEAD")
     self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:RegisterEvent("VARIABLES_LOADED")
 end
 
 local delayTime = 0
@@ -460,14 +460,11 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
 	arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23 = select(1, ...)
 	
 	local _, eventType, _, sourceGUID, _, sourceFlags, _, destGUID = CombatLogGetCurrentEventInfo() --CSCIGUY 8-10-18
-	if event == "VARIABLES_LOADED" then
-        Soundtrack.BattleEvents.Initialize(self)
-    end
-	
-	Soundtrack.TraceBattle(event)
+
+	Soundtrack.TraceBattle(event .. " " .. tostring(eventType))
 	
     if event == "PLAYER_REGEN_DISABLED" then
-        if not Soundtrack.Settings.EnableBattleMusic then
+        if not SoundtrackAddon.db.profile.settings.EnableBattleMusic then
             return
         end
 
@@ -477,8 +474,8 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
     elseif event == "PLAYER_REGEN_ENABLED" and 
            not UnitIsCorpse("player") and 
            not UnitIsDead("player") then
-        if Soundtrack.Settings.BattleCooldown > 0 then
-            Soundtrack.Timers.AddTimer("BattleCooldown", Soundtrack.Settings.BattleCooldown, StopCombatMusic)
+        if SoundtrackAddon.db.profile.settings.BattleCooldown > 0 then
+            Soundtrack.Timers.AddTimer("BattleCooldown", SoundtrackAddon.db.profile.settings.BattleCooldown, StopCombatMusic)
         else
             StopCombatMusic()            
         end
@@ -489,7 +486,7 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
 			hostileDeathCount = hostileDeathCount + 1
 			Soundtrack.TraceBattle("Death count: "..hostileDeathCount)
 		else
-			if Soundtrack.Settings.EnableMiscMusic then
+			if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 				for k,v in pairs(Soundtrack_BattleEvents) do
 					if SoundtrackEvents_EventHasTracks(ST_MISC, v) then
 						--RunScript(v.script)
@@ -553,7 +550,8 @@ function Soundtrack.BattleEvents.RegisterEventScript(self, name, tableName, _tri
 end
 
 
-function Soundtrack.BattleEvents.Initialize(self)
+function Soundtrack.BattleEvents.Initialize()
+
     Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_UNKNOWN_BATTLE, ST_BATTLE_LVL, true)
 
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_CRITTER, ST_BATTLE_LVL, true)
@@ -597,7 +595,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 	--]]
 	
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Swing Crit
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_SWING_CRIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -611,7 +609,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 		true
 	);
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Swing
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_SWING_HIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -630,7 +628,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 	);
 
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Damage Spells Crit
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_SPELL_CRIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -644,7 +642,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 		true
 	);
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Damage Spells
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_SPELL_HIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -663,7 +661,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 	);
 	
 	Soundtrack.BattleEvents.RegisterEventScript(	-- DoTs Crit
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_DOT_CRIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -677,7 +675,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 		true
 	);
 	Soundtrack.BattleEvents.RegisterEventScript(	-- DoTs
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_DOT_HIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -696,7 +694,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 	);
 	
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Healing Spells Crit
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_HEAL_CRIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -710,7 +708,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 		true
 	);
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Healing Spells
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_HEAL_HIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -729,7 +727,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 	); 
     
 	Soundtrack.BattleEvents.RegisterEventScript(	-- HoTs Crit
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_HOT_CRIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -743,7 +741,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 		true
 	); 
 	Soundtrack.BattleEvents.RegisterEventScript(	-- HoTs
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_HOT_HIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -762,7 +760,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 	); 
     
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Range Crit
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_RANGE_CRIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",
@@ -776,7 +774,7 @@ function Soundtrack.BattleEvents.Initialize(self)
 		true
 	);
 	Soundtrack.BattleEvents.RegisterEventScript(	-- Range
-		self,
+		SoundtrackBattleDUMMY,
 	    SOUNDTRACK_RANGE_HIT,
 	    ST_MISC,
 	    "COMBAT_LOG_EVENT_UNFILTERED",

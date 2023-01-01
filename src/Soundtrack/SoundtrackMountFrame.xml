@@ -3,8 +3,6 @@
 	
 	<Frame name="SoundtrackMountDUMMY" parent="UIParent" hidden="false">
 		<Scripts>
-            <OnLoad>Soundtrack.MountEvents.OnLoad(self)</OnLoad>
-            <OnEvent>Soundtrack.MountEvents.OnEvent(self, event, ...)</OnEvent>
 			<OnUpdate>Soundtrack.MountEvents.OnUpdate(self, elapsed)</OnUpdate>
         </Scripts>
     </Frame>

@@ -405,15 +405,6 @@ SOUNDTRACK_LOOP_MUSIC_TIP = "Activar reproduccion de musica continua"
 SOUNDTRACK_MAX_SILENCE = "M�ximo Silencio"
 SOUNDTRACK_MAX_SILENCE_TIP = "El importe m�ximo de silencio para insertar entre las canciones o la musica de zona."
 
-SOUNDTRACK_PROJECT = "Proyecto"
-SOUNDTRACK_PROJECT_TIP = "Proyecto de Soundtrack por instalar o deinstalar."
-
-SOUNDTRACK_PROJECT_LOAD = "Instalar proyecto"
-SOUNDTRACK_PROJECT_LOAD_TIP = "Instalar configuracion de evento-cancion de proyecto."
-
-SOUNDTRACK_PROJECT_REMOVE = "Desinstalar proyecto"
-SOUNDTRACK_PROJECT_REMOVE_TIP = "Desinstalar configuracion de evento-cancion de proyecto."
-
 SOUNDTRACK_ENABLE_MUSIC = "Activar toda la musica"
 SOUNDTRACK_ENABLE_MUSIC_TIP = "Activar o desactivar toda la musica de Soundtrack."
 

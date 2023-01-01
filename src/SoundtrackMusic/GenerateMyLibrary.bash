@@ -637,7 +637,7 @@ function process_file {
   relativeFilePathNoExtension="$relativeFolderPath/$fileNameNoExtension"
 
   tags=$(DEBUG=0 BAIL_AFTER_TITLE=1 parse_id3v2 "$filePathWithExtension")
-  trackTitle=$(parseTag "$tags" "TIT2" "None")
+  trackTitle=$(parseTag "$tags" "TIT2" "$fileNameNoExtension")
   album=$(parseTag "$tags" "TALB" "None")
   author=$(parseTag "$tags" "TPE1" "None")
 
@@ -658,11 +658,11 @@ currentDate=$(date)
 {
   echo "SMP3_PL_VERSION = \"$currentDate\"";
   echo "function Soundtrack_LoadMyTracks()";
-  echo "   if Soundtrack.Settings.MyTracksVersion == nil or Soundtrack.Settings.MyTracksVersion ~= SMP3_PL_VERSION then";
-  echo "      Soundtrack.Settings.MyTracksVersion = SMP3_PL_VERSION";
-  echo "      Soundtrack.Settings.MyTracksVersionSame = false";
+  echo "   if SoundtrackAddon.db.profile.settings.MyTracksVersion == nil or SoundtrackAddon.db.profile.settings.MyTracksVersion ~= SMP3_PL_VERSION then";
+  echo "      SoundtrackAddon.db.profile.settings.MyTracksVersion = SMP3_PL_VERSION";
+  echo "      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = false";
   echo "   else";
-  echo "      Soundtrack.Settings.MyTracksVersionSame = true";
+  echo "      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = true";
   echo "   end";
 } >> MyTracks.lua
 
