@@ -1,3 +1,7 @@
+3.0.9
+- Add profile support
+- Easier to click on expandable events
+
 3.0.8
 - Fix some bugs with the windows powershell library generator. Shout out to Dax Belmont for bringing them to my attention.
 
