@@ -2,6 +2,7 @@
 -- localization.fr.lua (French)
 --------------------------------------------------
 if GetLocale() == "frFR" then
+    LOCALIZATION_LOADED=true
 
     SOUNDTRACK_DANCE_EMOTES = {};
 
@@ -146,6 +147,15 @@ if GetLocale() == "frFR" then
     SOUNDTRACK_LEVEL_UP = "Groupe & Auto/Niveau Superieur"
     SOUNDTRACK_LFG_COMPLETE = "Groupe & Auto/Donjon Termine"
     SOUNDTRACK_QUEST_COMPLETE = "Groupe & Auto/Quete Terminee"
+
+    -- Item Get
+    SOUNDTRACK_ITEM_GET = "Item Get"
+    SOUNDTRACK_ITEM_GET_JUNK = SOUNDTRACK_ITEM_GET .. "/Junk"
+    SOUNDTRACK_ITEM_GET_COMMON = SOUNDTRACK_ITEM_GET .. "/Common"
+    SOUNDTRACK_ITEM_GET_UNCOMMON = SOUNDTRACK_ITEM_GET .. "/Uncommon"
+    SOUNDTRACK_ITEM_GET_RARE = SOUNDTRACK_ITEM_GET .. "/Rare"
+    SOUNDTRACK_ITEM_GET_EPIC = SOUNDTRACK_ITEM_GET .. "/Epic"
+    SOUNDTRACK_ITEM_GET_LEGENDARY = SOUNDTRACK_ITEM_GET .. "/Legendary"
 
     SOUNDTRACK_NPC_EVENTS = "PNJ"
     SOUNDTRACK_AUCTION_HOUSE = "PNJ/Encheres"

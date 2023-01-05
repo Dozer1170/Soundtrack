@@ -2,6 +2,7 @@
 -- localization.es.lua (Spanish)
 --------------------------------------------------
 if GetLocale() == "esES" or GetLocale() == "esMX" then
+    LOCALIZATION_LOADED=true
 
     SOUNDTRACK_DANCE_EMOTES = {
         "Te pones a bailar.",
@@ -150,6 +151,15 @@ if GetLocale() == "esES" or GetLocale() == "esMX" then
     SOUNDTRACK_LEVEL_UP = "Grupo y autonomos/Elevar a mismo nivel"
     SOUNDTRACK_LFG_COMPLETE = "Grupo y autonomos/LFG completa"
     SOUNDTRACK_QUEST_COMPLETE = "Grupo y autonomos/Quest completa"
+
+    -- Item Get
+    SOUNDTRACK_ITEM_GET = "Item Get"
+    SOUNDTRACK_ITEM_GET_JUNK = SOUNDTRACK_ITEM_GET .. "/Junk"
+    SOUNDTRACK_ITEM_GET_COMMON = SOUNDTRACK_ITEM_GET .. "/Common"
+    SOUNDTRACK_ITEM_GET_UNCOMMON = SOUNDTRACK_ITEM_GET .. "/Uncommon"
+    SOUNDTRACK_ITEM_GET_RARE = SOUNDTRACK_ITEM_GET .. "/Rare"
+    SOUNDTRACK_ITEM_GET_EPIC = SOUNDTRACK_ITEM_GET .. "/Epic"
+    SOUNDTRACK_ITEM_GET_LEGENDARY = SOUNDTRACK_ITEM_GET .. "/Legendary"
 
     SOUNDTRACK_NPC_EVENTS = "NPC"
     SOUNDTRACK_AUCTION_HOUSE = "NPC/Casa de Subastas"

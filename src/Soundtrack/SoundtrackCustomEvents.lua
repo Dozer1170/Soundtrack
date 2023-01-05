@@ -100,12 +100,10 @@ function Soundtrack.CustomEvents.UpdateActiveAuras()
 		local n, __, __, __, __, __, __, __, __, spellId = UnitBuff("player", i)
 		if spellId ~= nil then	
 			Soundtrack.ActiveAuras[spellId] = spellId
-			debug("Adding active buff aura spellid: "..spellId)
 		end
 		local n, __, __, __, __, __, __, __, __, spellId = UnitDebuff("player", i)
 		if spellId ~= nil then	
 			Soundtrack.ActiveAuras[spellId] = spellId
-			debug("Adding active debuff aura spellid: "..spellId)
 		end
 	end
 end --]]
@@ -729,19 +727,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		true
 	);
 
-	--Soundtrack.CustomEvents.RegisterEventScript(	-- Achievement
-	--		SoundtrackMiscDUMMY,
-	--		SOUNDTRACK_ACHIEVEMENT,
-	--		ST_MISC,
-	--		"ACHIEVEMENT_EARNED",
-	--		ST_SFX_LVL,
-	--		false,
-	--		function()
-	--			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ACHIEVEMENT)
-	--		end,
-	--		true
-	--);
-
+	RegisterItemGetEvents()
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, ST_MISC, 369968, ST_BUFF_LVL, true, false)
 
@@ -813,6 +799,38 @@ function Soundtrack.CustomEvents.MiscInitialize()
     Soundtrack_SortEvents(ST_MISC)
 end
 
+function RegisterItemGetEvents()
+	SoundtrackMiscDUMMY:RegisterEvent("CHAT_MSG_LOOT")
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET, ST_SFX_LVL, false, true)
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_JUNK, ST_SFX_LVL, false, true);
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_COMMON, ST_SFX_LVL, false, true);
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_UNCOMMON, ST_SFX_LVL, false, true);
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_RARE, ST_SFX_LVL, false, true);
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_EPIC, ST_SFX_LVL, false, true);
+	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_LEGENDARY, ST_SFX_LVL, false, true);
+end
+
+function HandleLootMessageEvent(lootString, player)
+	local playerName = UnitName("player")
+	Soundtrack.TraceCustom("Loot message event lootstring: " .. tostring(lootString) .. " player: " .. tostring(player) .. " current player: " .. playerName)
+
+	local itemLink = string.match(lootString,"|%x+|Hitem:.-|h.-|h|r")
+	local itemString = string.match(itemLink, "item[%-?%d:]+")
+	local _, _, quality, _, _, class, subclass, _, equipSlot, texture, _, ClassID, SubClassID = GetItemInfo(itemString)
+
+	-- TODO dont play another sound if one is active, escalate if higher rarity item is looted
+
+	if string.find(player, playerName) then
+		if quality == 0 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_JUNK)
+		elseif quality == 1 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_COMMON)
+		elseif quality == 2 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_UNCOMMON)
+		elseif quality == 3 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_RARE)
+		elseif quality == 4 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_EPIC)
+		elseif quality == 5 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_LEGENDARY)
+		end
+	end
+end
+
 -- CustomEvents
 function Soundtrack.CustomEvents.CustomInitialize()
 	SoundtrackCustomDUMMY:RegisterEvent("UNIT_AURA")
@@ -864,7 +882,6 @@ end
 function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
 	st_arg1, st_arg2, st_arg3, st_arg4, st_arg5, st_arg6, st_arg7, st_arg8, st_arg9, st_arg10, st_arg11, st_arg12, st_arg13, st_arg14, st_arg15, st_arg16, st_arg17, st_arg18, st_arg19, st_arg20, st_arg21, st_arg22, st_arg23, st_arg24 = ...
 
-	debug("MiscOnEvent called")
 	Soundtrack.CustomEvents.UpdateActiveAuras()
 	
     if event == "AUCTION_HOUSE_SHOW" then
@@ -895,6 +912,8 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
         Soundtrack.Trainer = true
     elseif event == "TRAINER_CLOSED" then
         Soundtrack.Trainer = false
+	elseif event == "CHAT_MSG_LOOT" then
+		HandleLootMessageEvent(st_arg1, st_arg5)
 		
     -- Handle buff/debuff events
     elseif (event == "UNIT_AURA" and st_arg1 == "player") or event == "UPDATE_SHAPESHIFT_FORM" then
@@ -927,23 +946,17 @@ end
 function Soundtrack.CustomEvents.CustomOnEvent(self, event, ...)
 	st_arg1, st_arg2, st_arg3, st_arg4, st_arg5, st_arg6, st_arg7, st_arg8, st_arg9, st_arg10, st_arg11, st_arg12, st_arg13, st_arg14, st_arg15, st_arg16, st_arg17, st_arg18, st_arg19, st_arg20, st_arg21, st_arg22, st_arg23, st_arg24 = ...
 
-	debug("CustomOnEvent called")
 	Soundtrack.CustomEvents.UpdateActiveAuras()
 
 	if event == "UNIT_AURA" and st_arg1 == "player" then
-		debug("UNIT_AURA event")
 		if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
-			debug("Custom music enabled")
 			for k,v in pairs(SoundtrackAddon.db.profile.customEvents) do
 				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
-					debug("Has spell id and tracks: "..k)
 					local isActive = Soundtrack.CustomEvents.IsAuraActive(v.spellId)
 					if not v.active and isActive then
-						debug("Not active and has aura: "..k)
 						v.active = true
 						Soundtrack_Custom_PlayEvent(ST_CUSTOM, k)
 					elseif v.active and not isActive then
-						debug("Active and doesnt have aura: "..k)
 						v.active = false
 						Soundtrack_Custom_StopEvent(ST_CUSTOM, k)
 					end
