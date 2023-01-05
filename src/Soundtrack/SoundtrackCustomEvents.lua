@@ -729,6 +729,20 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		true
 	);
 
+	--Soundtrack.CustomEvents.RegisterEventScript(	-- Achievement
+	--		SoundtrackMiscDUMMY,
+	--		SOUNDTRACK_ACHIEVEMENT,
+	--		ST_MISC,
+	--		"ACHIEVEMENT_EARNED",
+	--		ST_SFX_LVL,
+	--		false,
+	--		function()
+	--			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ACHIEVEMENT)
+	--		end,
+	--		true
+	--);
+
+
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, ST_MISC, 369968, ST_BUFF_LVL, true, false)
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DK, ST_MISC, 0, 1, false, false);
