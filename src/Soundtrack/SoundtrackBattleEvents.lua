@@ -240,7 +240,6 @@ function GetGroupEnemyLevel()
     
     local classificationText = GetClassificationText(highestClassification)
     local difficultyText = GetDifficultyText(highestDifficulty)
-    Soundtrack.TraceBattle("Difficulty: "..difficultyText..", "..highestClassification.." "..classificationText)
     return classificationText, difficultyText, pvpEnabled, isBoss, bossName, hasLowHealth
 end
 
@@ -348,9 +347,6 @@ local function AnalyzeBattleSituation()
     local battleTypeIndex = Soundtrack.IndexOf(battleEvents, battleType)
     -- If we're in cooldown, but a higher battle is already playing, keep that one, 
     -- otherwise we can escalate the battle music.
-    Soundtrack.TraceBattle("CurrentBattleTypeIndex: "..currentBattleTypeIndex.."  BattleType: "..battleType)
-    if SoundtrackAddon.db.profile.settings.EscalateBattleMusic then Soundtrack.TraceBattle("EscalateBattleMusic enabled") end
-	
     -- If we are out of combat, we play the battle event.
     -- If we are in combat, we only escalate if option is turned on
     if currentBattleTypeIndex == 0 or battleType == SOUNDTRACK_BOSS_BATTLE or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE or
@@ -396,33 +392,6 @@ local function AnalyzeBattleSituation()
 		else
 			Soundtrack.PlayEvent(ST_BATTLE, battleType)
 		end
-		--[[
-		if battleType == SOUNDTRACK_BOSS_BATTLE or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE and hasLowHealth then
-			if battleType == SOUNDTRACK_BOSS_BATTLE and 
-			  (SoundtrackBattle_BattleHasTracks(SOUNDTRACK_BOSS_LOW_HEALTH) or
-			  SoundtrackBattle_BossHasTracks(bossName.." "..SOUNDTRACK_LOW_HEALTH) ) then
-				if SoundtrackBattle_BossHasTracks(bossName.." "..SOUNDTRACK_LOW_HEALTH) then
-					Soundtrack.PlayEvent(ST_BOSS, bossName.." "..SOUNDTRACK_LOW_HEALTH)
-				else 
-					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH)
-				end
-			elseif battleType == SOUNDTRACK_WORLD_BOSS and
-			  (SoundtrackBattle_BattleHasTracks(SOUNDTRACK_WORLD_BOSS_LOW_HEALTH) or
-			  SoundtrackBattle_BossHasTracks(bossName.." "..SOUNDTRACK_LOW_HEALTH) ) then
-				if SoundtrackBattle_BossHasTracks(bossName.." "..SOUNDTRACK_LOW_HEALTH) then
-					Soundtrack.PlayEvent(ST_BOSS, bossName.." "..SOUNDTRACK_LOW_HEALTH)
-				else
-					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH) 
-				end
-			elseif bossName ~= nil then
-				Soundtrack.PlayEvent(ST_BOSS, bossName)
-			else
-				Soundtrack.PlayEvent(ST_BATTLE, battleType)
-			end
-		else
-			Soundtrack.PlayEvent(ST_BATTLE, battleType)
-		end
-		--]]
 	end
 	currentBattleTypeIndex = battleTypeIndex
 end
@@ -480,16 +449,13 @@ function Soundtrack.BattleEvents.OnEvent(self, event, ...)
             StopCombatMusic()            
         end
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-	--Soundtrack.TraceBattle("eventType : "..eventType) --CSCIGUY DEBUG 
 		if eventType == "PARTY_KILL" then --CSCIGUY added 8-10-18
-		--if arg2 == "PARTY_KILL" then --No longer working in BFA CSCIGUY
 			hostileDeathCount = hostileDeathCount + 1
 			Soundtrack.TraceBattle("Death count: "..hostileDeathCount)
 		else
 			if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 				for k,v in pairs(Soundtrack_BattleEvents) do
 					if SoundtrackEvents_EventHasTracks(ST_MISC, v) then
-						--RunScript(v.script)
 						v.script()
 					end
 				end
@@ -551,7 +517,6 @@ end
 
 
 function Soundtrack.BattleEvents.Initialize()
-
     Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_UNKNOWN_BATTLE, ST_BATTLE_LVL, true)
 
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_CRITTER, ST_BATTLE_LVL, true)

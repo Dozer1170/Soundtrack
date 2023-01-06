@@ -727,8 +727,6 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		true
 	);
 
-	RegisterItemGetEvents()
-
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, ST_MISC, 369968, ST_BUFF_LVL, true, false)
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DK, ST_MISC, 0, 1, false, false);
@@ -795,40 +793,10 @@ function Soundtrack.CustomEvents.MiscInitialize()
 	);
 	
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_SHAMAN_GHOST_WOLF, ST_MISC, 2645, ST_AURA_LVL, true, false)
-	
+
+	LootEvents.RegisterItemGetEventsToMiscFrame()
+
     Soundtrack_SortEvents(ST_MISC)
-end
-
-function RegisterItemGetEvents()
-	SoundtrackMiscDUMMY:RegisterEvent("CHAT_MSG_LOOT")
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET, ST_SFX_LVL, false, true)
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_JUNK, ST_SFX_LVL, false, true);
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_COMMON, ST_SFX_LVL, false, true);
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_UNCOMMON, ST_SFX_LVL, false, true);
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_RARE, ST_SFX_LVL, false, true);
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_EPIC, ST_SFX_LVL, false, true);
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_ITEM_GET_LEGENDARY, ST_SFX_LVL, false, true);
-end
-
-function HandleLootMessageEvent(lootString, player)
-	local playerName = UnitName("player")
-	Soundtrack.TraceCustom("Loot message event lootstring: " .. tostring(lootString) .. " player: " .. tostring(player) .. " current player: " .. playerName)
-
-	local itemLink = string.match(lootString,"|%x+|Hitem:.-|h.-|h|r")
-	local itemString = string.match(itemLink, "item[%-?%d:]+")
-	local _, _, quality, _, _, class, subclass, _, equipSlot, texture, _, ClassID, SubClassID = GetItemInfo(itemString)
-
-	-- TODO dont play another sound if one is active, escalate if higher rarity item is looted
-
-	if string.find(player, playerName) then
-		if quality == 0 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_JUNK)
-		elseif quality == 1 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_COMMON)
-		elseif quality == 2 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_UNCOMMON)
-		elseif quality == 3 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_RARE)
-		elseif quality == 4 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_EPIC)
-		elseif quality == 5 then Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ITEM_GET_LEGENDARY)
-		end
-	end
 end
 
 -- CustomEvents
@@ -863,6 +831,8 @@ function Soundtrack.CustomEvents.MiscOnUpdate(self, elapsed)
 				v.script()
             end
         end
+
+		LootEvents.OnUpdate()
     end
 end
 -- CustomEvents
@@ -913,7 +883,7 @@ function Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)
     elseif event == "TRAINER_CLOSED" then
         Soundtrack.Trainer = false
 	elseif event == "CHAT_MSG_LOOT" then
-		HandleLootMessageEvent(st_arg1, st_arg5)
+		LootEvents.HandleLootMessageEvent(st_arg1, st_arg5)
 		
     -- Handle buff/debuff events
     elseif (event == "UNIT_AURA" and st_arg1 == "player") or event == "UPDATE_SHAPESHIFT_FORM" then
