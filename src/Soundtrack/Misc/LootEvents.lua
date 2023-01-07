@@ -28,6 +28,10 @@ function LootEvents.HandleLootMessageEvent(lootString, player)
     Soundtrack.TraceCustom("Loot message event: " .. tostring(lootString) .. " player: " .. tostring(player) .. " current player: " .. playerName)
 
     local itemLink = string.match(lootString,"|%x+|Hitem:.-|h.-|h|r")
+    if not itemLink then
+        return
+    end
+
     local itemString = string.match(itemLink, "item[%-?%d:]+")
     local _, _, quality, _, _, _, _, _, _, _, _, _, _ = GetItemInfo(itemString)
 
