@@ -1,4 +1,7 @@
 3.0.10
+- Fix error on some item get events
+
+3.0.10
 - Item get events under misc
 
 3.0.9
