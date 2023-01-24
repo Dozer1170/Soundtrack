@@ -1,6 +1,6 @@
-## Interface: 100002
+## Interface: 100005
 ## Title: Soundtrack
-## Version: 3.0.11
+## Version: 3.0.12
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: myAddOns
