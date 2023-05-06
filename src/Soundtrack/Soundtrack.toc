@@ -1,11 +1,12 @@
-## Interface: 100005
+## Interface: 100100
 ## Title: Soundtrack
-## Version: 3.0.12
+## Version: 3.0.13
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: myAddOns
 ## RequiredDeps: 
 ## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
+## IconTexture: Interface\Icons\INV_Misc_Flute_01
 Embeds.xml
 Soundtrack.xml
 OldSaveMigrator.lua
