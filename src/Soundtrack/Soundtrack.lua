@@ -59,6 +59,7 @@ function SoundtrackAddon:VARIABLES_LOADED()
     Soundtrack.CustomEvents.MiscInitialize()
     Soundtrack.CustomEvents.CustomInitialize()
     SoundtrackFrame_RefreshShowingTab()
+    SoundtrackFrame_Initialize()
 end
 
 function LoadTracks()

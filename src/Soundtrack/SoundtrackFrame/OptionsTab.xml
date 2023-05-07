@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-    <Frame name="SoundtrackFrameOptionsFrameTemplate" hidden="true" virtual="true">
+    <Frame name="SoundtrackFrameOptionsTabTemplate" hidden="true" virtual="true">
         <Size>
             <RelDimension x="0.5" y="0.8"/>
         </Size>
@@ -196,7 +196,7 @@
             </CheckButton>
 
 
-            <Frame name="SoundtrackFrame_PlaybackButtonsLocationDropDown" inherits="UIDropDownMenuTemplate"
+            <Frame name="OptionsTab_PlaybackButtonsLocationDropDown" inherits="UIDropDownMenuTemplate"
                    enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_HidePlaybackButtons"
@@ -213,7 +213,7 @@
                             <Anchors>
                                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="21" y="0"/>
+                                        <AbsDimension x="0" y="0"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -221,14 +221,8 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-                    <OnLoad>
-                        SoundtrackFrame_PlaybackButtonsLocationDropDown.Text:SetText("Playback Controls Buttons");
-                        SoundtrackFrame_PlaybackButtonsLocationDropDown_OnLoad(self)
-                    </OnLoad>
-                    <OnShow>SoundtrackFrame_PlaybackButtonsLocationDropDown_OnLoad(self)</OnShow>
-                    <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS,
-                        SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS_TIP)
-                    </OnEnter>
+                    <OnLoad> OptionsTab_PlaybackButtonsLocationDropDown.Text:SetText("Playback Controls Buttons"); </OnLoad>
+                    <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS_TIP) </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </Frame>
@@ -287,7 +281,7 @@
                     <OnLeave>Soundtrack.HideTip();</OnLeave>
                 </Scripts>
             </CheckButton>
-            <Frame name="SoundtrackFrame_BattleCooldownDropDown" inherits="UIDropDownMenuTemplate"
+            <Frame name="OptionsTab_BattleCooldownDropDown" inherits="UIDropDownMenuTemplate"
                    enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_YourEnemyLevelOnly"
@@ -304,7 +298,7 @@
                             <Anchors>
                                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="21" y="0"/>
+                                        <AbsDimension x="0" y="0"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -312,19 +306,16 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_BattleCooldownDropDown.Text:SetText(SOUNDTRACK_BATTLE_CD);
-                        SoundtrackFrame_BattleCooldownDropDown_OnLoad(self)
-                    </OnLoad>
-                    <OnShow>SoundtrackFrame_BattleCooldownDropDown_OnLoad(self)</OnShow>
+                    <OnLoad>OptionsTab_BattleCooldownDropDown.Text:SetText(SOUNDTRACK_BATTLE_CD); </OnLoad>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_BATTLE_CD, SOUNDTRACK_BATTLE_CD_TIP)</OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </Frame>
 
-            <Frame name="SoundtrackFrame_LowHealthPercentDropDown" inherits="UIDropDownMenuTemplate"
+            <Frame name="OptionsTab_LowHealthPercentDropDown" inherits="UIDropDownMenuTemplate"
                    enableMouse="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_BattleCooldownDropDown"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_BattleCooldownDropDown"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-15"/>
@@ -338,7 +329,7 @@
                             <Anchors>
                                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="21" y="0"/>
+                                        <AbsDimension x="0" y="0"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -346,11 +337,7 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-                    <OnLoad>
-                        SoundtrackFrame_LowHealthPercentDropDown.Text:SetText(SOUNDTRACK_LOW_HEALTH_PERCENT);
-                        SoundtrackFrame_LowHealthPercentDropDown_OnLoad(self)
-                    </OnLoad>
-                    <OnShow>SoundtrackFrame_LowHealthPercentDropDown_OnLoad(self)</OnShow>
+                    <OnLoad> OptionsTab_LowHealthPercentDropDown.Text:SetText(SOUNDTRACK_LOW_HEALTH_PERCENT); </OnLoad>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOW_HEALTH_PERCENT,
                         SOUNDTRACK_LOW_HEALTH_PERCENT_TIP)
                     </OnEnter>
@@ -360,7 +347,7 @@
 
             <CheckButton name="SoundtrackFrame_LoopMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LowHealthPercentDropDown"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_LowHealthPercentDropDown"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-10"/>
@@ -375,7 +362,7 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <Frame name="SoundtrackFrame_SilenceDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+            <Frame name="OptionsTab_SilenceDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LoopMusic" relativePoint="BOTTOMLEFT">
                         <Offset>
@@ -390,7 +377,7 @@
                             <Anchors>
                                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="21" y="0"/>
+                                        <AbsDimension x="0" y="0"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -398,10 +385,7 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_SilenceDropDown.Text:SetText(SOUNDTRACK_MAX_SILENCE);
-                        SoundtrackFrame_SilenceDropDown_OnLoad()
-                    </OnLoad>
-                    <OnShow>SoundtrackFrame_SilenceDropDown_OnLoad()</OnShow>
+                    <OnLoad> OptionsTab_SilenceDropDown.Text:SetText(SOUNDTRACK_MAX_SILENCE); </OnLoad>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_MAX_SILENCE, SOUNDTRACK_MAX_SILENCE_TIP)
                     </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -522,11 +506,7 @@
 
 
         <Scripts>
-            <OnLoad><!--Options Backdrop-->
-
-
-            </OnLoad>
-            <OnShow>SoundtrackFrame_RefreshOptionsFrame()</OnShow>
+            <OnShow>SoundtrackFrame_RefreshOptionsTab()</OnShow>
         </Scripts>
     </Frame>
 </Ui>

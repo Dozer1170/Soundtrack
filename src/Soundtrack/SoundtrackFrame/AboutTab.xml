@@ -188,7 +188,7 @@
             <OnLoad><!--ABOUT Backdrop-->
 
             </OnLoad>
-            <OnShow>SoundtrackFrame_RefreshOptionsFrame()</OnShow>
+            <OnShow>SoundtrackFrame_RefreshOptionsTab()</OnShow>
         </Scripts>
     </Frame>
 </Ui>

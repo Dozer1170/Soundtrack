@@ -3,6 +3,7 @@
     <Script file="SoundtrackFrame.lua"/>
     <Include file="GeneralTemplates.xml"/>
     <Include file="EventsTab.xml"/>
+    <Include file="OptionsTab.lua"/>
     <Include file="OptionsTab.xml"/>
     <Include file="ProfilesTab.lua" />
     <Include file="ProfilesTab.xml"/>
@@ -272,7 +273,7 @@
             <Frame name="SoundtrackFrameEventFrame" inherits="SoundtrackFrameEventFrameTemplate"/>
 
             <!-- OPTIONS TAB -->
-            <Frame name="SoundtrackFrameOptionsFrame" inherits="SoundtrackFrameOptionsFrameTemplate"/>
+            <Frame name="SoundtrackFrameOptionsTab" inherits="SoundtrackFrameOptionsTabTemplate"/>
 
             <!-- PROFILES TAB -->
             <Frame name="SoundtrackFrameProfilesFrame" inherits="SoundtrackFrameProfilesFrameTemplate"/>

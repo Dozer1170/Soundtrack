@@ -16,6 +16,10 @@ local eventTypes = {
     "Debuff"
 }
 
+function SoundtrackFrame_Initialize()
+    OptionsTab.Initialize()
+end
+
 function Soundtrack.IndexOf(_table, value)
     if _table == nil then
         return 0
@@ -449,7 +453,7 @@ function SoundtrackFrame_TouchTracks()
     SoundtrackFrame_RefreshCurrentlyPlaying()
 end
 
-function SoundtrackFrame_RefreshOptionsFrame()
+function SoundtrackFrame_RefreshOptionsTab()
     local s = SoundtrackAddon.db.profile.settings
 
     SoundtrackFrame_EnableMinimapButton:SetChecked(not SoundtrackAddon.db.profile.minimap.hide)
@@ -1284,7 +1288,7 @@ end
 function SoundtrackFrame_RefreshShowingTab()
     SEVT.SelectedEventsTable = nil
     SoundtrackFrameEventFrame:Hide()
-    SoundtrackFrameOptionsFrame:Hide()
+    SoundtrackFrameOptionsTab:Hide()
     SoundtrackFrameProfilesFrame:Hide()
     SoundtrackFrameAboutFrame:Hide()
     -- Battle events tab
@@ -1323,7 +1327,7 @@ function SoundtrackFrame_RefreshShowingTab()
         SoundtrackFrameEventFrame:Show()
         -- Options tab
     elseif (SoundtrackFrame.selectedTab == 9) then
-        SoundtrackFrameOptionsFrame:Show()
+        SoundtrackFrameOptionsTab:Show()
         -- Profiles tab
     elseif (SoundtrackFrame.selectedTab == 10) then
         SoundtrackFrameProfilesFrame:Show()
@@ -1625,114 +1629,6 @@ function SoundtrackFrame_IsTrackActive(trackName)
     return false
 end
 
-local lowhealthpercents = { 0, .05, .1, .15, .20, .25, .3, .35, .4, .45, .5 }
-
-local function GetLowHealthPercents()
-    return {
-        "0%",
-        "5%",
-        "10%",
-        "15%",
-        "20%",
-        "25%",
-        "30%",
-        "35%",
-        "40%",
-        "45%",
-        "50%",
-    }
-end
-
-local function GetCurrentLowHealthPercent()
-    local i
-    for i = 1, #(lowhealthpercents), 1 do
-        if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.LowHealthPercent == lowhealthpercents[i] then
-            return i
-        end
-    end
-
-    return 0
-end
-
-local cooldowns = { 0, 1, 2, 3, 5, 10, 15, 30 }
-
-local function GetBattleCooldowns()
-    return {
-        "No cooldown",
-        "1 second",
-        "2 seconds",
-        "3 seconds",
-        "5 seconds",
-        "10 seconds",
-        "15 seconds",
-        "30 seconds",
-    }
-end
-
-local function GetCurrentBattleCooldown()
-    -- TODO replace with IndexOf
-    for i, c in ipairs(cooldowns) do
-        if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.BattleCooldown == c then
-            return i
-        end
-    end
-
-    return 1
-end
-
-local locations = { "LEFT", "TOPLEFT", "TOPRIGHT", "RIGHT", "BOTTOMRIGHT", "BOTTOMLEFT" }
-
-local function GetPlaybackButtonsLocations()
-    return {
-        "Left",
-        "Top Left",
-        "Top Right",
-        "Right",
-        "Bottom Right",
-        "Bottom Left",
-    }
-end
-
-local function GetCurrentPlaybackButtonsLocation()
-    local i
-    for i = 1, #(locations), 1 do
-        if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition == locations[i] then
-            return i
-        end
-    end
-
-    return 1
-end
-
-local silences = { 0, 5, 10, 20, 30, 40, 60, 90, 120, 300 }
-
-local function GetSilences()
-    return {
-        "No silence",
-        "5 seconds",
-        "10 seconds",
-        "20 seconds",
-        "30 seconds",
-        "40 seconds",
-        "1 minute",
-        "1.5 minute",
-        "2 minutes",
-        "5 minutes"
-    }
-end
-
-local function GetCurrentSilence()
-    -- Replace with index of
-    local i
-    for i = 1, #(silences), 1 do
-        if not SoundtrackAddon == nil and not SoundtrackAddon.db == nil and SoundtrackAddon.db.profile.settings.Silence == silences[i] then
-            return i
-        end
-    end
-
-    return 1
-end
-
 function SoundtrackFrame_Toggle()
     if (SoundtrackFrame:IsVisible()) then
         SoundtrackFrame:Hide()
@@ -1740,125 +1636,6 @@ function SoundtrackFrame_Toggle()
         SoundtrackFrame:Show()
     end
 end
-
-function SoundtrackFrame_PlaybackButtonsLocationDropDown_OnLoad(self)
-    SoundtrackFrame.selectedLocation = GetCurrentPlaybackButtonsLocation()
-    UIDropDownMenu_SetSelectedID(self, SoundtrackFrame.selectedLocation)
-    UIDropDownMenu_Initialize(self, SoundtrackFrame_PlaybackButtonsLocationDropDown_Initialize)
-    UIDropDownMenu_SetWidth(self, 160)
-end
-
-function SoundtrackFrame_PlaybackButtonsLocationDropDown_Initialize()
-    SoundtrackFrame_PlaybackButtonsLocationDropDown_LoadLocations(GetPlaybackButtonsLocations())
-end
-
-function SoundtrackFrame_PlaybackButtonsLocationDropDown_LoadLocations(locationsTexts)
-    local currentLocation = SoundtrackFrame.selectedLocation
-    local info
-
-    for i, locationText in ipairs(locationsTexts) do
-        local checked = nil
-        if currentLocation == i then
-            checked = 1
-            UIDropDownMenu_SetText(SoundtrackFrame_PlaybackButtonsLocationDropDown, locationText)
-        end
-
-        info = {}
-        info.text = locationText
-        info.func = SoundtrackFrame_PlaybackButtonsLocationDropDown_OnClick
-        UIDropDownMenu_AddButton(info)
-    end
-end
-
-function SoundtrackFrame_PlaybackButtonsLocationDropDown_OnClick(self)
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_PlaybackButtonsLocationDropDown, self:GetID())
-    SoundtrackFrame.selectedLocation = self:GetID()
-    -- Save settings.
-    SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = locations[SoundtrackFrame.selectedLocation]
-    SoundtrackFrame_RefreshPlaybackControls()
-end
-
-function SoundtrackFrame_BattleCooldownDropDown_OnLoad(self)
-
-    SoundtrackFrame.selectedCooldown = GetCurrentBattleCooldown()
-    UIDropDownMenu_SetSelectedID(self, SoundtrackFrame.selectedCooldown)
-    UIDropDownMenu_Initialize(self, SoundtrackFrame_BattleCooldownDropDown_Initialize)
-    UIDropDownMenu_SetWidth(self, 130)
-end
-
-function SoundtrackFrame_BattleCooldownDropDown_LoadCooldowns(cooldownTexts)
-    local currentCooldown = SoundtrackFrame.selectedCooldown
-    local info
-
-    for i, cooldownText in ipairs(cooldownTexts) do
-        local checked = nil
-        if currentCooldown == i then
-            checked = 1
-            UIDropDownMenu_SetText(SoundtrackFrame_BattleCooldownDropDown, cooldownText)
-        end
-
-        info = {}
-        info.text = cooldownText
-        info.func = SoundtrackFrame_BattleCooldownDropDown_OnClick
-        info.checked = checked
-        UIDropDownMenu_AddButton(info)
-    end
-end
-
-function SoundtrackFrame_BattleCooldownDropDown_Initialize()
-    SoundtrackFrame_BattleCooldownDropDown_LoadCooldowns(GetBattleCooldowns())
-end
-
-function SoundtrackFrame_BattleCooldownDropDown_OnClick(self)
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_BattleCooldownDropDown, self:GetID())
-    SoundtrackFrame.selectedCooldown = self:GetID()
-    -- Save settings.
-    SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackFrame.selectedCooldown]
-end
-
-
--- Low Health Percent
-
-function SoundtrackFrame_LowHealthPercentDropDown_OnLoad(self)
-    SoundtrackFrame.selectedLowHealthPercent = GetCurrentLowHealthPercent()
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_LowHealthPercentDropDown, SoundtrackFrame.selectedLowHealthPercent)
-    UIDropDownMenu_Initialize(SoundtrackFrame_LowHealthPercentDropDown, SoundtrackFrame_LowHealthPercentDropDown_Initialize)
-    UIDropDownMenu_SetWidth(SoundtrackFrame_LowHealthPercentDropDown, 130)
-end
-
-function SoundtrackFrame_LowHealthPercentDropDown_LoadPercents(lowHealthTexts)
-    local currentLowHealthPercent = SoundtrackFrame.selectedLowHealthPercent
-    local info
-
-    for i = 1, #(lowHealthTexts), 1 do
-        local checked = nil
-        if (currentLowHealthPercent == i) then
-            checked = 1
-            UIDropDownMenu_SetText(SoundtrackFrame_LowHealthPercentDropDown, lowHealthTexts[i])
-        end
-
-        info = {}
-        info.text = lowHealthTexts[i]
-        info.func = SoundtrackFrame_LowHealthPercentDropDown_OnClick
-        info.checked = checked
-        UIDropDownMenu_AddButton(info)
-    end
-end
-
-function SoundtrackFrame_LowHealthPercentDropDown_Initialize()
-    SoundtrackFrame_LowHealthPercentDropDown_LoadPercents(GetLowHealthPercents())
-end
-
-function SoundtrackFrame_LowHealthPercentDropDown_OnClick(self)
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_LowHealthPercentDropDown, self:GetID())
-    SoundtrackFrame.selectedLowHealthPercent = self:GetID()
-    -- Save settings.
-    SoundtrackAddon.db.profile.settings.LowHealthPercent = lowhealthpercents[SoundtrackFrame.selectedLowHealthPercent]
-end
-
--- end low health percent
-
-
 
 function SoundtrackFrame_EventTypeDropDown_OnLoad(self)
     UIDropDownMenu_Initialize(self, SoundtrackFrame_EventTypeDropDown_Initialize)
@@ -1916,43 +1693,6 @@ function SoundtrackFrame_EventTypeDropDown_OnClick(self)
     end
 
     SoundtrackFrame_RefreshCustomEvent()
-end
-
-function SoundtrackFrame_SilenceDropDown_OnLoad(self)
-    SoundtrackFrame.selectedSilence = GetCurrentSilence()
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_SilenceDropDown, SoundtrackFrame.selectedSilence)
-    UIDropDownMenu_Initialize(SoundtrackFrame_SilenceDropDown, SoundtrackFrame_SilenceDropDown_Initialize)
-    UIDropDownMenu_SetWidth(SoundtrackFrame_SilenceDropDown, 130)
-end
-
-function SoundtrackFrame_SilenceDropDown_LoadSilences(silencesTexts)
-    local currentSilence = SoundtrackFrame.selectedSilence
-    local info
-
-    for i = 1, #(silencesTexts), 1 do
-        local checked = nil
-        if (currentSilence == i) then
-            checked = 1
-            UIDropDownMenu_SetText(SoundtrackFrame_SilenceDropDown, silencesTexts[i])
-        end
-
-        info = {}
-        info.text = silencesTexts[i]
-        info.func = SoundtrackFrame_SilenceDropDown_OnClick
-        info.checked = checked
-        UIDropDownMenu_AddButton(info)
-    end
-end
-
-function SoundtrackFrame_SilenceDropDown_Initialize()
-    SoundtrackFrame_SilenceDropDown_LoadSilences(GetSilences())
-end
-
-function SoundtrackFrame_SilenceDropDown_OnClick(self)
-    UIDropDownMenu_SetSelectedID(SoundtrackFrame_SilenceDropDown, self:GetID())
-    SoundtrackFrame.selectedSilence = self:GetID()
-    -- Save settings.
-    SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackFrame.selectedSilence]
 end
 
 -- get shown and you can check things on/off anyways.
