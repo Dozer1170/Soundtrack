@@ -321,6 +321,7 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 								local randomSilence = 0
 								if SoundtrackAddon.db.profile.settings.Silence > 0 then
 									randomSilence = random(5, SoundtrackAddon.db.profile.settings.Silence)
+                                    Soundtrack.TraceEvents('Adding '..randomSilence..' seconds of silence after track')
 								end
 								Soundtrack.Timers.AddTimer("TrackFinished", length + randomSilence, trackFinished)
 								if track.length > 20 then

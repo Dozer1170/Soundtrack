@@ -52,18 +52,16 @@ function Soundtrack.Library.StopMusic()
 	
 	-- Play EmptyTrack
     Soundtrack.Library.CurrentlyPlayingTrack = "None"
-    debug("Playing empty track.")
     debug("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
-    PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3") 
+    PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
     SoundtrackFrame_TouchTracks()
 end
 
 function Soundtrack.Library.PauseMusic()
 	-- Play EmptyTrack
     Soundtrack.Library.CurrentlyPlayingTrack = "None"
-    debug("Playing empty track.")
     debug("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
-    PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3") 
+    PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
     SoundtrackFrame_TouchTracks()
 end
 
@@ -80,7 +78,7 @@ local nextTrackName;
 local function DelayedPlayMusic()
    Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
    SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
-   debug("help PlayMusic(".. nextFileName ..")")
+   debug("PlayMusic(".. nextFileName ..")")
    -- Soundtrack.Library.StopTrack()]
    PlayMusic(nextFileName)
    --Soundtrack.Library.PlayTrack(nextFileName, nil)
@@ -115,8 +113,6 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 
     if soundEffect == nil then soundEffect = false end
 
-    debug("PlayTrack(".. Soundtrack.GetPathFileName(trackName) ..")")
-    
     -- Check if the track is valid
     if not Soundtrack_Tracks or not Soundtrack_Tracks[trackName] then
         return
@@ -170,7 +166,7 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 			originalVolume = tonumber(GetCVar("Sound_MusicVolume"))
 			currentVolume = originalVolume    
 		end
-	fadeOut = true
+        fadeOut = true
 	else
 		debug("PlaySoundFile(".. nextFileName ..")")  -- EDITED, replaced fileName with nextFileName
 		PlaySoundFile(nextFileName) -- sound effect. play the music overlapping other music
