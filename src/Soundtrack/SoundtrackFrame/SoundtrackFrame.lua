@@ -453,74 +453,7 @@ function SoundtrackFrame_TouchTracks()
     SoundtrackFrame_RefreshCurrentlyPlaying()
 end
 
-function SoundtrackFrame_RefreshOptionsTab()
-    local s = SoundtrackAddon.db.profile.settings
-
-    SoundtrackFrame_EnableMinimapButton:SetChecked(not SoundtrackAddon.db.profile.minimap.hide)
-    SoundtrackFrame_EnableDebugMode:SetChecked(s.Debug)
-    SoundtrackFrame_ShowTrackInformation:SetChecked(s.ShowTrackInformation)
-    SoundtrackFrame_LockNowPlayingFrame:SetChecked(s.LockNowPlayingFrame)
-    SoundtrackFrame_ShowDefaultMusic:SetChecked(s.ShowDefaultMusic)
-    SoundtrackFrame_ShowPlaybackControls:SetChecked(s.ShowPlaybackControls)
-    SoundtrackFrame_LockPlaybackControls:SetChecked(s.LockPlaybackControls)
-    SoundtrackFrame_ShowEventStack:SetChecked(s.ShowEventStack)
-    SoundtrackFrame_AutoAddZones:SetChecked(s.AutoAddZones)
-    SoundtrackFrame_AutoEscalateBattleMusic:SetChecked(s.EscalateBattleMusic)
-    SoundtrackFrame_YourEnemyLevelOnly:SetChecked(s.YourEnemyLevelOnly)
-
-    SoundtrackFrame_EnableZoneMusic:SetChecked(s.EnableZoneMusic)
-    SoundtrackFrame_EnableBattleMusic:SetChecked(s.EnableBattleMusic)
-    SoundtrackFrame_EnableMiscMusic:SetChecked(s.EnableMiscMusic)
-    SoundtrackFrame_EnableCustomMusic:SetChecked(s.EnableCustomMusic)
-
-    SoundtrackFrame_HidePlaybackButtons:SetChecked(s.HideControlButtons)
-
-    local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
-    Soundtrack.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
-    if cvar_LoopMusic == "0" then
-        SoundtrackFrame_LoopMusic:SetChecked(false)
-    else
-        SoundtrackFrame_LoopMusic:SetChecked(true)
-    end
-end
-
 function SoundtrackFrame_RefreshProfilesFrame()
-    -- TODO update frame
-end
-
-function SoundtrackFrame_ToggleLoopMusic()
-    if SoundtrackFrame_LoopMusic:GetChecked() == 1 then
-        SetCVar("Sound_ZoneMusicNoDelay", 1, "SoundtrackSound_ZoneMusicNoDelay_1")
-        local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
-        Soundtrack.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
-    else
-        SetCVar("Sound_ZoneMusicNoDelay", 0, "SoundtrackSound_ZoneMusicNoDelay_0")
-        local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
-        Soundtrack.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
-    end
-end
-
-function SoundtrackFrame_ToggleMinimapButton()
-    SoundtrackMinimap_ToggleMinimap()
-
-    if not SoundtrackAddon.db.profile.settings.EnableMinimapButton then
-    end
-end
-
-function SoundtrackFrame_ToggleDebugMode()
-    SoundtrackAddon.db.profile.settings.Debug = not SoundtrackAddon.db.profile.settings.Debug
-    Soundtrack.Util.InitDebugChatFrame()
-end
-
-function SoundtrackFrame_ToggleShowTrackInformation()
-    SoundtrackAddon.db.profile.settings.ShowTrackInformation = not SoundtrackAddon.db.profile.settings.ShowTrackInformation
-end
-
-function SoundtrackFrame_ToggleShowEventStack()
-    SoundtrackAddon.db.profile.settings.ShowEventStack = not SoundtrackAddon.db.profile.settings.ShowEventStack
-
-    SoundtrackFrame_RefreshPlaybackControls()
-
 end
 
 function SoundtrackFrame_SetControlsButtonsPosition()
@@ -717,11 +650,6 @@ function SoundtrackFrame_RefreshPlaybackControls()
             controlFrame:Hide()
         end
     end
-end
-
-function SoundtrackFrame_ToggleShowPlaybackControls()
-    SoundtrackAddon.db.profile.settings.ShowPlaybackControls = not SoundtrackAddon.db.profile.settings.ShowPlaybackControls
-    SoundtrackFrame_RefreshPlaybackControls()
 end
 
 function SoundtrackFrame_ToggleRandomMusic()

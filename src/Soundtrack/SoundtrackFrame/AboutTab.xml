@@ -188,7 +188,7 @@
             <OnLoad><!--ABOUT Backdrop-->
 
             </OnLoad>
-            <OnShow>SoundtrackFrame_RefreshOptionsTab()</OnShow>
+            <OnShow>OptionsTab.Refresh()</OnShow>
         </Scripts>
     </Frame>
 </Ui>

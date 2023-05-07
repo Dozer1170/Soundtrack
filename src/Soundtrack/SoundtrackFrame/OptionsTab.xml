@@ -9,7 +9,7 @@
         </Anchors>
         <Layers>
             <Layer level="BACKGROUND">
-                <FontString name="SoundtrackFrame_FontStringUIOptions" inherits="GameFontNormal"
+                <FontString name="OptionsTab_FontStringUIOptions" inherits="GameFontNormal"
                             text="User Interface Options">
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -19,7 +19,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="SoundtrackFrame_FontStringEventOptions" inherits="GameFontNormal"
+                <FontString name="OptionsTab_FontStringEventOptions" inherits="GameFontNormal"
                             text="Event Options">
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -29,7 +29,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="SoundtrackFrame_FontStringEnableEventsOptions" inherits="GameFontNormal"
+                <FontString name="OptionsTab_FontStringEnableEventsOptions" inherits="GameFontNormal"
                             text="Enable Events">
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -39,7 +39,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="SoundtrackFrame_FontStringDebugOptions" inherits="GameFontNormal"
+                <FontString name="OptionsTab_FontStringDebugOptions" inherits="GameFontNormal"
                             text="Debugging Options">
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -53,9 +53,9 @@
         </Layers>
         <Frames>
             <!-- OPTIONS -->
-            <CheckButton name="SoundtrackFrame_EnableMinimapButton" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_EnableMinimapButton" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringUIOptions"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringUIOptions"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-10"/>
@@ -63,33 +63,33 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_EnableMinimapButton.Text:SetText(SOUNDTRACK_SHOW_MINIMAP_BUTTON)
+                    <OnLoad>OptionsTab_EnableMinimapButton.Text:SetText(SOUNDTRACK_SHOW_MINIMAP_BUTTON)
                     </OnLoad>
-                    <OnClick>SoundtrackFrame_ToggleMinimapButton()</OnClick>
+                    <OnClick>OptionsTab_ToggleMinimapButton()</OnClick>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_MINIMAP_BUTTON,
                         SOUNDTRACK_SHOW_MINIMAP_BUTTON_TIP)
                     </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_ShowPlaybackControls" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_ShowPlaybackControls" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableMinimapButton"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_EnableMinimapButton"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_ShowPlaybackControls.Text:SetText(SOUNDTRACK_SHOW_PLAYBACK_CONTROLS)
+                    <OnLoad>OptionsTab_ShowPlaybackControls.Text:SetText(SOUNDTRACK_SHOW_PLAYBACK_CONTROLS)
                     </OnLoad>
-                    <OnClick>SoundtrackFrame_ToggleShowPlaybackControls()</OnClick>
+                    <OnClick>OptionsTab_ToggleShowPlaybackControls()</OnClick>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_PLAYBACK_CONTROLS,
                         SOUNDTRACK_SHOW_PLAYBACK_CONTROLS_TIP)
                     </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_LockPlaybackControls" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_LockPlaybackControls" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_ShowPlaybackControls"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_ShowPlaybackControls"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <Absdimension x="10" y="0"/>
@@ -97,7 +97,7 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_LockPlaybackControls.Text:SetText(SOUNDTRACK_LOCK_PLAYBACK_CONTROLS)
+                    <OnLoad>OptionsTab_LockPlaybackControls.Text:SetText(SOUNDTRACK_LOCK_PLAYBACK_CONTROLS)
                     </OnLoad>
                     <OnClick>
                         SoundtrackControlFrame:EnableMouse(SoundtrackAddon.db.profile.settings.LockPlaybackControls);
@@ -110,9 +110,9 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_ShowTrackInformation" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_ShowTrackInformation" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LockPlaybackControls"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_LockPlaybackControls"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <Absdimension x="-10" y="0"/>
@@ -120,18 +120,18 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_ShowTrackInformation.Text:SetText(SOUNDTRACK_SHOW_TRACK_INFO)
+                    <OnLoad>OptionsTab_ShowTrackInformation.Text:SetText(SOUNDTRACK_SHOW_TRACK_INFO)
                     </OnLoad>
-                    <OnClick>SoundtrackFrame_ToggleShowTrackInformation()</OnClick>
+                    <OnClick>OptionsTab_ToggleShowTrackInformation()</OnClick>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_TRACK_INFO, SOUNDTRACK_SHOW_TRACK_INFO_TIP
                         )
                     </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_LockNowPlayingFrame" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_LockNowPlayingFrame" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_ShowTrackInformation"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_ShowTrackInformation"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <Absdimension x="10" y="0"/>
@@ -139,7 +139,7 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_LockNowPlayingFrame.Text:SetText(SOUNDTRACK_LOCK_NOW_PLAYING)
+                    <OnLoad>OptionsTab_LockNowPlayingFrame.Text:SetText(SOUNDTRACK_LOCK_NOW_PLAYING)
                     </OnLoad>
                     <OnClick>
                         NowPlayingTextFrame:EnableMouse(SoundtrackAddon.db.profile.settings.LockNowPlayingFrame);
@@ -152,9 +152,9 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_ShowDefaultMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_ShowDefaultMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LockNowPlayingFrame"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_LockNowPlayingFrame"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <Absdimension x="-10" y="0"/>
@@ -162,7 +162,7 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)
+                    <OnLoad>OptionsTab_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)
                     </OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.ShowDefaultMusic = not
                         SoundtrackAddon.db.profile.settings.ShowDefaultMusic; SoundtrackFrame_RefreshTracks()
@@ -173,9 +173,9 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_HidePlaybackButtons" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_HidePlaybackButtons" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_ShowDefaultMusic"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_ShowDefaultMusic"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-10"/>
@@ -183,7 +183,7 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_HidePlaybackButtons.Text:SetText("Hide Playback Buttons")</OnLoad>
+                    <OnLoad>OptionsTab_HidePlaybackButtons.Text:SetText("Hide Playback Buttons")</OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.HideControlButtons = not
                         SoundtrackAddon.db.profile.settings.HideControlButtons;
                         SoundtrackFrame_RefreshPlaybackControls()
@@ -199,7 +199,7 @@
             <Frame name="OptionsTab_PlaybackButtonsLocationDropDown" inherits="UIDropDownMenuTemplate"
                    enableMouse="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_HidePlaybackButtons"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_HidePlaybackButtons"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-21"/>
@@ -227,9 +227,9 @@
                 </Scripts>
             </Frame>
 
-            <CheckButton name="SoundtrackFrame_AutoAddZones" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_AutoAddZones" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringEventOptions"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringEventOptions"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-10"/>
@@ -237,7 +237,7 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_AutoAddZones.Text:SetText(SOUNDTRACK_AUTO_ADD_ZONES)</OnLoad>
+                    <OnLoad>OptionsTab_AutoAddZones.Text:SetText(SOUNDTRACK_AUTO_ADD_ZONES)</OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.AutoAddZones = not
                         SoundtrackAddon.db.profile.settings.AutoAddZones
                     </OnClick>
@@ -247,13 +247,13 @@
                 </Scripts>
             </CheckButton>
 
-            <CheckButton name="SoundtrackFrame_AutoEscalateBattleMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_AutoEscalateBattleMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_AutoAddZones"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_AutoAddZones"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_AutoEscalateBattleMusic.Text:SetText(SOUNDTRACK_ESCALATE_BATTLE)
+                    <OnLoad>OptionsTab_AutoEscalateBattleMusic.Text:SetText(SOUNDTRACK_ESCALATE_BATTLE)
                     </OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.EscalateBattleMusic = not
                         SoundtrackAddon.db.profile.settings.EscalateBattleMusic
@@ -264,13 +264,13 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_YourEnemyLevelOnly" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_YourEnemyLevelOnly" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_AutoEscalateBattleMusic"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_AutoEscalateBattleMusic"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_YourEnemyLevelOnly.Text:SetText(SOUNDTRACK_YOUR_ENEMY_LEVEL)
+                    <OnLoad>OptionsTab_YourEnemyLevelOnly.Text:SetText(SOUNDTRACK_YOUR_ENEMY_LEVEL)
                     </OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly = not
                         SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly
@@ -284,7 +284,7 @@
             <Frame name="OptionsTab_BattleCooldownDropDown" inherits="UIDropDownMenuTemplate"
                    enableMouse="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_YourEnemyLevelOnly"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_YourEnemyLevelOnly"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-15"/>
@@ -345,7 +345,7 @@
                 </Scripts>
             </Frame>
 
-            <CheckButton name="SoundtrackFrame_LoopMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_LoopMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="OptionsTab_LowHealthPercentDropDown"
                             relativePoint="BOTTOMLEFT">
@@ -355,8 +355,8 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_LoopMusic.Text:SetText(SOUNDTRACK_LOOP_MUSIC)</OnLoad>
-                    <OnClick>SoundtrackFrame_ToggleLoopMusic()</OnClick>
+                    <OnLoad>OptionsTab_LoopMusic.Text:SetText(SOUNDTRACK_LOOP_MUSIC)</OnLoad>
+                    <OnClick>OptionsTab_ToggleLoopMusic()</OnClick>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOOP_MUSIC, SOUNDTRACK_LOOP_MUSIC_TIP)
                     </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -364,7 +364,7 @@
             </CheckButton>
             <Frame name="OptionsTab_SilenceDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_LoopMusic" relativePoint="BOTTOMLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_LoopMusic" relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-21"/>
                         </Offset>
@@ -392,9 +392,9 @@
                 </Scripts>
             </Frame>
 
-            <CheckButton name="SoundtrackFrame_EnableDebugMode" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_EnableDebugMode" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringDebugOptions"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringDebugOptions"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-10"/>
@@ -402,21 +402,21 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_EnableDebugMode.Text:SetText(SOUNDTRACK_SHOW_DEBUG)</OnLoad>
-                    <OnClick>SoundtrackFrame_ToggleDebugMode()</OnClick>
+                    <OnLoad>OptionsTab_EnableDebugMode.Text:SetText(SOUNDTRACK_SHOW_DEBUG)</OnLoad>
+                    <OnClick>OptionsTab_ToggleDebugMode()</OnClick>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEBUG, SOUNDTRACK_SHOW_DEBUG_TIP)
                     </OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_ShowEventStack" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_ShowEventStack" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableDebugMode"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_EnableDebugMode"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_ShowEventStack.Text:SetText(SOUNDTRACK_SHOW_EVENT_STACK)</OnLoad>
-                    <OnClick>SoundtrackFrame_ToggleShowEventStack()</OnClick>
+                    <OnLoad>OptionsTab_ShowEventStack.Text:SetText(SOUNDTRACK_SHOW_EVENT_STACK)</OnLoad>
+                    <OnClick>OptionsTab_ToggleShowEventStack()</OnClick>
                     <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_EVENT_STACK,
                         SOUNDTRACK_SHOW_EVENT_STACK_TIP)
                     </OnEnter>
@@ -425,9 +425,9 @@
             </CheckButton>
 
 
-            <CheckButton name="SoundtrackFrame_EnableZoneMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_EnableZoneMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringEnableEventsOptions"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringEnableEventsOptions"
                             relativePoint="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="0" y="-10"/>
@@ -435,7 +435,7 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_EnableZoneMusic.Text:SetText(SOUNDTRACK_ENABLE_ZONE_MUSIC)</OnLoad>
+                    <OnLoad>OptionsTab_EnableZoneMusic.Text:SetText(SOUNDTRACK_ENABLE_ZONE_MUSIC)</OnLoad>
                     <OnClick>
                         SoundtrackAddon.db.profile.settings.EnableZoneMusic = not
                         SoundtrackAddon.db.profile.settings.EnableZoneMusic
@@ -451,13 +451,13 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_EnableBattleMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_EnableBattleMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableZoneMusic"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_EnableZoneMusic"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_EnableBattleMusic.Text:SetText(SOUNDTRACK_ENABLE_BATTLE_MUSIC)
+                    <OnLoad>OptionsTab_EnableBattleMusic.Text:SetText(SOUNDTRACK_ENABLE_BATTLE_MUSIC)
                     </OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.EnableBattleMusic = not
                         SoundtrackAddon.db.profile.settings.EnableBattleMusic
@@ -468,13 +468,13 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_EnableMiscMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_EnableMiscMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableBattleMusic"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_EnableBattleMusic"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_EnableMiscMusic.Text:SetText(SOUNDTRACK_ENABLE_MISC_MUSIC)</OnLoad>
+                    <OnLoad>OptionsTab_EnableMiscMusic.Text:SetText(SOUNDTRACK_ENABLE_MISC_MUSIC)</OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.EnableMiscMusic = not
                         SoundtrackAddon.db.profile.settings.EnableMiscMusic
                     </OnClick>
@@ -484,13 +484,13 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>
-            <CheckButton name="SoundtrackFrame_EnableCustomMusic" inherits="UICheckButtonTemplate">
+            <CheckButton name="OptionsTab_EnableCustomMusic" inherits="UICheckButtonTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_EnableMiscMusic"
+                    <Anchor point="TOPLEFT" relativeTo="OptionsTab_EnableMiscMusic"
                             relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>SoundtrackFrame_EnableCustomMusic.Text:SetText(SOUNDTRACK_ENABLE_CUSTOM_MUSIC);
+                    <OnLoad>OptionsTab_EnableCustomMusic.Text:SetText(SOUNDTRACK_ENABLE_CUSTOM_MUSIC);
                     </OnLoad>
                     <OnClick>SoundtrackAddon.db.profile.settings.EnableCustomMusic = not
                         SoundtrackAddon.db.profile.settings.EnableCustomMusic
@@ -506,7 +506,7 @@
 
 
         <Scripts>
-            <OnShow>SoundtrackFrame_RefreshOptionsTab()</OnShow>
+            <OnShow>OptionsTab.Refresh()</OnShow>
         </Scripts>
     </Frame>
 </Ui>
