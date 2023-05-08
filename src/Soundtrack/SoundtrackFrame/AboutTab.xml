@@ -31,7 +31,7 @@
                     </Anchors>
                 </FontString>
                 <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontNormal"
-                            text="Maintained by: Lunaqua, Csciguy, Dozer1170/Gart ">
+                            text="Maintained by: Dozer1170/Gartetasa">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout2"
                                 relativePoint="BOTTOMLEFT"/>
