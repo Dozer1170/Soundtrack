@@ -162,14 +162,9 @@
                     </Anchor>
                 </Anchors>
                 <Scripts>
-                    <OnLoad>OptionsTab_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)
-                    </OnLoad>
-                    <OnClick>SoundtrackAddon.db.profile.settings.ShowDefaultMusic = not
-                        SoundtrackAddon.db.profile.settings.ShowDefaultMusic; SoundtrackFrame_RefreshTracks()
-                    </OnClick>
-                    <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEFAULT_MUSIC,
-                        SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP)
-                    </OnEnter>
+                    <OnLoad>OptionsTab_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)</OnLoad>
+                    <OnClick>OptionsTab_ToggleShowDefaultMusic()</OnClick>
+                    <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEFAULT_MUSIC, SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP)</OnEnter>
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </CheckButton>

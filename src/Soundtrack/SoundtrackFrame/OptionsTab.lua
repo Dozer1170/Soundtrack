@@ -76,9 +76,13 @@ end
 
 function OptionsTab_ToggleShowEventStack()
     SoundtrackAddon.db.profile.settings.ShowEventStack = not SoundtrackAddon.db.profile.settings.ShowEventStack
-
     SoundtrackFrame_RefreshPlaybackControls()
+end
 
+function OptionsTab_ToggleShowDefaultMusic()
+    SoundtrackAddon.db.profile.settings.ShowDefaultMusic = not SoundtrackAddon.db.profile.settings.ShowDefaultMusic
+    _TracksLoaded = false
+    LoadTracks()
 end
 
 -- Playback button locations
