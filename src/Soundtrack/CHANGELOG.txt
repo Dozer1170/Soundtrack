@@ -1,3 +1,7 @@
+3.1.5
+- Bump for patch 10.1.5
+- Add SL & DF tracks to default tracks
+
 3.0.14
 - Fix tracks replaying before another one starts, silence should work properly
 - Fix dropdowns not populating with correct values on load
