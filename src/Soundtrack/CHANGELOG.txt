@@ -1,6 +1,7 @@
 3.1.5
 - Bump for patch 10.1.5
 - Add SL & DF tracks to default tracks
+- Reorganized existing default tracks, may need to clear your MyTracks.lua
 
 3.0.14
 - Fix tracks replaying before another one starts, silence should work properly
