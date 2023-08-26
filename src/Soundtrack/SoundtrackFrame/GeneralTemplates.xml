@@ -247,7 +247,7 @@
     </Button>
 
     <!-- Tab button -->
-    <Button name="SoundtrackFrameTabTemplate" inherits="PanelTabButtonTemplate" virtual="true">
+    <Button name="SoundtrackFrameTabTemplate" inherits="TabButtonTemplate" virtual="true">
         <Scripts>
             <OnClick>
                 PanelTemplates_Tab_OnClick(self, SoundtrackFrame);

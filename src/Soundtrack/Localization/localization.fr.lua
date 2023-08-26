@@ -116,13 +116,6 @@ if GetLocale() == "frFR" then
     SOUNDTRACK_NPC_BATTLE = "NPC Battle"
     SOUNDTRACK_PVP_MATCHMAKING = "PVP Random Match"
     SOUNDTRACK_PVP_DUEL = "PVP Duel"
-    SOUNDTRACK_PETBATTLES_VICTORY = "Victory"
-    SOUNDTRACK_PETBATTLES_NAMEDNPCS = "Named NPCs"
-    SOUNDTRACK_PETBATTLES_PLAYERS = "Players"
-    SOUNDTRACK_PETBATTLES_ADD_TARGET = "Add Target"
-    SOUNDTRACK_PETBATTLES_ADD_TARGET_TIP = "Adds the currently selected NPC or player to the list."
-    SOUNDTRACK_PETBATTLES_REMOVE_TARGET = "Remove Target"
-    SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP = "Removes the currently selected event from the list."
 
     -- Misc Tab
     SOUNDTRACK_DUEL_REQUESTED = "Demande de Duel"

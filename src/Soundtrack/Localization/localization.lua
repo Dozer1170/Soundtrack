@@ -119,13 +119,6 @@ if not LOCALIZATION_LOADED then
     SOUNDTRACK_NPC_BATTLE = "NPC Battle"
     SOUNDTRACK_PVP_MATCHMAKING = "PVP Random Match"
     SOUNDTRACK_PVP_DUEL = "PVP Duel"
-    SOUNDTRACK_PETBATTLES_VICTORY = "Victory"
-    SOUNDTRACK_PETBATTLES_NAMEDNPCS = "Named NPCs"
-    SOUNDTRACK_PETBATTLES_PLAYERS = "Players"
-    SOUNDTRACK_PETBATTLES_ADD_TARGET = "Add Target"
-    SOUNDTRACK_PETBATTLES_ADD_TARGET_TIP = "Adds the currently selected NPC or player to the list."
-    SOUNDTRACK_PETBATTLES_REMOVE_TARGET = "Remove Target"
-    SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP = "Removes the currently selected event from the list."
 
     -- Misc Tab
     SOUNDTRACK_DUEL_REQUESTED = "Duel Requested"
@@ -196,8 +189,8 @@ if not LOCALIZATION_LOADED then
 
     SOUNDTRACK_DRUID = "Druid"
     SOUNDTRACK_DRUID_CHANGE = "Druid/Change Form"
-    --n = GetSpellInfo(1066)
-    n = GetSpellInfo(276012)
+    n = GetSpellInfo(1066)
+    --n = GetSpellInfo(276012)
     SOUNDTRACK_DRUID_AQUATIC = "Druid/" .. n
     n = GetSpellInfo(5487)
     SOUNDTRACK_DRUID_BEAR = "Druid/" .. n
@@ -205,33 +198,33 @@ if not LOCALIZATION_LOADED then
     SOUNDTRACK_DRUID_CAT = "Druid/" .. n
     n = GetSpellInfo(1850)
     SOUNDTRACK_DRUID_DASH = "Druid/" .. n
-    n = GetSpellInfo(252216)
-    SOUNDTRACK_DRUID_TIGER_DASH = "Druid/" .. n
+    --n = GetSpellInfo(252216)
+    --SOUNDTRACK_DRUID_TIGER_DASH = "Druid/" .. n
     --n = GetSpellInfo(33943)
-    n = GetSpellInfo(276029)
-    SOUNDTRACK_DRUID_FLIGHT = "Druid/" .. n
+    --n = GetSpellInfo(276029)
+    --SOUNDTRACK_DRUID_FLIGHT = "Druid/" .. n
     n = GetSpellInfo(24858)
     SOUNDTRACK_DRUID_MOONKIN = "Druid/" .. n
     n = GetSpellInfo(5215)
     SOUNDTRACK_DRUID_PROWL = "Druid/" .. n
     n = GetSpellInfo(783)
     SOUNDTRACK_DRUID_TRAVEL = "Druid/" .. n
-    n = GetSpellInfo(33891)
-    SOUNDTRACK_DRUID_INCARNATION_TREE = "Druid/" .. n
-    n = GetSpellInfo(102558)
-    SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druid/" .. n
-    n = GetSpellInfo(102543)
-    SOUNDTRACK_DRUID_INCARNATION_CAT = "Druid/" .. n
-    n = GetSpellInfo(102560)
-    SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druid/" .. n
+    --n = GetSpellInfo(33891)
+    --SOUNDTRACK_DRUID_INCARNATION_TREE = "Druid/" .. n
+    --n = GetSpellInfo(102558)
+    --SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druid/" .. n
+    --n = GetSpellInfo(102543)
+    --SOUNDTRACK_DRUID_INCARNATION_CAT = "Druid/" .. n
+    --n = GetSpellInfo(102560)
+    --SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druid/" .. n
 
     SOUNDTRACK_HUNTER = "Hunter"
-    n = GetSpellInfo(90954)
-    SOUNDTRACK_HUNTER_CAMO = "Hunter/" .. n
+    --n = GetSpellInfo(90954)
+    --SOUNDTRACK_HUNTER_CAMO = "Hunter/" .. n
 
-    SOUNDTRACK_EVOKER = "Evoker"
-    n = GetSpellInfo(369536)
-    SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
+    --SOUNDTRACK_EVOKER = "Evoker"
+    --n = GetSpellInfo(369536)
+    --SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
 
     SOUNDTRACK_MAGE = "Mage"
 

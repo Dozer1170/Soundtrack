@@ -324,22 +324,24 @@ function Soundtrack.ZoneEvents.Initialize()
 	
 	-- Get all continents
 	local continents = C_Map.GetMapChildrenInfo(946,2,1)
-	-- Add continents
-	for k,v in pairs(continents) do
-		local continentName = v.name
-		Soundtrack.AddEvent(ST_ZONE, continentName, ST_CONTINENT_LVL, true)
-		-- Add zones for each continent
-		local zones = C_Map.GetMapChildrenInfo(v.mapID,3)
-		for a,b in pairs(zones) do
-			local zoneName = continentName.."/"..b.name
-			Soundtrack.AddEvent(ST_ZONE, zoneName, ST_ZONE_LVL, true)
-			-- Add subzones for each zone
-			--[[ Commented out b/c Subzones based on minimap, not map.
-			local subzones = C_Map.GetMapChildrenInfo(b.mapID,3)
-			for c,d in pairs(subzones) do
-				local subzoneName = zoneName.."/"..d.name
-				Soundtrack.AddEvent(ST_ZONE, subzoneName, ST_SUBZONE_LVL, true)
-			end --]]
+	if continents then
+		-- Add continents
+		for k,v in pairs(continents) do
+			local continentName = v.name
+			Soundtrack.AddEvent(ST_ZONE, continentName, ST_CONTINENT_LVL, true)
+			-- Add zones for each continent
+			local zones = C_Map.GetMapChildrenInfo(v.mapID,3)
+			for a,b in pairs(zones) do
+				local zoneName = continentName.."/"..b.name
+				Soundtrack.AddEvent(ST_ZONE, zoneName, ST_ZONE_LVL, true)
+				-- Add subzones for each zone
+				--[[ Commented out b/c Subzones based on minimap, not map.
+                local subzones = C_Map.GetMapChildrenInfo(b.mapID,3)
+                for c,d in pairs(subzones) do
+                    local subzoneName = zoneName.."/"..d.name
+                    Soundtrack.AddEvent(ST_ZONE, subzoneName, ST_SUBZONE_LVL, true)
+                end --]]
+			end
 		end
 	end
 end

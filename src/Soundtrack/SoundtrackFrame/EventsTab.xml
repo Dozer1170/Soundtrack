@@ -403,42 +403,6 @@
                     <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
             </Button>
-            <Button name="SoundtrackFrameAddPetBattlesTargetButton" inherits="UIPanelButtonTemplate" text="Add Target">
-                <Size>
-                    <AbsDimension x="100" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameEventList">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>SoundtrackFrameAddPetBattlesTargetButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-                    <OnClick>SoundtrackFrameAddPetBattleTargetButton_OnClick()</OnClick>
-                    <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_ADD_TARGET, SOUNDTRACK_PETBATTLES_ADD_TARGET_TIP)</OnEnter>
-                    <OnLeave>Soundtrack.HideTip()</OnLeave>
-                </Scripts>
-            </Button>
-            <Button name="SoundtrackFrameDeletePetBattlesTargetButton" inherits="UIPanelButtonTemplate" text="Remove Target">
-                <Size>
-                    <AbsDimension x="100" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="RIGHT" relativeTo="SoundtrackFrameAddPetBattlesTargetButton" relativePoint="LEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>SoundtrackFrameDeletePetBattlesTargetButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-                    <OnClick>SoundtrackFrameRemovePetBattleTargetButton_OnClick()</OnClick>
-                    <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_REMOVE_TARGET, SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP)</OnEnter>
-                    <OnLeave>Soundtrack.HideTip()</OnLeave>
-                </Scripts>
-            </Button>
             <Button name="SoundtrackFrameAddCustomEventButton" inherits="UIPanelButtonTemplate" text="Add">
                 <Size>
                     <AbsDimension x="100" y="22"/>

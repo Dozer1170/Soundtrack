@@ -29,12 +29,4 @@ function Soundtrack.Fix()
 			Soundtrack.RemoveEvent(ST_ZONE, zEvent);
 		end
 	end	
-	
-	-- Remove continent numbers
-	local continentNames, key, val = { GetMapContinents() } ;
-	for i = 1, #continentNames, 2 do
-			Soundtrack.RemoveEvent(ST_PETBATTLES, continentNames[i].." "..SOUNDTRACK_WILD_BATTLE, ST_NPC_LVL, true)
-			Soundtrack.RemoveEvent(ST_PETBATTLES, continentNames[i].." "..SOUNDTRACK_NPC_BATTLE, ST_NPC_LVL, true)
-	end
-	
 end

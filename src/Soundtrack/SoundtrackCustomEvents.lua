@@ -737,32 +737,32 @@ function Soundtrack.CustomEvents.MiscInitialize()
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_SHAMAN, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_WARRIOR, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER, ST_MISC, 0, 1, false, false);
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER, ST_MISC, 0, 1, false, false);
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER, ST_MISC, 0, 1, false, false);
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_COMBAT_EVENTS, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_GROUP_EVENTS, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_NPC_EVENTS, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_STATUS_EVENTS, ST_MISC, 0, 1, false, false);
 
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER_CAMO, ST_MISC, 90954, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER_CAMO, ST_MISC, 90954, ST_BUFF_LVL, true, false)
 
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER_SOAR, ST_MISC, 369536, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER_SOAR, ST_MISC, 369536, ST_BUFF_LVL, true, false)
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_ROGUE_SPRINT, ST_MISC, 2983, ST_BUFF_LVL, true, false)
 	
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_DASH, ST_MISC, 1850, ST_BUFF_LVL, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_TIGER_DASH, ST_MISC, 252216, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_TIGER_DASH, ST_MISC, 252216, ST_BUFF_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_CAT, ST_MISC, 768, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_BEAR, ST_MISC, 5487, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_MOONKIN, ST_MISC, 24858, ST_AURA_LVL, true, false)
 	
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_TREE, ST_MISC, 33891, ST_BUFF_LVL, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_BEAR, ST_MISC, 102558, ST_BUFF_LVL, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_CAT, ST_MISC, 102543, ST_BUFF_LVL, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_MOONKIN, ST_MISC, 102560, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_TREE, ST_MISC, 33891, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_BEAR, ST_MISC, 102558, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_CAT, ST_MISC, 102543, ST_BUFF_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_INCARNATION_MOONKIN, ST_MISC, 102560, ST_BUFF_LVL, true, false)
 	
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_AQUATIC, ST_MISC, 0, ST_AURA_LVL, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_FLIGHT, ST_MISC, 0, ST_AURA_LVL, true, false)
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_FLIGHT, ST_MISC, 0, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterUpdateScript(	-- SOUNDTRACK_DRUID_TRAVEL
 	    SoundtrackMiscDUMMY,
 		SOUNDTRACK_DRUID_TRAVEL, 

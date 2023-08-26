@@ -910,49 +910,6 @@ function SoundtrackFrame_AddNamedWorldBoss(targetName)
     SoundtrackFrame_RefreshEvents()
 end
 
-function SoundtrackFrameAddPetBattleTargetButton_OnClick()
-    local targetName = UnitName("target")
-    local isPlayer
-    if UnitIsPlayer("target") then
-        isPlayer = true
-    else
-        isPlayer = false
-    end
-    if targetName then
-        SoundtrackFrame_AddPetBattleTarget(targetName, isPlayer)
-    end
-end
-
-function SoundtrackFrame_AddPetBattleTarget(targetName, isPlayer)
-    if isPlayer then
-        Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName, ST_NPC_LVL, true)
-    else
-        Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName, ST_NPC_LVL, true)
-    end
-    SoundtrackFrame_SelectedEvent = targetName
-    SoundtrackFrame_RefreshEvents()
-end
-
-function SoundtrackFrameRemovePetBattleTargetButton_OnClick()
-    StaticPopup_Show("SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP")
-end
-
-function SoundtrackFrame_RemovePetBattleTarget(eventName)
-    Soundtrack.Events.DeleteEvent(ST_PETBATTLES, eventName)
-end
-StaticPopupDialogs["SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP"] = {
-    preferredIndex = 3,
-    text = "Do you want to remove this pet battle event?",
-    button1 = ACCEPT,
-    button2 = CANCEL,
-    OnAccept = function(self)
-        SoundtrackFrame_RemovePetBattleTarget(SoundtrackFrame_SelectedEvent)
-    end,
-    timeout = 0,
-    whileDead = 1,
-    hideOnEscape = 1
-}
-
 -- Added by Lunaqua
 function SoundtrackFrameRemoveZoneButton_OnClick()
     StaticPopup_Show("SOUNDTRACK_REMOVE_ZONE_POPUP")
@@ -1295,14 +1252,6 @@ function SoundtrackFrame_OnTabChanged()
             SoundtrackFrameRemoveZoneButton:Hide()
             SoundtrackFrameCollapseAllZoneButton:Hide()
             SoundtrackFrameExpandAllZoneButton:Hide()
-        end
-
-        if SEVT.SelectedEventsTable == "Pet Battles" then
-            SoundtrackFrameAddPetBattlesTargetButton:Show()
-            SoundtrackFrameDeletePetBattlesTargetButton:Show()
-        else
-            SoundtrackFrameAddPetBattlesTargetButton:Hide()
-            SoundtrackFrameDeletePetBattlesTargetButton:Hide()
         end
 
         if SEVT.SelectedEventsTable == "Boss" then

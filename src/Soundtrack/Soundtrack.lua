@@ -52,7 +52,6 @@ function SoundtrackAddon:VARIABLES_LOADED()
     Soundtrack.MigrateFromOldSavedVariables()
     LoadTracks()
     Soundtrack.DanceEvents.Initialize()
-    Soundtrack.PetBattlesEvents.Initialize()
     Soundtrack.MountEvents.Initialize()
     Soundtrack.ZoneEvents.Initialize()
     Soundtrack.BattleEvents.Initialize()
@@ -757,9 +756,6 @@ function Soundtrack.TraceLibrary(text)
 end
 function Soundtrack.TraceBattle(text)
     Soundtrack.Util.DebugPrint("[Battle]: " .. text, 1.0, 0.0, 0.0)
-end
-function Soundtrack.TracePetBattles(text)
-    Soundtrack.Util.DebugPrint("[Pet Battles]: " .. text, 0.5, 1.0, 0.0)
 end
 function Soundtrack.TraceZones(text)
     Soundtrack.Util.DebugPrint("[Zones]: " .. text, 0.0, 0.50, 0.0)
