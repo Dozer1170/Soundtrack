@@ -1,6 +1,6 @@
-## Interface: 100105
+## Interface: 11404
 ## Title: Soundtrack Music
-## Version: 1.0
+## Version: 1.0_era
 ## Author: Katherine Beegle, Dozer1170/Gart
 ## Notes: Custom Music for Soundtrack.
 ## RequiredDeps: Soundtrack
