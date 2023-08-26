@@ -1,3 +1,7 @@
+3.1.6_era
+- Remove DK and hunter misc events.
+- Completely remove pet battle stuff
+
 3.1.5_era
 - Add classic era support
 
