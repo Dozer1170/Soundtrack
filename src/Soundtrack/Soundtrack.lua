@@ -123,7 +123,6 @@ Soundtrack_EventTabs = {
     "Battle", 
     "Boss",
     "Zone", 
-	"Pet Battles",
     "Dance",
     "Misc",
     "Custom", 

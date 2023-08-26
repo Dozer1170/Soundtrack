@@ -76,7 +76,7 @@ function SoundtrackFrame_OnLoad(self)
 
     tinsert(UISpecialFrames, "SoundtrackFrame")
 
-    PanelTemplates_SetNumTabs(self, 11)
+    PanelTemplates_SetNumTabs(self, 10)
     PanelTemplates_SetTab(self, 1)
 end
 
@@ -107,16 +107,14 @@ local function GetTabIndex(tableName)
         return 2
     elseif (tableName == "Zone") then
         return 3
-    elseif (tableName == "Pet Battles") then
-        return 4
     elseif (tableName == "Dance") then
-        return 5
+        return 4
     elseif (tableName == "Misc") then
-        return 6
+        return 5
     elseif (tableName == "Custom") then
-        return 7
+        return 6
     elseif (tableName == "Playlists") then
-        return 8
+        return 7
     else
         return 0
     end
@@ -1188,36 +1186,32 @@ function SoundtrackFrame_RefreshShowingTab()
     elseif (SoundtrackFrame.selectedTab == 3) then
         SEVT.SelectedEventsTable = "Zone"
         SoundtrackFrameEventFrame:Show()
-        -- Pet Battles tab
-    elseif (SoundtrackFrame.selectedTab == 4) then
-        SEVT.SelectedEventsTable = "Pet Battles"
-        SoundtrackFrameEventFrame:Show()
         -- Dance tab
-    elseif (SoundtrackFrame.selectedTab == 5) then
+    elseif (SoundtrackFrame.selectedTab == 4) then
         SEVT.SelectedEventsTable = "Dance"
         SoundtrackFrameEventFrame:Show()
         -- Misc tab
-    elseif (SoundtrackFrame.selectedTab == 6) then
+    elseif (SoundtrackFrame.selectedTab == 5) then
         SEVT.SelectedEventsTable = "Misc"
         SoundtrackFrameEventFrame:Show()
 
         -- Custom tab
-    elseif (SoundtrackFrame.selectedTab == 7) then
+    elseif (SoundtrackFrame.selectedTab == 6) then
         SEVT.SelectedEventsTable = "Custom"
         SoundtrackFrameEventFrame:Show()
 
         -- Playlists tab
-    elseif (SoundtrackFrame.selectedTab == 8) then
+    elseif (SoundtrackFrame.selectedTab == 7) then
         SEVT.SelectedEventsTable = "Playlists"
         SoundtrackFrameEventFrame:Show()
         -- Options tab
-    elseif (SoundtrackFrame.selectedTab == 9) then
+    elseif (SoundtrackFrame.selectedTab == 8) then
         SoundtrackFrameOptionsTab:Show()
         -- Profiles tab
-    elseif (SoundtrackFrame.selectedTab == 10) then
+    elseif (SoundtrackFrame.selectedTab == 9) then
         SoundtrackFrameProfilesFrame:Show()
         -- About tab
-    elseif (SoundtrackFrame.selectedTab == 11) then
+    elseif (SoundtrackFrame.selectedTab == 10) then
         SoundtrackFrameAboutFrame:Show()
     end
 

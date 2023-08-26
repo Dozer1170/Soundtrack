@@ -113,13 +113,6 @@ if not LOCALIZATION_LOADED then
     SOUNDTRACK_UNCATEGORIZED = "Uncategorized"
     SOUNDTRACK_UNKNOWN = "Unknown"
 
-
-    -- Pet Battles Tab
-    SOUNDTRACK_WILD_BATTLE = "Wild Battle"
-    SOUNDTRACK_NPC_BATTLE = "NPC Battle"
-    SOUNDTRACK_PVP_MATCHMAKING = "PVP Random Match"
-    SOUNDTRACK_PVP_DUEL = "PVP Duel"
-
     -- Misc Tab
     SOUNDTRACK_DUEL_REQUESTED = "Duel Requested"
     SOUNDTRACK_STATUS_EVENTS = "Status"
@@ -184,8 +177,8 @@ if not LOCALIZATION_LOADED then
 
     local n
 
-    SOUNDTRACK_DK = "Death Knight"
-    SOUNDTRACK_DK_CHANGE = "Death Knight/Change Presence"
+    --SOUNDTRACK_DK = "Death Knight"
+    --SOUNDTRACK_DK_CHANGE = "Death Knight/Change Presence"
 
     SOUNDTRACK_DRUID = "Druid"
     SOUNDTRACK_DRUID_CHANGE = "Druid/Change Form"

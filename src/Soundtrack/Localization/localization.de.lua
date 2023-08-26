@@ -113,13 +113,6 @@ if GetLocale() == "deDE" then
     SOUNDTRACK_UNCATEGORIZED = "Uncategorized"
     SOUNDTRACK_UNKNOWN = "Unknown"
 
-
-    -- Pet Battles Tab
-    SOUNDTRACK_WILD_BATTLE = "Wild Battle"
-    SOUNDTRACK_NPC_BATTLE = "NPC Battle"
-    SOUNDTRACK_PVP_MATCHMAKING = "PVP Random Match"
-    SOUNDTRACK_PVP_DUEL = "PVP Duel"
-
     -- Misc Tab
     SOUNDTRACK_DUEL_REQUESTED = "Duel Requested"
     SOUNDTRACK_STATUS_EVENTS = "Status"
@@ -197,32 +190,32 @@ if GetLocale() == "deDE" then
     SOUNDTRACK_DRUID_CAT = "Druide/" .. n
     n = GetSpellInfo(1850)
     SOUNDTRACK_DRUID_DASH = "Druide/" .. n
-    n = GetSpellInfo(252216)
-    SOUNDTRACK_DRUID_TIGER_DASH = "Druide/" .. n
-    n = GetSpellInfo(33943)
-    SOUNDTRACK_DRUID_FLIGHT = "Druide/" .. n
+    --n = GetSpellInfo(252216)
+    --SOUNDTRACK_DRUID_TIGER_DASH = "Druide/" .. n
+    --n = GetSpellInfo(33943)
+    --SOUNDTRACK_DRUID_FLIGHT = "Druide/" .. n
     n = GetSpellInfo(24858)
     SOUNDTRACK_DRUID_MOONKIN = "Druide/" .. n
     n = GetSpellInfo(5215)
     SOUNDTRACK_DRUID_PROWL = "Druide/" .. n
     n = GetSpellInfo(783)
     SOUNDTRACK_DRUID_TRAVEL = "Druide/" .. n
-    n = GetSpellInfo(33891)
-    SOUNDTRACK_DRUID_INCARNATION_TREE = "Druide/" .. n
-    n = GetSpellInfo(102558)
-    SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druide/" .. n
-    n = GetSpellInfo(102543)
-    SOUNDTRACK_DRUID_INCARNATION_CAT = "Druide/" .. n
-    n = GetSpellInfo(102560)
-    SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druide/" .. n
+    --n = GetSpellInfo(33891)
+    --SOUNDTRACK_DRUID_INCARNATION_TREE = "Druide/" .. n
+    --n = GetSpellInfo(102558)
+    --SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druide/" .. n
+    --n = GetSpellInfo(102543)
+    --SOUNDTRACK_DRUID_INCARNATION_CAT = "Druide/" .. n
+    --n = GetSpellInfo(102560)
+    --SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druide/" .. n
 
     SOUNDTRACK_HUNTER = "J�ger"
-    n = GetSpellInfo(90954)
-    SOUNDTRACK_HUNTER_CAMO = "J�ger/" .. n
+    --n = GetSpellInfo(90954)
+    --SOUNDTRACK_HUNTER_CAMO = "J�ger/" .. n
 
-    SOUNDTRACK_EVOKER = "Evoker"
-    n = GetSpellInfo(369536)
-    SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
+    --SOUNDTRACK_EVOKER = "Evoker"
+    --n = GetSpellInfo(369536)
+    --SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
 
     SOUNDTRACK_MAGE = "Magier"
 

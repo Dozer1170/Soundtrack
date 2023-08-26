@@ -478,24 +478,24 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		true
 	);
 
-	Soundtrack.CustomEvents.RegisterEventScript(	-- Death Knight Change Presence
-		SoundtrackMiscDUMMY,
-	    SOUNDTRACK_DK_CHANGE,
-	    ST_MISC,
-	    "UPDATE_SHAPESHIFT_FORM",
-	    ST_SFX_LVL,
-	    false,
-	    function()
-	        local class = UnitClass("player")
-			local stance = GetShapeshiftForm();
-			if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DK_CHANGE)
-				Soundtrack.CurrentStance = stance;
-			end
-	    end,
-		true
-	);
-
+	--Soundtrack.CustomEvents.RegisterEventScript(	-- Death Knight Change Presence
+	--	SoundtrackMiscDUMMY,
+	--    SOUNDTRACK_DK_CHANGE,
+	--    ST_MISC,
+	--    "UPDATE_SHAPESHIFT_FORM",
+	--    ST_SFX_LVL,
+	--    false,
+	--    function()
+	--        local class = UnitClass("player")
+	--		local stance = GetShapeshiftForm();
+	--		if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+	--			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DK_CHANGE)
+	--			Soundtrack.CurrentStance = stance;
+	--		end
+	--    end,
+	--	true
+	--);
+	--
 	Soundtrack.CustomEvents.RegisterEventScript(	-- Druid Change Form
 		SoundtrackMiscDUMMY,
 	    SOUNDTRACK_DRUID_CHANGE,
@@ -729,14 +729,13 @@ function Soundtrack.CustomEvents.MiscInitialize()
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, ST_MISC, 369968, ST_BUFF_LVL, true, false)
 
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DK, ST_MISC, 0, 1, false, false);
+	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DK, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_PALADIN, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_PRIEST, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_ROGUE, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_SHAMAN, ST_MISC, 0, 1, false, false);
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_WARRIOR, ST_MISC, 0, 1, false, false);
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER, ST_MISC, 0, 1, false, false);
 	--Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER, ST_MISC, 0, 1, false, false);
 
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_COMBAT_EVENTS, ST_MISC, 0, 1, false, false);
