@@ -1,3 +1,6 @@
+3.1.5_era
+- Add classic era support
+
 3.1.5
 - Bump for patch 10.1.5
 - Add SL & DF tracks to default tracks
