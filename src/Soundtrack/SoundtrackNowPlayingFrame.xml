@@ -37,7 +37,7 @@
 			</Anchor>
           </Anchors>
         </FontString>
-        <FontString name="TrackTextString" inherits="GameTooltipText">
+        <FontString name="TrackTextString" inherits="GameTooltipHeaderText">
           <Size>
             <RelDimension x="0.5" y="0"/>
           </Size>
@@ -66,7 +66,7 @@
             <Anchor point="TOPLEFT" relativeTo="TrackTextString" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-		
+
 		<FontString name="AlbumTextBG1" inherits="GameTooltipText">
           <Size>
             <RelDimension x="0.5" y="0"/>
