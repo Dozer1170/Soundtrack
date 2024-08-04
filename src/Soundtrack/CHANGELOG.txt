@@ -1,3 +1,6 @@
+3.2.0_era
+- Bump classic era UI version number
+
 3.1.6_era
 - Remove DK and hunter misc events.
 - Completely remove pet battle stuff
