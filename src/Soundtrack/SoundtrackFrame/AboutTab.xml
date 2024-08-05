@@ -37,7 +37,7 @@
                                 relativePoint="BOTTOMLEFT"/>
                     </Anchors>
                 </FontString>
-                <FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 3.0.14">
+                <FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 3.1.6">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout3"
                                 relativePoint="BOTTOMLEFT"/>

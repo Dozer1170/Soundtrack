@@ -1,3 +1,6 @@
+3.1.6
+- Bump for patch 11.0.0
+
 3.1.5
 - Bump for patch 10.1.5
 - Add SL & DF tracks to default tracks
