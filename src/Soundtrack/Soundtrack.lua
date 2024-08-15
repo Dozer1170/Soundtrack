@@ -143,7 +143,7 @@ Soundtrack_SortedTracks = {}
 local _SuspendSorting = false
 local _TracksLoaded = false
 
-_G.SOUNDTRACK_BINDING_HEADER = GetAddOnMetadata(..., 'Title')
+_G.SOUNDTRACK_BINDING_HEADER = C_AddOns.GetAddOnMetadata(..., 'Title')
 
 function Soundtrack.IsNullOrEmpty(text)
     return not text or text == ""

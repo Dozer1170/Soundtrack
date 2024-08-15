@@ -198,39 +198,39 @@ if GetLocale() == "esES" or GetLocale() == "esMX" then
 
     SOUNDTRACK_DRUID = "Druida"
     SOUNDTRACK_DRUID_CHANGE = "Druida/Change Forma"
-    n = GetSpellInfo(1066)
+    n = C_Spell.GetSpellInfo(1066).name
     SOUNDTRACK_DRUID_AQUATIC = "Druida/" .. n
-    n = GetSpellInfo(5487)
+    n = C_Spell.GetSpellInfo(5487).name
     SOUNDTRACK_DRUID_BEAR = "Druida/" .. n
-    n = GetSpellInfo(768)
+    n = C_Spell.GetSpellInfo(768).name
     SOUNDTRACK_DRUID_CAT = "Druida/" .. n
-    n = GetSpellInfo(1850)
+    n = C_Spell.GetSpellInfo(1850).name
     SOUNDTRACK_DRUID_DASH = "Druida/" .. n
-    n = GetSpellInfo(252216)
+    n = C_Spell.GetSpellInfo(252216).name
     SOUNDTRACK_DRUID_TIGER_DASH = "Druida/" .. n
-    n = GetSpellInfo(33943)
+    n = C_Spell.GetSpellInfo(33943).name
     SOUNDTRACK_DRUID_FLIGHT = "Druida/" .. n
-    n = GetSpellInfo(24858)
+    n = C_Spell.GetSpellInfo(24858).name
     SOUNDTRACK_DRUID_MOONKIN = "Druida/" .. n
-    n = GetSpellInfo(5215)
+    n = C_Spell.GetSpellInfo(5215).name
     SOUNDTRACK_DRUID_PROWL = "Druida/" .. n
-    n = GetSpellInfo(783)
+    n = C_Spell.GetSpellInfo(783).name
     SOUNDTRACK_DRUID_TRAVEL = "Druida/" .. n
-    n = GetSpellInfo(33891)
+    n = C_Spell.GetSpellInfo(33891).name
     SOUNDTRACK_DRUID_INCARNATION_TREE = "Druida/" .. n
-    n = GetSpellInfo(102558)
+    n = C_Spell.GetSpellInfo(102558).name
     SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druida/" .. n
-    n = GetSpellInfo(102543)
+    n = C_Spell.GetSpellInfo(102543).name
     SOUNDTRACK_DRUID_INCARNATION_CAT = "Druida/" .. n
-    n = GetSpellInfo(102560)
+    n = C_Spell.GetSpellInfo(102560).name
     SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druida/" .. n
 
     SOUNDTRACK_HUNTER = "Cazador"
-    n = GetSpellInfo(90954)
+    n = C_Spell.GetSpellInfo(90954).name
     SOUNDTRACK_HUNTER_CAMO = "Cazador/" .. n
 
     SOUNDTRACK_EVOKER = "Evoker"
-    n = GetSpellInfo(369536)
+    n = C_Spell.GetSpellInfo(369536).name
     SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
 
     SOUNDTRACK_MAGE = "Mago"
@@ -244,15 +244,15 @@ if GetLocale() == "esES" or GetLocale() == "esMX" then
     SOUNDTRACK_PRIEST_CHANGE = "Sacerdotisa/Change Forma"
 
     SOUNDTRACK_ROGUE = "Picaro"
-    n = GetSpellInfo(2983)
+    n = C_Spell.GetSpellInfo(2983).name
     SOUNDTRACK_ROGUE_SPRINT = "Picaro/" .. n
-    n = GetSpellInfo(1784)
+    n = C_Spell.GetSpellInfo(1784).name
     SOUNDTRACK_ROGUE_STEALTH = "Picaro/" .. n
     SOUNDTRACK_ROGUE_CHANGE = "Picaro/Change " .. n
 
     SOUNDTRACK_SHAMAN = "Chaman"
     SOUNDTRACK_SHAMAN_CHANGE = "Chaman/Change Form"
-    n = GetSpellInfo(2645)
+    n = C_Spell.GetSpellInfo(2645).name
     SOUNDTRACK_SHAMAN_GHOST_WOLF = "Chaman/" .. n
 
     SOUNDTRACK_WARLOCK = "Bruja"

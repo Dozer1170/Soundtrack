@@ -196,39 +196,39 @@ if GetLocale() == "deDE" then
 
     SOUNDTRACK_DRUID = "Druide"
     SOUNDTRACK_DRUID_CHANGE = "Druide/Change Form"
-    n = GetSpellInfo(1066)
+    n = C_Spell.GetSpellInfo(1066).name
     SOUNDTRACK_DRUID_AQUATIC = "Druide/" .. n
-    n = GetSpellInfo(5487)
+    n = C_Spell.GetSpellInfo(5487).name
     SOUNDTRACK_DRUID_BEAR = "Druide/" .. n
-    n = GetSpellInfo(768)
+    n = C_Spell.GetSpellInfo(768).name
     SOUNDTRACK_DRUID_CAT = "Druide/" .. n
-    n = GetSpellInfo(1850)
+    n = C_Spell.GetSpellInfo(1850).name
     SOUNDTRACK_DRUID_DASH = "Druide/" .. n
-    n = GetSpellInfo(252216)
+    n = C_Spell.GetSpellInfo(252216).name
     SOUNDTRACK_DRUID_TIGER_DASH = "Druide/" .. n
-    n = GetSpellInfo(33943)
+    n = C_Spell.GetSpellInfo(33943).name
     SOUNDTRACK_DRUID_FLIGHT = "Druide/" .. n
-    n = GetSpellInfo(24858)
+    n = C_Spell.GetSpellInfo(24858).name
     SOUNDTRACK_DRUID_MOONKIN = "Druide/" .. n
-    n = GetSpellInfo(5215)
+    n = C_Spell.GetSpellInfo(5215).name
     SOUNDTRACK_DRUID_PROWL = "Druide/" .. n
-    n = GetSpellInfo(783)
+    n = C_Spell.GetSpellInfo(783).name
     SOUNDTRACK_DRUID_TRAVEL = "Druide/" .. n
-    n = GetSpellInfo(33891)
+    n = C_Spell.GetSpellInfo(33891).name
     SOUNDTRACK_DRUID_INCARNATION_TREE = "Druide/" .. n
-    n = GetSpellInfo(102558)
+    n = C_Spell.GetSpellInfo(102558).name
     SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druide/" .. n
-    n = GetSpellInfo(102543)
+    n = C_Spell.GetSpellInfo(102543).name
     SOUNDTRACK_DRUID_INCARNATION_CAT = "Druide/" .. n
-    n = GetSpellInfo(102560)
+    n = C_Spell.GetSpellInfo(102560).name
     SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druide/" .. n
 
     SOUNDTRACK_HUNTER = "J�ger"
-    n = GetSpellInfo(90954)
+    n = C_Spell.GetSpellInfo(90954).name
     SOUNDTRACK_HUNTER_CAMO = "J�ger/" .. n
 
     SOUNDTRACK_EVOKER = "Evoker"
-    n = GetSpellInfo(369536)
+    n = C_Spell.GetSpellInfo(369536).name
     SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
 
     SOUNDTRACK_MAGE = "Magier"
@@ -242,15 +242,15 @@ if GetLocale() == "deDE" then
     SOUNDTRACK_PRIEST_CHANGE = "Priester/Change Form"
 
     SOUNDTRACK_ROGUE = "Schurke"
-    n = GetSpellInfo(2983)
+    n = C_Spell.GetSpellInfo(2983).name
     SOUNDTRACK_ROGUE_SPRINT = "Schurke/" .. n
-    n = GetSpellInfo(1784)
+    n = C_Spell.GetSpellInfo(1784).name
     SOUNDTRACK_ROGUE_STEALTH = "Schurke/" .. n
     SOUNDTRACK_ROGUE_CHANGE = "Schurke/Change " .. n
 
     SOUNDTRACK_SHAMAN = "Schamane"
     SOUNDTRACK_SHAMAN_CHANGE = "Schamane/Change Form"
-    n = GetSpellInfo(2645)
+    n = C_Spell.GetSpellInfo(2645).name
     SOUNDTRACK_SHAMAN_GHOST_WOLF = "Schamane/" .. n
 
     SOUNDTRACK_WARLOCK = "Hexenmeister"

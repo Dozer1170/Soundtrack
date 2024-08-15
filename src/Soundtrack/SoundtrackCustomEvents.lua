@@ -97,13 +97,13 @@ end
 function Soundtrack.CustomEvents.UpdateActiveAuras()
 	Soundtrack.ActiveAuras = {}
 	for i=1,40 do
-		local n, __, __, __, __, __, __, __, __, spellId = UnitBuff("player", i)
-		if spellId ~= nil then	
-			Soundtrack.ActiveAuras[spellId] = spellId
+		local buff = C_UnitAuras.GetBuffDataByIndex("player", i)
+		if buff ~= nil then
+			Soundtrack.ActiveAuras[buff.spellId] = buff.spellId
 		end
-		local n, __, __, __, __, __, __, __, __, spellId = UnitDebuff("player", i)
-		if spellId ~= nil then	
-			Soundtrack.ActiveAuras[spellId] = spellId
+		local debuff = C_UnitAuras.GetDebuffDataByIndex("player", i)
+		if debuff ~= nil then
+			Soundtrack.ActiveAuras[debuff.spellId] = debuff.spellId
 		end
 	end
 end --]]

@@ -196,41 +196,41 @@ if not LOCALIZATION_LOADED then
 
     SOUNDTRACK_DRUID = "Druid"
     SOUNDTRACK_DRUID_CHANGE = "Druid/Change Form"
-    --n = GetSpellInfo(1066)
-    n = GetSpellInfo(276012)
+    --n = C_Spell.GetSpellInfo(1066).name
+    n = C_Spell.GetSpellInfo(276012).name
     SOUNDTRACK_DRUID_AQUATIC = "Druid/" .. n
-    n = GetSpellInfo(5487)
+    n = C_Spell.GetSpellInfo(5487).name
     SOUNDTRACK_DRUID_BEAR = "Druid/" .. n
-    n = GetSpellInfo(768)
+    n = C_Spell.GetSpellInfo(768).name
     SOUNDTRACK_DRUID_CAT = "Druid/" .. n
-    n = GetSpellInfo(1850)
+    n = C_Spell.GetSpellInfo(1850).name
     SOUNDTRACK_DRUID_DASH = "Druid/" .. n
-    n = GetSpellInfo(252216)
+    n = C_Spell.GetSpellInfo(252216).name
     SOUNDTRACK_DRUID_TIGER_DASH = "Druid/" .. n
-    --n = GetSpellInfo(33943)
-    n = GetSpellInfo(276029)
+    --n = C_Spell.GetSpellInfo(33943)
+    n = C_Spell.GetSpellInfo(276029).name
     SOUNDTRACK_DRUID_FLIGHT = "Druid/" .. n
-    n = GetSpellInfo(24858)
+    n = C_Spell.GetSpellInfo(24858).name
     SOUNDTRACK_DRUID_MOONKIN = "Druid/" .. n
-    n = GetSpellInfo(5215)
+    n = C_Spell.GetSpellInfo(5215).name
     SOUNDTRACK_DRUID_PROWL = "Druid/" .. n
-    n = GetSpellInfo(783)
+    n = C_Spell.GetSpellInfo(783).name
     SOUNDTRACK_DRUID_TRAVEL = "Druid/" .. n
-    n = GetSpellInfo(33891)
+    n = C_Spell.GetSpellInfo(33891).name
     SOUNDTRACK_DRUID_INCARNATION_TREE = "Druid/" .. n
-    n = GetSpellInfo(102558)
+    n = C_Spell.GetSpellInfo(102558).name
     SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druid/" .. n
-    n = GetSpellInfo(102543)
+    n = C_Spell.GetSpellInfo(102543).name
     SOUNDTRACK_DRUID_INCARNATION_CAT = "Druid/" .. n
-    n = GetSpellInfo(102560)
+    n = C_Spell.GetSpellInfo(102560).name
     SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druid/" .. n
 
     SOUNDTRACK_HUNTER = "Hunter"
-    n = GetSpellInfo(90954)
+    n = C_Spell.GetSpellInfo(90954).name
     SOUNDTRACK_HUNTER_CAMO = "Hunter/" .. n
 
     SOUNDTRACK_EVOKER = "Evoker"
-    n = GetSpellInfo(369536)
+    n = C_Spell.GetSpellInfo(369536).name
     SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
 
     SOUNDTRACK_MAGE = "Mage"
@@ -244,15 +244,15 @@ if not LOCALIZATION_LOADED then
     SOUNDTRACK_PRIEST_CHANGE = "Priest/Change Form"
 
     SOUNDTRACK_ROGUE = "Rogue"
-    n = GetSpellInfo(2983)
+    n = C_Spell.GetSpellInfo(2983).name
     SOUNDTRACK_ROGUE_SPRINT = "Rogue/" .. n
-    n = GetSpellInfo(1784)
+    n = C_Spell.GetSpellInfo(1784).name
     SOUNDTRACK_ROGUE_STEALTH = "Rogue/" .. n
     SOUNDTRACK_ROGUE_CHANGE = "Rogue/Change " .. n
 
     SOUNDTRACK_SHAMAN = "Shaman"
     SOUNDTRACK_SHAMAN_CHANGE = "Shaman/Change Form"
-    n = GetSpellInfo(2645)
+    n = C_Spell.GetSpellInfo(2645).name
     SOUNDTRACK_SHAMAN_GHOST_WOLF = "Shaman/" .. n
 
     SOUNDTRACK_WARLOCK = "Warlock"
