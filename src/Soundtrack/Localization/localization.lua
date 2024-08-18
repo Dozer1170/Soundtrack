@@ -260,46 +260,8 @@ if not LOCALIZATION_LOADED then
     SOUNDTRACK_WARRIOR = "Warrior"
     SOUNDTRACK_WARRIOR_CHANGE = "Warrior/Change Stance"
 
-    -- Old Misc Event Names
-    --[[
-    SOUNDTRACK_FLIGHT_OLD = "Flight Path"
-    SOUNDTRACK_DEATH_OLD = "Death"
-    SOUNDTRACK_GHOST_OLD = "Ghost"
-    SOUNDTRACK_MOUNT_FLYING_OLD = "Mount, Flying"
-    SOUNDTRACK_MOUNT_GROUND_OLD = "Mount, Ground"
-    SOUNDTRACK_STEALTHED_OLD = "Stealthed"
-    SOUNDTRACK_SWIMMING_OLD = "Swimming"
-
-    SOUNDTRACK_ACHIEVEMENT_OLD = "Achievement"
-    SOUNDTRACK_JOIN_PARTY_OLD = "Join Party"
-    SOUNDTRACK_JOIN_RAID_OLD = "Join Raid"
-    SOUNDTRACK_JUMP_OLD = "Jump"
-    SOUNDTRACK_LEVEL_UP_OLD = "Level Up"
-    SOUNDTRACK_LFG_COMPLETE_OLD = "LFG Complete"
-    SOUNDTRACK_QUEST_COMPLETE_OLD = "Quest Complete"
-
-    SOUNDTRACK_AUCTION_HOUSE_OLD = "Auction House"
-    SOUNDTRACK_BANK_OLD = "Bank"
-    SOUNDTRACK_MERCHANT_OLD = "Merchant"
-
-    SOUNDTRACK_RANGE_CRIT_OLD = "Range Crit"
-    SOUNDTRACK_RANGE_HIT_OLD = "Range"
-    SOUNDTRACK_HEAL_CRIT_OLD = "Spell Heal Crit"
-    SOUNDTRACK_HEAL_HIT_OLD = "Spell Heal"
-    SOUNDTRACK_HOT_CRIT_OLD = "Spell HoT Crit"
-    SOUNDTRACK_HOT_HIT_OLD = "Spell HoT"
-    SOUNDTRACK_SPELL_CRIT_OLD = "Spell Damage Crit"
-    SOUNDTRACK_SPELL_HIT_OLD = "Spell Damage"
-    SOUNDTRACK_DOT_CRIT_OLD = "Spell DoT Crit"
-    SOUNDTRACK_DOT_HIT_OLD = "Spell DoT"
-    SOUNDTRACK_SWING_CRIT_OLD = "Swing Crit"
-    SOUNDTRACK_SWING_HIT_OLD = "Swing"
-    SOUNDTRACK_VICTORY_OLD = "Victory"
-    --]]
-
     SOUNDTRACK_REMOVE_MISC = "Remove Misc. Event"
     SOUNDTRACK_REMOVE_MISC_TIP = "Removes the selected misc. event."
-
 
     -- Custom Event Tab
     SOUNDTRACK_ADD_CUSTOM = "Add Custom Event"
