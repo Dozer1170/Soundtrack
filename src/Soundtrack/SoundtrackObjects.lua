@@ -1,12 +1,11 @@
-Soundtrack = 
-{
-    Library = {};    
-    Events = {};
-    BattleEvents = {};
-    ZoneEvents = {};
-    DanceEvents = {};
-    MountEvents = {};
-    Util = {};
-    Settings = {};
-    Timers = {};
-};
+Soundtrack = {
+	Library = {},
+	Events = {},
+	BattleEvents = {},
+	ZoneEvents = {},
+	DanceEvents = {},
+	MountEvents = {},
+	Util = {},
+	Settings = {},
+	Timers = {},
+}
