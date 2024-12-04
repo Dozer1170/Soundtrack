@@ -199,7 +199,19 @@ StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
 	hideOnEscape = 1,
 }
 
---DEBUG = 1
+StaticPopupDialogs["SOUNDTRACK_CLEAR_SELECTED_EVENT"] = {
+	preferredIndex = 3,
+	text = SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION,
+	button1 = ACCEPT,
+	button2 = CANCEL,
+	OnAccept = function()
+		SoundtrackFrame_ClearEvent(SoundtrackFrame_SelectedEvent)
+	end,
+	enterClicksFirstButton = 1,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = 1,
+}
 
 local SEVT = {
 	SelectedEventsTable = nil,
@@ -1288,9 +1300,12 @@ function SoundtrackFrameClearButton_OnClick()
 		return
 	end
 
-	-- TODO: Confirm that the user really wants to clear the tracks for the event.
+	-- TODO: Test this popup
+	StaticPopup_Show("SOUNDTRACK_CLEAR_SELECTED_EVENT")
+end
 
-	Soundtrack.Events.ClearEvent(SEVT.SelectedEventsTable, SoundtrackFrame_SelectedEvent)
+function SoundtrackFrame_ClearEvent(eventToClear)
+	Soundtrack.Events.ClearEvent(SEVT.SelectedEventsTable, eventToClear)
 
 	SoundtrackFrame_RefreshEvents()
 end
@@ -1485,7 +1500,6 @@ function SoundtrackFrame_RefreshEvents()
 		return
 	end
 
-	-- TODO Should not have to do this here
 	Soundtrack.TraceFrame("SEVT.SelectedEventsTable: " .. SEVT.SelectedEventsTable)
 	local flatEventsTable = GetFlatEventsTable()
 
