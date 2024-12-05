@@ -256,7 +256,7 @@ function Soundtrack.ZoneEvents.OnLoad(self)
 	self:RegisterEvent("VARIABLES_LOADED")
 end
 
-function Soundtrack.ZoneEvents.OnUpdate(self)
+function Soundtrack.ZoneEvents.OnUpdate(_)
 	local currentTime = GetTime()
 
 	if currentTime >= nextUpdateTime then
@@ -270,7 +270,7 @@ function Soundtrack.ZoneEvents.OnUpdate(self)
 	end
 end
 
-function Soundtrack.ZoneEvents.OnEvent(self, event, ...)
+function Soundtrack.ZoneEvents.OnEvent(_, event, _)
 	if not SoundtrackAddon.db.profile.settings.EnableZoneMusic then
 		return
 	end
