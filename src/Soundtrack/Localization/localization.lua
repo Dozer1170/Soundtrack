@@ -1,22 +1,101 @@
 --------------------------------------------------
 -- localization.lua (English)
 --------------------------------------------------
----
---n = C_Spell.GetSpellInfo(276012).name
---SOUNDTRACK_DRUID_AQUATIC = "Druid/" .. n
 
-function ConcatLocalizationPath(spellId, path)
+local function GetSpellName(spellId)
 	local spellInfo = C_Spell.GetSpellInfo(spellId)
 	if spellInfo == nil then
+		return nil
+	end
+
+	return spellInfo.name
+end
+
+function ConcatLocalizationPath(spellId, path)
+	local spellName = GetSpellName(spellId)
+	if spellName == nil then
 		return ""
 	end
 
-	return path .. spellInfo.name
+	return path .. spellName
 end
 
-if not LOCALIZATION_LOADED then
-	LOCALIZATION_LOADED = true
+local function RegisterDruidStrings(localizedClassName, localizedChangeFormText)
+	local druidPath = localizedClassName .. "/"
+	SOUNDTRACK_DRUID = localizedClassName
+	SOUNDTRACK_DRUID_CHANGE = druidPath .. localizedChangeFormText
 
+	local retailAquaticFormPath = ConcatLocalizationPath(276012, druidPath)
+	if not retailAquaticFormPath == "" then
+		SOUNDTRACK_DRUID_AQUATIC = retailAquaticFormPath
+	else
+		SOUNDTRACK_DRUID_AQUATIC = ConcatLocalizationPath(1066, druidPath)
+	end
+
+	local bearFormPath = ConcatLocalizationPath(5487, druidPath)
+	if not bearFormPath == nil then
+		SOUNDTRACK_DRUID_BEAR = bearFormPath
+	end
+
+	local catFormPath = ConcatLocalizationPath(768, druidPath)
+	if not catFormPath == nil then
+		SOUNDTRACK_DRUID_CAT = catFormPath
+	end
+
+	local dashPath = ConcatLocalizationPath(1850, druidPath)
+	if not dashPath == nil then
+		SOUNDTRACK_DRUID_DASH = dashPath
+	end
+
+	local tigerDashPath = ConcatLocalizationPath(252216, druidPath)
+	if not tigerDashPath == nil then
+		SOUNDTRACK_DRUID_TIGER_DASH = tigerDashPath
+	end
+
+	local flightFormPath = ConcatLocalizationPath(276029, druidPath)
+	if flightFormPath then
+		SOUNDTRACK_DRUID_FLIGHT = flightFormPath
+	else
+		SOUNDTRACK_DRUID_FLIGHT = ConcatLocalizationPath(33943, druidPath)
+	end
+
+	local moonkinFormPath = ConcatLocalizationPath(24858, druidPath)
+	if not moonkinFormPath == nil then
+		SOUNDTRACK_DRUID_MOONKIN = moonkinFormPath
+	end
+
+	local prowlPath = ConcatLocalizationPath(5215, druidPath)
+	if not prowlPath == nil then
+		SOUNDTRACK_DRUID_PROWL = prowlPath
+	end
+
+	local travelFormPath = ConcatLocalizationPath(783, druidPath)
+	if not travelFormPath == nil then
+		SOUNDTRACK_DRUID_TRAVEL = travelFormPath
+	end
+
+	local incarnTreePath = ConcatLocalizationPath(33891, druidPath)
+	if not incarnTreePath == nil then
+		SOUNDTRACK_DRUID_INCARNATION_TREE = incarnTreePath
+	end
+
+	local incarnBearPath = ConcatLocalizationPath(102558, druidPath)
+	if not incarnBearPath == nil then
+		SOUNDTRACK_DRUID_INCARNATION_BEAR = incarnBearPath
+	end
+
+	local incarnCatPath = ConcatLocalizationPath(102543, druidPath)
+	if not incarnCatPath == nil then
+		SOUNDTRACK_DRUID_INCARNATION_CAT = incarnCatPath
+	end
+
+	local incarnMoonkinPath = ConcatLocalizationPath(102560, druidPath)
+	if not incarnMoonkinPath == nil then
+		SOUNDTRACK_DRUID_INCARNATION_MOONKIN = incarnMoonkinPath
+	end
+end
+
+local function RegisterGeneralStrings()
 	SOUNDTRACK_DANCE_EMOTES = {
 		" burst into dance.",
 		" dance with ",
@@ -30,35 +109,35 @@ if not LOCALIZATION_LOADED then
 	-- Main Frame
 	SOUNDTRACK_CLOSE = "Close Window"
 	SOUNDTRACK_CLOSE_TIP =
-	"Closes Soundtrack's main window. If a track was being previewed it will be stopped, and the active events are resumed."
+		"Closes Soundtrack's main window. If a track was being previewed it will be stopped, and the active events are resumed."
 	--"If a playlist was started, it will continue to play."   -- Currently not functioning.
 
 	SOUNDTRACK_TRACK_FILTER = "Track Filter"
 	SOUNDTRACK_TRACK_FILTER_TIP =
-	"Allows filtering of the tracks. The filter is compared against the track file names, paths, title, artist and album name. Clear the box to show the full list of tracks again."
+		"Allows filtering of the tracks. The filter is compared against the track file names, paths, title, artist and album name. Clear the box to show the full list of tracks again."
 
 	SOUNDTRACK_EVENT_FILTER = "Event Filter"
 	SOUNDTRACK_EVENT_FILTER_TIP =
-	"Allows filtering of the events. The filter is compared against the event name. Clear the box to show the full list of events again."
+		"Allows filtering of the events. The filter is compared against the event name. Clear the box to show the full list of events again."
 
 	SOUNDTRACK_EVENT_SETTINGS = "Event Settings"
 	SOUNDTRACK_EVENT_SETTINGS_TIP =
-	"Allows editing of the selected event's settings such as its name, and playback behavior."
+		"Allows editing of the selected event's settings such as its name, and playback behavior."
 
 	SOUNDTRACK_ALL = "All Tracks"
 	SOUNDTRACK_ALL_TIP =
-	"Adds all available tracks to this event's assigned tracks. Useful if you want to create a playlist or other event which will play any of your songs."
+		"Adds all available tracks to this event's assigned tracks. Useful if you want to create a playlist or other event which will play any of your songs."
 
 	SOUNDTRACK_CLEAR = "Clear Tracks"
 	SOUNDTRACK_CLEAR_TIP = "Removes all assigned tracks from this event's tracks."
 
 	SOUNDTRACK_DOWN = "Move Track Down"
 	SOUNDTRACK_DOWN_TIP =
-	"Moves the selected assigned track down in the list. This allows you to set a specific order to your event's tracks."
+		"Moves the selected assigned track down in the list. This allows you to set a specific order to your event's tracks."
 
 	SOUNDTRACK_UP = "Move Track Up"
 	SOUNDTRACK_UP_TIP =
-	"Moves the selected assigned track up in the list. This allows you to set a specific order to your event's tracks."
+		"Moves the selected assigned track up in the list. This allows you to set a specific order to your event's tracks."
 
 	SOUNDTRACK_NAME = "Event Name"
 	SOUNDTRACK_NAME_TIP = "This is the name of the selected event. You can rename your event. Press Enter to confirm."
@@ -68,11 +147,11 @@ if not LOCALIZATION_LOADED then
 
 	SOUNDTRACK_SOUND_EFFECT = "Sound Effect"
 	SOUNDTRACK_SOUND_EFFECT_TIP =
-	"Plays the music track once as a sound effect, without stopping other music. This is useful for short sound-effects like victory music or a quest complete sound."
+		"Plays the music track once as a sound effect, without stopping other music. This is useful for short sound-effects like victory music or a quest complete sound."
 
 	SOUNDTRACK_CONTINUOUS = "Repeat"
 	SOUNDTRACK_CONTINUOUS_TIP =
-	"Plays the tracks continuously in a loop. If you turn this off, the track is played once, and then is removed from the stack."
+		"Plays the tracks continuously in a loop. If you turn this off, the track is played once, and then is removed from the stack."
 
 	SOUNDTRACK_REMOVE_TRACK = "Remove Track"
 
@@ -86,7 +165,7 @@ if not LOCALIZATION_LOADED then
 
 	-- Minimap
 	SOUNDTRACK_MINIMAP =
-	"Assign your own music to various events in the game or play your own playlists. You can drag this icon around the minimap."
+		"Assign your own music to various events in the game or play your own playlists. You can drag this icon around the minimap."
 
 	-- Battle Tab
 	SOUNDTRACK_UNKNOWN_BATTLE = "Unknown Battle"
@@ -112,7 +191,7 @@ if not LOCALIZATION_LOADED then
 	SOUNDTRACK_ADD_TARGET_PARTY = "Add Target as Party Boss"
 	SOUNDTRACK_ADD_TARGET_RAID = "Add Target as Raid Boss"
 	SOUNDTRACK_ADD_TARGET_TIP =
-	"Add the currently targeted mob to the list, or enter the name of a mob to add to the list."
+		"Add the currently targeted mob to the list, or enter the name of a mob to add to the list."
 	SOUNDTRACK_ADD_BOSS_TIP = "Add named mob:"
 
 	SOUNDTRACK_REMOVE_TARGET = "Remove Target"
@@ -121,7 +200,7 @@ if not LOCALIZATION_LOADED then
 	-- Zones Tab
 	SOUNDTRACK_ADD_ZONE = "Add Zone"
 	SOUNDTRACK_ADD_ZONE_TIP =
-	"Adds your current locations to the zone list so that you can assign tracks to them. This can be done automatically with the 'Automatically Add New Zones' option."
+		"Adds your current locations to the zone list so that you can assign tracks to them. This can be done automatically with the 'Automatically Add New Zones' option."
 
 	SOUNDTRACK_REMOVE_ZONE = "Remove Zone"
 	SOUNDTRACK_REMOVE_ZONE_TIP = "Removes the selected zone."
@@ -208,72 +287,50 @@ if not LOCALIZATION_LOADED then
 	SOUNDTRACK_SWING_HIT = "Combat/Swing"
 	SOUNDTRACK_VICTORY = "Combat/Victory"
 	SOUNDTRACK_VICTORY_BOSS = "Combat/Victory, Boss"
+end
 
-	local n
+if not LOCALIZATION_LOADED then
+	LOCALIZATION_LOADED = true
+
+	RegisterGeneralStrings()
 
 	SOUNDTRACK_DK = "Death Knight"
 	SOUNDTRACK_DK_CHANGE = "Death Knight/Change Presence"
 
-	SOUNDTRACK_DRUID = "Druid"
-	SOUNDTRACK_DRUID_CHANGE = "Druid/Change Form"
-	local retailAquaticFormPath = ConcatLocalizationPath(276012, "Druid/")
-	if not retailAquaticFormPath == "" then
-		SOUNDTRACK_DRUID_AQUATIC = retailAquaticFormPath
-	else
-		SOUNDTRACK_DRUID_AQUATIC = ConcatLocalizationPath(1066, "Druid/")
-	end
-	n = C_Spell.GetSpellInfo(5487).name
-	SOUNDTRACK_DRUID_BEAR = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(768).name
-	SOUNDTRACK_DRUID_CAT = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(1850).name
-	SOUNDTRACK_DRUID_DASH = "Druid/" .. n
-	local soundtrackdruidtigerdash = ConcatLocalizationPath(252216, "Druid/")
-	if not soundtrackdruidtigerdash == nil then
-		SOUNDTRACK_DRUID_TIGER_DASH = soundtrackdruidtigerdash
-	end
-	--n = C_Spell.GetSpellInfo(33943)
-	n = C_Spell.GetSpellInfo(276029).name
-	SOUNDTRACK_DRUID_FLIGHT = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(24858).name
-	SOUNDTRACK_DRUID_MOONKIN = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(5215).name
-	SOUNDTRACK_DRUID_PROWL = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(783).name
-	SOUNDTRACK_DRUID_TRAVEL = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(33891).name
-	SOUNDTRACK_DRUID_INCARNATION_TREE = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(102558).name
-	SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(102543).name
-	SOUNDTRACK_DRUID_INCARNATION_CAT = "Druid/" .. n
-	n = C_Spell.GetSpellInfo(102560).name
-	SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druid/" .. n
+	RegisterDruidStrings("Druid", "Change Form")
 
 	SOUNDTRACK_HUNTER = "Hunter"
-	n = C_Spell.GetSpellInfo(90954).name
-	SOUNDTRACK_HUNTER_CAMO = "Hunter/" .. n
+	local camoPath = ConcatLocalizationPath(90954, "Hunter/")
+	if not camoPath == nil then
+		SOUNDTRACK_HUNTER_CAMO = camoPath
+	end
 
 	SOUNDTRACK_EVOKER = "Evoker"
-	n = C_Spell.GetSpellInfo(369536).name
-	SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
+	local soarPath = ConcatLocalizationPath(369536, "Evoker/")
+	if not soarPath == nil then
+		SOUNDTRACK_EVOKER_SOAR = soarPath
+	end
 
 	SOUNDTRACK_MAGE = "Mage"
-
 	SOUNDTRACK_MONK = "Monk"
-
 	SOUNDTRACK_PALADIN = "Paladin"
 	SOUNDTRACK_PALADIN_CHANGE = "Paladin/Change Aura"
-
 	SOUNDTRACK_PRIEST = "Priest"
 	SOUNDTRACK_PRIEST_CHANGE = "Priest/Change Form"
 
 	SOUNDTRACK_ROGUE = "Rogue"
-	n = C_Spell.GetSpellInfo(2983).name
-	SOUNDTRACK_ROGUE_SPRINT = "Rogue/" .. n
-	n = C_Spell.GetSpellInfo(1784).name
-	SOUNDTRACK_ROGUE_STEALTH = "Rogue/" .. n
-	SOUNDTRACK_ROGUE_CHANGE = "Rogue/Change " .. n
+	local roguePath = SOUNDTRACK_ROGUE .. "/"
+	local sprintPath = ConcatLocalizationPath(2983, roguePath)
+	if not sprintPath == nil then
+		SOUNDTRACK_ROGUE_SPRINT = sprintPath
+	end
+
+	local stealthSpellId = 1784
+	local stealthPath = ConcatLocalizationPath(stealthSpellId, roguePath)
+	if not stealthPath == nil then
+		SOUNDTRACK_ROGUE_STEALTH = stealthPath
+		SOUNDTRACK_ROGUE_CHANGE = "Rogue/Change " .. GetSpellName(stealthSpellId)
+	end
 
 	SOUNDTRACK_SHAMAN = "Shaman"
 	SOUNDTRACK_SHAMAN_CHANGE = "Shaman/Change Form"
@@ -291,11 +348,11 @@ if not LOCALIZATION_LOADED then
 	-- Custom Event Tab
 	SOUNDTRACK_ADD_CUSTOM = "Add Custom Event"
 	SOUNDTRACK_ADD_CUSTOM_TIP =
-	"Creates a new custom event. Custom events are events that you can define yourself through a variety of methods including scripting."
+		"Creates a new custom event. Custom events are events that you can define yourself through a variety of methods including scripting."
 
 	SOUNDTRACK_EDIT_CUSTOM = "Edit Custom Event"
 	SOUNDTRACK_EDIT_CUSTOM_TIP =
-	"Switches to the custom event editing interface so you can adjust the selected custom event."
+		"Switches to the custom event editing interface so you can adjust the selected custom event."
 
 	SOUNDTRACK_REMOVE_CUSTOM = "Remove Custom Event"
 	SOUNDTRACK_REMOVE_CUSTOM_TIP = "Removes the selected custom event."
@@ -304,7 +361,7 @@ if not LOCALIZATION_LOADED then
 	SOUNDTRACK_SOUND_EFFECT = "Sound Effect"
 	SOUNDTRACK_CUSTOM_CONTINUOUS = "Continuous"
 	SOUNDTRACK_CUSTOM_CONTINUOUS_TIP =
-	"Determines if this event will loop or play once. When an event plays continuously, it can be stopped by its own script, or through another event replacing it."
+		"Determines if this event will loop or play once. When an event plays continuously, it can be stopped by its own script, or through another event replacing it."
 
 	SOUNDTRACK_EVENT_TYPE = "Event Type"
 	SOUNDTRACK_EVENT_TYPE_TIP = "The type of event affects how the custom event is edited."
@@ -314,7 +371,7 @@ if not LOCALIZATION_LOADED then
 	-- Playlists Tab
 	SOUNDTRACK_ADD_PLAYLIST = "Add Playlist"
 	SOUNDTRACK_ADD_PLAYLIST_TIP =
-	"Adds a new playlist. Playlists override all other events, so they never get interrupted by other events."
+		"Adds a new playlist. Playlists override all other events, so they never get interrupted by other events."
 
 	SOUNDTRACK_REMOVE_PLAYLIST = "Remove Playlist"
 	SOUNDTRACK_REMOVE_PLAYLIST_TIP = "Removes the selected playlist."
@@ -349,11 +406,11 @@ if not LOCALIZATION_LOADED then
 	-- Options Tab
 	SOUNDTRACK_SHOW_MINIMAP_BUTTON = "Show Minimap Button"
 	SOUNDTRACK_SHOW_MINIMAP_BUTTON_TIP =
-	"Displays the Soundtrack icon on the minimap. The icon can be repositioned by dragging it around the minimap. If you turn off this button, you can open Soundtrack's main window with a keybinding or with the /soundtrack command."
+		"Displays the Soundtrack icon on the minimap. The icon can be repositioned by dragging it around the minimap. If you turn off this button, you can open Soundtrack's main window with a keybinding or with the /soundtrack command."
 
 	SOUNDTRACK_SHOW_PLAYBACK_CONTROLS = "Playback Controls"
 	SOUNDTRACK_SHOW_PLAYBACK_CONTROLS_TIP =
-	"Displays a mini toolbar with a previous, pause, and next button to control the playback. The controls can be repositioned by dragging the name area."
+		"Displays a mini toolbar with a previous, pause, and next button to control the playback. The controls can be repositioned by dragging the name area."
 
 	SOUNDTRACK_LOCK_PLAYBACK_CONTROLS = "Lock Playback Controls"
 	SOUNDTRACK_LOCK_PLAYBACK_CONTROLS_TIP = "Makes the Playback Controls unmovable."
@@ -363,34 +420,34 @@ if not LOCALIZATION_LOADED then
 
 	SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS = "Playback Controls Buttons"
 	SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS_TIP =
-	"Change location of the Playback Controls buttons around Playback Controls frame."
+		"Change location of the Playback Controls buttons around Playback Controls frame."
 
 	SOUNDTRACK_SHOW_TRACK_INFO = "Show Track Information"
 	SOUNDTRACK_SHOW_TRACK_INFO_TIP =
-	"When track changes, the track's title, album and artist are shortly displayed on the screen. The track information frame can be repositioned by dragging it when it appears."
+		"When track changes, the track's title, album and artist are shortly displayed on the screen. The track information frame can be repositioned by dragging it when it appears."
 
 	SOUNDTRACK_SHOW_DEFAULT_MUSIC = "Show Default Music"
 	SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP =
-	"Adds all the available music tracks included with the game to your music library."
+		"Adds all the available music tracks included with the game to your music library."
 
 	SOUNDTRACK_LOCK_NOW_PLAYING = "Lock Track Info. Frame"
 	SOUNDTRACK_LOCK_NOW_PLAYING_TIP = "Locks the track information frame so it cannot be moved or clicked."
 
 	SOUNDTRACK_SHOW_DEBUG = "Output Debug Information"
 	SOUNDTRACK_SHOW_DEBUG_TIP =
-	"Outputs verbose debug information to the chat frame. Output is sent to default chat frame or the frame named 'Soundtrack' if available."
+		"Outputs verbose debug information to the chat frame. Output is sent to default chat frame or the frame named 'Soundtrack' if available."
 
 	SOUNDTRACK_SHOW_EVENT_STACK = "Event Stack"
 	SOUNDTRACK_SHOW_EVENT_STACK_TIP =
-	"Displays the currently active events in the stack, below the minimap (useful for debugging)."
+		"Displays the currently active events in the stack, below the minimap (useful for debugging)."
 
 	SOUNDTRACK_AUTO_ADD_ZONES = "Automatically Add Zones"
 	SOUNDTRACK_AUTO_ADD_ZONES_TIP =
-	"Adds new zones to the list of zone events as you travel. Zones are added hierarchically at all levels (e.g. continents, major areas, cities, towns, inns, etc."
+		"Adds new zones to the list of zone events as you travel. Zones are added hierarchically at all levels (e.g. continents, major areas, cities, towns, inns, etc."
 
 	SOUNDTRACK_ESCALATE_BATTLE = "Escalate Battle Music"
 	SOUNDTRACK_ESCALATE_BATTLE_TIP =
-	"If during a battle a stronger enemy is detected, allows the music to switch to the higher battle music."
+		"If during a battle a stronger enemy is detected, allows the music to switch to the higher battle music."
 
 	SOUNDTRACK_YOUR_ENEMY_LEVEL = "Your Enemy Level Only"
 	SOUNDTRACK_YOUR_ENEMY_LEVEL_TIP = "Only use you and your pet's target to calculate current enemy level."
@@ -400,19 +457,19 @@ if not LOCALIZATION_LOADED then
 
 	SOUNDTRACK_LOW_HEALTH_PERCENT = "Boss Low Health %"
 	SOUNDTRACK_LOW_HEALTH_PERCENT_TIP =
-	"The amount of health when Boss and World Boss events switch to Boss Low Health."
+		"The amount of health when Boss and World Boss events switch to Boss Low Health."
 
 	SOUNDTRACK_LOOP_MUSIC = "Loop Music"
 	SOUNDTRACK_LOOP_MUSIC_TIP =
-	"Enable to continuously play background music. This is the same setting exposed in the default Sound options."
+		"Enable to continuously play background music. This is the same setting exposed in the default Sound options."
 
 	SOUNDTRACK_MAX_SILENCE = "Maximum Silence"
 	SOUNDTRACK_MAX_SILENCE_TIP =
-	"The maximum amount of silence to insert between tracks for zone music. Increase this value if you wish the music would take a break once in a while."
+		"The maximum amount of silence to insert between tracks for zone music. Increase this value if you wish the music would take a break once in a while."
 
 	SOUNDTRACK_ENABLE_MUSIC = "Enable Music"
 	SOUNDTRACK_ENABLE_MUSIC_TIP =
-	"Master toggle to turn off all music. Use this to temporarily disable all of Soundtrack's music."
+		"Master toggle to turn off all music. Use this to temporarily disable all of Soundtrack's music."
 
 	SOUNDTRACK_ENABLE_ZONE_MUSIC = "Enable Zone Music"
 	SOUNDTRACK_ENABLE_ZONE_MUSIC_TIP = "Enable zone music. Use this to temporarily stop all zone music from playing."
@@ -431,15 +488,15 @@ if not LOCALIZATION_LOADED then
 	SOUNDTRACK_NO_EVENT_PLAYING = "No event playing"
 	SOUNDTRACK_NOW_PLAYING = "Now playing"
 	SOUNDTRACK_MINIMAP_BUTTON_HIDDEN =
-	"The minimap button was hidden. You can access Soundtrack's UI by using the /soundtrack command."
+		"The minimap button was hidden. You can access Soundtrack's UI by using the /soundtrack command."
 
 	SOUNDTRACK_REMOVE_QUESTION = "Do you want to remove this?"
 	SOUNDTRACK_PURGE_EVENTS_QUESTION = "MyTracks.lua changed.\n\nPurge obsolete tracks?"
 	SOUNDTRACK_GEN_LIBRARY =
-	"Exit the game, run GenerateMyLibrary, and reenter game to create MyTracks.lua for Soundtrack to work properly."
+		"Exit the game, run GenerateMyLibrary, and reenter game to create MyTracks.lua for Soundtrack to work properly."
 	SOUNDTRACK_NO_MYTRACKS = "MyTracks.lua not found.\n\nRun Soundtrack without MyTracks.lua?"
 	SOUNDTRACK_ERROR_LOADING =
-	"Cannot load MyTracks.lua. You probably forgot to run GenerateMyLibrary. Read the setup instructions for more details."
+		"Cannot load MyTracks.lua. You probably forgot to run GenerateMyLibrary. Read the setup instructions for more details."
 
 	SOUNDTRACK_COPY_BUTTON = "Copy"
 	SOUNDTRACK_COPY_TRACKS = "Copy Tracks"
