@@ -302,6 +302,10 @@ function Soundtrack.ZoneEvents.Initialize()
 	-- 6 = "Orphan"
 
 	local continents = C_Map.GetMapChildrenInfo(946, 2, 1)
+	if continents == nil then
+		return
+	end
+
 	for _, v in pairs(continents) do
 		local continentName = v.name
 		Soundtrack.AddEvent(ST_ZONE, continentName, ST_CONTINENT_LVL, true)

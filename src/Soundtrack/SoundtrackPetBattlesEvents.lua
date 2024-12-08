@@ -155,6 +155,10 @@ function Soundtrack.PetBattlesEvents.Initialize()
 	Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS, ST_NPC_LVL, true)
 
 	local continents = C_Map.GetMapChildrenInfo(946, 2, 1)
+	if continents == nil then
+		return
+	end
+
 	for _, v in pairs(continents) do
 		Soundtrack.AddEvent(ST_PETBATTLES, v.name .. " " .. SOUNDTRACK_WILD_BATTLE, ST_NPC_LVL, true)
 		Soundtrack.AddEvent(ST_PETBATTLES, v.name .. " " .. SOUNDTRACK_NPC_BATTLE, ST_NPC_LVL, true)
