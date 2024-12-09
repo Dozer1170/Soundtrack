@@ -153,6 +153,7 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_LEVEL_UP = "Groupe & Auto/Niveau Superieur"
 	SOUNDTRACK_LFG_COMPLETE = "Groupe & Auto/Donjon Termine"
 	SOUNDTRACK_QUEST_COMPLETE = "Groupe & Auto/Quete Terminee"
+	SOUNDTRACK_RESTING = "Group & Self/Resting"
 
 	-- Item Get
 	SOUNDTRACK_ITEM_GET = "Item Get"

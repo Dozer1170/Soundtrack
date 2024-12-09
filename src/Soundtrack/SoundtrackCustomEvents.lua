@@ -5,10 +5,6 @@
     Functions that manage misc. and custom events.
 ]]
 
-local function debug(msg)
-	Soundtrack.TraceCustom(msg)
-end
-
 Soundtrack.CustomEvents = {}
 Soundtrack.ActionHouse = false
 Soundtrack.Bank = false
@@ -19,7 +15,180 @@ Soundtrack.Trainer = false
 Soundtrack.CurrentStance = 0
 Soundtrack.ActiveAuras = {}
 
+local function debug(msg)
+	Soundtrack.TraceCustom(msg)
+end
+
 local ST_CLASS_STEALTH
+
+local nonInnZones = {
+	["Ironforge"] = 1,
+	["Stormwind City"] = 1,
+	["Darnassus"] = 1,
+	["Orgrimmar"] = 1,
+	["Thunder Bluff"] = 1,
+	["Undercity"] = 1,
+}
+
+local function OnRestingEvent()
+	local currentZone = GetZoneText()
+	if IsResting() and not nonInnZones[currentZone] then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_RESTING)
+	else
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_RESTING)
+	end
+end
+
+local function OnSwimmingEvent()
+	if SNDCUSTOM_IsSwimming == nil then
+		SNDCUSTOM_IsSwimming = false
+	end
+
+	if SNDCUSTOM_IsSwimming and not IsSwimming() then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_SWIMMING)
+		SNDCUSTOM_IsSwimming = false
+	elseif not SNDCUSTOM_IsSwimming and IsSwimming() then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_SWIMMING)
+		SNDCUSTOM_IsSwimming = true
+	end
+end
+
+local function OnAuctionHouseEvent()
+	if SNDCUSTOM_AuctionHouse == nil then
+		SNDCUSTOM_AuctionHouse = false
+	end
+
+	if SNDCUSTOM_AuctionHouse and not Soundtrack.AuctionHouse then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_AUCTION_HOUSE)
+		SNDCUSTOM_AuctionHouse = false
+	elseif not SNDCUSTOM_AuctionHouse and Soundtrack.AuctionHouse then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_AUCTION_HOUSE)
+		SNDCUSTOM_AuctionHouse = true
+	end
+end
+
+local function OnBankEvent()
+	if SNDCUSTOM_Bank == nil then
+		SNDCUSTOM_Bank = false
+	end
+
+	-- Soundtrack.* does not deal with localization
+	if SNDCUSTOM_Bank and not Soundtrack.Bank then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_BANK)
+		SNDCUSTOM_Bank = false
+	elseif not SNDCUSTOM_Bank and Soundtrack.Bank then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_BANK)
+		SNDCUSTOM_Bank = true
+	end
+end
+
+local function OnMerchantEvent()
+	if SNDCUSTOM_Merchant == nil then
+		SNDCUSTOM_Merchant = false
+	end
+
+	if SNDCUSTOM_Merchant and not Soundtrack.Merchant then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_MERCHANT)
+		SNDCUSTOM_Merchant = false
+	elseif not SNDCUSTOM_Merchant and Soundtrack.Merchant then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_MERCHANT)
+		SNDCUSTOM_Merchant = true
+	end
+end
+
+local function OnFlightMasterEvent()
+	if SNDCUSTOM_FlightMaster == nil then
+		SNDCUSTOM_FlightMaster = false
+	end
+
+	if SNDCUSTOM_FlightMaster and not Soundtrack.FlightMaster then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_FLIGHTMASTER)
+		SNDCUSTOM_FlightMaster = false
+	elseif not SNDCUSTOM_FlightMaster and Soundtrack.FlightMaster then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_FLIGHTMASTER)
+		SNDCUSTOM_FlightMaster = true
+	end
+end
+
+local function OnTrainerEvent()
+	if SNDCUSTOM_Trainer == nil then
+		SNDCUSTOM_Trainer = false
+	end
+
+	if SNDCUSTOM_Trainer and not Soundtrack.Trainer then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_TRAINER)
+		SNDCUSTOM_Trainer = false
+	elseif not SNDCUSTOM_Trainer and Soundtrack.Trainer then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_TRAINER)
+		SNDCUSTOM_Trainer = true
+	end
+end
+
+local function OnBarbershopEvent()
+	if SNDCUSTOM_Barbershop == nil then
+		SNDCUSTOM_Barbershop = false
+	end
+
+	if SNDCUSTOM_Barbershop and not Soundtrack.Barbershop then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_BARBERSHOP)
+		SNDCUSTOM_Barbershop = false
+	elseif not SNDCUSTOM_Barbershop and Soundtrack.Barbershop then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_BARBERSHOP)
+		SNDCUSTOM_Barbershop = true
+	end
+end
+
+local function OnCinematicEvent()
+	if SNDCUSTOM_Cinematic == nil then
+		SNDCUSTOM_Cinematic = false
+	end
+
+	if SNDCUSTOM_Cinematic and not Soundtrack.Cinematic then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_CINEMATIC)
+		SNDCUSTOM_Cinematic = false
+	elseif not SNDCUSTOM_Cinematic and Soundtrack.Cinematic then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_CINEMATIC)
+		SNDCUSTOM_Cinematic = true
+	end
+end
+
+local function OnJoinPartyEvent()
+	if SOUNDTRACK_InParty == nil then
+		SOUNDTRACK_InParty = false
+	end
+	if not SOUNDTRACK_InParty and GetNumSubgroupMembers() == 0 and GetNumSubgroupMembers() > 0 then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_JOIN_PARTY)
+		SOUNDTRACK_InParty = true
+	elseif SOUNDTRACK_InParty and GetNumSubgroupMembers() == 0 then
+		SOUNDTRACK_InParty = false
+	end
+end
+
+local function OnJoinRaidEvent()
+	if SOUNDTRACK_InRaid == nil then
+		SOUNDTRACK_InRaid = false
+	end
+	if not SOUNDTRACK_InRaid and GetNumSubgroupMembers() > 0 then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_JOIN_RAID)
+		SOUNDTRACK_InRaid = true
+	elseif SOUNDTRACK_InRaid and not GetNumSubgroupMembers() == 0 then
+		SOUNDTRACK_InRaid = false
+	end
+end
+
+function OnChangeShapeshiftEvent()
+	local class = UnitClass("player")
+	local stance = GetShapeshiftForm()
+	if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DK_CHANGE)
+		Soundtrack.CurrentStance = stance
+	elseif class == "Druid" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack_Custom_PlayEvent("Misc", SOUNDTRACK_DRUID_CHANGE)
+		Soundtrack.CurrentStance = stance
+	elseif class == "Druid" and stance == 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack.CurrentStance = stance
+	end
+end
 
 function Soundtrack.CustomEvents.RenameEvent(tableName, oldEventName, newEventName)
 	if Soundtrack.IsNullOrEmpty(tableName) then
@@ -223,37 +392,13 @@ function Soundtrack.CustomEvents.MiscInitialize()
 	SoundtrackMiscDUMMY:RegisterEvent("TRAINER_CLOSED")
 
 	-- Add fixed custom events
-	Soundtrack.CustomEvents.RegisterUpdateScript( -- Jump
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_JUMP,
-		ST_MISC,
-		ST_SFX_LVL,
-		false,
-		function()
-			-- hooksecurefunc for "JumpOrAscendStart"
-		end,
-		true
-	)
-
 	Soundtrack.CustomEvents.RegisterUpdateScript( -- Swimming
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_SWIMMING,
 		ST_MISC,
 		ST_STATUS_LVL,
 		true,
-		function()
-			if SNDCUSTOM_IsSwimming == nil then
-				SNDCUSTOM_IsSwimming = false
-			end
-
-			if SNDCUSTOM_IsSwimming and not IsSwimming() then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_SWIMMING)
-				SNDCUSTOM_IsSwimming = false
-			elseif not SNDCUSTOM_IsSwimming and IsSwimming() then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_SWIMMING)
-				SNDCUSTOM_IsSwimming = true
-			end
-		end,
+		OnSwimmingEvent,
 		false
 	)
 
@@ -263,19 +408,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_NPC_LVL,
 		true,
-		function()
-			if SNDCUSTOM_AuctionHouse == nil then
-				SNDCUSTOM_AuctionHouse = false
-			end
-
-			if SNDCUSTOM_AuctionHouse and not Soundtrack.AuctionHouse then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_AUCTION_HOUSE)
-				SNDCUSTOM_AuctionHouse = false
-			elseif not SNDCUSTOM_AuctionHouse and Soundtrack.AuctionHouse then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_AUCTION_HOUSE)
-				SNDCUSTOM_AuctionHouse = true
-			end
-		end,
+		OnAuctionHouseEvent,
 		false
 	)
 
@@ -285,20 +418,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_NPC_LVL,
 		true,
-		function()
-			if SNDCUSTOM_Bank == nil then
-				SNDCUSTOM_Bank = false
-			end
-
-			-- Soundtrack.* does not deal with localization
-			if SNDCUSTOM_Bank and not Soundtrack.Bank then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_BANK)
-				SNDCUSTOM_Bank = false
-			elseif not SNDCUSTOM_Bank and Soundtrack.Bank then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_BANK)
-				SNDCUSTOM_Bank = true
-			end
-		end,
+		OnBankEvent,
 		false
 	)
 
@@ -308,19 +428,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
 		true,
-		function()
-			if SNDCUSTOM_Merchant == nil then
-				SNDCUSTOM_Merchant = false
-			end
-
-			if SNDCUSTOM_Merchant and not Soundtrack.Merchant then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_MERCHANT)
-				SNDCUSTOM_Merchant = false
-			elseif not SNDCUSTOM_Merchant and Soundtrack.Merchant then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_MERCHANT)
-				SNDCUSTOM_Merchant = true
-			end
-		end,
+		OnMerchantEvent,
 		false
 	)
 
@@ -328,21 +436,9 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_FLIGHTMASTER,
 		ST_MISC,
-		ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
+		ST_NPC_LVL,
 		true,
-		function()
-			if SNDCUSTOM_FlightMaster == nil then
-				SNDCUSTOM_FlightMaster = false
-			end
-
-			if SNDCUSTOM_FlightMaster and not Soundtrack.FlightMaster then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_FLIGHTMASTER)
-				SNDCUSTOM_FlightMaster = false
-			elseif not SNDCUSTOM_FlightMaster and Soundtrack.FlightMaster then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_FLIGHTMASTER)
-				SNDCUSTOM_FlightMaster = true
-			end
-		end,
+		OnFlightMasterEvent,
 		false
 	)
 
@@ -352,19 +448,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
 		true,
-		function()
-			if SNDCUSTOM_Trainer == nil then
-				SNDCUSTOM_Trainer = false
-			end
-
-			if SNDCUSTOM_Trainer and not Soundtrack.Trainer then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_TRAINER)
-				SNDCUSTOM_Trainer = false
-			elseif not SNDCUSTOM_Trainer and Soundtrack.Trainer then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_TRAINER)
-				SNDCUSTOM_Trainer = true
-			end
-		end,
+		OnTrainerEvent,
 		false
 	)
 
@@ -374,19 +458,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_NPC_LVL,
 		true,
-		function()
-			if SNDCUSTOM_Barbershop == nil then
-				SNDCUSTOM_Barbershop = false
-			end
-
-			if SNDCUSTOM_Barbershop and not Soundtrack.Barbershop then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_BARBERSHOP)
-				SNDCUSTOM_Barbershop = false
-			elseif not SNDCUSTOM_Barbershop and Soundtrack.Barbershop then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_BARBERSHOP)
-				SNDCUSTOM_Barbershop = true
-			end
-		end,
+		OnBarbershopEvent,
 		false
 	)
 
@@ -396,19 +468,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_NPC_LVL,
 		true,
-		function()
-			if SNDCUSTOM_Cinematic == nil then
-				SNDCUSTOM_Cinematic = false
-			end
-
-			if SNDCUSTOM_Cinematic and not Soundtrack.Cinematic then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_CINEMATIC)
-				SNDCUSTOM_Cinematic = false
-			elseif not SNDCUSTOM_Cinematic and Soundtrack.Cinematic then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_CINEMATIC)
-				SNDCUSTOM_Cinematic = true
-			end
-		end,
+		OnCinematicEvent,
 		false
 	)
 
@@ -484,17 +544,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		"GROUP_ROSTER_UPDATE",
 		ST_SFX_LVL,
 		false,
-		function()
-			if SOUNDTRACK_InParty == nil then
-				SOUNDTRACK_InParty = false
-			end
-			if not SOUNDTRACK_InParty and GetNumSubgroupMembers() == 0 and GetNumSubgroupMembers() > 0 then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_JOIN_PARTY)
-				SOUNDTRACK_InParty = true
-			elseif SOUNDTRACK_InParty and GetNumSubgroupMembers() == 0 then
-				SOUNDTRACK_InParty = false
-			end
-		end,
+		OnJoinPartyEvent,
 		true
 	)
 
@@ -505,17 +555,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		"GROUP_ROSTER_UPDATE",
 		ST_SFX_LVL,
 		false,
-		function()
-			if SOUNDTRACK_InRaid == nil then
-				SOUNDTRACK_InRaid = false
-			end
-			if not SOUNDTRACK_InRaid and GetNumSubgroupMembers() > 0 then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_JOIN_RAID)
-				SOUNDTRACK_InRaid = true
-			elseif SOUNDTRACK_InRaid and not GetNumSubgroupMembers() == 0 then
-				SOUNDTRACK_InRaid = false
-			end
-		end,
+		OnJoinRaidEvent,
 		true
 	)
 
@@ -526,14 +566,7 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		"UPDATE_SHAPESHIFT_FORM",
 		ST_SFX_LVL,
 		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DK_CHANGE)
-				Soundtrack.CurrentStance = stance
-			end
-		end,
+		OnChangeShapeshiftEvent,
 		true
 	)
 
@@ -544,19 +577,11 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		"UPDATE_SHAPESHIFT_FORM",
 		ST_SFX_LVL,
 		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Druid" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
-				Soundtrack_Custom_PlayEvent("Misc", SOUNDTRACK_DRUID_CHANGE)
-				Soundtrack.CurrentStance = stance
-			elseif class == "Druid" and stance == 0 and stance ~= Soundtrack.CurrentStance then
-				Soundtrack.CurrentStance = stance
-			end
-		end,
+		OnChangeShapeshiftEvent,
 		true
 	)
 
+	--TODO: here is where to continue
 	Soundtrack.CustomEvents.RegisterUpdateScript( -- Druid Prowl
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_DRUID_PROWL,
@@ -719,6 +744,17 @@ function Soundtrack.CustomEvents.MiscInitialize()
 			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_QUEST_COMPLETE)
 		end,
 		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Resting, thanks to appakanna for the code
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_RESTING,
+		ST_MISC,
+		"PLAYER_UPDATE_RESTING",
+		ST_MINIMAP_LVL,
+		true,
+		OnRestingEvent,
+		false
 	)
 
 	-- Thanks to zephus67 for the code!
@@ -975,7 +1011,7 @@ end
 
 -- CustomEvents
 function Soundtrack.CustomEvents.CustomOnEvent(_, event, ...)
-	st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
+	local st_arg1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
 
 	Soundtrack.CustomEvents.UpdateActiveAuras()
 

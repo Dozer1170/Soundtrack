@@ -159,6 +159,7 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_LEVEL_UP = "Grupo y autonomos/Elevar a mismo nivel"
 	SOUNDTRACK_LFG_COMPLETE = "Grupo y autonomos/LFG completa"
 	SOUNDTRACK_QUEST_COMPLETE = "Grupo y autonomos/Quest completa"
+	SOUNDTRACK_RESTING = "Group & Self/Resting"
 
 	-- Item Get
 	SOUNDTRACK_ITEM_GET = "Item Get"
