@@ -5,8 +5,6 @@
     Functions that manage misc. and custom events.
 ]]
 
-local st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = nil
-
 local function debug(msg)
 	Soundtrack.TraceCustom(msg)
 end
@@ -170,6 +168,10 @@ end
 
 function Soundtrack_Custom_PlayEvent(tableName, eventName)
 	local eventTable = Soundtrack.Events.GetTable(tableName)
+	if not eventTable then
+		return
+	end
+
 	local currentEvent = Soundtrack.Events.Stack[eventTable[eventName].priority].eventName
 	if eventName ~= currentEvent then
 		Soundtrack.PlayEvent(tableName, eventName)
@@ -178,8 +180,11 @@ end
 
 function Soundtrack_Custom_StopEvent(tableName, eventName)
 	local eventTable = Soundtrack.Events.GetTable(tableName)
-	local currentEvent = Soundtrack.Events.Stack[eventTable[eventName].priority].eventName
+	if not eventTable then
+		return
+	end
 
+	local currentEvent = Soundtrack.Events.Stack[eventTable[eventName].priority].eventName
 	if eventName == currentEvent then
 		Soundtrack.StopEvent(tableName, eventName)
 	end
@@ -906,7 +911,7 @@ end
 
 -- MiscEvents
 function Soundtrack.CustomEvents.MiscOnEvent(_, event, ...)
-	st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
+	local st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
 
 	Soundtrack.CustomEvents.UpdateActiveAuras()
 

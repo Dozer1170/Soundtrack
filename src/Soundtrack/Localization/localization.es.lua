@@ -371,7 +371,8 @@ local function RegisterGeneralStrings()
 end
 
 local function LoadSpanish()
-	if GetLocale() == "esES" or GetLocale() == "esMX" then
+	local locale = GetLocale()
+	if locale == "esES" or locale == "esMX" then
 		SoundtrackLocalization.LOCALIZATION_LOADED = true
 
 		RegisterGeneralStrings()

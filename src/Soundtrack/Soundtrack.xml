@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="Localization\localization.de.lua"/>
-  <Script file="Localization\localization.fr.lua"/>
-  <Script file="Localization\localization.es.lua"/>
-  <Script file="Localization\localization.lua"/>
+  <Script file="Localization\SoundtrackLocalization.lua"/>
+  <Script file="Localization\Localization.de.lua"/>
+  <Script file="Localization\Localization.fr.lua"/>
+  <Script file="Localization\Localization.es.lua"/>
+  <Script file="Localization\Localization.en.lua"/>
   <Script file="SoundtrackLevels.lua"/>
   <Script file="SoundtrackObjects.lua"/>
   <Script file="SoundtrackUtil.lua"/>
