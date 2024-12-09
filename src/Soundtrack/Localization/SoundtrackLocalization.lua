@@ -11,7 +11,7 @@ function SoundtrackLocalization.GetSpellName(spellId)
 end
 
 function SoundtrackLocalization.CreateSpellNamePath(spellId, path)
-	local spellName = GetSpellName(spellId)
+	local spellName = SoundtrackLocalization.GetSpellName(spellId)
 	if spellName == nil then
 		return ""
 	end

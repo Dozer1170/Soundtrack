@@ -234,6 +234,10 @@ end
 
 -- table can be Custom or Misc.
 function Soundtrack.CustomEvents.RegisterUpdateScript(_, name, tableName, _priority, _continuous, _script, _soundEffect)
+	if not name then
+		return
+	end
+
 	if tableName == ST_CUSTOM then
 		SoundtrackAddon.db.profile.customEvents[name] = {
 			script = _script,
@@ -266,6 +270,10 @@ function Soundtrack.CustomEvents.RegisterEventScript(
 	_script,
 	_soundEffect
 )
+	if not name then
+		return
+	end
+
 	if tableName == ST_CUSTOM then
 		SoundtrackAddon.db.profile.customEvents[name] = {
 			trigger = _trigger,
@@ -310,6 +318,10 @@ function Soundtrack.CustomEvents.IsAuraActive(spellId)
 end
 
 function Soundtrack.CustomEvents.RegisterBuffEvent(eventName, tableName, _spellId, _priority, _continuous, _soundEffect)
+	if not eventName then
+		return
+	end
+
 	if tableName == ST_CUSTOM then
 		SoundtrackAddon.db.profile.customEvents[eventName] = {
 			spellId = _spellId,
