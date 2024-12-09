@@ -1,7 +1,7 @@
 --------------------------------------------------
 -- localization.es.lua (Spanish)
 --------------------------------------------------
-if GetLocale() == "esES" or GetLocale() == "esMX" then
+local function RegisterGeneralStrings()
 	LOCALIZATION_LOADED = true
 
 	SOUNDTRACK_DANCE_EMOTES = {
@@ -199,112 +199,6 @@ if GetLocale() == "esES" or GetLocale() == "esMX" then
 	SOUNDTRACK_VICTORY = "Combate/Victoria"
 	SOUNDTRACK_VICTORY_BOSS = "Combate/Victoria, Repujado"
 
-	local n
-
-	SOUNDTRACK_DK = "Caballero de la Muerte"
-	SOUNDTRACK_DK_CHANGE = "Caballero de la Muerte/Change Presence"
-
-	SOUNDTRACK_DRUID = "Druida"
-	SOUNDTRACK_DRUID_CHANGE = "Druida/Change Forma"
-	n = C_Spell.GetSpellInfo(1066).name
-	SOUNDTRACK_DRUID_AQUATIC = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(5487).name
-	SOUNDTRACK_DRUID_BEAR = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(768).name
-	SOUNDTRACK_DRUID_CAT = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(1850).name
-	SOUNDTRACK_DRUID_DASH = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(252216).name
-	SOUNDTRACK_DRUID_TIGER_DASH = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(33943).name
-	SOUNDTRACK_DRUID_FLIGHT = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(24858).name
-	SOUNDTRACK_DRUID_MOONKIN = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(5215).name
-	SOUNDTRACK_DRUID_PROWL = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(783).name
-	SOUNDTRACK_DRUID_TRAVEL = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(33891).name
-	SOUNDTRACK_DRUID_INCARNATION_TREE = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(102558).name
-	SOUNDTRACK_DRUID_INCARNATION_BEAR = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(102543).name
-	SOUNDTRACK_DRUID_INCARNATION_CAT = "Druida/" .. n
-	n = C_Spell.GetSpellInfo(102560).name
-	SOUNDTRACK_DRUID_INCARNATION_MOONKIN = "Druida/" .. n
-
-	SOUNDTRACK_HUNTER = "Cazador"
-	n = C_Spell.GetSpellInfo(90954).name
-	SOUNDTRACK_HUNTER_CAMO = "Cazador/" .. n
-
-	SOUNDTRACK_EVOKER = "Evoker"
-	n = C_Spell.GetSpellInfo(369536).name
-	SOUNDTRACK_EVOKER_SOAR = "Evoker/" .. n
-
-	SOUNDTRACK_MAGE = "Mago"
-
-	SOUNDTRACK_MONK = "Monk"
-
-	SOUNDTRACK_PALADIN = "Paladin"
-	SOUNDTRACK_PALADIN_CHANGE = "Paladin/Change Aura"
-
-	SOUNDTRACK_PRIEST = "Sacerdotisa"
-	SOUNDTRACK_PRIEST_CHANGE = "Sacerdotisa/Change Forma"
-
-	SOUNDTRACK_ROGUE = "Picaro"
-	n = C_Spell.GetSpellInfo(2983).name
-	SOUNDTRACK_ROGUE_SPRINT = "Picaro/" .. n
-	n = C_Spell.GetSpellInfo(1784).name
-	SOUNDTRACK_ROGUE_STEALTH = "Picaro/" .. n
-	SOUNDTRACK_ROGUE_CHANGE = "Picaro/Change " .. n
-
-	SOUNDTRACK_SHAMAN = "Chaman"
-	SOUNDTRACK_SHAMAN_CHANGE = "Chaman/Change Form"
-	n = C_Spell.GetSpellInfo(2645).name
-	SOUNDTRACK_SHAMAN_GHOST_WOLF = "Chaman/" .. n
-
-	SOUNDTRACK_WARLOCK = "Bruja"
-
-	SOUNDTRACK_WARRIOR = "Guerrero"
-	SOUNDTRACK_WARRIOR_CHANGE = "Guerrero/Change Stance"
-
-	-- Old misc events
-	--[[
-    SOUNDTRACK_DEATH_OLD = "Death"
-    SOUNDTRACK_FLIGHT_OLD = "Trayectoria de vuelo"
-    SOUNDTRACK_GHOST_OLD = "Ghost"
-    SOUNDTRACK_MOUNT_FLYING_OLD = "Montura voladora"
-    SOUNDTRACK_MOUNT_GROUND_OLD = "Montura suelo"
-    SOUNDTRACK_STEALTHED_OLD = "Sigilo"
-    SOUNDTRACK_SWIMMING_OLD = "Natacion"
-
-    SOUNDTRACK_ACHIEVEMENT_OLD = "Achievement"
-    SOUNDTRACK_JOIN_PARTY_OLD = "Unirse a la fiesta"
-    SOUNDTRACK_JOIN_RAID_OLD = "unete a Raid"
-    SOUNDTRACK_JUMP_OLD = "Jump"
-    SOUNDTRACK_LEVEL_UP_OLD = "Elevar a mismo nivel"
-    SOUNDTRACK_LFG_COMPLETE_OLD = "LFG Complete"
-    SOUNDTRACK_QUEST_COMPLETE_OLD = "Quest completa"
-
-    SOUNDTRACK_AUCTION_HOUSE_OLD = "Casa de Subastas"
-    SOUNDTRACK_BANK_OLD = "Banco"
-    SOUNDTRACK_MERCHANT_OLD = "Comerciante"
-
-    SOUNDTRACK_RANGE_CRIT_OLD = "Range Crit"
-    SOUNDTRACK_RANGE_HIT_OLD = "Range"
-    SOUNDTRACK_HEAL_CRIT_OLD = "Spell Heal Crit"
-    SOUNDTRACK_HEAL_HIT_OLD = "Spell Heal"
-    SOUNDTRACK_HOT_CRIT_OLD = "Spell HoT Crit"
-    SOUNDTRACK_HOT_HIT_OLD = "Spell HoT"
-    SOUNDTRACK_SPELL_CRIT_OLD = "Spell Damage Crit"
-    SOUNDTRACK_SPELL_HIT_OLD = "Spell Damage"
-    SOUNDTRACK_DOT_CRIT_OLD = "Spell DoT Crit"
-    SOUNDTRACK_DOT_HIT_OLD = "Spell DoT"
-    SOUNDTRACK_SWING_CRIT_OLD = "Swing Crit"
-    SOUNDTRACK_SWING_HIT_OLD = "Swing"
-    SOUNDTRACK_VICTORY_OLD = "Victory"
-    --]]
-
 	SOUNDTRACK_REMOVE_MISC = "Remove Misc. Event"
 	SOUNDTRACK_REMOVE_MISC_TIP = "Removes the selected misc. event."
 
@@ -475,3 +369,25 @@ if GetLocale() == "esES" or GetLocale() == "esMX" then
 
 	SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION = "¿Está seguro de que desea borrar el evento seleccionado?"
 end
+
+local function LoadSpanish()
+	if GetLocale() == "esES" or GetLocale() == "esMX" then
+		SoundtrackLocalization.LOCALIZATION_LOADED = true
+
+		RegisterGeneralStrings()
+		SoundtrackLocalization.RegisterDruidStrings("Druida", "Change Forma")
+		SoundtrackLocalization.RegisterHunterStrings("Cazador")
+		SoundtrackLocalization.RegisterDeathKnightStrings("Caballero de la Muerte", "Change Presence")
+		SoundtrackLocalization.RegisterEvokerStrings("Evoker")
+		SoundtrackLocalization.RegisterPaladinStrings("Paladin", "Change Aura")
+		SoundtrackLocalization.RegisterPriestStrings("Sacerdotisa", "Change Forma")
+		SoundtrackLocalization.RegisterRogueStrings("Picaro", "Change Sigilo")
+		SoundtrackLocalization.RegisterShamanStrings("Chaman", "Change Forma")
+		SoundtrackLocalization.RegisterWarriorStrings("Guerrero", "Change Stance")
+		SoundtrackLocalization.RegisterMageStrings("Mago")
+		SoundtrackLocalization.RegisterMonkStrings("Monk")
+		SoundtrackLocalization.RegisterWarlockStrings("Bruja")
+	end
+end
+
+LoadSpanish()
