@@ -176,6 +176,22 @@ local function OnJoinRaidEvent()
 	end
 end
 
+local function OnDruidProwlEvent()
+	local class = UnitClass("player")
+	if ST_CLASS_STEALTH == nil then
+		ST_CLASS_STEALTH = false
+	end
+	if ST_CLASS_STEALTH and not IsStealthed() and class == "Druid" then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_PROWL)
+		ST_CLASS_STEALTH = false
+	elseif not ST_CLASS_STEALTH and IsStealthed() and class == "Druid" then
+		if Soundtrack.CustomEvents.IsAuraActive(5215) then
+			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_PROWL)
+			ST_CLASS_STEALTH = true
+		end
+	end
+end
+
 function OnChangeShapeshiftEvent()
 	local class = UnitClass("player")
 	local stance = GetShapeshiftForm()
@@ -187,6 +203,70 @@ function OnChangeShapeshiftEvent()
 		Soundtrack.CurrentStance = stance
 	elseif class == "Druid" and stance == 0 and stance ~= Soundtrack.CurrentStance then
 		Soundtrack.CurrentStance = stance
+	elseif class == "Paladin" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_PALADIN_CHANGE)
+		Soundtrack.CurrentStance = stance
+	elseif class == "Priest" and stance ~= 0 then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_PRIEST_CHANGE)
+		Soundtrack.CurrentStance = stance
+	elseif class == "Rogue" and stance ~= 0 and stance ~= 2 and not IsStealthed() then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ROGUE_CHANGE)
+		Soundtrack.CurrentStance = stance
+	elseif class == "Shaman" and stance ~= 0 then
+		Soundtrack.CurrentStance = stance
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_SHAMAN_CHANGE)
+	elseif class == "Warrior" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_WARRIOR_CHANGE)
+		Soundtrack.CurrentStance = stance
+	end
+end
+
+local function RogueStealthUpdate()
+	local class = UnitClass("player")
+	if ST_CLASS_STEALTH == nil then
+		ST_CLASS_STEALTH = false
+	end
+	if ST_CLASS_STEALTH and not IsStealthed() and class == "Rogue" then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_ROGUE_STEALTH)
+		ST_CLASS_STEALTH = false
+	elseif not ST_CLASS_STEALTH and IsStealthed() and class == "Rogue" then
+		if Soundtrack.CustomEvents.IsAuraActive(1784) then
+			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ROGUE_STEALTH)
+			ST_CLASS_STEALTH = true
+		end
+	end
+end
+
+local function StealthUpdate()
+	if SNDCUSTOM_IsStealthed == nil then
+		SNDCUSTOM_IsStealthed = false
+	end
+	if SNDCUSTOM_IsStealthed and not IsStealthed() then
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_STEALTHED)
+		SNDCUSTOM_IsStealthed = false
+	elseif not SNDCUSTOM_IsStealthed and IsStealthed() then
+		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_STEALTHED)
+		SNDCUSTOM_IsStealthed = true
+	end
+end
+
+local function DruidTravelFormUpdate()
+	local buff = Soundtrack.CustomEvents.IsAuraActive(783)
+	--local isFlying = IsFlying()
+	local canFly = IsFlyableArea()
+	local isSwimming = IsSwimming()
+	if buff == 783 then
+		if isSwimming then
+			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_AQUATIC)
+		elseif canFly then
+			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_FLIGHT)
+		else
+			Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_TRAVEL)
+		end
+	else
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_AQUATIC)
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_FLIGHT)
+		Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_TRAVEL)
 	end
 end
 
@@ -571,104 +651,24 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		true
 	)
 
-	Soundtrack.CustomEvents.RegisterEventScript( -- Death Knight Change Presence
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_DK_CHANGE,
-		ST_MISC,
-		"UPDATE_SHAPESHIFT_FORM",
-		ST_SFX_LVL,
-		false,
-		OnChangeShapeshiftEvent,
-		true
-	)
-
-	Soundtrack.CustomEvents.RegisterEventScript( -- Druid Change Form
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_DRUID_CHANGE,
-		"Misc",
-		"UPDATE_SHAPESHIFT_FORM",
-		ST_SFX_LVL,
-		false,
-		OnChangeShapeshiftEvent,
-		true
-	)
-
-	--TODO: here is where to continue
 	Soundtrack.CustomEvents.RegisterUpdateScript( -- Druid Prowl
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_DRUID_PROWL,
 		ST_MISC,
 		ST_BUFF_LVL,
 		true,
-		function()
-			local class = UnitClass("player")
-			if ST_CLASS_STEALTH == nil then
-				ST_CLASS_STEALTH = false
-			end
-			if ST_CLASS_STEALTH and not IsStealthed() and class == "Druid" then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_PROWL)
-				ST_CLASS_STEALTH = false
-			elseif not ST_CLASS_STEALTH and IsStealthed() and class == "Druid" then
-				if Soundtrack.CustomEvents.IsAuraActive(5215) then
-					Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_PROWL)
-					ST_CLASS_STEALTH = true
-				end
-			end
-		end,
+		OnDruidProwlEvent,
 		false
 	)
 
-	Soundtrack.CustomEvents.RegisterEventScript( -- Paladin Change Auras
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_PALADIN_CHANGE,
 		ST_MISC,
 		"UPDATE_SHAPESHIFT_FORM",
 		ST_SFX_LVL,
 		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Paladin" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_PALADIN_CHANGE)
-				Soundtrack.CurrentStance = stance
-			end
-		end,
-		true
-	)
-
-	Soundtrack.CustomEvents.RegisterEventScript( -- Priest Change Shadowform
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_PRIEST_CHANGE,
-		ST_MISC,
-		"UPDATE_SHAPESHIFT_FORM",
-		ST_SFX_LVL,
-		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Priest" and stance ~= 0 then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_PRIEST_CHANGE)
-				Soundtrack.CurrentStance = stance
-			end
-		end,
-		true
-	)
-
-	Soundtrack.CustomEvents.RegisterEventScript( -- Rogue Change Stealth
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_ROGUE_CHANGE,
-		ST_MISC,
-		"UPDATE_SHAPESHIFT_FORM",
-		ST_SFX_LVL,
-		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Rogue" and stance ~= 0 and stance ~= 2 and not IsStealthed() then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ROGUE_CHANGE)
-				Soundtrack.CurrentStance = stance
-			end
-		end,
+		OnChangeShapeshiftEvent,
 		true
 	)
 
@@ -678,58 +678,29 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MISC,
 		ST_BUFF_LVL,
 		true,
-		function()
-			local class = UnitClass("player")
-			if ST_CLASS_STEALTH == nil then
-				ST_CLASS_STEALTH = false
-			end
-			if ST_CLASS_STEALTH and not IsStealthed() and class == "Rogue" then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_ROGUE_STEALTH)
-				ST_CLASS_STEALTH = false
-			elseif not ST_CLASS_STEALTH and IsStealthed() and class == "Rogue" then
-				if Soundtrack.CustomEvents.IsAuraActive(1784) then
-					Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ROGUE_STEALTH)
-					ST_CLASS_STEALTH = true
-				end
-			end
-		end,
+		RogueStealthUpdate,
 		false
 	)
 
-	Soundtrack.CustomEvents.RegisterEventScript( -- Shaman Change Ghost Wolf
+	-- Thanks to zephus67 for the code!
+	Soundtrack.CustomEvents.RegisterUpdateScript( -- Stealthed
 		SoundtrackMiscDUMMY,
-		SOUNDTRACK_SHAMAN_CHANGE,
+		SOUNDTRACK_STEALTHED,
 		ST_MISC,
-		"UPDATE_SHAPESHIFT_FORM",
-		ST_SFX_LVL,
-		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Shaman" and stance ~= 0 then
-				Soundtrack.CurrentStance = stance
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_SHAMAN_CHANGE)
-			end
-		end,
-		true
+		ST_AURA_LVL,
+		true,
+		StealthUpdate,
+		false
 	)
 
-	Soundtrack.CustomEvents.RegisterEventScript( -- Warrior Change Stances
+	Soundtrack.CustomEvents.RegisterUpdateScript(
 		SoundtrackMiscDUMMY,
-		SOUNDTRACK_WARRIOR_CHANGE,
+		SOUNDTRACK_DRUID_TRAVEL,
 		ST_MISC,
-		"UPDATE_SHAPESHIFT_FORM",
-		ST_SFX_LVL,
-		false,
-		function()
-			local class = UnitClass("player")
-			local stance = GetShapeshiftForm()
-			if class == "Warrior" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_WARRIOR_CHANGE)
-				Soundtrack.CurrentStance = stance
-			end
-		end,
-		true
+		ST_AURA_LVL,
+		true,
+		DruidTravelFormUpdate,
+		false
 	)
 
 	Soundtrack.CustomEvents.RegisterEventScript( -- Duel Requested
@@ -766,28 +737,6 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		ST_MINIMAP_LVL,
 		true,
 		OnRestingEvent,
-		false
-	)
-
-	-- Thanks to zephus67 for the code!
-	Soundtrack.CustomEvents.RegisterUpdateScript( -- Stealthed
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_STEALTHED,
-		ST_MISC,
-		ST_AURA_LVL,
-		true,
-		function()
-			if SNDCUSTOM_IsStealthed == nil then
-				SNDCUSTOM_IsStealthed = false
-			end
-			if SNDCUSTOM_IsStealthed and not IsStealthed() then
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_STEALTHED)
-				SNDCUSTOM_IsStealthed = false
-			elseif not SNDCUSTOM_IsStealthed and IsStealthed() then
-				Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_STEALTHED)
-				SNDCUSTOM_IsStealthed = true
-			end
-		end,
 		false
 	)
 
@@ -835,11 +784,14 @@ function Soundtrack.CustomEvents.MiscInitialize()
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_HUNTER_CAMO, ST_MISC, 90954, ST_BUFF_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_EVOKER_SOAR, ST_MISC, 369536, ST_BUFF_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_ROGUE_SPRINT, ST_MISC, 2983, ST_BUFF_LVL, true, false)
+	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_SHAMAN_GHOST_WOLF, ST_MISC, 2645, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_DASH, ST_MISC, 1850, ST_BUFF_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_TIGER_DASH, ST_MISC, 252216, ST_BUFF_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_CAT, ST_MISC, 768, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_BEAR, ST_MISC, 5487, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_MOONKIN, ST_MISC, 24858, ST_AURA_LVL, true, false)
+	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_AQUATIC, ST_MISC, 0, ST_AURA_LVL, true, false)
+	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_FLIGHT, ST_MISC, 0, ST_AURA_LVL, true, false)
 	Soundtrack.CustomEvents.RegisterBuffEvent(
 		SOUNDTRACK_DRUID_INCARNATION_TREE,
 		ST_MISC,
@@ -872,39 +824,6 @@ function Soundtrack.CustomEvents.MiscInitialize()
 		true,
 		false
 	)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_AQUATIC, ST_MISC, 0, ST_AURA_LVL, true, false)
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_DRUID_FLIGHT, ST_MISC, 0, ST_AURA_LVL, true, false)
-
-	Soundtrack.CustomEvents.RegisterUpdateScript(
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_DRUID_TRAVEL,
-		ST_MISC,
-		--"UNIT_AURA",
-		ST_AURA_LVL,
-		true,
-		function()
-			local buff = Soundtrack.CustomEvents.IsAuraActive(783)
-			--local isFlying = IsFlying()
-			local canFly = IsFlyableArea()
-			local isSwimming = IsSwimming()
-			if buff == 783 then
-				if isSwimming then
-					Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_AQUATIC)
-				elseif canFly then
-					Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_FLIGHT)
-				else
-					Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_DRUID_TRAVEL)
-				end
-			else
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_AQUATIC)
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_FLIGHT)
-				Soundtrack_Custom_StopEvent(ST_MISC, SOUNDTRACK_DRUID_TRAVEL)
-			end
-		end,
-		false
-	)
-
-	Soundtrack.CustomEvents.RegisterBuffEvent(SOUNDTRACK_SHAMAN_GHOST_WOLF, ST_MISC, 2645, ST_AURA_LVL, true, false)
 
 	LootEvents.RegisterItemGetEventsToMiscFrame()
 

@@ -310,18 +310,17 @@ end
 
 function Soundtrack.RemoveEvent(tableName, eventName)
 	if Soundtrack.IsNullOrEmpty(tableName) then
-		Soundtrack.Error("AddEvent: Nil table")
+		Soundtrack.Error("RemoveEvent: Nil table")
 		return
 	end
 	if Soundtrack.IsNullOrEmpty(eventName) then
-		Soundtrack.Error("AddEvent: Nil event")
+		Soundtrack.Error("RemoveEvent: Nil event")
 		return
 	end
 
 	local eventTable = Soundtrack.Events.GetTable(tableName)
-
 	if not eventTable then
-		Soundtrack.Error("AddEvent: Cannot find table : " .. tableName)
+		Soundtrack.Error("RemoveEvent: Cannot find table : " .. tableName)
 		return
 	end
 
