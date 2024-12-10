@@ -241,15 +241,6 @@
       </Size>
     </HighlightTexture>
   </Button>
-  <!-- Tab button -->
-  <Button name="SoundtrackFrameTabTemplate" inherits="PanelTabButtonTemplate" virtual="true">
-    <Scripts>
-      <OnClick>
-                PanelTemplates_Tab_OnClick(self, SoundtrackFrame);
-                SoundtrackFrame_RefreshShowingTab();
-            </OnClick>
-    </Scripts>
-  </Button>
   <EditBox name="SoundtrackFrame_EditBoxTemplate" historyLines="0" enableMouse="true" autoFocus="false" letters="256" virtual="true">
     <Size>
       <AbsDimension x="260" y="20"/>

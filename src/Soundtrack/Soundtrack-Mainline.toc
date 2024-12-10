@@ -11,6 +11,8 @@ Embeds.xml
 Soundtrack.xml
 OldSaveMigrator.lua
 Utils/DebugUtils.lua
+SoundtrackFrame/GeneralTemplates.xml
+SoundtrackFrame/TabTemplateRetail.xml
 SoundtrackFrame/SoundtrackFrame.xml
 SoundtrackFrame/SoundtrackFrame.lua
 SoundtrackFix.lua
