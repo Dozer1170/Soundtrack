@@ -132,6 +132,7 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	SoundtrackFrame_Initialize()
 end
 
+-- TODO: Make as much of this local as possible
 function LoadTracks()
 	Soundtrack.Util.InitDebugChatFrame()
 	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Util.InitDebugChatFrame)

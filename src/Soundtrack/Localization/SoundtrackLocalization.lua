@@ -126,8 +126,9 @@ function SoundtrackLocalization.RegisterPriestStrings(localizedClassName, locali
 end
 
 function SoundtrackLocalization.RegisterRogueStrings(localizedClassName, localizedChangeStanceText)
+	local roguePath = localizedClassName .. "/"
 	SOUNDTRACK_ROGUE = localizedClassName
-	local roguePath = SOUNDTRACK_ROGUE .. "/"
+	SOUNDTRACK_ROGUE_CHANGE = roguePath .. localizedChangeStanceText
 	local sprintPath = SoundtrackLocalization.CreateSpellNamePath(2983, roguePath)
 	if not sprintPath == nil then
 		SOUNDTRACK_ROGUE_SPRINT = sprintPath
@@ -137,13 +138,12 @@ function SoundtrackLocalization.RegisterRogueStrings(localizedClassName, localiz
 	local stealthPath = SoundtrackLocalization.CreateSpellNamePath(stealthSpellId, roguePath)
 	if not stealthPath == nil then
 		SOUNDTRACK_ROGUE_STEALTH = stealthPath
-		SOUNDTRACK_ROGUE_CHANGE = localizedClassName .. "/" .. localizedChangeStanceText
 	end
 end
 
 function SoundtrackLocalization.RegisterShamanStrings(localizedClassName, localizedChangeStanceText)
+	local shamanPath = localizedClassName .. "/"
 	SOUNDTRACK_SHAMAN = localizedClassName
-	local shamanPath = SOUNDTRACK_SHAMAN .. "/"
 	SOUNDTRACK_SHAMAN_CHANGE = shamanPath .. localizedChangeStanceText
 
 	local ghostWolfPath = SoundtrackLocalization.CreateSpellNamePath(2645, shamanPath)

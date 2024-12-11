@@ -5,6 +5,7 @@
     Functions that manage misc. and custom events.
 ]]
 
+-- TODO: Actually split misc into its own file
 Soundtrack.CustomEvents = {}
 Soundtrack.ActionHouse = false
 Soundtrack.Bank = false
@@ -213,8 +214,8 @@ function OnChangeShapeshiftEvent()
 		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_ROGUE_CHANGE)
 		Soundtrack.CurrentStance = stance
 	elseif class == "Shaman" and stance ~= 0 then
-		Soundtrack.CurrentStance = stance
 		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_SHAMAN_CHANGE)
+		Soundtrack.CurrentStance = stance
 	elseif class == "Warrior" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
 		Soundtrack_Custom_PlayEvent(ST_MISC, SOUNDTRACK_WARRIOR_CHANGE)
 		Soundtrack.CurrentStance = stance
@@ -664,6 +665,72 @@ function Soundtrack.CustomEvents.MiscInitialize()
 	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_PALADIN_CHANGE,
+		ST_MISC,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_ROGUE_CHANGE,
+		ST_MISC,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_SHAMAN_CHANGE,
+		ST_MISC,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_PRIEST_CHANGE,
+		ST_MISC,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_DK_CHANGE,
+		ST_MISC,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_DRUID_CHANGE,
+		ST_MISC,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.CustomEvents.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_WARRIOR_CHANGE,
 		ST_MISC,
 		"UPDATE_SHAPESHIFT_FORM",
 		ST_SFX_LVL,

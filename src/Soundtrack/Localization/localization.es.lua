@@ -137,8 +137,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP = "Removes the currently selected event from the list."
 
 	-- Misc Tab
-	SOUNDTRACK_DUEL_REQUESTED = "Duel requerido"
-
 	SOUNDTRACK_STATUS_EVENTS = "Estatus"
 	SOUNDTRACK_DEATH = "Estatus/Muerte"
 	SOUNDTRACK_DRAGONRIDING_RACE = "Estatus/Carrera de equitación del dragón"
@@ -159,7 +157,8 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_LEVEL_UP = "Grupo y autonomos/Elevar a mismo nivel"
 	SOUNDTRACK_LFG_COMPLETE = "Grupo y autonomos/LFG completa"
 	SOUNDTRACK_QUEST_COMPLETE = "Grupo y autonomos/Quest completa"
-	SOUNDTRACK_RESTING = "Group & Self/Resting"
+	SOUNDTRACK_RESTING = "Groupo y autonomos/Resting"
+	SOUNDTRACK_DUEL_REQUESTED = "Grupo y autonomos/Duel requerido"
 
 	-- Item Get
 	SOUNDTRACK_ITEM_GET = "Item Get"

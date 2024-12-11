@@ -18,16 +18,6 @@
 	 
 	Functionality for both is currently disabled.
 	
-	TODO: 
-	-Fix the known issues
-	-Check behavior when a real battle interrupts a pet battle
-	-See if the PVP request declined checks are actually necessary (testing suggests no)
-	-Add global pet battle music on/off toggle over in the options
-	-Fix PVP duels with no target (maybe, needs testing)
-	-Fix PVP duel proposals with an unregistered player
-	--There is no event for proposing a duel
-	--Check if not targetName and isPlayer, perhaps
-	
 	Possible features:
 	-Play different tracks based on wild pet rarity
 	-Play different tracks based on wild pet species
