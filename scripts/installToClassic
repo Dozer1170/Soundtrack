@@ -1,5 +1,0 @@
-#!/bin/sh
-
-rm -rf '/mnt/c/World of Warcraft/_classic_/Interface/Addons/Soundtrack'
-cp -Rv src/Soundtrack '/mnt/c/World of Warcraft/_classic_/Interface/Addons/'
-cp -Rv src/SoundtrackMusic '/mnt/c/World of Warcraft/_classic_/Interface/Addons/'

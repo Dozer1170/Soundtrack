@@ -1,7 +1,11 @@
 #!/bin/bash
 
 ZIP_FILE=$1
+GAME_FOLDER=$2
 
-unzip -o $ZIP_FILE -d "/mnt/c/World of Warcraft/_retail_/Interface/Addons/"
-#unzip -o $ZIP_FILE -d "/Applications/World of Warcraft/_retail_/Interface/Addons/"
+if [ -z "$GAME_FOLDER" ]; then
+  echo "Provide game folder as second arg"
+  exit 1
+fi
 
+unzip -o $ZIP_FILE -d "/mnt/c/World of Warcraft/$GAME_FOLDER/Interface/Addons/"
