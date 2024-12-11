@@ -932,6 +932,7 @@ function Soundtrack.CustomEvents.MiscOnUpdate(_, _)
 		LootEvents.OnUpdate()
 	end
 end
+
 -- CustomEvents
 function Soundtrack.CustomEvents.CustomOnUpdate(_, _)
 	if SoundtrackAddon.db.profile.settings.EnableCustomMusic then

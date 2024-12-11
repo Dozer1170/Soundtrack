@@ -378,7 +378,7 @@ end
 
 function Soundtrack.AssignTrack(eventName, trackName)
 	if Soundtrack.IsNullOrEmpty(eventName) or Soundtrack.IsNullOrEmpty(trackName) then
-		debugEvents("AddEvent: Invalid table or event name")
+		debugEvents("AssignTrack: Invalid table or event name")
 		return
 	end
 
