@@ -30,3 +30,4 @@ SoundtrackMinimap.lua
 SoundtrackNowPlayingFrame.xml
 SoundtrackControlFrame.xml
 SoundtrackReportFrame.xml
+SoundtrackCleanup.lua
