@@ -19,13 +19,13 @@ SoundtrackFix.lua
 SoundtrackBattleFrame.xml
 SoundtrackBattleEvents.lua
 SoundtrackAuras.xml
-SoundtrackCustomFrame.xml
-SoundtrackCustomEvents.lua
-SoundtrackMiscFrame.xml
+Custom/SoundtrackCustomFrame.xml
+Custom/SoundtrackCustomEvents.lua
+Misc/SoundtrackMiscFrame.xml
+Misc/SoundtrackMountFrame.xml
 SoundtrackPetBattlesFrame.xml
 SoundtrackPetBattlesEvents.lua
 SoundtrackDanceFrame.xml
-SoundtrackMountFrame.xml
 SoundtrackZoneFrame.xml
 SoundtrackMinimap.lua
 SoundtrackNowPlayingFrame.xml
