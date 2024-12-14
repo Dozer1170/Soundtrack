@@ -1,3 +1,8 @@
+4.0.2
+- Major refactor to enable reliability, ease of change
+- Resting event thanks to appakanna
+- Properly remove old misc events if they are not in the new version
+
 4.0.1
 - Update for 11.0.5
 

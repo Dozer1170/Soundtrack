@@ -8,16 +8,25 @@
 -- TODO: Should break out the actual event registration to more organized chunks
 
 Soundtrack.MiscEvents = {}
-Soundtrack.ActionHouse = false
-Soundtrack.Bank = false
-Soundtrack.Merchant = false
-Soundtrack.FlightMaster = false
-Soundtrack.Barbershop = false
-Soundtrack.Trainer = false
-Soundtrack.CurrentStance = 0
-Soundtrack.ActiveAuras = {}
-
-local ST_CLASS_STEALTH
+Soundtrack.MiscEvents.ActionHouse = false
+Soundtrack.MiscEvents.Bank = false
+Soundtrack.MiscEvents.Merchant = false
+Soundtrack.MiscEvents.FlightMaster = false
+Soundtrack.MiscEvents.Barbershop = false
+Soundtrack.MiscEvents.Trainer = false
+Soundtrack.MiscEvents.CurrentStance = 0
+Soundtrack.MiscEvents.WasStealthed = false
+Soundtrack.MiscEvents.WasSwimming = false
+Soundtrack.MiscEvents.WasInAuctionHouse = false
+Soundtrack.MiscEvents.WasInBank = false
+Soundtrack.MiscEvents.WasAtMerchant = false
+Soundtrack.MiscEvents.WasOnFlightMaster = false
+Soundtrack.MiscEvents.WasAtTrainer = false
+Soundtrack.MiscEvents.WasAtBarbershop = false
+Soundtrack.MiscEvents.WasInCinematic = false
+Soundtrack.MiscEvents.WasInParty = false
+Soundtrack.MiscEvents.WasInRaid = false
+Soundtrack.MiscEvents.ActiveAuras = {}
 
 local nonInnZones = {
 	["Ironforge"] = 1,
@@ -38,154 +47,113 @@ local function OnRestingEvent()
 end
 
 local function OnSwimmingEvent()
-	if SNDCUSTOM_IsSwimming == nil then
-		SNDCUSTOM_IsSwimming = false
-	end
-
-	if SNDCUSTOM_IsSwimming and not IsSwimming() then
+	if Soundtrack.MiscEvents.WasSwimming and not IsSwimming() then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_SWIMMING)
-		SNDCUSTOM_IsSwimming = false
-	elseif not SNDCUSTOM_IsSwimming and IsSwimming() then
+		Soundtrack.MiscEvents.WasSwimming = false
+	elseif not Soundtrack.MiscEvents.WasSwimming and IsSwimming() then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_SWIMMING)
-		SNDCUSTOM_IsSwimming = true
+		Soundtrack.MiscEvents.WasSwimming = true
 	end
 end
 
 local function OnAuctionHouseEvent()
-	if SNDCUSTOM_AuctionHouse == nil then
-		SNDCUSTOM_AuctionHouse = false
-	end
-
-	if SNDCUSTOM_AuctionHouse and not Soundtrack.AuctionHouse then
+	if Soundtrack.MiscEvents.WasInAuctionHouse and not Soundtrack.MiscEvents.AuctionHouse then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_AUCTION_HOUSE)
-		SNDCUSTOM_AuctionHouse = false
-	elseif not SNDCUSTOM_AuctionHouse and Soundtrack.AuctionHouse then
+		Soundtrack.MiscEvents.WasInAuctionHouse = false
+	elseif not Soundtrack.MiscEvents.WasInAuctionHouse and Soundtrack.MiscEvents.AuctionHouse then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_AUCTION_HOUSE)
-		SNDCUSTOM_AuctionHouse = true
+		Soundtrack.MiscEvents.WasInAuctionHouse = true
 	end
 end
 
 local function OnBankEvent()
-	if SNDCUSTOM_Bank == nil then
-		SNDCUSTOM_Bank = false
-	end
-
 	-- Soundtrack.* does not deal with localization
-	if SNDCUSTOM_Bank and not Soundtrack.Bank then
+	if Soundtrack.MiscEvents.WasInBank and not Soundtrack.MiscEvents.Bank then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_BANK)
-		SNDCUSTOM_Bank = false
-	elseif not SNDCUSTOM_Bank and Soundtrack.Bank then
+		Soundtrack.MiscEvents.WasInBank = false
+	elseif not Soundtrack.MiscEvents.WasInBank and Soundtrack.MiscEvents.Bank then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_BANK)
-		SNDCUSTOM_Bank = true
+		Soundtrack.MiscEvents.WasInBank = true
 	end
 end
 
 local function OnMerchantEvent()
-	if SNDCUSTOM_Merchant == nil then
-		SNDCUSTOM_Merchant = false
-	end
-
-	if SNDCUSTOM_Merchant and not Soundtrack.Merchant then
+	if Soundtrack.MiscEvents.WasAtMerchant and not Soundtrack.MiscEvents.Merchant then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_MERCHANT)
-		SNDCUSTOM_Merchant = false
-	elseif not SNDCUSTOM_Merchant and Soundtrack.Merchant then
+		Soundtrack.MiscEvents.WasAtMerchant = false
+	elseif not Soundtrack.MiscEvents.WasAtMerchant and Soundtrack.MiscEvents.Merchant then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_MERCHANT)
-		SNDCUSTOM_Merchant = true
+		Soundtrack.MiscEvents.WasAtMerchant = true
 	end
 end
 
 local function OnFlightMasterEvent()
-	if SNDCUSTOM_FlightMaster == nil then
-		SNDCUSTOM_FlightMaster = false
-	end
-
-	if SNDCUSTOM_FlightMaster and not Soundtrack.FlightMaster then
+	if Soundtrack.MiscEvents.WasOnFlightMaster and not Soundtrack.MiscEvents.FlightMaster then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_FLIGHTMASTER)
-		SNDCUSTOM_FlightMaster = false
-	elseif not SNDCUSTOM_FlightMaster and Soundtrack.FlightMaster then
+		Soundtrack.MiscEvents.WasOnFlightMaster = false
+	elseif not Soundtrack.MiscEvents.WasOnFlightMaster and Soundtrack.MiscEvents.FlightMaster then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_FLIGHTMASTER)
-		SNDCUSTOM_FlightMaster = true
+		Soundtrack.MiscEvents.WasOnFlightMaster = true
 	end
 end
 
 local function OnTrainerEvent()
-	if SNDCUSTOM_Trainer == nil then
-		SNDCUSTOM_Trainer = false
-	end
-
-	if SNDCUSTOM_Trainer and not Soundtrack.Trainer then
+	if Soundtrack.MiscEvents.WasAtTrainer and not Soundtrack.MiscEvents.Trainer then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_TRAINER)
-		SNDCUSTOM_Trainer = false
-	elseif not SNDCUSTOM_Trainer and Soundtrack.Trainer then
+		Soundtrack.MiscEvents.WasAtTrainer = false
+	elseif not Soundtrack.MiscEvents.WasAtTrainer and Soundtrack.MiscEvents.Trainer then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_TRAINER)
-		SNDCUSTOM_Trainer = true
+		Soundtrack.MiscEvents.WasAtTrainer = true
 	end
 end
 
 local function OnBarbershopEvent()
-	if SNDCUSTOM_Barbershop == nil then
-		SNDCUSTOM_Barbershop = false
-	end
-
-	if SNDCUSTOM_Barbershop and not Soundtrack.Barbershop then
+	if Soundtrack.MiscEvents.WasAtBarbershop and not Soundtrack.MiscEvents.Barbershop then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_BARBERSHOP)
-		SNDCUSTOM_Barbershop = false
-	elseif not SNDCUSTOM_Barbershop and Soundtrack.Barbershop then
+		Soundtrack.MiscEvents.WasAtBarbershop = false
+	elseif not Soundtrack.MiscEvents.WasAtBarbershop and Soundtrack.MiscEvents.Barbershop then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_BARBERSHOP)
-		SNDCUSTOM_Barbershop = true
+		Soundtrack.MiscEvents.WasAtBarbershop = true
 	end
 end
 
 local function OnCinematicEvent()
-	if SNDCUSTOM_Cinematic == nil then
-		SNDCUSTOM_Cinematic = false
-	end
-
-	if SNDCUSTOM_Cinematic and not Soundtrack.Cinematic then
+	if Soundtrack.MiscEvents.WasInCinematic and not Soundtrack.MiscEvents.Cinematic then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_CINEMATIC)
-		SNDCUSTOM_Cinematic = false
-	elseif not SNDCUSTOM_Cinematic and Soundtrack.Cinematic then
+		Soundtrack.MiscEvents.WasInCinematic = false
+	elseif not Soundtrack.MiscEvents.WasInCinematic and Soundtrack.MiscEvents.Cinematic then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_CINEMATIC)
-		SNDCUSTOM_Cinematic = true
+		Soundtrack.MiscEvents.WasInCinematic = true
 	end
 end
 
 local function OnJoinPartyEvent()
-	if SOUNDTRACK_InParty == nil then
-		SOUNDTRACK_InParty = false
-	end
-	if not SOUNDTRACK_InParty and GetNumSubgroupMembers() == 0 and GetNumSubgroupMembers() > 0 then
+	if not Soundtrack.MiscEvents.WasInParty and GetNumSubgroupMembers() == 0 and GetNumSubgroupMembers() > 0 then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_JOIN_PARTY)
-		SOUNDTRACK_InParty = true
-	elseif SOUNDTRACK_InParty and GetNumSubgroupMembers() == 0 then
-		SOUNDTRACK_InParty = false
+		Soundtrack.MiscEvents.WasInParty = true
+	elseif Soundtrack.MiscEvents.WasInParty and GetNumSubgroupMembers() == 0 then
+		Soundtrack.MiscEvents.WasInParty = false
 	end
 end
 
 local function OnJoinRaidEvent()
-	if SOUNDTRACK_InRaid == nil then
-		SOUNDTRACK_InRaid = false
-	end
-	if not SOUNDTRACK_InRaid and GetNumSubgroupMembers() > 0 then
+	if not Soundtrack.MiscEvents.WasInRaid and GetNumSubgroupMembers() > 0 then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_JOIN_RAID)
-		SOUNDTRACK_InRaid = true
-	elseif SOUNDTRACK_InRaid and not GetNumSubgroupMembers() == 0 then
-		SOUNDTRACK_InRaid = false
+		Soundtrack.MiscEvents.WasInRaid = true
+	elseif Soundtrack.MiscEvents.WasInRaid and not GetNumSubgroupMembers() == 0 then
+		Soundtrack.MiscEvents.WasInRaid = false
 	end
 end
 
 local function OnDruidProwlEvent()
 	local class = UnitClass("player")
-	if ST_CLASS_STEALTH == nil then
-		ST_CLASS_STEALTH = false
-	end
-	if ST_CLASS_STEALTH and not IsStealthed() and class == "Druid" then
+	if Soundtrack.MiscEvents.WasStealthed and not IsStealthed() and class == "Druid" then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_DRUID_PROWL)
-		ST_CLASS_STEALTH = false
-	elseif not ST_CLASS_STEALTH and IsStealthed() and class == "Druid" then
+		Soundtrack.MiscEvents.WasStealthed = false
+	elseif not Soundtrack.MiscEvents.WasStealthed and IsStealthed() and class == "Druid" then
 		if Soundtrack.MiscEvents.IsAuraActive(5215) then
 			Soundtrack_Misc_PlayEvent(SOUNDTRACK_DRUID_PROWL)
-			ST_CLASS_STEALTH = true
+			Soundtrack.MiscEvents.WasStealthed = true
 		end
 	end
 end
@@ -193,64 +161,57 @@ end
 function OnChangeShapeshiftEvent()
 	local class = UnitClass("player")
 	local stance = GetShapeshiftForm()
-	if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+	if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.MiscEvents.CurrentStance then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_DK_CHANGE)
-		Soundtrack.CurrentStance = stance
-	elseif class == "Druid" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack.MiscEvents.CurrentStance = stance
+	elseif class == "Druid" and stance ~= 0 and stance ~= Soundtrack.MiscEvents.CurrentStance then
 		Soundtrack_Misc_PlayEvent("Misc", SOUNDTRACK_DRUID_CHANGE)
-		Soundtrack.CurrentStance = stance
-	elseif class == "Druid" and stance == 0 and stance ~= Soundtrack.CurrentStance then
-		Soundtrack.CurrentStance = stance
-	elseif class == "Paladin" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack.MiscEvents.CurrentStance = stance
+	elseif class == "Druid" and stance == 0 and stance ~= Soundtrack.MiscEvents.CurrentStance then
+		Soundtrack.MiscEvents.CurrentStance = stance
+	elseif class == "Paladin" and stance ~= 0 and stance ~= Soundtrack.MiscEvents.CurrentStance then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_PALADIN_CHANGE)
-		Soundtrack.CurrentStance = stance
+		Soundtrack.MiscEvents.CurrentStance = stance
 	elseif class == "Priest" and stance ~= 0 then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_PRIEST_CHANGE)
-		Soundtrack.CurrentStance = stance
+		Soundtrack.MiscEvents.CurrentStance = stance
 	elseif class == "Rogue" and stance ~= 0 and stance ~= 2 and not IsStealthed() then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_ROGUE_CHANGE)
-		Soundtrack.CurrentStance = stance
+		Soundtrack.MiscEvents.CurrentStance = stance
 	elseif class == "Shaman" and stance ~= 0 then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_SHAMAN_CHANGE)
-		Soundtrack.CurrentStance = stance
-	elseif class == "Warrior" and stance ~= 0 and stance ~= Soundtrack.CurrentStance then
+		Soundtrack.MiscEvents.CurrentStance = stance
+	elseif class == "Warrior" and stance ~= 0 and stance ~= Soundtrack.MiscEvents.CurrentStance then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_WARRIOR_CHANGE)
-		Soundtrack.CurrentStance = stance
+		Soundtrack.MiscEvents.CurrentStance = stance
 	end
 end
 
 local function RogueStealthUpdate()
 	local class = UnitClass("player")
-	if ST_CLASS_STEALTH == nil then
-		ST_CLASS_STEALTH = false
-	end
-	if ST_CLASS_STEALTH and not IsStealthed() and class == "Rogue" then
+	if Soundtrack.MiscEvents.WasStealthed and not IsStealthed() and class == "Rogue" then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_ROGUE_STEALTH)
-		ST_CLASS_STEALTH = false
-	elseif not ST_CLASS_STEALTH and IsStealthed() and class == "Rogue" then
+		Soundtrack.MiscEvents.WasStealthed = false
+	elseif not Soundtrack.MiscEvents.WasStealthed and IsStealthed() and class == "Rogue" then
 		if Soundtrack.MiscEvents.IsAuraActive(1784) then
 			Soundtrack_Misc_PlayEvent(SOUNDTRACK_ROGUE_STEALTH)
-			ST_CLASS_STEALTH = true
+			Soundtrack.MiscEvents.WasStealthed = true
 		end
 	end
 end
 
 local function StealthUpdate()
-	if SNDCUSTOM_IsStealthed == nil then
-		SNDCUSTOM_IsStealthed = false
-	end
-	if SNDCUSTOM_IsStealthed and not IsStealthed() then
+	if Soundtrack.MiscEvents.WasStealthed and not IsStealthed() then
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_STEALTHED)
-		SNDCUSTOM_IsStealthed = false
-	elseif not SNDCUSTOM_IsStealthed and IsStealthed() then
+		Soundtrack.MiscEvents.WasStealthed = false
+	elseif not Soundtrack.MiscEvents.WasStealthed and IsStealthed() then
 		Soundtrack_Misc_PlayEvent(SOUNDTRACK_STEALTHED)
-		SNDCUSTOM_IsStealthed = true
+		Soundtrack.MiscEvents.WasStealthed = true
 	end
 end
 
 local function DruidTravelFormUpdate()
 	local buff = Soundtrack.MiscEvents.IsAuraActive(783)
-	--local isFlying = IsFlying()
 	local canFly = IsFlyableArea()
 	local isSwimming = IsSwimming()
 	if buff == 783 then
@@ -304,22 +265,22 @@ end
 
 -- TODO: Dedupe this, custom also has it
 function Soundtrack.MiscEvents.UpdateActiveAuras()
-	Soundtrack.ActiveAuras = {}
+	Soundtrack.MiscEvents.ActiveAuras = {}
 	for i = 1, 40 do
 		local buff = C_UnitAuras.GetBuffDataByIndex("player", i)
 		if buff ~= nil then
-			Soundtrack.ActiveAuras[buff.spellId] = buff.spellId
+			Soundtrack.MiscEvents.ActiveAuras[buff.spellId] = buff.spellId
 		end
 		local debuff = C_UnitAuras.GetDebuffDataByIndex("player", i)
 		if debuff ~= nil then
-			Soundtrack.ActiveAuras[debuff.spellId] = debuff.spellId
+			Soundtrack.MiscEvents.ActiveAuras[debuff.spellId] = debuff.spellId
 		end
 	end
 end --]]
 
 -- Returns the spellID of the buff, else nil
 function Soundtrack.MiscEvents.IsAuraActive(spellId)
-	return Soundtrack.ActiveAuras[spellId]
+	return Soundtrack.MiscEvents.ActiveAuras[spellId]
 end
 
 function Soundtrack.MiscEvents.RegisterBuffEvent(eventName, _spellId, _priority, _continuous, _soundEffect)
@@ -680,7 +641,8 @@ function Soundtrack.MiscEvents.MiscInitialize()
 		true
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Resting, thanks to appakanna for the code
+	-- Thanks to appakanna for the code
+	Soundtrack.MiscEvents.RegisterEventScript( -- Resting
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_RESTING,
 		"PLAYER_UPDATE_RESTING",
@@ -769,33 +731,33 @@ function Soundtrack.MiscEvents.MiscOnEvent(_, event, ...)
 	Soundtrack.MiscEvents.UpdateActiveAuras()
 
 	if event == "AUCTION_HOUSE_SHOW" then
-		Soundtrack.AuctionHouse = true
+		Soundtrack.MiscEvents.AuctionHouse = true
 	elseif event == "AUCTION_HOUSE_CLOSED" then
-		Soundtrack.AuctionHouse = false
+		Soundtrack.MiscEvents.AuctionHouse = false
 	elseif event == "BANKFRAME_OPENED" then
-		Soundtrack.Bank = true
+		Soundtrack.MiscEvents.Bank = true
 	elseif event == "BANKFRAME_CLOSED" then
-		Soundtrack.Bank = false
+		Soundtrack.MiscEvents.Bank = false
 	elseif event == "MERCHANT_SHOW" then
-		Soundtrack.Merchant = true
+		Soundtrack.MiscEvents.Merchant = true
 	elseif event == "MERCHANT_CLOSED" then
-		Soundtrack.Merchant = false
+		Soundtrack.MiscEvents.Merchant = false
 	elseif event == "TAXIMAP_OPENED" then
-		Soundtrack.FlightMaster = true
+		Soundtrack.MiscEvents.FlightMaster = true
 	elseif event == "TAXIMAP_CLOSED" then
-		Soundtrack.FlightMaster = false
+		Soundtrack.MiscEvents.FlightMaster = false
 	elseif event == "BARBER_SHOP_OPEN" then
-		Soundtrack.Barbershop = true
+		Soundtrack.MiscEvents.Barbershop = true
 	elseif event == "BARBER_SHOP_CLOSE" then
-		Soundtrack.Barbershop = false
+		Soundtrack.MiscEvents.Barbershop = false
 	elseif event == "CINEMATIC_START" then
-		Soundtrack.Cinematic = true
+		Soundtrack.MiscEvents.Cinematic = true
 	elseif event == "CINEMATIC_STOP" then
-		Soundtrack.Cinematic = false
+		Soundtrack.MiscEvents.Cinematic = false
 	elseif event == "TRAINER_SHOW" then
-		Soundtrack.Trainer = true
+		Soundtrack.MiscEvents.Trainer = true
 	elseif event == "TRAINER_CLOSED" then
-		Soundtrack.Trainer = false
+		Soundtrack.MiscEvents.Trainer = false
 	elseif event == "CHAT_MSG_LOOT" then
 		LootEvents.HandleLootMessageEvent(st_arg1, st_arg5)
 	-- Handle buff/debuff events

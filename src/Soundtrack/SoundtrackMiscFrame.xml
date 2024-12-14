@@ -4,8 +4,8 @@
   <Script file="SoundtrackCustomEvents.lua"/>
   <Frame name="SoundtrackMiscDUMMY" parent="UIParent" hidden="false">
     <Scripts>
-      <OnUpdate>Soundtrack.CustomEvents.MiscOnUpdate(self, elapsed)</OnUpdate>
-      <OnEvent>Soundtrack.CustomEvents.MiscOnEvent(self, event, ...)</OnEvent>
+      <OnUpdate>Soundtrack.MiscEvents.MiscOnUpdate(self, elapsed)</OnUpdate>
+      <OnEvent>Soundtrack.MiscEvents.MiscOnEvent(self, event, ...)</OnEvent>
     </Scripts>
   </Frame>
 </Ui>

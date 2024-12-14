@@ -5,7 +5,6 @@
     Functions that manage misc. and custom events.
 ]]
 
--- TODO: Actually split misc into its own file
 Soundtrack.CustomEvents = {}
 Soundtrack.ActiveAuras = {}
 
