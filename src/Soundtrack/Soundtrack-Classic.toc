@@ -18,6 +18,7 @@ SoundtrackFrame/SoundtrackFrame.lua
 SoundtrackFix.lua
 SoundtrackBattleFrame.xml
 SoundtrackBattleEvents.lua
+SoundtrackAuras.xml
 SoundtrackCustomFrame.xml
 SoundtrackCustomEvents.lua
 SoundtrackMiscFrame.xml

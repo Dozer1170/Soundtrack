@@ -502,7 +502,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 end
 
 function Soundtrack.BattleEvents.RegisterEventScript(self, name, tableName, _trigger, _priority, _continuous, _script, _soundEffect)
-  Soundtrack_MiscEvents[name] = { trigger = _trigger, script = _script, eventtype = "Event Script", priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
+  Soundtrack_MiscEvents[name] = { trigger = _trigger, script = _script, eventtype = ST_EVENT_SCRIPT, priority=_priority, continuous=_continuous, soundEffect=_soundEffect };
   Soundtrack_BattleEvents[name] = {script = _script}
 
   self:RegisterEvent(_trigger);

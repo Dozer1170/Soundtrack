@@ -7,6 +7,10 @@
 
 -- TODO: Should break out the actual event registration to more organized chunks
 
+local function debug(msg)
+	Soundtrack.TraceCustom(msg)
+end
+
 Soundtrack.MiscEvents = {}
 Soundtrack.MiscEvents.ActionHouse = false
 Soundtrack.MiscEvents.Bank = false
@@ -26,7 +30,6 @@ Soundtrack.MiscEvents.WasAtBarbershop = false
 Soundtrack.MiscEvents.WasInCinematic = false
 Soundtrack.MiscEvents.WasInParty = false
 Soundtrack.MiscEvents.WasInRaid = false
-Soundtrack.MiscEvents.ActiveAuras = {}
 
 local nonInnZones = {
 	["Ironforge"] = 1,
@@ -151,7 +154,7 @@ local function OnDruidProwlEvent()
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_DRUID_PROWL)
 		Soundtrack.MiscEvents.WasStealthed = false
 	elseif not Soundtrack.MiscEvents.WasStealthed and IsStealthed() and class == "Druid" then
-		if Soundtrack.MiscEvents.IsAuraActive(5215) then
+		if Soundtrack.Auras.IsAuraActive(5215) then
 			Soundtrack_Misc_PlayEvent(SOUNDTRACK_DRUID_PROWL)
 			Soundtrack.MiscEvents.WasStealthed = true
 		end
@@ -193,7 +196,7 @@ local function RogueStealthUpdate()
 		Soundtrack_Misc_StopEvent(SOUNDTRACK_ROGUE_STEALTH)
 		Soundtrack.MiscEvents.WasStealthed = false
 	elseif not Soundtrack.MiscEvents.WasStealthed and IsStealthed() and class == "Rogue" then
-		if Soundtrack.MiscEvents.IsAuraActive(1784) then
+		if Soundtrack.Auras.IsAuraActive(1784) then
 			Soundtrack_Misc_PlayEvent(SOUNDTRACK_ROGUE_STEALTH)
 			Soundtrack.MiscEvents.WasStealthed = true
 		end
@@ -211,7 +214,7 @@ local function StealthUpdate()
 end
 
 local function DruidTravelFormUpdate()
-	local buff = Soundtrack.MiscEvents.IsAuraActive(783)
+	local buff = Soundtrack.Auras.IsAuraActive(783)
 	local canFly = IsFlyableArea()
 	local isSwimming = IsSwimming()
 	if buff == 783 then
@@ -236,7 +239,7 @@ function Soundtrack.MiscEvents.RegisterUpdateScript(_, name, _priority, _continu
 
 	Soundtrack_MiscEvents[name] = {
 		script = _script,
-		eventtype = "Update Script",
+		eventtype = ST_UPDATE_SCRIPT,
 		priority = _priority,
 		continuous = _continuous,
 		soundEffect = _soundEffect,
@@ -253,7 +256,7 @@ function Soundtrack.MiscEvents.RegisterEventScript(self, name, _trigger, _priori
 	Soundtrack_MiscEvents[name] = {
 		trigger = _trigger,
 		script = _script,
-		eventtype = "Event Script",
+		eventtype = ST_EVENT_SCRIPT,
 		priority = _priority,
 		continuous = _continuous,
 		soundEffect = _soundEffect,
@@ -261,26 +264,6 @@ function Soundtrack.MiscEvents.RegisterEventScript(self, name, _trigger, _priori
 
 	self:RegisterEvent(_trigger)
 	Soundtrack.AddEvent(ST_MISC, name, _priority, _continuous, _soundEffect)
-end
-
--- TODO: Dedupe this, custom also has it
-function Soundtrack.MiscEvents.UpdateActiveAuras()
-	Soundtrack.MiscEvents.ActiveAuras = {}
-	for i = 1, 40 do
-		local buff = C_UnitAuras.GetBuffDataByIndex("player", i)
-		if buff ~= nil then
-			Soundtrack.MiscEvents.ActiveAuras[buff.spellId] = buff.spellId
-		end
-		local debuff = C_UnitAuras.GetDebuffDataByIndex("player", i)
-		if debuff ~= nil then
-			Soundtrack.MiscEvents.ActiveAuras[debuff.spellId] = debuff.spellId
-		end
-	end
-end --]]
-
--- Returns the spellID of the buff, else nil
-function Soundtrack.MiscEvents.IsAuraActive(spellId)
-	return Soundtrack.MiscEvents.ActiveAuras[spellId]
 end
 
 function Soundtrack.MiscEvents.RegisterBuffEvent(eventName, _spellId, _priority, _continuous, _soundEffect)
@@ -292,7 +275,7 @@ function Soundtrack.MiscEvents.RegisterBuffEvent(eventName, _spellId, _priority,
 		spellId = _spellId,
 		stackLevel = _priority,
 		active = false,
-		eventtype = "Buff",
+		eventtype = ST_BUFF_SCRIPT,
 		priority = _priority,
 		continuous = _continuous,
 		soundEffect = _soundEffect,
@@ -301,7 +284,7 @@ function Soundtrack.MiscEvents.RegisterBuffEvent(eventName, _spellId, _priority,
 	Soundtrack.AddEvent(ST_MISC, eventName, _priority, _continuous, _soundEffect)
 end
 
-function Soundtrack_Misc_PlayEvent(eventName)
+local function Soundtrack_Misc_PlayEvent(eventName)
 	local eventTable = Soundtrack.Events.GetTable(ST_MISC)
 	if not eventTable then
 		return
@@ -339,11 +322,10 @@ hooksecurefunc("JumpOrAscendStart", function()
 	end
 end)
 
--- MiscEvents
+-- TODO: Should break out the actual event registration to more organized chunks
 function Soundtrack.MiscEvents.MiscInitialize()
 	debug("Initializing misc. events...")
 
-	SoundtrackMiscDUMMY:RegisterEvent("UNIT_AURA")
 	SoundtrackMiscDUMMY:RegisterEvent("AUCTION_HOUSE_CLOSED")
 	SoundtrackMiscDUMMY:RegisterEvent("AUCTION_HOUSE_SHOW")
 	SoundtrackMiscDUMMY:RegisterEvent("BANKFRAME_CLOSED")
@@ -715,7 +697,7 @@ end
 function Soundtrack.MiscEvents.MiscOnUpdate(_, _)
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
-			if v.eventtype == "Update Script" and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
+			if v.eventtype == ST_UPDATE_SCRIPT and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 				v.script()
 			end
 		end
@@ -727,8 +709,6 @@ end
 -- MiscEvents
 function Soundtrack.MiscEvents.MiscOnEvent(_, event, ...)
 	local st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
-
-	Soundtrack.MiscEvents.UpdateActiveAuras()
 
 	if event == "AUCTION_HOUSE_SHOW" then
 		Soundtrack.MiscEvents.AuctionHouse = true
@@ -760,29 +740,22 @@ function Soundtrack.MiscEvents.MiscOnEvent(_, event, ...)
 		Soundtrack.MiscEvents.Trainer = false
 	elseif event == "CHAT_MSG_LOOT" then
 		LootEvents.HandleLootMessageEvent(st_arg1, st_arg5)
-	-- Handle buff/debuff events
-	elseif (event == "UNIT_AURA" and st_arg1 == "player") or event == "UPDATE_SHAPESHIFT_FORM" then
-		if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
-			for k, v in pairs(Soundtrack_MiscEvents) do
-				if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
-					local isActive = Soundtrack.MiscEvents.IsAuraActive(v.spellId)
-					if not v.active and isActive then
-						v.active = true
-						Soundtrack_Misc_PlayEvent(k)
-					elseif v.active and not isActive then
-						v.active = false
-						Soundtrack_Misc_StopEvent(k)
-					end
-				end
-			end
-		end
 	end
+end
 
-	-- Handle custom script events
+-- TODO: Make sure shapeshift event works this way
+function Soundtrack.MiscEvents.OnPlayerAurasUpdated()
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
-			if v.eventtype == "Event Script" and event == v.trigger and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
-				v.script()
+			if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
+				local isActive = Soundtrack.Auras.IsAuraActive(v.spellId)
+				if not v.active and isActive then
+					v.active = true
+					Soundtrack_Misc_PlayEvent(k)
+				elseif v.active and not isActive then
+					v.active = false
+					Soundtrack_Misc_StopEvent(k)
+				end
 			end
 		end
 	end

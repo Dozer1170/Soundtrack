@@ -101,20 +101,20 @@ function SoundtrackFrameSaveCustomEventButton_OnClick()
 
 	local eventType = customEvent.type
 	Soundtrack.TraceFrame(customEvent.type)
-	if eventType == "Event Script" then
-		customEvent.eventtype = "Event Script"
+	if eventType == ST_EVENT_SCRIPT then
+		customEvent.eventtype = ST_EVENT_SCRIPT
 		customEvent.trigger = getglobal("SoundtrackFrame_EventTrigger"):GetText()
 		Soundtrack.CustomEvents.RegisterTrigger(_G["SoundtrackCustomDUMMY"], customEvent.trigger)
-	elseif eventType == "Buff" then
-		customEvent.eventtype = "Buff"
+	elseif eventType == ST_BUFF_SCRIPT then
+		customEvent.eventtype = ST_BUFF_SCRIPT
 		customEvent.spellId = tonumber(getglobal("SoundtrackFrame_EventTrigger"):GetText())
 		Soundtrack.TraceFrame(customEvent.spellId)
-	elseif eventType == "Debuff" then
-		customEvent.eventtype = "Debuff"
+	elseif eventType == ST_DEBUFF_SCRIPT then
+		customEvent.eventtype = ST_DEBUFF_SCRIPT
 		customEvent.spellId = tonumber(getglobal("SoundtrackFrame_EventTrigger"):GetText())
 		Soundtrack.TraceFrame(customEvent.spellId)
-	elseif eventType == "Update Script" then
-		customEvent.eventtype = "Update Script"
+	elseif eventType == ST_UPDATE_SCRIPT then
+		customEvent.eventtype = ST_UPDATE_SCRIPT
 	end
 	customEvent.script = getglobal("SoundtrackFrame_EventScript"):GetText()
 

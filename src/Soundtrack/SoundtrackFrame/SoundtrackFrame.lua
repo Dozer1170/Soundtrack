@@ -174,10 +174,10 @@ local SEVT = {
 }
 
 local eventTypes = {
-	"Event Script",
-	"Update Script",
-	"Buff",
-	"Debuff",
+	ST_EVENT_SCRIPT,
+	ST_UPDATE_SCRIPT,
+	ST_BUFF_SCRIPT,
+	ST_DEBUFF_SCRIPT,
 }
 
 function SoundtrackFrame_Initialize()
@@ -887,17 +887,17 @@ function SoundtrackFrame_RefreshCustomEvent()
 
 	if customEvent then
 		_G["SoundtrackFrame_Priority"]:SetText(tostring(customEvent.priority))
-		if customEvent.type == "Event Script" then
+		if customEvent.type == ST_EVENT_SCRIPT then
 			_G["SoundtrackFrame_FontStringTrigger"]:SetText("Trigger")
 			_G["SoundtrackFrame_EventTrigger"]:SetText(customEvent.trigger)
 			_G["SoundtrackFrame_EventScript"]:SetText(customEvent.script)
-		elseif customEvent.type == "Buff" then
+		elseif customEvent.type == ST_BUFF_SCRIPT then
 			_G["SoundtrackFrame_FontStringTrigger"]:SetText("Spell ID")
 			_G["SoundtrackFrame_EventTrigger"]:SetText(customEvent.spellId)
 			_G["SoundtrackFrame_EventScript"]:SetText(
 				"Buff events do not need a script.\nThey remain active while the specified buff is active."
 			)
-		elseif customEvent.type == "Update Script" then
+		elseif customEvent.type == ST_UPDATE_SCRIPT then
 			_G["SoundtrackFrame_FontStringTrigger"]:SetText("Trigger")
 			_G["SoundtrackFrame_EventTrigger"]:SetText("OnUpdate")
 			_G["SoundtrackFrame_EventScript"]:SetText(customEvent.script)
@@ -906,7 +906,7 @@ function SoundtrackFrame_RefreshCustomEvent()
 
 	if customEvent.type == nil then
 		Soundtrack.TraceFrame("Nil type on " .. SoundtrackFrame_SelectedEvent)
-		customEvent.type = "Update Script"
+		customEvent.type = ST_UPDATE_SCRIPT
 	end
 
 	local eventTypeIndex = Soundtrack.IndexOf(eventTypes, customEvent.type)
@@ -1644,15 +1644,15 @@ function SoundtrackFrame_EventTypeDropDown_OnClick(self)
 
 	customEvent.type = eventTypes[selectedId]
 
-	if eventTypes[selectedId] == "Update Script" then
+	if eventTypes[selectedId] == ST_UPDATE_SCRIPT then
 		if customEvent.script == nil then
 			customEvent.swcript = "type your update script here"
 		end
-	elseif eventTypes[selectedId] == "Buff" then
+	elseif eventTypes[selectedId] == ST_BUFF_SCRIPT then
 		if customEvent.spellId == nil then
 			customEvent.spellId = "0"
 		end
-	elseif eventTypes[selectedId] == "Event Script" then
+	elseif eventTypes[selectedId] == ST_EVENT_SCRIPT then
 		if customEvent.trigger == nil then
 			customEvent.trigger = "UNIT_AURA"
 		end
