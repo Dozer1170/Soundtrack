@@ -21,8 +21,8 @@ SoundtrackBattleEvents.lua
 SoundtrackAuras.xml
 Custom/SoundtrackCustomFrame.xml
 Custom/SoundtrackCustomEvents.lua
-Misc/SoundtrackMiscFrame.xml
-Misc/SoundtrackMountFrame.xml
+MiscEvents/SoundtrackMiscFrame.xml
+MiscEvents/SoundtrackMountFrame.xml
 SoundtrackPetBattlesFrame.xml
 SoundtrackPetBattlesEvents.lua
 SoundtrackDanceFrame.xml
