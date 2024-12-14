@@ -1,36 +1,38 @@
+Soundtrack.DruidEvents = {}
+
 local function DruidTravelFormUpdate()
 	local buff = Soundtrack.Auras.IsAuraActive(783)
 	local canFly = IsFlyableArea()
 	local isSwimming = IsSwimming()
 	if buff == 783 then
 		if isSwimming then
-			Soundtrack_Misc_PlayEvent(SOUNDTRACK_DRUID_AQUATIC)
+			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DRUID_AQUATIC)
 		elseif canFly then
-			Soundtrack_Misc_PlayEvent(SOUNDTRACK_DRUID_FLIGHT)
+			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DRUID_FLIGHT)
 		else
-			Soundtrack_Misc_PlayEvent(SOUNDTRACK_DRUID_TRAVEL)
+			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DRUID_TRAVEL)
 		end
 	else
-		Soundtrack_Misc_StopEvent(SOUNDTRACK_DRUID_AQUATIC)
-		Soundtrack_Misc_StopEvent(SOUNDTRACK_DRUID_FLIGHT)
-		Soundtrack_Misc_StopEvent(SOUNDTRACK_DRUID_TRAVEL)
+		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_DRUID_AQUATIC)
+		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_DRUID_FLIGHT)
+		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_DRUID_TRAVEL)
 	end
 end
 
 local function OnDruidProwlEvent()
 	local class = UnitClass("player")
 	if Soundtrack.MiscEvents.WasStealthed and not IsStealthed() and class == "Druid" then
-		Soundtrack_Misc_StopEvent(SOUNDTRACK_DRUID_PROWL)
+		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_DRUID_PROWL)
 		Soundtrack.MiscEvents.WasStealthed = false
 	elseif not Soundtrack.MiscEvents.WasStealthed and IsStealthed() and class == "Druid" then
 		if Soundtrack.Auras.IsAuraActive(5215) then
-			Soundtrack_Misc_PlayEvent(SOUNDTRACK_DRUID_PROWL)
+			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DRUID_PROWL)
 			Soundtrack.MiscEvents.WasStealthed = true
 		end
 	end
 end
 
-function Soundtrack.MiscDruid.RegisterEvents()
+function Soundtrack.DruidEvents.Register()
 	Soundtrack.MiscEvents.RegisterUpdateScript( -- Druid Prowl
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_DRUID_PROWL,

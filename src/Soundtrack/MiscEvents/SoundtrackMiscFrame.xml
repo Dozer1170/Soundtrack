@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="LootEvents.lua"/>
+  <Script file="StealthEvents.lua"/>
   <Script file="DruidEvents.lua"/>
-  <Script file="SoundtrackMiscEvents.lua"/>
+  <Script file="MiscEvents.lua"/>
   <Frame name="SoundtrackMiscDUMMY" parent="UIParent" hidden="false">
     <Scripts>
       <OnUpdate>Soundtrack.MiscEvents.MiscOnUpdate(self, elapsed)</OnUpdate>
