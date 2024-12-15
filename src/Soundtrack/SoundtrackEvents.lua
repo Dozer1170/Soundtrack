@@ -190,7 +190,7 @@ local currentEventName = nil
 function Soundtrack.UnRegisterEvent(_) end
 
 Soundtrack.Events.Stack = {
-	-- This must match number of levels in SoundtrackLevels.lua
+	-- This must match number of levels in SoundtrackConstants.lua
 	{ eventName = nil, tableName = nil }, -- Level 1: Continent
 	{ eventName = nil, tableName = nil }, -- Level 2: Region
 	{ eventName = nil, tableName = nil }, -- Level 3: Zones

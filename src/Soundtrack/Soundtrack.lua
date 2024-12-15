@@ -131,6 +131,7 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	Soundtrack.CustomEvents.CustomInitialize()
 	SoundtrackFrame_RefreshShowingTab()
 	SoundtrackFrame_Initialize()
+	Soundtrack.Cleanup.CleanupOldEvents()
 end
 
 -- TODO: Make as much of this local as possible

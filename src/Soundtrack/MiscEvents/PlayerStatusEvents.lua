@@ -334,7 +334,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		true
 	)
 
-	hooksecurefunc("JumpOrAscendStart", OnJump())
+	hooksecurefunc("JumpOrAscendStart", OnJump)
 
 	Soundtrack.MiscEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, 369968, ST_BUFF_LVL, true, false)
 end

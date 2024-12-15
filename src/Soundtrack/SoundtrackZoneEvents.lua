@@ -199,7 +199,7 @@ local function OnZoneChanged()
 	if zoneText4 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-			if eventTable[zoneText4] == nil then
+			if eventTable ~= nil and eventTable[zoneText4] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText4, ST_MINIMAP_LVL, true)
 			end
 		end
@@ -212,7 +212,7 @@ local function OnZoneChanged()
 	if zoneText3 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-			if eventTable[zoneText3] == nil then
+			if eventTable ~= nil and eventTable[zoneText3] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText3, ST_SUBZONE_LVL, true)
 			end
 		end
@@ -225,7 +225,7 @@ local function OnZoneChanged()
 	if zoneText2 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-			if eventTable[zoneText2] == nil then
+			if eventTable ~= nil and eventTable[zoneText2] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText2, ST_ZONE_LVL, true)
 			end
 		end
@@ -238,7 +238,7 @@ local function OnZoneChanged()
 	if zoneText1 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-			if eventTable[zoneText1] == nil then
+			if eventTable ~= nil and eventTable[zoneText1] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText1, ST_CONTINENT_LVL, true)
 			end
 		end

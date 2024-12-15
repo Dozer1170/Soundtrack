@@ -9,7 +9,7 @@ Soundtrack.Auras = {}
 Soundtrack.Auras.ActiveAuras = {}
 
 function Soundtrack.Auras.Initialize()
-	SoundtrackAuraDUMMY:RegisterEvent("UNIT_AURA")
+	SoundtrackAurasDUMMY:RegisterEvent("UNIT_AURA")
 end
 
 function Soundtrack.Auras.OnEvent(_, event, ...)

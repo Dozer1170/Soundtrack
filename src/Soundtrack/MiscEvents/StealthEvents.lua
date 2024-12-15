@@ -1,3 +1,5 @@
+Soundtrack.StealthEvents = {}
+
 local function RogueStealthUpdate()
 	local class = UnitClass("player")
 	if Soundtrack.MiscEvents.WasStealthed and not IsStealthed() and class == "Rogue" then

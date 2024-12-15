@@ -13,12 +13,13 @@ OldSaveMigrator.lua
 Utils/DebugUtils.lua
 SoundtrackFrame/GeneralTemplates.xml
 SoundtrackFrame/TabTemplateClassic.xml
+SoundtrackAurasFrame.xml
+SoundtrackCleanup.lua
 SoundtrackFrame/SoundtrackFrame.xml
 SoundtrackFrame/SoundtrackFrame.lua
 SoundtrackFix.lua
 SoundtrackBattleFrame.xml
 SoundtrackBattleEvents.lua
-SoundtrackAuras.xml
 Custom/SoundtrackCustomFrame.xml
 Custom/SoundtrackCustomEvents.lua
 MiscEvents/SoundtrackMiscFrame.xml
@@ -31,4 +32,3 @@ SoundtrackMinimap.lua
 SoundtrackNowPlayingFrame.xml
 SoundtrackControlFrame.xml
 SoundtrackReportFrame.xml
-SoundtrackCleanup.lua

@@ -30,7 +30,7 @@ end
 
 function Soundtrack.LootEvents.OnUpdate()
 	if GetTime() > playLootSoundEffectTime and playLootSoundEffectName then
-		Soundtrack_Custom_PlayEvent(ST_MISC, playLootSoundEffectName)
+		Soundtrack.PlayEvent(ST_MISC, playLootSoundEffectName)
 		playLootSoundEffectName = nil
 	end
 end

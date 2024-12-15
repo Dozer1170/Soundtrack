@@ -19,5 +19,3 @@ function Soundtrack.Cleanup.CleanupOldEvents()
 
 	SoundtrackFrame_RefreshEvents()
 end
-
-Soundtrack.Cleanup.CleanupOldEvents()
