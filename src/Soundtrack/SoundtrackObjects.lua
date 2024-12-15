@@ -1,6 +1,7 @@
 Soundtrack = {
 	Library = {},
 	Events = {},
+	RegisteredEvents = {},
 	BattleEvents = {},
 	ZoneEvents = {},
 	DanceEvents = {},

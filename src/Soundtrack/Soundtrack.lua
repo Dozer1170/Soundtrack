@@ -279,6 +279,12 @@ function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soun
 		return
 	end
 
+	-- Used by cleanup events to remove events that are no longer valid
+	if Soundtrack.RegisteredEvents[tableName] == nil then
+		Soundtrack.RegisteredEvents[tableName] = {}
+	end
+	Soundtrack.RegisteredEvents[tableName][eventName] = true
+
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if not eventTable then

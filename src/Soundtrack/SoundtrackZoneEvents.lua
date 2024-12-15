@@ -212,6 +212,7 @@ local function OnZoneChanged()
 	if zoneText3 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+			-- TODO: Make sure this still works as expected after add ~= check
 			if eventTable ~= nil and eventTable[zoneText3] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText3, ST_SUBZONE_LVL, true)
 			end
@@ -225,6 +226,7 @@ local function OnZoneChanged()
 	if zoneText2 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+			-- TODO: Make sure this still works as expected after add ~= check
 			if eventTable ~= nil and eventTable[zoneText2] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText2, ST_ZONE_LVL, true)
 			end
@@ -238,6 +240,7 @@ local function OnZoneChanged()
 	if zoneText1 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
 			local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+			-- TODO: Make sure this still works as expected after add ~= check
 			if eventTable ~= nil and eventTable[zoneText1] == nil then
 				Soundtrack.AddEvent(ST_ZONE, zoneText1, ST_CONTINENT_LVL, true)
 			end
@@ -262,8 +265,8 @@ function Soundtrack.ZoneEvents.OnUpdate(_)
 	if currentTime >= nextUpdateTime then
 		nextUpdateTime = currentTime + updateInterval
 
-		local inInstance, newZoneType = IsInInstance()
-		if not newZoneType == zoneType then
+		local _, newZoneType = IsInInstance()
+		if newZoneType ~= zoneType then
 			zoneType = newZoneType
 			OnZoneChanged()
 		end

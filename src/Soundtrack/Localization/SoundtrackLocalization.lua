@@ -25,29 +25,29 @@ function SoundtrackLocalization.RegisterDruidStrings(localizedClassName, localiz
 	SOUNDTRACK_DRUID_CHANGE = druidPath .. localizedChangeStanceText
 
 	local retailAquaticFormPath = SoundtrackLocalization.CreateSpellNamePath(276012, druidPath)
-	if not retailAquaticFormPath == "" then
+	if retailAquaticFormPath ~= "" then
 		SOUNDTRACK_DRUID_AQUATIC = retailAquaticFormPath
 	else
 		SOUNDTRACK_DRUID_AQUATIC = SoundtrackLocalization.CreateSpellNamePath(1066, druidPath)
 	end
 
 	local bearFormPath = SoundtrackLocalization.CreateSpellNamePath(5487, druidPath)
-	if not bearFormPath == nil then
+	if bearFormPath ~= nil then
 		SOUNDTRACK_DRUID_BEAR = bearFormPath
 	end
 
 	local catFormPath = SoundtrackLocalization.CreateSpellNamePath(768, druidPath)
-	if not catFormPath == nil then
+	if catFormPath ~= nil then
 		SOUNDTRACK_DRUID_CAT = catFormPath
 	end
 
 	local dashPath = SoundtrackLocalization.CreateSpellNamePath(1850, druidPath)
-	if not dashPath == nil then
+	if dashPath ~= nil then
 		SOUNDTRACK_DRUID_DASH = dashPath
 	end
 
 	local tigerDashPath = SoundtrackLocalization.CreateSpellNamePath(252216, druidPath)
-	if not tigerDashPath == nil then
+	if tigerDashPath ~= nil then
 		SOUNDTRACK_DRUID_TIGER_DASH = tigerDashPath
 	end
 
@@ -59,37 +59,37 @@ function SoundtrackLocalization.RegisterDruidStrings(localizedClassName, localiz
 	end
 
 	local moonkinFormPath = SoundtrackLocalization.CreateSpellNamePath(24858, druidPath)
-	if not moonkinFormPath == nil then
+	if moonkinFormPath ~= nil then
 		SOUNDTRACK_DRUID_MOONKIN = moonkinFormPath
 	end
 
 	local prowlPath = SoundtrackLocalization.CreateSpellNamePath(5215, druidPath)
-	if not prowlPath == nil then
+	if prowlPath ~= nil then
 		SOUNDTRACK_DRUID_PROWL = prowlPath
 	end
 
 	local travelFormPath = SoundtrackLocalization.CreateSpellNamePath(783, druidPath)
-	if not travelFormPath == nil then
+	if travelFormPath ~= nil then
 		SOUNDTRACK_DRUID_TRAVEL = travelFormPath
 	end
 
 	local incarnTreePath = SoundtrackLocalization.CreateSpellNamePath(33891, druidPath)
-	if not incarnTreePath == nil then
+	if incarnTreePath ~= nil then
 		SOUNDTRACK_DRUID_INCARNATION_TREE = incarnTreePath
 	end
 
 	local incarnBearPath = SoundtrackLocalization.CreateSpellNamePath(102558, druidPath)
-	if not incarnBearPath == nil then
+	if incarnBearPath ~= nil then
 		SOUNDTRACK_DRUID_INCARNATION_BEAR = incarnBearPath
 	end
 
 	local incarnCatPath = SoundtrackLocalization.CreateSpellNamePath(102543, druidPath)
-	if not incarnCatPath == nil then
+	if incarnCatPath ~= nil then
 		SOUNDTRACK_DRUID_INCARNATION_CAT = incarnCatPath
 	end
 
 	local incarnMoonkinPath = SoundtrackLocalization.CreateSpellNamePath(102560, druidPath)
-	if not incarnMoonkinPath == nil then
+	if incarnMoonkinPath ~= nil then
 		SOUNDTRACK_DRUID_INCARNATION_MOONKIN = incarnMoonkinPath
 	end
 end
@@ -97,7 +97,7 @@ end
 function SoundtrackLocalization.RegisterHunterStrings(localizedClassName)
 	SOUNDTRACK_HUNTER = localizedClassName
 	local camoPath = SoundtrackLocalization.CreateSpellNamePath(90954, localizedClassName .. "/")
-	if not camoPath == nil then
+	if camoPath ~= nil then
 		SOUNDTRACK_HUNTER_CAMO = camoPath
 	end
 end
@@ -110,7 +110,7 @@ end
 function SoundtrackLocalization.RegisterEvokerStrings(localizedClassName)
 	SOUNDTRACK_EVOKER = localizedClassName
 	local soarPath = SoundtrackLocalization.CreateSpellNamePath(369536, localizedClassName .. "/")
-	if not soarPath == nil then
+	if soarPath ~= nil then
 		SOUNDTRACK_EVOKER_SOAR = soarPath
 	end
 end
@@ -130,13 +130,13 @@ function SoundtrackLocalization.RegisterRogueStrings(localizedClassName, localiz
 	SOUNDTRACK_ROGUE = localizedClassName
 	SOUNDTRACK_ROGUE_CHANGE = roguePath .. localizedChangeStanceText
 	local sprintPath = SoundtrackLocalization.CreateSpellNamePath(2983, roguePath)
-	if not sprintPath == nil then
+	if sprintPath ~= nil then
 		SOUNDTRACK_ROGUE_SPRINT = sprintPath
 	end
 
 	local stealthSpellId = 1784
 	local stealthPath = SoundtrackLocalization.CreateSpellNamePath(stealthSpellId, roguePath)
-	if not stealthPath == nil then
+	if stealthPath ~= nil then
 		SOUNDTRACK_ROGUE_STEALTH = stealthPath
 	end
 end
@@ -147,7 +147,7 @@ function SoundtrackLocalization.RegisterShamanStrings(localizedClassName, locali
 	SOUNDTRACK_SHAMAN_CHANGE = shamanPath .. localizedChangeStanceText
 
 	local ghostWolfPath = SoundtrackLocalization.CreateSpellNamePath(2645, shamanPath)
-	if not ghostWolfPath == nil then
+	if ghostWolfPath ~= nil then
 		SOUNDTRACK_SHAMAN_GHOST_WOLF = ghostWolfPath
 	end
 end
