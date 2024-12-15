@@ -7,7 +7,7 @@ StaticPopupDialogs["SOUNDTRACK_ADD_CUSTOM_POPUP"] = {
 	maxLetters = 100,
 	OnAccept = function(self)
 		local eventName = _G[self:GetName() .. "EditBox"]
-		SoundtrackFrame_AddCustomEvent(eventName:GetText(), self)
+		SoundtrackFrame_AddCustomEvent(eventName:GetText())
 	end,
 	OnShow = function(self)
 		_G[self:GetName() .. "EditBox"]:SetFocus()
@@ -16,7 +16,7 @@ StaticPopupDialogs["SOUNDTRACK_ADD_CUSTOM_POPUP"] = {
 	OnHide = function(_) end,
 	EditBoxOnEnterPressed = function(self)
 		local eventName = _G[self:GetName()]
-		SoundtrackFrame_AddCustomEvent(eventName:GetText(), self)
+		SoundtrackFrame_AddCustomEvent(eventName:GetText())
 		self:GetParent():Hide()
 	end,
 	EditBoxOnEscapePressed = function(self)
@@ -46,7 +46,7 @@ function SoundtrackFrameAddCustomEventButton_OnClick(_)
 	StaticPopup_Show("SOUNDTRACK_ADD_CUSTOM_POPUP")
 end
 
-function SoundtrackFrame_AddCustomEvent(eventName, self)
+function SoundtrackFrame_AddCustomEvent(eventName)
 	_G["SoundtrackFrameRightPanelTracks"]:Hide()
 	_G["SoundtrackFrameRightPanelEditEvent"]:Show()
 
@@ -72,7 +72,7 @@ function SoundtrackFrame_AddCustomEvent(eventName, self)
 		.. eventName
 		.. '") \n'
 
-	Soundtrack.CustomEvents.RegisterEventScript(self, eventName, "Custom", "UNIT_AURA", 4, true, script)
+	Soundtrack.CustomEvents.RegisterEventScript(eventName, "UNIT_AURA", 4, true, script)
 	SoundtrackFrame_SelectedEvent = eventName
 	SoundtrackFrame_RefreshEvents()
 	SoundtrackFrame_RefreshCustomEvent()

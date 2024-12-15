@@ -69,15 +69,7 @@ function Soundtrack.CustomEvents.RegisterUpdateScript(_, name, _priority, _conti
 	Soundtrack.AddEvent(ST_CUSTOM, name, _priority, _continuous, _soundEffect)
 end
 
-function Soundtrack.CustomEvents.RegisterEventScript(
-	self,
-	name,
-	_trigger,
-	_priority,
-	_continuous,
-	_script,
-	_soundEffect
-)
+function Soundtrack.CustomEvents.RegisterEventScript(name, _trigger, _priority, _continuous, _script, _soundEffect)
 	if not name then
 		return
 	end
@@ -91,7 +83,7 @@ function Soundtrack.CustomEvents.RegisterEventScript(
 		soundEffect = _soundEffect,
 	}
 
-	self:RegisterEvent(_trigger)
+	SoundtrackCustomDUMMY:RegisterEvent(_trigger)
 	Soundtrack.AddEvent(ST_CUSTOM, name, _priority, _continuous, _soundEffect)
 end
 
