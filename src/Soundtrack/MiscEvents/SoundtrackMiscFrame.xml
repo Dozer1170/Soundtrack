@@ -6,11 +6,12 @@
   <Script file="StealthEvents.lua"/>
   <Script file="NpcEvents.lua"/>
   <Script file="PlayerStatusEvents.lua"/>
+  <Script file="MountEvents.lua"/>
   <Script file="MiscEvents.lua"/>
   <Frame name="SoundtrackMiscDUMMY" parent="UIParent" hidden="false">
     <Scripts>
-      <OnUpdate>Soundtrack.MiscEvents.MiscOnUpdate(self, elapsed)</OnUpdate>
-      <OnEvent>Soundtrack.MiscEvents.MiscOnEvent(self, event, ...)</OnEvent>
+      <OnUpdate>Soundtrack.Misc.OnUpdate(self, elapsed)</OnUpdate>
+      <OnEvent>Soundtrack.Misc.OnEvent(self, event, ...)</OnEvent>
     </Scripts>
   </Frame>
 </Ui>

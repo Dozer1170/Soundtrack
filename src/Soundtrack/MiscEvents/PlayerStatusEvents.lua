@@ -37,9 +37,9 @@ local nonInnZones = {
 local function OnRestingEvent()
 	local currentZone = GetZoneText()
 	if IsResting() and not nonInnZones[currentZone] then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_RESTING)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_RESTING)
 	else
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_RESTING)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_RESTING)
 	end
 end
 
@@ -51,7 +51,7 @@ local function OnJump()
 		if currentTime >= jumpDelayTime then
 			jumpDelayTime = currentTime + jumpUpdateTime
 			if SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_JUMP) then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_JUMP)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_JUMP)
 			end
 		end
 	end
@@ -59,20 +59,20 @@ end
 
 local function OnSwimmingEvent()
 	if PlayerStatus.WasSwimming and not IsSwimming() then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_SWIMMING)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_SWIMMING)
 		PlayerStatus.WasSwimming = false
 	elseif not PlayerStatus.WasSwimming and IsSwimming() then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SWIMMING)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWIMMING)
 		PlayerStatus.WasSwimming = true
 	end
 end
 
 local function OnAuctionHouseEvent()
 	if PlayerStatus.WasInAuctionHouse and not PlayerStatus.AuctionHouse then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_AUCTION_HOUSE)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_AUCTION_HOUSE)
 		PlayerStatus.WasInAuctionHouse = false
 	elseif not PlayerStatus.WasInAuctionHouse and PlayerStatus.AuctionHouse then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_AUCTION_HOUSE)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_AUCTION_HOUSE)
 		PlayerStatus.WasInAuctionHouse = true
 	end
 end
@@ -80,68 +80,68 @@ end
 local function OnBankEvent()
 	-- Soundtrack.* does not deal with localization
 	if PlayerStatus.WasInBank and not PlayerStatus.IsInBank then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_BANK)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_BANK)
 		PlayerStatus.WasInBank = false
 	elseif not PlayerStatus.WasInBank and PlayerStatus.IsInBank then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_BANK)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_BANK)
 		PlayerStatus.WasInBank = true
 	end
 end
 
 local function OnMerchantEvent()
 	if PlayerStatus.WasAtMerchant and not PlayerStatus.IsAtMerchant then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_MERCHANT)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_MERCHANT)
 		PlayerStatus.WasAtMerchant = false
 	elseif not PlayerStatus.WasAtMerchant and PlayerStatus.IsAtMerchant then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_MERCHANT)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_MERCHANT)
 		PlayerStatus.WasAtMerchant = true
 	end
 end
 
 local function OnFlightMasterEvent()
 	if PlayerStatus.WasOnFlightPath and not PlayerStatus.IsOnFlightPath then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_FLIGHTMASTER)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_FLIGHTMASTER)
 		PlayerStatus.WasOnFlightPath = false
 	elseif not PlayerStatus.WasOnFlightPath and PlayerStatus.IsOnFlightPath then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_FLIGHTMASTER)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_FLIGHTMASTER)
 		PlayerStatus.WasOnFlightPath = true
 	end
 end
 
 local function OnTrainerEvent()
 	if PlayerStatus.WasAtTrainer and not PlayerStatus.IsAtTrainer then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_TRAINER)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_TRAINER)
 		PlayerStatus.WasAtTrainer = false
 	elseif not PlayerStatus.WasAtTrainer and PlayerStatus.IsAtTrainer then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_TRAINER)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_TRAINER)
 		PlayerStatus.WasAtTrainer = true
 	end
 end
 
 local function OnBarbershopEvent()
 	if PlayerStatus.WasAtBarbershop and not PlayerStatus.IsAtBarbershop then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_BARBERSHOP)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_BARBERSHOP)
 		PlayerStatus.WasAtBarbershop = false
 	elseif not PlayerStatus.WasAtBarbershop and PlayerStatus.IsAtBarbershop then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_BARBERSHOP)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_BARBERSHOP)
 		PlayerStatus.WasAtBarbershop = true
 	end
 end
 
 local function OnCinematicEvent()
 	if PlayerStatus.WasInCinematic and not PlayerStatus.Cinematic then
-		Soundtrack.MiscEvents.StopEvent(SOUNDTRACK_CINEMATIC)
+		Soundtrack.Misc.StopEvent(SOUNDTRACK_CINEMATIC)
 		PlayerStatus.WasInCinematic = false
 	elseif not PlayerStatus.WasInCinematic and PlayerStatus.Cinematic then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_CINEMATIC)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_CINEMATIC)
 		PlayerStatus.WasInCinematic = true
 	end
 end
 
 local function OnJoinPartyEvent()
 	if not PlayerStatus.WasInParty and GetNumSubgroupMembers() == 0 and GetNumSubgroupMembers() > 0 then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_JOIN_PARTY)
-		Soundtrack.MiscEvents.WasInParty = true
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_JOIN_PARTY)
+		Soundtrack.Misc.WasInParty = true
 	elseif PlayerStatus.WasInParty and GetNumSubgroupMembers() == 0 then
 		PlayerStatus.WasInParty = false
 	end
@@ -149,7 +149,7 @@ end
 
 local function OnJoinRaidEvent()
 	if not PlayerStatus.WasInRaid and GetNumSubgroupMembers() > 0 then
-		Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_JOIN_RAID)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_JOIN_RAID)
 		PlayerStatus.WasInRaid = true
 	elseif PlayerStatus.WasInRaid and not GetNumSubgroupMembers() == 0 then
 		PlayerStatus.WasInRaid = false
@@ -170,7 +170,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 	SoundtrackMiscDUMMY:RegisterEvent("TRAINER_SHOW")
 	SoundtrackMiscDUMMY:RegisterEvent("TRAINER_CLOSED")
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Swimming
+	Soundtrack.Misc.RegisterUpdateScript( -- Swimming
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_SWIMMING,
 		ST_STATUS_LVL,
@@ -179,7 +179,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Auction House
+	Soundtrack.Misc.RegisterUpdateScript( -- Auction House
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_AUCTION_HOUSE,
 		ST_NPC_LVL,
@@ -188,7 +188,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Bank
+	Soundtrack.Misc.RegisterUpdateScript( -- Bank
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_BANK,
 		ST_NPC_LVL,
@@ -197,7 +197,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Merchant
+	Soundtrack.Misc.RegisterUpdateScript( -- Merchant
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_MERCHANT,
 		ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
@@ -206,7 +206,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- FlightMaster
+	Soundtrack.Misc.RegisterUpdateScript( -- FlightMaster
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_FLIGHTMASTER,
 		ST_NPC_LVL,
@@ -215,7 +215,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Trainer
+	Soundtrack.Misc.RegisterUpdateScript( -- Trainer
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_TRAINER,
 		ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
@@ -224,7 +224,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Barbershop
+	Soundtrack.Misc.RegisterUpdateScript( -- Barbershop
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_BARBERSHOP,
 		ST_NPC_LVL,
@@ -233,7 +233,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterUpdateScript( -- Cinematic
+	Soundtrack.Misc.RegisterUpdateScript( -- Cinematic
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_CINEMATIC,
 		ST_NPC_LVL,
@@ -242,19 +242,19 @@ function Soundtrack.PlayerStatusEvents.Register()
 		false
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Level Up
+	Soundtrack.Misc.RegisterEventScript( -- Level Up
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_LEVEL_UP,
 		"PLAYER_LEVEL_UP",
 		ST_SFX_LVL,
 		false,
 		function()
-			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_LEVEL_UP)
+			Soundtrack.Misc.PlayEvent(SOUNDTRACK_LEVEL_UP)
 		end,
 		true
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Join Party
+	Soundtrack.Misc.RegisterEventScript( -- Join Party
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_JOIN_PARTY,
 		"GROUP_ROSTER_UPDATE",
@@ -264,7 +264,7 @@ function Soundtrack.PlayerStatusEvents.Register()
 		true
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Join Raid
+	Soundtrack.Misc.RegisterEventScript( -- Join Raid
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_JOIN_RAID,
 		"GROUP_ROSTER_UPDATE",
@@ -274,32 +274,32 @@ function Soundtrack.PlayerStatusEvents.Register()
 		true
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Duel Requested
+	Soundtrack.Misc.RegisterEventScript( -- Duel Requested
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_DUEL_REQUESTED,
 		"DUEL_REQUESTED",
 		ST_SFX_LVL,
 		false,
 		function()
-			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DUEL_REQUESTED)
+			Soundtrack.Misc.PlayEvent(SOUNDTRACK_DUEL_REQUESTED)
 		end,
 		true
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Quest Complete
+	Soundtrack.Misc.RegisterEventScript( -- Quest Complete
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_QUEST_COMPLETE,
 		"QUEST_COMPLETE",
 		ST_SFX_LVL,
 		false,
 		function()
-			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_QUEST_COMPLETE)
+			Soundtrack.Misc.PlayEvent(SOUNDTRACK_QUEST_COMPLETE)
 		end,
 		true
 	)
 
 	-- Thanks to appakanna for the code
-	Soundtrack.MiscEvents.RegisterEventScript( -- Resting
+	Soundtrack.Misc.RegisterEventScript( -- Resting
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_RESTING,
 		"PLAYER_UPDATE_RESTING",
@@ -310,33 +310,33 @@ function Soundtrack.PlayerStatusEvents.Register()
 	)
 
 	-- Thanks to sgtrama!
-	Soundtrack.MiscEvents.RegisterEventScript( -- LFG Complete
+	Soundtrack.Misc.RegisterEventScript( -- LFG Complete
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_LFG_COMPLETE,
 		"LFG_COMPLETION_REWARD",
 		ST_SFX_LVL,
 		false,
 		function()
-			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_LFG_COMPLETE)
+			Soundtrack.Misc.PlayEvent(SOUNDTRACK_LFG_COMPLETE)
 		end,
 		true
 	)
 
-	Soundtrack.MiscEvents.RegisterEventScript( -- Achievement
+	Soundtrack.Misc.RegisterEventScript( -- Achievement
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_ACHIEVEMENT,
 		"ACHIEVEMENT_EARNED",
 		ST_SFX_LVL,
 		false,
 		function()
-			Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_ACHIEVEMENT)
+			Soundtrack.Misc.PlayEvent(SOUNDTRACK_ACHIEVEMENT)
 		end,
 		true
 	)
 
 	hooksecurefunc("JumpOrAscendStart", OnJump)
 
-	Soundtrack.MiscEvents.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, 369968, ST_BUFF_LVL, true, false)
+	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, 369968, ST_BUFF_LVL, true, false)
 end
 
 function Soundtrack.PlayerStatusEvents.OnEvent(event)

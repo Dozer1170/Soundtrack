@@ -9,9 +9,9 @@ local function debug(msg)
 	Soundtrack.TraceCustom(msg)
 end
 
-Soundtrack.MiscEvents = {}
+Soundtrack.Misc = {}
 
-function Soundtrack.MiscEvents.RegisterUpdateScript(_, name, _priority, _continuous, _script, _soundEffect)
+function Soundtrack.Misc.RegisterUpdateScript(_, name, _priority, _continuous, _script, _soundEffect)
 	if not name then
 		return
 	end
@@ -27,7 +27,7 @@ function Soundtrack.MiscEvents.RegisterUpdateScript(_, name, _priority, _continu
 	Soundtrack.AddEvent(ST_MISC, name, _priority, _continuous, _soundEffect)
 end
 
-function Soundtrack.MiscEvents.RegisterEventScript(self, name, _trigger, _priority, _continuous, _script, _soundEffect)
+function Soundtrack.Misc.RegisterEventScript(self, name, _trigger, _priority, _continuous, _script, _soundEffect)
 	if not name then
 		return
 	end
@@ -45,7 +45,7 @@ function Soundtrack.MiscEvents.RegisterEventScript(self, name, _trigger, _priori
 	Soundtrack.AddEvent(ST_MISC, name, _priority, _continuous, _soundEffect)
 end
 
-function Soundtrack.MiscEvents.RegisterBuffEvent(eventName, _spellId, _priority, _continuous, _soundEffect)
+function Soundtrack.Misc.RegisterBuffEvent(eventName, _spellId, _priority, _continuous, _soundEffect)
 	if not eventName then
 		return
 	end
@@ -63,7 +63,7 @@ function Soundtrack.MiscEvents.RegisterBuffEvent(eventName, _spellId, _priority,
 	Soundtrack.AddEvent(ST_MISC, eventName, _priority, _continuous, _soundEffect)
 end
 
-function Soundtrack.MiscEvents.PlayEvent(eventName)
+function Soundtrack.Misc.PlayEvent(eventName)
 	local eventTable = Soundtrack.Events.GetTable(ST_MISC)
 	if not eventTable then
 		return
@@ -75,7 +75,7 @@ function Soundtrack.MiscEvents.PlayEvent(eventName)
 	end
 end
 
-function Soundtrack.MiscEvents.StopEvent(eventName)
+function Soundtrack.Misc.StopEvent(eventName)
 	local eventTable = Soundtrack.Events.GetTable(ST_MISC)
 	if not eventTable then
 		return
@@ -87,13 +87,13 @@ function Soundtrack.MiscEvents.StopEvent(eventName)
 	end
 end
 
-function Soundtrack.MiscEvents.MiscInitialize()
+function Soundtrack.Misc.Initialize()
 	debug("Initializing misc. events...")
 
-	Soundtrack.MiscEvents.RegisterBuffEvent(SOUNDTRACK_COMBAT_EVENTS, 0, 1, false, false)
-	Soundtrack.MiscEvents.RegisterBuffEvent(SOUNDTRACK_GROUP_EVENTS, 0, 1, false, false)
-	Soundtrack.MiscEvents.RegisterBuffEvent(SOUNDTRACK_NPC_EVENTS, 0, 1, false, false)
-	Soundtrack.MiscEvents.RegisterBuffEvent(SOUNDTRACK_STATUS_EVENTS, 0, 1, false, false)
+	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_COMBAT_EVENTS, 0, 1, false, false)
+	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_GROUP_EVENTS, 0, 1, false, false)
+	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_NPC_EVENTS, 0, 1, false, false)
+	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_STATUS_EVENTS, 0, 1, false, false)
 
 	Soundtrack.LootEvents.Register()
 	Soundtrack.ClassEvents.Register()
@@ -104,7 +104,7 @@ function Soundtrack.MiscEvents.MiscInitialize()
 	Soundtrack_SortEvents(ST_MISC)
 end
 
-function Soundtrack.MiscEvents.MiscOnUpdate(_, _)
+function Soundtrack.Misc.OnUpdate(_, _)
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
 			if v.eventtype == ST_UPDATE_SCRIPT and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
@@ -113,11 +113,12 @@ function Soundtrack.MiscEvents.MiscOnUpdate(_, _)
 		end
 
 		Soundtrack.LootEvents.OnUpdate()
+		Soundtrack.MountEvents.OnUpdate()
 	end
 end
 
 -- MiscEvents
-function Soundtrack.MiscEvents.MiscOnEvent(_, event, ...)
+function Soundtrack.Misc.OnEvent(_, event, ...)
 	local st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
 
 	Soundtrack.PlayerStatusEvents.OnEvent(event)
@@ -125,17 +126,17 @@ function Soundtrack.MiscEvents.MiscOnEvent(_, event, ...)
 end
 
 -- TODO: Make sure shapeshift events works this way
-function Soundtrack.MiscEvents.OnPlayerAurasUpdated()
+function Soundtrack.Misc.OnPlayerAurasUpdated()
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
 			if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
 				local isActive = Soundtrack.Auras.IsAuraActive(v.spellId)
 				if not v.active and isActive then
 					v.active = true
-					Soundtrack.MiscEvents.PlayEvent(k)
+					Soundtrack.Misc.PlayEvent(k)
 				elseif v.active and not isActive then
 					v.active = false
-					Soundtrack.MiscEvents.StopEvent(k)
+					Soundtrack.Misc.StopEvent(k)
 				end
 			end
 		end

@@ -18,7 +18,7 @@ function Soundtrack.Auras.OnEvent(_, event, ...)
 	Soundtrack.Auras.UpdateActiveAuras()
 
 	if event == "UNIT_AURA" and st_arg1 == "player" then
-		Soundtrack.MiscEvents.OnPlayerAurasUpdated()
+		Soundtrack.Misc.OnPlayerAurasUpdated()
 		Soundtrack.CustomEvents.OnPlayerAurasUpdated()
 	end
 end

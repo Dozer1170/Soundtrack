@@ -45,7 +45,7 @@ local function Soundtrack_MountEvents_StopIfTracksAvailable(tableName, eventName
 	end
 end
 
-function Soundtrack.MountEvents.OnUpdate(_, _)
+function Soundtrack.MountEvents.OnUpdate()
 	local currentTime = GetTime()
 	if currentTime >= nextUpdateTime then
 		nextUpdateTime = currentTime + updateInterval

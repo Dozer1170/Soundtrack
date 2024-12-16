@@ -596,7 +596,7 @@ function Soundtrack.BattleEvents.Initialize()
 		false,
 		function()
 			if arg2 == "SWING_DAMAGE" and arg5 == UnitName("player") and arg18 == 1 then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SWING_CRIT)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_CRIT)
 			end
 		end,
 		true
@@ -611,9 +611,9 @@ function Soundtrack.BattleEvents.Initialize()
 		function()
 			if arg2 == "SWING_DAMAGE" and arg5 == UnitName("player") then
 				if arg18 == nil then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SWING_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_HIT)
 				elseif arg18 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_SWING_CRIT) == false then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SWING_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_HIT)
 				end
 			end
 		end,
@@ -629,7 +629,7 @@ function Soundtrack.BattleEvents.Initialize()
 		false,
 		function()
 			if arg2 == "SPELL_DAMAGE" and arg5 == UnitName("player") and arg21 == 1 then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SPELL_CRIT)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_CRIT)
 			end
 		end,
 		true
@@ -645,9 +645,9 @@ function Soundtrack.BattleEvents.Initialize()
 		function()
 			if arg2 == "SPELL_DAMAGE" and arg5 == UnitName("player") then
 				if arg21 == nil then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SPELL_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_HIT)
 				elseif arg21 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_SPELL_CRIT) == false then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_SPELL_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_HIT)
 				end
 			end
 		end,
@@ -663,7 +663,7 @@ function Soundtrack.BattleEvents.Initialize()
 		false,
 		function()
 			if arg2 == "SPELL_PERIODIC_DAMAGE" and arg5 == UnitName("player") and arg21 == 1 then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DOT_CRIT)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_CRIT)
 			end
 		end,
 		true
@@ -679,9 +679,9 @@ function Soundtrack.BattleEvents.Initialize()
 		function()
 			if arg2 == "SPELL_PERIODIC_DAMAGE" and arg5 == UnitName("player") then
 				if arg21 == nil then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DOT_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_HIT)
 				elseif arg21 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_DOT_CRIT) == false then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_DOT_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_HIT)
 				end
 			end
 		end,
@@ -697,7 +697,7 @@ function Soundtrack.BattleEvents.Initialize()
 		false,
 		function()
 			if arg2 == "SPELL_HEAL" and arg5 == UnitName("player") and arg18 == 1 then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_HEAL_CRIT)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_CRIT)
 			end
 		end,
 		true
@@ -713,9 +713,9 @@ function Soundtrack.BattleEvents.Initialize()
 		function()
 			if arg2 == "SPELL_HEAL" and arg5 == UnitName("player") then
 				if arg18 == nil then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_HEAL_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_HIT)
 				elseif arg18 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_HEAL_CRIT) == false then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_HEAL_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_HIT)
 				end
 			end
 		end,
@@ -731,7 +731,7 @@ function Soundtrack.BattleEvents.Initialize()
 		false,
 		function()
 			if arg2 == "SPELL_PERIODIC_HEAL" and arg5 == UnitName("player") and arg18 == 1 then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_HOT_CRIT)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_CRIT)
 			end
 		end,
 		true
@@ -747,9 +747,9 @@ function Soundtrack.BattleEvents.Initialize()
 		function()
 			if arg2 == "SPELL_PERIODIC_HEAL" and arg5 == UnitName("player") then
 				if arg18 == nil then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_HOT_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_HIT)
 				elseif arg18 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_HOT_CRIT) == false then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_HOT_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_HIT)
 				end
 			end
 		end,
@@ -765,7 +765,7 @@ function Soundtrack.BattleEvents.Initialize()
 		false,
 		function()
 			if arg2 == "RANGE_DAMAGE" and arg5 == UnitName("player") and arg21 == 1 then
-				Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_RANGE_CRIT)
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_CRIT)
 			end
 		end,
 		true
@@ -781,9 +781,9 @@ function Soundtrack.BattleEvents.Initialize()
 		function()
 			if arg2 == "RANGE_DAMAGE" and arg5 == UnitName("player") then
 				if arg21 == nil then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_RANGE_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_HIT)
 				elseif arg21 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_RANGE_CRIT) == false then
-					Soundtrack.MiscEvents.PlayEvent(SOUNDTRACK_RANGE_HIT)
+					Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_HIT)
 				end
 			end
 		end,
