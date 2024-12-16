@@ -31,25 +31,10 @@ StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"] = {
 	button2 = CANCEL,
 	OnAccept = function()
 		SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true
-		LoadTracks()
+		Soundtrack.LoadTracks()
 	end,
 	OnCancel = function()
 		SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = false
-	end,
-	timeout = 0,
-	whileDead = 1,
-}
-
-StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_PURGE_EVENTS_QUESTION,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function()
-		PurgeEventsConfirmed()
-	end,
-	OnCancel = function()
-		StaticPopup_Show("SOUNDTRACK_NO_PURGE_POPUP")
 	end,
 	timeout = 0,
 	whileDead = 1,
@@ -120,7 +105,7 @@ end
 function SoundtrackAddon:VARIABLES_LOADED()
 	SoundtrackMinimap_Initialize()
 	Soundtrack.MigrateFromOldSavedVariables()
-	LoadTracks()
+	Soundtrack.LoadTracks()
 	Soundtrack.DanceEvents.Initialize()
 	Soundtrack.PetBattlesEvents.Initialize()
 	Soundtrack.MountEvents.Initialize()
@@ -134,8 +119,38 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	Soundtrack.Cleanup.CleanupOldEvents()
 end
 
--- TODO: Make as much of this local as possible
-function LoadTracks()
+local function Soundtrack_SetFrameLocks()
+	-- If option true, then disable mouse.
+	local enableMouse = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame
+	NowPlayingTextFrame:EnableMouse(enableMouse)
+
+	enableMouse = not SoundtrackAddon.db.profile.settings.LockPlaybackControls
+	SoundtrackControlFrame:EnableMouse(enableMouse)
+end
+
+local function SetUserEventsToCorrectLevel()
+	local tableName = Soundtrack.Events.GetTable("Boss")
+	if not tableName then
+		return
+	end
+
+	for j, v in pairs(tableName) do
+		v.priority = ST_BOSS_LVL
+		Soundtrack.Trace(j .. " set to " .. ST_BOSS_LVL)
+	end
+
+	tableName = Soundtrack.Events.GetTable("Playlists")
+	if not tableName then
+		return
+	end
+
+	for j, v in pairs(tableName) do
+		v.priority = ST_PLAYLIST_LVL
+		Soundtrack.Trace(j .. " set to " .. ST_PLAYLIST_LVL)
+	end
+end
+
+function Soundtrack.LoadTracks()
 	Soundtrack.Util.InitDebugChatFrame()
 	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Util.InitDebugChatFrame)
 	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 2, Soundtrack.Util.InitDebugChatFrame)
@@ -170,8 +185,7 @@ function LoadTracks()
 	_SuspendSorting = false
 
 	-- Remove obsolete predefined events
-	--PurgeEvents()
-	Soundtrack.Timers.AddTimer("PurgeEvents", 10, PurgeEvents)
+	Soundtrack.Timers.AddTimer("PurgeEvents", 10, Soundtrack.Cleanup.PurgeOldTracksFromEvents)
 
 	-- sort all the tables
 	Soundtrack.SortAllEvents()
@@ -183,90 +197,6 @@ function LoadTracks()
 	DEFAULT_CHAT_FRAME:AddMessage("Soundtrack: Loaded with " .. numTracks .. " track(s) in library.", 0.0, 1.0, 0.25)
 
 	SoundtrackFrame_RefreshPlaybackControls()
-end
-
-function Soundtrack.IsNullOrEmpty(text)
-	return not text or text == ""
-end
-
--- Removes obsolete tracks from events.
-function PurgeEventsFromTable(eventTableName)
-	local eventTable = Soundtrack.Events.GetTable(eventTableName)
-	if not eventTable then
-		return
-	end
-
-	for k, v in pairs(eventTable) do
-		local tracksToRemove = {}
-
-		-- Find tracks to remove
-		for _, trackName in ipairs(v.tracks) do
-			if not Soundtrack_Tracks[trackName] then
-				Soundtrack.Message("Removed obsolete track " .. trackName)
-				table.insert(tracksToRemove, trackName)
-			end
-		end
-
-		-- Remove tracks
-		for _, trackToRemove in ipairs(tracksToRemove) do
-			Soundtrack.Events.Remove(eventTableName, k, trackToRemove)
-		end
-	end
-end
-
-function CheckForPurgeEvents(eventTableName)
-	local eventTable = Soundtrack.Events.GetTable(eventTableName)
-	if not eventTable then
-		return
-	end
-
-	for _, v in pairs(eventTable) do
-		-- Find tracks to remove
-		for _, trackName in ipairs(v.tracks) do
-			if not Soundtrack_Tracks[trackName] then
-				-- Track found to remove
-				return true
-			end
-		end
-	end
-
-	return false
-end
-
--- Removes obsolete tracks from event assignments
--- DONE If user forgot MyTracks.lua, this could wipe all assignments. Confirmation box?
-function PurgeEvents()
-	local eventsToPurge = false
-	for _, event in ipairs(Soundtrack_EventTabs) do
-		if CheckForPurgeEvents(event) then
-			eventsToPurge = true
-		end
-	end
-	if eventsToPurge then
-		StaticPopup_Show("SOUNDTRACK_PURGE_POPUP")
-	end
-end
-
-function PurgeEventsConfirmed()
-	for _, event in ipairs(Soundtrack_EventTabs) do
-		PurgeEventsFromTable(event)
-	end
-end
-
-function GetPathFileNameRecursive(filePath)
-	local index1 = string.find(filePath, "/")
-	if not index1 then
-		return filePath
-	else
-		return Soundtrack.GetPathFileName(string.sub(filePath, index1 + 1))
-	end
-end
-
--- Strips a path string from the path and returns the file name at the end.
--- Used to strip parent events or parent folders from event and track names.
-function Soundtrack.GetPathFileName(filePath)
-	local temp = string.gsub(filePath, "\\", "/")
-	return GetPathFileNameRecursive(temp)
 end
 
 function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soundEffect)
@@ -401,37 +331,6 @@ function Soundtrack.AssignTrack(eventName, trackName)
 	table.insert(eventTable[eventName].tracks, trackName)
 end
 
-function Soundtrack_SetFrameLocks()
-	-- If option true, then disable mouse.
-	local enableMouse = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame
-	NowPlayingTextFrame:EnableMouse(enableMouse)
-
-	enableMouse = not SoundtrackAddon.db.profile.settings.LockPlaybackControls
-	SoundtrackControlFrame:EnableMouse(enableMouse)
-end
-
-function SetUserEventsToCorrectLevel()
-	local tableName = Soundtrack.Events.GetTable("Boss")
-	if not tableName then
-		return
-	end
-
-	for j, v in pairs(tableName) do
-		v.priority = ST_BOSS_LVL
-		Soundtrack.Trace(j .. " set to " .. ST_BOSS_LVL)
-	end
-
-	tableName = Soundtrack.Events.GetTable("Playlists")
-	if not tableName then
-		return
-	end
-
-	for j, v in pairs(tableName) do
-		v.priority = ST_PLAYLIST_LVL
-		Soundtrack.Trace(j .. " set to " .. ST_PLAYLIST_LVL)
-	end
-end
-
 function Soundtrack.SortAllEvents()
 	for _, eventTabName in ipairs(Soundtrack_EventTabs) do
 		Soundtrack_SortEvents(eventTabName)
@@ -564,80 +463,6 @@ function Soundtrack.StopEvent(tableName, eventName)
 	end
 end
 
-function Soundtrack.ShowTip(self, tipTitle, tipText, tipTextAuthor, tipTextAlbum)
-	if Soundtrack_Tooltip == nil then
-		Soundtrack_Tooltip = CreateFrame("GameTooltip", "SoundtrackTooltip", UIParent, "GameTooltipTemplate")
-	end
-	Soundtrack_Tooltip:SetOwner(self or UIParent, "ANCHOR_TOPRIGHT")
-	Soundtrack_Tooltip:ClearLines()
-	Soundtrack_Tooltip:AddLine(tipTitle, 1, 1, 1, true)
-
-	if tipText ~= nil then
-		Soundtrack_Tooltip:AddLine(tipText, nil, nil, nil, true)
-	end
-	if tipTextAuthor ~= nil then
-		Soundtrack_Tooltip:AddLine(tipTextAuthor, 1, 0.9, 0, true)
-	end
-	if tipTextAlbum ~= nil then
-		Soundtrack_Tooltip:AddLine(tipTextAlbum, 1, 0.5, 0, true)
-	end
-	Soundtrack_Tooltip:Show()
-end
-
-function Soundtrack.HideTip()
-	if Soundtrack_Tooltip == nil then
-		Soundtrack_Tooltip = CreateFrame("GameTooltip", "SoundtrackTooltip", UIParent, "GameTooltipTemplate")
-	end
-	Soundtrack_Tooltip:Hide()
-end
-
-function StringSplit(text, delimiter)
-	local list = {}
-	local pos = 1
-	if strfind("", delimiter, 1) then
-		error("delimiter matches empty string!")
-	end
-
-	while 1 do
-		local first, last = strfind(text, delimiter, pos)
-		if first then -- found?
-			tinsert(list, strsub(text, pos, first - 1))
-			pos = last + 1
-		else
-			tinsert(list, strsub(text, pos))
-			break
-		end
-	end
-	return list
-end
-
-function StringSplit(str, delim, maxNb)
-	-- Eliminate bad cases...
-	if string.find(str, delim) == nil then
-		return { str }
-	end
-	if maxNb == nil or maxNb < 1 then
-		maxNb = 0 -- No limit
-	end
-	local result = {}
-	local pat = "(.-)" .. delim .. "()"
-	local nb = 0
-	local lastPos
-	for part, pos in string.gmatch(str, pat) do
-		nb = nb + 1
-		result[nb] = part
-		lastPos = pos
-		if nb == maxNb then
-			break
-		end
-	end
-	-- Handle the last field
-	if nb ~= maxNb then
-		result[nb + 1] = string.sub(str, lastPos)
-	end
-	return result
-end
-
 -- Returns a child node if the name matches
 function GetChildNode(rootNode, childNodeName)
 	if not rootNode then
@@ -754,135 +579,6 @@ function Soundtrack_SortEvents(eventTableName)
 	SoundtrackFrame_RefreshEvents()
 end
 
--- Chat print functions
-function Soundtrack.Message(text)
-	Soundtrack.Util.ChatPrint("Soundtrack: " .. text)
-end
-
-function Soundtrack.Error(text)
-	Soundtrack.Util.ChatPrint("Soundtrack: Error: " .. text, 1, 0.25, 0.0)
-end
-
--- Debug functions
-function Soundtrack.Warning(text)
-	Soundtrack.Util.DebugPrint("Soundtrack: Warning: " .. text, 0.75, 0.75, 0.0)
-end
-
-function Soundtrack.Trace(text)
-	Soundtrack.Util.DebugPrint("[Trace]: " .. text, 0.75, 0.75, 0.75)
-end
-
-function Soundtrack.TraceLibrary(text)
-	Soundtrack.Util.DebugPrint("[Library]: " .. text, 0.25, 0.25, 1.0)
-end
-
-function Soundtrack.TraceBattle(text)
-	Soundtrack.Util.DebugPrint("[Battle]: " .. text, 1.0, 0.0, 0.0)
-end
-
-function Soundtrack.TracePetBattles(text)
-	Soundtrack.Util.DebugPrint("[Pet Battles]: " .. text, 0.5, 1.0, 0.0)
-end
-
-function Soundtrack.TraceZones(text)
-	Soundtrack.Util.DebugPrint("[Zones]: " .. text, 0.0, 0.50, 0.0)
-end
-
-function Soundtrack.TraceFrame(text)
-	Soundtrack.Util.DebugPrint("[Frame]: " .. text, 0.75, 0.75, 0.0)
-end
-
-function Soundtrack.TraceEvents(text)
-	Soundtrack.Util.DebugPrint("[Events]: " .. text, 0.0, 1.0, 1.0)
-end
-
-function Soundtrack.TraceCustom(text)
-	Soundtrack.Util.DebugPrint("[Custom]: " .. text, 1.0, 0.0, 0.5)
-end
-
-function Soundtrack.TraceProfiles(text)
-	Soundtrack.Util.DebugPrint("[Profiles]: " .. text, 0.75, 1.0, 0.25)
-end
-
--- Sort functions
-function CompareTracksByAlbum(i1, i2)
-	return Soundtrack_Tracks[i1].album < Soundtrack_Tracks[i2].album
-end
-
-function CompareTracksByArtist(i1, i2)
-	return Soundtrack_Tracks[i1].artist < Soundtrack_Tracks[i2].artist
-end
-
-function CompareTracksByTitle(i1, i2)
-	return Soundtrack_Tracks[i1].title < Soundtrack_Tracks[i2].title
-end
-
-function CompareTracksByFileName(i1, i2)
-	return Soundtrack.GetPathFileName(i1) < Soundtrack.GetPathFileName(i2)
-end
-
-function MatchTrack(trackName, track, filter)
-	local lowerFilter = string.lower(filter)
-	local index = string.find(string.lower(trackName), lowerFilter)
-	if index then
-		return true
-	end
-	index = string.find(string.lower(track.artist), lowerFilter)
-	if index then
-		return true
-	end
-	index = string.find(string.lower(track.album), lowerFilter)
-	if index then
-		return true
-	end
-	index = string.find(string.lower(track.title), lowerFilter)
-	if index then
-		return true
-	end
-
-	return nil
-end
-
--- Sorts the list of tracks using the passed criteria, or uses
--- the last used sorting criteria
-function Soundtrack.SortTracks(sortCriteria)
-	if sortCriteria then
-		Soundtrack.lastSortCriteria = sortCriteria
-	else
-		if Soundtrack.lastSortCriteria == nil then
-			Soundtrack.lastSortCriteria = "filePath"
-			sortCriteria = "filePath"
-		else
-			sortCriteria = Soundtrack.lastSortCriteria
-		end
-	end
-
-	Soundtrack_SortedTracks = {}
-	for k, v in pairs(Soundtrack_Tracks) do
-		if not v.defaultTrack or SoundtrackAddon.db.profile.settings.ShowDefaultMusic then
-			if not Soundtrack.trackFilter then
-				table.insert(Soundtrack_SortedTracks, k)
-			elseif MatchTrack(k, v, Soundtrack.trackFilter) then
-				table.insert(Soundtrack_SortedTracks, k)
-			end
-		end
-	end
-
-	if sortCriteria == "album" then
-		table.sort(Soundtrack_SortedTracks, CompareTracksByAlbum)
-	elseif sortCriteria == "artist" then
-		table.sort(Soundtrack_SortedTracks, CompareTracksByArtist)
-	elseif sortCriteria == "filePath" then
-		table.sort(Soundtrack_SortedTracks)
-	elseif sortCriteria == "fileName" then
-		table.sort(Soundtrack_SortedTracks, CompareTracksByFileName)
-	elseif sortCriteria == "title" then
-		table.sort(Soundtrack_SortedTracks, CompareTracksByTitle)
-	end
-
-	SoundtrackFrame_RefreshTracks()
-end
-
 function Soundtrack_OnUpdate(_, deltaT)
 	local currentTime = GetTime()
 
@@ -920,12 +616,5 @@ function Soundtrack_OnLoad(self)
 end
 
 function Soundtrack_OnEvent(self, event, _)
-	-- 5.4.1 IsDisabledByParentalControls() Taint fix
-	UIParent:HookScript("OnEvent", function(s, e, a1, a2)
-		if e:find("ACTION_FORBIDDEN") and ((a1 or "") .. (a2 or "")):find("IsDisabledByParentalControls") then
-			StaticPopup_Hide(e)
-		end
-	end)
-
 	Soundtrack.Events.OnEvent(self, event)
 end

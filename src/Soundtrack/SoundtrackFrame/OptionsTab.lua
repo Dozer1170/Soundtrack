@@ -80,7 +80,7 @@ end
 function OptionsTab_ToggleShowDefaultMusic()
 	SoundtrackAddon.db.profile.settings.ShowDefaultMusic = not SoundtrackAddon.db.profile.settings.ShowDefaultMusic
 	_TracksLoaded = false
-	LoadTracks()
+	Soundtrack.LoadTracks()
 end
 
 -- Playback button locations
