@@ -1,0 +1,3 @@
+[submodule "src/BlizzardInterfaceCode"]
+	path = src/BlizzardInterfaceCode
+	url = git@github.com:tomrus88/BlizzardInterfaceCode.git

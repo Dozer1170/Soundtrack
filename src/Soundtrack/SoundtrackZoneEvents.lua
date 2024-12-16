@@ -28,7 +28,9 @@ local function FindContinentByZone()
 	end
 
 	-- Get continent
-	local c = MapUtil.GetMapParentInfo(C_Map.GetBestMapForUnit("player"), Enum.UIMapType.Continent, true)
+	local mapId = C_Map.GetBestMapForUnit("player")
+	print("Mapid: " .. mapId)
+	local c = MapUtil.GetMapParentInfo(mapId, Enum.UIMapType.Continent, true)
 	local continent
 	if c ~= nil then
 		continent = c.name
@@ -36,7 +38,7 @@ local function FindContinentByZone()
 
 	-- Get zone
 	-- Test that map has a zone map (i.e. Legion Dalaran is labeled dungeon, no zone map)
-	local z = MapUtil.GetMapParentInfo(C_Map.GetBestMapForUnit("player"), 3)
+	local z = MapUtil.GetMapParentInfo(mapId, 3)
 	local zone = GetRealZoneText()
 	if z ~= nil then
 		zone = z.name
