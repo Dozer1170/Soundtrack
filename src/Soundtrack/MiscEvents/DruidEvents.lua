@@ -48,7 +48,7 @@ function Soundtrack.DruidEvents.Register()
 		"UPDATE_SHAPESHIFT_FORM",
 		ST_SFX_LVL,
 		false,
-		OnChangeShapeshiftEvent,
+		Soundtrack.ClassEvents.OnChangeShapeshiftEvent,
 		true
 	)
 

@@ -1,7 +1,7 @@
 Soundtrack.ClassEvents = {}
 Soundtrack.ClassEvents.CurrentStance = 0
 
-local function OnChangeShapeshiftEvent()
+function Soundtrack.ClassEvents.OnChangeShapeshiftEvent()
 	local class = UnitClass("player")
 	local stance = GetShapeshiftForm()
 	if class == "Death Knight" and stance ~= 0 and stance ~= Soundtrack.ClassEvents.CurrentStance then
