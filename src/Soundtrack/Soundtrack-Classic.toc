@@ -30,4 +30,3 @@ Core/SoundtrackZoneFrame.xml
 Core/UI/Minimap.lua
 Core/UI/NowPlayingFrame.xml
 Core/UI/ControlFrame.xml
-Core/SoundtrackReportFrame.xml
