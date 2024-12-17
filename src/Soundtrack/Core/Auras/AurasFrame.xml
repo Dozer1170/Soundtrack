@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="SoundtrackAuras.lua"/>
+  <Script file="Auras.lua"/>
   <Frame name="SoundtrackAurasDUMMY" parent="UIParent" hidden="false">
     <Scripts>
       <OnEvent>Soundtrack.Auras.OnEvent(self, event, ...)</OnEvent>

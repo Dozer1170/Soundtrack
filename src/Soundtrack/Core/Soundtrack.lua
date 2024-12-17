@@ -512,8 +512,6 @@ function Soundtrack.OnLoad(self)
 		elseif msg == "report" then
 			SoundtrackReportFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 			SoundtrackReportFrame:Show()
-		elseif msg == "fix" then
-		--Soundtrack.Fix()
 		else
 			SoundtrackFrame:Show()
 		end
