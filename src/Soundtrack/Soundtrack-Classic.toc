@@ -12,6 +12,8 @@ Soundtrack.xml
 OldSaveMigrator.lua
 Utils/DebugUtils.lua
 Utils/StringUtils.lua
+SoundtrackChat.lua
+SoundtrackSorting.lua
 SoundtrackFrame/GeneralTemplates.xml
 SoundtrackFrame/TabTemplateClassic.xml
 SoundtrackAurasFrame.xml
@@ -24,7 +26,6 @@ SoundtrackBattleEvents.lua
 Custom/SoundtrackCustomFrame.xml
 Custom/SoundtrackCustomEvents.lua
 MiscEvents/SoundtrackMiscFrame.xml
-MiscEvents/SoundtrackMountFrame.xml
 SoundtrackPetBattlesFrame.xml
 SoundtrackPetBattlesEvents.lua
 SoundtrackDanceFrame.xml

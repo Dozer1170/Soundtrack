@@ -29,7 +29,10 @@ local function FindContinentByZone()
 
 	-- Get continent
 	local mapId = C_Map.GetBestMapForUnit("player")
-	print("Mapid: " .. mapId)
+	if mapId == nil then
+		return SOUNDTRACK_UNKNOWN, nil
+	end
+
 	local c = MapUtil.GetMapParentInfo(mapId, Enum.UIMapType.Continent, true)
 	local continent
 	if c ~= nil then
