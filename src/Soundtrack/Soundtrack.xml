@@ -16,9 +16,9 @@
   <Script file="Soundtrack.lua"/>
   <Frame name="SoundtrackDUMMY" hidden="false">
     <Scripts>
-      <OnUpdate>Soundtrack_OnUpdate(self, elapsed)</OnUpdate>
-      <OnLoad>Soundtrack_OnLoad(self)</OnLoad>
-      <OnEvent>Soundtrack_OnEvent(self, event, ...)</OnEvent>
+      <OnUpdate>Soundtrack.OnUpdate(self, elapsed)</OnUpdate>
+      <OnLoad>Soundtrack.OnLoad(self)</OnLoad>
+      <OnEvent>Soundtrack.Events.OnEvent(self, event, ...)</OnEvent>
     </Scripts>
   </Frame>
 </Ui>

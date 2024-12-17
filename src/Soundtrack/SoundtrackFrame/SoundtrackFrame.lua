@@ -1082,7 +1082,7 @@ function SoundtrackFrame_AddPlaylist(playlistName)
 	end
 	Soundtrack.AddEvent("Playlists", playlistName, ST_PLAYLIST_LVL, true)
 	SoundtrackFrame_SelectedEvent = playlistName
-	Soundtrack_SortEvents("Playlists")
+	Soundtrack.SortEvents("Playlists")
 	SoundtrackFrame_RefreshEvents()
 end
 

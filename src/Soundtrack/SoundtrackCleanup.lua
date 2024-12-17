@@ -57,7 +57,7 @@ local function DoesEventHaveOldTracks(eventTableName)
 	return false
 end
 
-local function PurgeEventsConfirmed()
+local function OnConfirmPurgeOldTracks()
 	for _, event in ipairs(Soundtrack_EventTabs) do
 		PurgeOldTracksFromTable(event)
 	end
@@ -69,7 +69,7 @@ StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 	button1 = ACCEPT,
 	button2 = CANCEL,
 	OnAccept = function()
-		PurgeEventsConfirmed()
+		OnConfirmPurgeOldTracks()
 	end,
 	OnCancel = function()
 		StaticPopup_Show("SOUNDTRACK_NO_PURGE_POPUP")

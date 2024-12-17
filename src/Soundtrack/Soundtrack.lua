@@ -52,7 +52,6 @@ StaticPopupDialogs["SOUNDTRACK_NO_PURGE_POPUP"] = {
 	hideOnEscape = 1,
 }
 
-local _SuspendSorting = false
 local _TracksLoaded = false
 local offset = 0
 local nextUpdateTime = 0
@@ -119,7 +118,7 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	Soundtrack.Cleanup.CleanupOldEvents()
 end
 
-local function Soundtrack_SetFrameLocks()
+local function ToggleFrameLock()
 	-- If option true, then disable mouse.
 	local enableMouse = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame
 	NowPlayingTextFrame:EnableMouse(enableMouse)
@@ -180,16 +179,12 @@ function Soundtrack.LoadTracks()
 		end
 	end
 
-	_SuspendSorting = true
-	Soundtrack_SetFrameLocks()
-	_SuspendSorting = false
+	ToggleFrameLock()
 
 	-- Remove obsolete predefined events
-	Soundtrack.Timers.AddTimer("PurgeEvents", 10, Soundtrack.Cleanup.PurgeOldTracksFromEvents)
+	Soundtrack.Timers.AddTimer("PurgeOldTracksFromEvents", 10, Soundtrack.Cleanup.PurgeOldTracksFromEvents)
 
-	-- sort all the tables
 	Soundtrack.SortAllEvents()
-
 	Soundtrack.SortTracks()
 	SetUserEventsToCorrectLevel()
 
@@ -244,7 +239,7 @@ function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soun
 		}
 	end
 
-	Soundtrack_SortEvents(tableName)
+	Soundtrack.SortEvents(tableName)
 end
 
 function Soundtrack.RemoveEvent(tableName, eventName)
@@ -311,7 +306,7 @@ function Soundtrack.RenameEvent(tableName, oldEventName, newEventName, _priority
 	Soundtrack.Events.DeleteEvent(tableName, oldEventName)
 
 	-- Because I cant figure out how to sort the hashtable...
-	Soundtrack_SortEvents(tableName)
+	Soundtrack.SortEvents(tableName)
 end
 
 function Soundtrack.AssignTrack(eventName, trackName)
@@ -329,12 +324,6 @@ function Soundtrack.AssignTrack(eventName, trackName)
 	end
 
 	table.insert(eventTable[eventName].tracks, trackName)
-end
-
-function Soundtrack.SortAllEvents()
-	for _, eventTabName in ipairs(Soundtrack_EventTabs) do
-		Soundtrack_SortEvents(eventTabName)
-	end
 end
 
 function Soundtrack.GetTableFromEvent(eventName)
@@ -463,50 +452,8 @@ function Soundtrack.StopEvent(tableName, eventName)
 	end
 end
 
--- Returns a child node if the name matches
-function GetChildNode(rootNode, childNodeName)
-	if not rootNode then
-		return nil
-	end
-
-	for _, n in ipairs(rootNode.nodes) do
-		if childNodeName == n.name then
-			return n
-		end
-	end
-
-	return nil
-end
-
-function AddEventNode(rootNode, eventPath)
-	if not rootNode then
-		error("rootNode is nil")
-	end
-
-	local currentRootNode = rootNode
-	local parts = StringSplit(eventPath, "/")
-	for _, part in ipairs(parts) do
-		local childNode = GetChildNode(currentRootNode, part)
-		if not childNode then
-			-- Add a new node if its missing
-			local newNode = { name = part, nodes = {}, tag = eventPath }
-			table.insert(currentRootNode.nodes, newNode)
-			currentRootNode = newNode
-		else
-			currentRootNode = childNode
-		end
-	end
-end
-
-function PrintEventNode(node)
-	Soundtrack.TraceFrame("Node: " .. node.name)
-	for _, n in ipairs(node.nodes) do
-		PrintEventNode(n)
-	end
-end
-
 -- Returns a flat list of tree nodes, based on whether each level is expanded or not
-function GetFlattenedEventNodes(eventTableName, rootNode, list)
+local function GetFlattenedEventNodes(eventTableName, rootNode, list)
 	table.insert(list, rootNode)
 
 	-- if expandable
@@ -522,7 +469,6 @@ function GetFlattenedEventNodes(eventTableName, rootNode, list)
 			event.expanded = true
 		end
 
-		-- TODO Have a method dump an object to the console regardless of type and nil
 		if event.expanded then
 			for _, n in ipairs(rootNode.nodes) do
 				GetFlattenedEventNodes(eventTableName, n, list)
@@ -541,45 +487,7 @@ function Soundtrack_OnTreeChanged(eventTableName)
 	end
 end
 
-function Soundtrack_SortEvents(eventTableName)
-	if _SuspendSorting then
-		return
-	end
-
-	Soundtrack_FlatEvents[eventTableName] = {}
-
-	local lowerEventFilter = ""
-	if Soundtrack.eventFilter ~= nil then
-		lowerEventFilter = string.lower(Soundtrack.eventFilter)
-	end
-
-	for k, _ in pairs(SoundtrackAddon.db.profile.events[eventTableName]) do
-		if k ~= "Preview" then -- Hide internal events
-			if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
-				table.insert(Soundtrack_FlatEvents[eventTableName], k)
-			elseif k ~= nil and string.find(string.lower(k), lowerEventFilter) ~= nil then
-				table.insert(Soundtrack_FlatEvents[eventTableName], k)
-			end
-		end
-	end
-
-	-- Only sort is user do not wish to bypass
-	table.sort(Soundtrack_FlatEvents[eventTableName])
-
-	-- Construct the event node tree, after events have been sorted
-	local rootNode = { name = eventTableName, nodes = {}, tag = nil }
-	for _, e in ipairs(Soundtrack_FlatEvents[eventTableName]) do
-		AddEventNode(rootNode, e)
-	end
-	Soundtrack_EventNodes[eventTableName] = rootNode
-	--
-	-- Print tree
-	Soundtrack.TraceFrame("SortEvents")
-	Soundtrack_OnTreeChanged(eventTableName)
-	SoundtrackFrame_RefreshEvents()
-end
-
-function Soundtrack_OnUpdate(_, deltaT)
+function Soundtrack.OnUpdate(_, deltaT)
 	local currentTime = GetTime()
 
 	Soundtrack.Library.OnUpdate(deltaT)
@@ -592,7 +500,7 @@ function Soundtrack_OnUpdate(_, deltaT)
 	end
 end
 
-function Soundtrack_OnLoad(self)
+function Soundtrack.OnLoad(self)
 	SLASH_SOUNDTRACK1, SLASH_SOUNDTRACK2 = "/soundtrack", "/st"
 	local function SoundtrackSlashCmd(msg)
 		if msg == "debug" then
@@ -613,8 +521,4 @@ function Soundtrack_OnLoad(self)
 	SlashCmdList["SOUNDTRACK"] = SoundtrackSlashCmd
 
 	Soundtrack.Events.OnLoad(self)
-end
-
-function Soundtrack_OnEvent(self, event, _)
-	Soundtrack.Events.OnEvent(self, event)
 end

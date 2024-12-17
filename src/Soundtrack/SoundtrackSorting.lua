@@ -1,4 +1,3 @@
--- Sort functions
 local function CompareTracksByAlbum(i1, i2)
 	return Soundtrack_Tracks[i1].album < Soundtrack_Tracks[i2].album
 end
@@ -75,4 +74,78 @@ function Soundtrack.SortTracks(sortCriteria)
 	end
 
 	SoundtrackFrame_RefreshTracks()
+end
+
+local function GetChildNode(rootNode, childNodeName)
+	if not rootNode then
+		return nil
+	end
+
+	for _, n in ipairs(rootNode.nodes) do
+		if childNodeName == n.name then
+			return n
+		end
+	end
+
+	return nil
+end
+
+local function AddEventNode(rootNode, eventPath)
+	if not rootNode then
+		error("rootNode is nil")
+	end
+
+	local currentRootNode = rootNode
+	local parts = StringSplit(eventPath, "/")
+	for _, part in ipairs(parts) do
+		local childNode = GetChildNode(currentRootNode, part)
+		if not childNode then
+			-- Add a new node if its missing
+			local newNode = { name = part, nodes = {}, tag = eventPath }
+			table.insert(currentRootNode.nodes, newNode)
+			currentRootNode = newNode
+		else
+			currentRootNode = childNode
+		end
+	end
+end
+
+function Soundtrack.SortEvents(eventTableName)
+	Soundtrack_FlatEvents[eventTableName] = {}
+
+	local lowerEventFilter = ""
+	if Soundtrack.eventFilter ~= nil then
+		lowerEventFilter = string.lower(Soundtrack.eventFilter)
+	end
+
+	for k, _ in pairs(SoundtrackAddon.db.profile.events[eventTableName]) do
+		if k ~= "Preview" then -- Hide internal events
+			if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
+				table.insert(Soundtrack_FlatEvents[eventTableName], k)
+			elseif k ~= nil and string.find(string.lower(k), lowerEventFilter) ~= nil then
+				table.insert(Soundtrack_FlatEvents[eventTableName], k)
+			end
+		end
+	end
+
+	-- Only sort is user do not wish to bypass
+	table.sort(Soundtrack_FlatEvents[eventTableName])
+
+	-- Construct the event node tree, after events have been sorted
+	local rootNode = { name = eventTableName, nodes = {}, tag = nil }
+	for _, e in ipairs(Soundtrack_FlatEvents[eventTableName]) do
+		AddEventNode(rootNode, e)
+	end
+	Soundtrack_EventNodes[eventTableName] = rootNode
+	--
+	-- Print tree
+	Soundtrack.TraceFrame("SortEvents")
+	Soundtrack_OnTreeChanged(eventTableName)
+	SoundtrackFrame_RefreshEvents()
+end
+
+function Soundtrack.SortAllEvents()
+	for _, eventTabName in ipairs(Soundtrack_EventTabs) do
+		Soundtrack.SortEvents(eventTabName)
+	end
 end

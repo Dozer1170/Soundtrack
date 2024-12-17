@@ -346,7 +346,7 @@ function Soundtrack.Events.Add(eventTableName, eventName, trackName)
 		eventTable[eventName] = { tracks = {}, lastTrackIndex = 0, random = true }
 
 		-- Because I cant figure out how to sort the hashtable...
-		Soundtrack_SortEvents(eventTableName)
+		Soundtrack.SortEvents(eventTableName)
 	end
 
 	if trackName then
@@ -382,7 +382,7 @@ function Soundtrack.Events.DeleteEvent(tableName, eventName)
 			Soundtrack.TraceEvents("Removing event: " .. eventName)
 			eventTable[eventName] = nil
 		end
-		Soundtrack_SortEvents(tableName)
+		Soundtrack.SortEvents(tableName)
 	end
 end
 
@@ -399,7 +399,7 @@ function Soundtrack.Events.RenameEvent(tableName, oldName, newName)
 		local event = eventTable[oldName]
 		eventTable[newName] = event
 		eventTable[oldName] = nil
-		Soundtrack_SortEvents(tableName)
+		Soundtrack.SortEvents(tableName)
 	end
 
 	-- Also rename event in CustomEvents

@@ -155,7 +155,7 @@ function Soundtrack.CustomEvents.CustomOnUpdate(_, _)
 	if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
 		for k, v in pairs(SoundtrackAddon.db.profile.customEvents) do
 			if v.eventtype == ST_UPDATE_SCRIPT and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
-				v.script()
+	Soundtrack.SortEvents
 			end
 		end
 	end
