@@ -14,12 +14,12 @@ Core/Utils/DebugUtils.lua
 Core/Utils/StringUtils.lua
 Core/Utils/Chat.lua
 Core/Utils/Sorting.lua
-Core/SoundtrackFrame/GeneralTemplates.xml
-Core/SoundtrackFrame/TabTemplateClassic.xml
+Core/UI/GeneralTemplates.xml
+Core/UI/TabTemplateClassic.xml
 Core/Auras/AurasFrame.xml
 Core/Utils/Cleanup.lua
-Core/SoundtrackFrame/SoundtrackFrame.xml
-Core/SoundtrackFrame/SoundtrackFrame.lua
+Core/UI/SoundtrackFrame.xml
+Core/UI/SoundtrackFrame.lua
 Core/SoundtrackFix.lua
 Core/BattleFrame.xml
 Core/Custom/CustomFrame.xml
@@ -28,7 +28,7 @@ Core/SoundtrackPetBattlesFrame.xml
 Core/SoundtrackPetBattlesEvents.lua
 Core/Dance/DanceFrame.xml
 Core/SoundtrackZoneFrame.xml
-Core/SoundtrackMinimap.lua
+Core/UI/Minimap.lua
 Core/SoundtrackNowPlayingFrame.xml
 Core/SoundtrackControlFrame.xml
 Core/SoundtrackReportFrame.xml
