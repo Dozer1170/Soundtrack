@@ -23,9 +23,9 @@
 	-Play different tracks based on wild pet species
 ]]
 
-Soundtrack.PetBattlesEvents = {}
+Soundtrack.PetBattleEvents = {}
 
-function Soundtrack.PetBattlesEvents.OnLoad(self)
+function Soundtrack.PetBattleEvents.OnLoad(self)
 	self:RegisterEvent("PET_BATTLE_OPENING_START")
 	self:RegisterEvent("PET_BATTLE_OVER")
 	self:RegisterEvent("PET_BATTLE_PVP_DUEL_REQUESTED")
@@ -40,21 +40,21 @@ local hasTracks = false --used to fall back to the Players/Named NPCs subheading
 local targetName = nil
 local zoneText
 
-function Soundtrack.PetBattlesEvents.OnEvent(_, event)
+function Soundtrack.PetBattleEvents.OnEvent(_, event)
 	Soundtrack.TracePetBattles(event)
 
 	if event == "PET_BATTLE_OPENING_START" then
-		Soundtrack.PetBattlesEvents.BattleEngaged()
+		Soundtrack.PetBattleEvents.BattleEngaged()
 	end
 
 	if event == "PET_BATTLE_OVER" then
-		Soundtrack.PetBattlesEvents.Victory()
+		Soundtrack.PetBattleEvents.Victory()
 	end
 
 	if event == "PLAYER_TARGET_CHANGED" then
 		if UnitExists("target") then
-			Soundtrack.PetBattlesEvents.GetPlayerTargetInfo()
-			Soundtrack.PetBattlesEvents.CheckPlayerTarget()
+			Soundtrack.PetBattleEvents.GetPlayerTargetInfo()
+			Soundtrack.PetBattleEvents.CheckPlayerTarget()
 		else --This might be a bad idea if the target changes when a battle loads
 			isPlayer = false
 			hasTracks = false
@@ -63,7 +63,7 @@ function Soundtrack.PetBattlesEvents.OnEvent(_, event)
 	end
 end
 
-function Soundtrack.PetBattlesEvents.BattleEngaged()
+function Soundtrack.PetBattleEvents.BattleEngaged()
 	if not targetName and isPlayer then
 		Soundtrack.PlayEvent(ST_PETBATTLES, SOUNDTRACK_PVP_DUEL)
 	elseif targetName then --Registered target battle
@@ -96,14 +96,14 @@ function Soundtrack.PetBattlesEvents.BattleEngaged()
 	end
 end
 
-function Soundtrack.PetBattlesEvents.Victory()
+function Soundtrack.PetBattleEvents.Victory()
 	Soundtrack.StopEventAtLevel(ST_NPC_LVL)
 	isPlayer = false
 	hasTracks = false
 	targetName = nil
 end
 
-function Soundtrack.PetBattlesEvents.GetPlayerTargetInfo()
+function Soundtrack.PetBattleEvents.GetPlayerTargetInfo()
 	targetName = UnitName("target")
 	Soundtrack.TracePetBattles("Target name is: " .. targetName)
 	if UnitIsPlayer("target") then
@@ -113,7 +113,7 @@ function Soundtrack.PetBattlesEvents.GetPlayerTargetInfo()
 	end
 end
 
-function Soundtrack.PetBattlesEvents.CheckPlayerTarget()
+function Soundtrack.PetBattleEvents.CheckPlayerTarget()
 	if isPlayer then
 		if SoundtrackEvents_EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
 			Soundtrack.TracePetBattles("Target player has known named event")
@@ -139,7 +139,7 @@ function Soundtrack.PetBattlesEvents.CheckPlayerTarget()
 	end
 end
 
-function Soundtrack.PetBattlesEvents.Initialize()
+function Soundtrack.PetBattleEvents.Initialize()
 	Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PVP_DUEL, ST_NPC_LVL, true)
 	Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS, ST_NPC_LVL, true)
 	Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS, ST_NPC_LVL, true)

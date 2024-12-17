@@ -269,7 +269,7 @@
             if currentTrackName ~= nil and
             currentTrackName ~= "None" then
             local track = Soundtrack_Tracks[currentTrackName]
-            -- SoundtrackNowPlayingFrame.lua
+            -- UI/NowPlayingFrame.lua
             SetNowPlayingText(track.title, track.artist, track.album)
             end
             </OnClick>

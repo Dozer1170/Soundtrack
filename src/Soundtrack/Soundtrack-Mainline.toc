@@ -24,11 +24,10 @@ Core/SoundtrackFix.lua
 Core/BattleFrame.xml
 Core/Custom/CustomFrame.xml
 Core/MiscEvents/SoundtrackMiscFrame.xml
-Core/SoundtrackPetBattlesFrame.xml
-Core/SoundtrackPetBattlesEvents.lua
+Core/PetBattleFrame...xml
 Core/DanceFrame.xml
 Core/SoundtrackZoneFrame.xml
 Core/UI/Minimap.lua
-Core/SoundtrackNowPlayingFrame.xml
-Core/SoundtrackControlFrame.xml
+Core/UI/NowPlayingFrame.xml
+Core/UI/ControlFrame.xml
 Core/SoundtrackReportFrame.xml
