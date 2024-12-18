@@ -101,7 +101,7 @@ function Soundtrack.Misc.Initialize()
 	Soundtrack.PlayerStatusEvents.Register()
 	Soundtrack.StealthEvents.Register()
 
-	Soundtrack_SortEvents(ST_MISC)
+	Soundtrack.SortEvents(ST_MISC)
 end
 
 function Soundtrack.Misc.OnUpdate(_, _)

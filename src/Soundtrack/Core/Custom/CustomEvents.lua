@@ -147,7 +147,7 @@ function Soundtrack.CustomEvents.CustomInitialize()
 		end
 	end
 
-	Soundtrack_SortEvents(ST_CUSTOM)
+	Soundtrack.SortEvents(ST_CUSTOM)
 end
 
 -- CustomEvents
