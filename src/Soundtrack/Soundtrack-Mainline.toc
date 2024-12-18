@@ -22,8 +22,8 @@ Core/UI/SoundtrackFrame.xml
 Core/Battle/BattleFrame.xml
 Core/Custom/CustomFrame.xml
 Core/MiscEvents/MiscFrame.xml
-Core/PetBattleFrame...xml
-Core/DanceFrame.xml
+Core/PetBattle/PetBattleFrame.xml
+Core/Dance/DanceFrame.xml
 Core/SoundtrackZoneFrame.xml
 Core/UI/Minimap.lua
 Core/UI/NowPlayingFrame.xml
