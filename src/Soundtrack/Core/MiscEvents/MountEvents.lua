@@ -1,8 +1,4 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Mount events functions.
-]]
+Soundtrack.MountEvents = {}
 
 local nextUpdateTime = 0
 local updateInterval = 0.1

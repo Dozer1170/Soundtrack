@@ -1,9 +1,4 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Soundtrack utility functions.
-    Various helper methods for debugging or generic stuff.
-]]
+Soundtrack.Timers = {}
 
 local timerList = {}
 Soundtrack.Timers.CooldownTime = 0 -- time (in seconds) since cooldowns last updated

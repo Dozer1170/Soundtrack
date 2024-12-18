@@ -1,9 +1,4 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Soundtrack library functions.
-    Functions that manage the users list of available music tracks.
-]]
+Soundtrack.Library = {}
 
 local nextTrackInfo
 local nextFileName

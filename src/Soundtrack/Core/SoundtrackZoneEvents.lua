@@ -1,15 +1,8 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Zone events functions.
-    Functions that manage zone change events.
-]]
+Soundtrack.ZoneEvents = {}
 
 local nextUpdateTime = 0
 local updateInterval = 1
 local zoneType = nil
-
-Soundtrack.ZoneEvents = {}
 
 local function debug(msg)
 	Soundtrack.TraceZones(msg)

@@ -1,9 +1,4 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Soundtrack utility functions.
-    Various helper methods for debugging or generic stuff.
-]]
+Soundtrack.Util = {}
 
 local debugChatFrameIndex = 1
 local function FindChatFrameIndex()

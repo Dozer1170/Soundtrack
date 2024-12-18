@@ -5,6 +5,7 @@
     Functions that handle mapping named events with tracks in the library.
 ]]
 
+Soundtrack.Events = {}
 Soundtrack.MaxStackLevel = 16
 
 local function VerifyStackLevel(stackLevel)

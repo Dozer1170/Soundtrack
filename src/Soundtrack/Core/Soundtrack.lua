@@ -1,8 +1,7 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    General functions.
-]]
+Soundtrack = {
+	RegisteredEvents = {},
+	Settings = {},
+}
 
 Soundtrack_EventTabs = {
 	"Battle",

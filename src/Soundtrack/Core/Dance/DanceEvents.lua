@@ -1,8 +1,4 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Dance events functions.
-]]
+Soundtrack.DanceEvents = {}
 
 function Soundtrack.DanceEvents.OnLoad(self)
 	self:RegisterEvent("CHAT_MSG_TEXT_EMOTE")
