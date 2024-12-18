@@ -238,7 +238,7 @@ function GetGroupEnemyLevel()
 				if bossEvent then
 					Soundtrack.TraceBattle(unitName .. " is a boss.")
 					isBoss = true
-					if SoundtrackEvents_EventHasTracks(ST_BOSS, unitName) then
+					if Soundtrack.Events.EventHasTracks(ST_BOSS, unitName) then
 						bossName = unitName
 					end
 					if unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent then
@@ -376,17 +376,17 @@ local function AnalyzeBattleSituation()
 		if battleType == SOUNDTRACK_BOSS_BATTLE then
 			if bossName ~= nil then
 				local bossLowHealth = bossName .. " " .. SOUNDTRACK_LOW_HEALTH
-				if hasLowHealth and SoundtrackEvents_EventHasTracks(ST_BOSS, bossLowHealth) then
+				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BOSS, bossLowHealth) then
 					Soundtrack.PlayEvent(ST_BOSS, bossLowHealth)
-				elseif hasLowHealth and SoundtrackEvents_EventHasTracks(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH) then
+				elseif hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH) then
 					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH)
-				elseif SoundtrackEvents_EventHasTracks(ST_BOSS, bossName) then
+				elseif Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
 					Soundtrack.PlayEvent(ST_BOSS, bossName)
 				else
 					Soundtrack.PlayEvent(ST_BATTLE, battleType)
 				end
 			else
-				if hasLowHealth and SoundtrackEvents_EventHasTracks(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH) then
+				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH) then
 					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH)
 				else
 					Soundtrack.PlayEvent(ST_BATTLE, battleType)
@@ -395,19 +395,19 @@ local function AnalyzeBattleSituation()
 		elseif battleType == SOUNDTRACK_WORLD_BOSS_BATTLE then
 			if bossName ~= nil then
 				local bossLowHealth = bossName .. " " .. SOUNDTRACK_LOW_HEALTH
-				if hasLowHealth and SoundtrackEvents_EventHasTracks(ST_BOSS, bossLowHealth) then
+				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BOSS, bossLowHealth) then
 					Soundtrack.PlayEvent(ST_BOSS, bossLowHealth)
 				elseif
-					hasLowHealth and SoundtrackEvents_EventHasTracks(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
+					hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
 				then
 					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
-				elseif SoundtrackEvents_EventHasTracks(ST_BOSS, bossName) then
+				elseif Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
 					Soundtrack.PlayEvent(ST_BOSS, bossName)
 				else
 					Soundtrack.PlayEvent(ST_BATTLE, battleType)
 				end
 			else
-				if hasLowHealth and SoundtrackEvents_EventHasTracks(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH) then
+				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH) then
 					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
 				else
 					Soundtrack.PlayEvent(ST_BATTLE, battleType)
@@ -477,7 +477,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		else
 			if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 				for _, v in pairs(Soundtrack_BattleEvents) do
-					if SoundtrackEvents_EventHasTracks(ST_MISC, v) then
+					if Soundtrack.Events.EventHasTracks(ST_MISC, v) then
 						v.script()
 					end
 				end
@@ -614,7 +614,7 @@ function Soundtrack.BattleEvents.Initialize()
 			if arg2 == "SWING_DAMAGE" and arg5 == UnitName("player") then
 				if arg18 == nil then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_HIT)
-				elseif arg18 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_SWING_CRIT) == false then
+				elseif arg18 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_SWING_CRIT) == false then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_HIT)
 				end
 			end
@@ -648,7 +648,7 @@ function Soundtrack.BattleEvents.Initialize()
 			if arg2 == "SPELL_DAMAGE" and arg5 == UnitName("player") then
 				if arg21 == nil then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_HIT)
-				elseif arg21 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_SPELL_CRIT) == false then
+				elseif arg21 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_SPELL_CRIT) == false then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_HIT)
 				end
 			end
@@ -682,7 +682,7 @@ function Soundtrack.BattleEvents.Initialize()
 			if arg2 == "SPELL_PERIODIC_DAMAGE" and arg5 == UnitName("player") then
 				if arg21 == nil then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_HIT)
-				elseif arg21 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_DOT_CRIT) == false then
+				elseif arg21 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_DOT_CRIT) == false then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_HIT)
 				end
 			end
@@ -716,7 +716,7 @@ function Soundtrack.BattleEvents.Initialize()
 			if arg2 == "SPELL_HEAL" and arg5 == UnitName("player") then
 				if arg18 == nil then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_HIT)
-				elseif arg18 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_HEAL_CRIT) == false then
+				elseif arg18 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_HEAL_CRIT) == false then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_HIT)
 				end
 			end
@@ -750,7 +750,7 @@ function Soundtrack.BattleEvents.Initialize()
 			if arg2 == "SPELL_PERIODIC_HEAL" and arg5 == UnitName("player") then
 				if arg18 == nil then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_HIT)
-				elseif arg18 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_HOT_CRIT) == false then
+				elseif arg18 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_HOT_CRIT) == false then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_HIT)
 				end
 			end
@@ -784,7 +784,7 @@ function Soundtrack.BattleEvents.Initialize()
 			if arg2 == "RANGE_DAMAGE" and arg5 == UnitName("player") then
 				if arg21 == nil then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_HIT)
-				elseif arg21 == 1 and SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_RANGE_CRIT) == false then
+				elseif arg21 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_RANGE_CRIT) == false then
 					Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_HIT)
 				end
 			end

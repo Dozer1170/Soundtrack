@@ -8,7 +8,7 @@
   <Script file="Constants.lua"/>
   <Script file="SoundtrackTimers.lua"/>
   <Script file="SoundtrackLibrary.lua"/>
-  <Script file="SoundtrackEvents.lua"/>
+  <Script file="Events.lua"/>
   <Script file="DefaultTracks.lua"/>
   <Script file="Soundtrack.lua"/>
   <Frame name="SoundtrackDUMMY" hidden="false">

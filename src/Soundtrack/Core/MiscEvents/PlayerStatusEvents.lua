@@ -50,7 +50,7 @@ local function OnJump()
 		local currentTime = GetTime()
 		if currentTime >= jumpDelayTime then
 			jumpDelayTime = currentTime + jumpUpdateTime
-			if SoundtrackEvents_EventHasTracks(ST_MISC, SOUNDTRACK_JUMP) then
+			if Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_JUMP) then
 				Soundtrack.Misc.PlayEvent(SOUNDTRACK_JUMP)
 			end
 		end

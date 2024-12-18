@@ -154,7 +154,7 @@ end
 function Soundtrack.CustomEvents.CustomOnUpdate(_, _)
 	if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
 		for k, v in pairs(SoundtrackAddon.db.profile.customEvents) do
-			if v.eventtype == ST_UPDATE_SCRIPT and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
+			if v.eventtype == ST_UPDATE_SCRIPT and Soundtrack.Events.EventHasTracks(ST_CUSTOM, k) then
 				v.script()
 			end
 		end
@@ -168,7 +168,7 @@ function Soundtrack.CustomEvents.CustomOnEvent(_, event)
 			if
 				v.eventtype == ST_EVENT_SCRIPT
 				and event == v.trigger
-				and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k)
+				and Soundtrack.Events.EventHasTracks(ST_CUSTOM, k)
 			then
 				RunScript(v.script)
 			end
@@ -179,7 +179,7 @@ end
 function Soundtrack.CustomEvents.OnPlayerAurasUpdated()
 	if SoundtrackAddon.db.profile.settings.EnableCustomMusic then
 		for k, v in pairs(SoundtrackAddon.db.profile.customEvents) do
-			if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_CUSTOM, k) then
+			if v.spellId ~= 0 and Soundtrack.Events.EventHasTracks(ST_CUSTOM, k) then
 				local isActive = Soundtrack.Auras.IsAuraActive(v.spellId)
 				if not v.active and isActive then
 					v.active = true

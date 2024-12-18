@@ -107,7 +107,7 @@ end
 function Soundtrack.Misc.OnUpdate(_, _)
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
-			if v.eventtype == ST_UPDATE_SCRIPT and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
+			if v.eventtype == ST_UPDATE_SCRIPT and Soundtrack.Events.EventHasTracks(ST_MISC, k) then
 				v.script()
 			end
 		end
@@ -129,7 +129,7 @@ end
 function Soundtrack.Misc.OnPlayerAurasUpdated()
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
-			if v.spellId ~= 0 and SoundtrackEvents_EventHasTracks(ST_MISC, k) then
+			if v.spellId ~= 0 and Soundtrack.Events.EventHasTracks(ST_MISC, k) then
 				local isActive = Soundtrack.Auras.IsAuraActive(v.spellId)
 				if not v.active and isActive then
 					v.active = true

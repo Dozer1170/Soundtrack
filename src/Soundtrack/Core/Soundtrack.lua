@@ -416,9 +416,9 @@ function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 		Soundtrack.Error("Cannot play event " .. eventName .. ". It has no priority!")
 	elseif event.soundEffect then
 		-- Sound effects are never added to the stack
-		PlayRandomTrackByTable(tableName, eventName, offset)
+		Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 	else
-		if Soundtrack_Events_GetEventAtStackLevel(event.priority) ~= eventName then
+		if Soundtrack.Events.GetEventAtStackLevel(event.priority) ~= eventName then
 			Soundtrack.Events.Stack[event.priority].tableName = tableName
 			Soundtrack.Events.Stack[event.priority].eventName = eventName
 			Soundtrack.Events.Stack[event.priority].offset = offset

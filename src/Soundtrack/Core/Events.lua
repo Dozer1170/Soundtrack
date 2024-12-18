@@ -1,12 +1,29 @@
---[[
-    Soundtrack addon for World of Warcraft
-
-    Soundtrack events functions.
-    Functions that handle mapping named events with tracks in the library.
-]]
-
 Soundtrack.Events = {}
-Soundtrack.MaxStackLevel = 16
+Soundtrack.Events.MaxStackLevel = 16
+Soundtrack.Events.Paused = false
+Soundtrack.Events.Stack = {
+	-- This must match number of levels in Constants.lua
+	{ eventName = nil, tableName = nil }, -- Level 1: Continent
+	{ eventName = nil, tableName = nil }, -- Level 2: Region
+	{ eventName = nil, tableName = nil }, -- Level 3: Zones
+	{ eventName = nil, tableName = nil }, -- Level 4: Interiors
+	{ eventName = nil, tableName = nil }, -- Level 5: Mount: Mount, Flight
+	{ eventName = nil, tableName = nil }, -- Level 6: Auras: Forms
+	{ eventName = nil, tableName = nil }, -- Level 7: Status: Swimming, Stealthed
+	{ eventName = nil, tableName = nil }, -- Level 8: Temp. Buffs: Dash, Class Stealth
+	{ eventName = nil, tableName = nil }, -- Level 9: NPCs: Merchant, Auction House
+	{ eventName = nil, tableName = nil }, -- Level 10: One-time: Dance, Cinematics
+	{ eventName = nil, tableName = nil }, -- Level 11: Battle
+	{ eventName = nil, tableName = nil }, -- Level 12: Boss
+	{ eventName = nil, tableName = nil }, -- Level 13: Death, Ghost
+	{ eventName = nil, tableName = nil }, -- Level 14: SFX: Victory, Level up, LFG Complete
+	{ eventName = nil, tableName = nil }, -- Level 15: Playlists
+	{ eventName = nil, tableName = nil }, -- Level 16: Preview
+}
+
+local fadeOutTime = 1
+local currentTableName = nil
+local currentEventName = nil
 
 local function VerifyStackLevel(stackLevel)
 	if not stackLevel or not (stackLevel >= 1 and stackLevel <= Soundtrack.MaxStackLevel) then
@@ -15,8 +32,12 @@ local function VerifyStackLevel(stackLevel)
 end
 
 -- Returns if event has tracks.
-function SoundtrackEvents_EventHasTracks(tableName, eventName)
+function Soundtrack.Events.EventHasTracks(tableName, eventName)
 	local eventTable = Soundtrack.Events.GetTable(tableName)
+	if not eventTable then
+		return false
+	end
+
 	if eventTable[eventName] then
 		local trackList = eventTable[eventName].tracks
 		if trackList then
@@ -29,7 +50,7 @@ function SoundtrackEvents_EventHasTracks(tableName, eventName)
 	return false
 end
 
-function SoundtrackEvents_EventExists(tableName, eventName)
+function Soundtrack.Events.EventExists(tableName, eventName)
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 	if eventTable[eventName] then
 		return true
@@ -40,8 +61,8 @@ end
 
 local nextTrack -- Hack because of fading issue
 -- Attempts to play a random track on a specific event table. Returns true if it found a track to play.
-function PlayRandomTrackByTable(tableName, eventName, offset)
-	Soundtrack.TraceEvents("PlayRandomTrackByTable (" .. tableName .. ", " .. eventName .. ")")
+function Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
+	Soundtrack.TraceEvents("Soundrack.Events.PlayRandomTrackByTable (" .. tableName .. ", " .. eventName .. ")")
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if eventTable[eventName] then
@@ -98,55 +119,19 @@ function PlayRandomTrackByTable(tableName, eventName, offset)
 	return false
 end
 
-function PlayTrackByTable(tableName, eventName, offset)
-	Soundtrack.TraceEvents("PlayTrackByTable (" .. tableName .. ", " .. eventName .. ")")
-	local eventTable = Soundtrack.Events.GetTable(tableName)
-
-	if eventTable[eventName] then
-		local trackList = eventTable[eventName].tracks
-
-		if trackList then
-			local numTracks = table.getn(trackList)
-			if numTracks >= 1 then
-				local index
-				index = eventTable[eventName].lastTrackIndex + offset
-				if index > numTracks then
-					index = 1
-				elseif index == 0 then
-					index = numTracks
-				end
-
-				local trackName = trackList[index]
-				eventTable[eventName].lastTrackIndex = index
-				if not Soundtrack.Events.Paused then
-					Soundtrack.Library.PlayTrack(trackName, eventTable[eventName].soundEffect)
-					nextTrack = trackName
-				else
-					Soundtrack.TraceEvents("Paused")
-				end
-				return true
-			end
-		end
-	end
-	return false
-end
-
--- Timer callback function
-local fadeOutTime = 1
-
-local function trackFinished()
+local function TrackFinished()
 	Soundtrack.Events.RestartLastEvent()
 end
 
-local function startEmptyTrack()
+local function StartEmptyTrack()
 	Soundtrack.Library.PauseMusic()
 end
 
-local function playOnceTrackFinished()
+local function PlayOnceTrackFinished()
 	Soundtrack.StopEventAtLevel(Soundtrack.Events.GetCurrentStackLevel()) -- TODO Anthony : by name?
 end
 
-local function getTrackCount(event)
+local function GetTrackCount(event)
 	if not event then
 		return 0
 	end
@@ -160,13 +145,13 @@ local function getTrackCount(event)
 end
 
 -- Returns the current stack level on which a valid event is found.
-local function getValidStackLevel()
+local function GetValidStackLevel()
 	local validStackLevel = 0
 
 	for i = table.getn(Soundtrack.Events.Stack), 1, -1 do
 		local event = Soundtrack.GetEvent(Soundtrack.Events.Stack[i].tableName, Soundtrack.Events.Stack[i].eventName)
 		if event then
-			local trackCount = getTrackCount(event)
+			local trackCount = GetTrackCount(event)
 			if validStackLevel == 0 and trackCount > 0 then
 				validStackLevel = i
 			elseif not event.continuous then
@@ -185,41 +170,11 @@ local function getValidStackLevel()
 	return validStackLevel
 end
 
-local currentTableName = nil
-local currentEventName = nil
-
-function Soundtrack.UnRegisterEvent(_) end
-
-Soundtrack.Events.Stack = {
-	-- This must match number of levels in Constants.lua
-	{ eventName = nil, tableName = nil }, -- Level 1: Continent
-	{ eventName = nil, tableName = nil }, -- Level 2: Region
-	{ eventName = nil, tableName = nil }, -- Level 3: Zones
-	{ eventName = nil, tableName = nil }, -- Level 4: Interiors
-	{ eventName = nil, tableName = nil }, -- Level 5: Mount: Mount, Flight
-	{ eventName = nil, tableName = nil }, -- Level 6: Auras: Forms
-	{ eventName = nil, tableName = nil }, -- Level 7: Status: Swimming, Stealthed
-	{ eventName = nil, tableName = nil }, -- Level 8: Temp. Buffs: Dash, Class Stealth
-	{ eventName = nil, tableName = nil }, -- Level 9: NPCs: Merchant, Auction House
-	{ eventName = nil, tableName = nil }, -- Level 10: One-time: Dance, Cinematics
-	{ eventName = nil, tableName = nil }, -- Level 11: Battle
-	{ eventName = nil, tableName = nil }, -- Level 12: Boss
-	{ eventName = nil, tableName = nil }, -- Level 13: Death, Ghost
-	{ eventName = nil, tableName = nil }, -- Level 14: SFX: Victory, Level up, LFG Complete
-	{ eventName = nil, tableName = nil }, -- Level 15: Playlists
-	{ eventName = nil, tableName = nil }, -- Level 16: Preview
-}
-
-function Soundtrack_Events_GetEventAtStackLevel(level)
+function Soundtrack.Events.GetEventAtStackLevel(level)
 	local eventName = Soundtrack.Events.Stack[level].eventName
 	local tableName = Soundtrack.Events.Stack[level].tableName
 	return eventName, tableName
 end
-
-Soundtrack.Events.Paused = false
-
--- Table of custom events defined by the user
-Soundtrack.Events.CustomEvents = {}
 
 -- Called anytime the stack has changed. Makes sure the top most event gets played,
 -- and avoids playing unnecessary events.
@@ -227,7 +182,7 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 	-- Remove any playOnce events that do not have any valid tracks or they will never be removed
 	SoundtrackFrame_TouchEvents()
 
-	local validStackLevel = getValidStackLevel()
+	local validStackLevel = GetValidStackLevel()
 	if validStackLevel == 0 then
 		-- Nothing to play.
 		-- Stop events if something was already active
@@ -267,7 +222,7 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 				Soundtrack.Timers.Remove("TrackFinished")
 
 				nextTrack = nil
-				local res = PlayRandomTrackByTable(tableName, eventName, offset)
+				local res = Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 				if not res then
 					Soundtrack.TraceEvents("Not supposed to play invalid events.")
 				end
@@ -283,9 +238,9 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 						if length then
 							if not event.continuous then
 								if track.length > 20 then
-									Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, playOnceTrackFinished)
+									Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, PlayOnceTrackFinished)
 								else
-									Soundtrack.Timers.AddTimer("FadeOut", length, playOnceTrackFinished)
+									Soundtrack.Timers.AddTimer("FadeOut", length, PlayOnceTrackFinished)
 								end
 							else
 								local randomSilence = 0
@@ -295,11 +250,11 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 										"Adding " .. randomSilence .. " seconds of silence after track"
 									)
 								end
-								Soundtrack.Timers.AddTimer("TrackFinished", length + randomSilence, trackFinished)
+								Soundtrack.Timers.AddTimer("TrackFinished", length + randomSilence, TrackFinished)
 								if track.length > 20 then
-									Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, startEmptyTrack)
+									Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, StartEmptyTrack)
 								else
-									Soundtrack.Timers.AddTimer("FadeOut", length, startEmptyTrack)
+									Soundtrack.Timers.AddTimer("FadeOut", length, StartEmptyTrack)
 								end
 							end
 						end
@@ -483,7 +438,7 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 	if event.soundEffect then
 		if eventHasTracks then
 			-- Sound effects are never added to the stack
-			PlayRandomTrackByTable(tableName, eventName, offset)
+			Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 		end
 	else
 		if eventHasTracks then
@@ -496,7 +451,7 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 end
 
 function Soundtrack.Events.RestartLastEvent(offset)
-	local stackLevel = getValidStackLevel()
+	local stackLevel = GetValidStackLevel()
 	if stackLevel > 0 then
 		Soundtrack.Events.PlayEvent(
 			Soundtrack.Events.Stack[stackLevel].tableName,
@@ -510,7 +465,7 @@ function Soundtrack.Events.RestartLastEvent(offset)
 end
 
 function Soundtrack.Events.GetCurrentStackLevel()
-	return getValidStackLevel()
+	return GetValidStackLevel()
 end
 
 function Soundtrack.Events.PlaybackNext()

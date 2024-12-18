@@ -575,7 +575,7 @@ end
 function SoundtrackFrame_TouchEvents()
 	SoundtrackFrame_RefreshCurrentlyPlaying()
 
-	for i = 1, Soundtrack.MaxStackLevel, 1 do
+	for i = 1, Soundtrack.Events.MaxStackLevel, 1 do
 		local tableName = Soundtrack.Events.Stack[i].tableName
 		local eventName = Soundtrack.Events.Stack[i].eventName
 		local label = _G["SoundtrackControlFrameStack" .. i]

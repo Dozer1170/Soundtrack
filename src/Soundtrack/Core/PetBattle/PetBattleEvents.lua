@@ -115,9 +115,9 @@ end
 
 function Soundtrack.PetBattleEvents.CheckPlayerTarget()
 	if isPlayer then
-		if SoundtrackEvents_EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
+		if Soundtrack.Events.EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
 			Soundtrack.TracePetBattles("Target player has known named event")
-			if SoundtrackEvents_EventHasTracks(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
+			if Soundtrack.Events.EventHasTracks(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
 				hasTracks = true
 			end
 		else
@@ -126,9 +126,9 @@ function Soundtrack.PetBattleEvents.CheckPlayerTarget()
 			targetName = nil
 		end
 	else
-		if SoundtrackEvents_EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName) then
+		if Soundtrack.Events.EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName) then
 			Soundtrack.TracePetBattles("Target NPC has known named event")
-			if SoundtrackEvents_EventHasTracks(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName) then
+			if Soundtrack.Events.EventHasTracks(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName) then
 				hasTracks = true
 			end
 		else
