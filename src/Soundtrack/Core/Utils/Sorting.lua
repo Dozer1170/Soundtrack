@@ -11,7 +11,7 @@ local function CompareTracksByTitle(i1, i2)
 end
 
 local function CompareTracksByFileName(i1, i2)
-	return Soundtrack.GetPathFileName(i1) < Soundtrack.GetPathFileName(i2)
+	return GetPathFileName(i1) < GetPathFileName(i2)
 end
 
 local function MatchTrack(trackName, track, filter)

@@ -149,10 +149,10 @@ local function SetUserEventsToCorrectLevel()
 end
 
 function Soundtrack.LoadTracks()
-	Soundtrack.Util.InitDebugChatFrame()
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Util.InitDebugChatFrame)
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 2, Soundtrack.Util.InitDebugChatFrame)
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Util.InitDebugChatFrame)
+	Soundtrack.Chat.InitDebugChatFrame()
+	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Chat.InitDebugChatFrame)
+	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 2, Soundtrack.Chat.InitDebugChatFrame)
+	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Chat.InitDebugChatFrame)
 
 	Soundtrack_Tracks = {}
 
@@ -188,17 +188,17 @@ function Soundtrack.LoadTracks()
 	SetUserEventsToCorrectLevel()
 
 	local numTracks = getn(Soundtrack_SortedTracks)
-	DEFAULT_CHAT_FRAME:AddMessage("Soundtrack: Loaded with " .. numTracks .. " track(s) in library.", 0.0, 1.0, 0.25)
+	Soundtrack.Chat.Message("Soundtrack: Loaded with " .. numTracks .. " track(s) in library.")
 
 	SoundtrackFrame_RefreshPlaybackControls()
 end
 
 function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soundEffect)
-	if Soundtrack.IsNullOrEmpty(tableName) then
+	if IsNullOrEmpty(tableName) then
 		Soundtrack.Error("AddEvent: Nil table")
 		return
 	end
-	if Soundtrack.IsNullOrEmpty(eventName) then
+	if IsNullOrEmpty(eventName) then
 		Soundtrack.Error("AddEvent: Nil event")
 		return
 	end
@@ -242,11 +242,11 @@ function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soun
 end
 
 function Soundtrack.RemoveEvent(tableName, eventName)
-	if Soundtrack.IsNullOrEmpty(tableName) then
+	if IsNullOrEmpty(tableName) then
 		Soundtrack.Error("RemoveEvent: Nil table")
 		return
 	end
-	if Soundtrack.IsNullOrEmpty(eventName) then
+	if IsNullOrEmpty(eventName) then
 		Soundtrack.Error("RemoveEvent: Nil event")
 		return
 	end
@@ -265,15 +265,15 @@ function Soundtrack.RemoveEvent(tableName, eventName)
 end
 
 function Soundtrack.RenameEvent(tableName, oldEventName, newEventName, _priority, _continuous, _soundEffect)
-	if Soundtrack.IsNullOrEmpty(tableName) then
+	if IsNullOrEmpty(tableName) then
 		Soundtrack.Error("RenameEvent: Nil table")
 		return
 	end
-	if Soundtrack.IsNullOrEmpty(oldEventName) then
+	if IsNullOrEmpty(oldEventName) then
 		Soundtrack.Error("RenmeEvent: Nil old event")
 		return
 	end
-	if Soundtrack.IsNullOrEmpty(newEventName) then
+	if IsNullOrEmpty(newEventName) then
 		Soundtrack.Error("RenameEvent: Nil new event " .. oldEventName)
 		return
 	end
@@ -309,7 +309,7 @@ function Soundtrack.RenameEvent(tableName, oldEventName, newEventName, _priority
 end
 
 function Soundtrack.AssignTrack(eventName, trackName)
-	if Soundtrack.IsNullOrEmpty(eventName) or Soundtrack.IsNullOrEmpty(trackName) then
+	if IsNullOrEmpty(eventName) or IsNullOrEmpty(trackName) then
 		debugEvents("AssignTrack: Invalid table or event name")
 		return
 	end
@@ -403,7 +403,7 @@ function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 		"PlayEvent("
 			.. tableName
 			.. ", "
-			.. Soundtrack.GetPathFileName(eventName)
+			.. GetPathFileName(eventName)
 			.. ", "
 			.. priorityText
 			.. ") "
@@ -504,7 +504,7 @@ function Soundtrack.OnLoad(self)
 	local function SoundtrackSlashCmd(msg)
 		if msg == "debug" then
 			SoundtrackAddon.db.profile.settings.Debug = not SoundtrackAddon.db.profile.settings.Debug
-			Soundtrack.Util.InitDebugChatFrame()
+			Soundtrack.Chat.InitDebugChatFrame()
 		elseif msg == "reset" then
 			SoundtrackFrame:ClearAllPoints()
 			SoundtrackFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)

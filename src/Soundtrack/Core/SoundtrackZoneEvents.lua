@@ -79,19 +79,19 @@ function Soundtrack_ZoneEvents_AddZones()
 	-- Construct full zone path
 	local zoneText1, zoneText2, zoneText3, zoneText4, zonePath
 
-	if not Soundtrack.IsNullOrEmpty(continentName) then
+	if not IsNullOrEmpty(continentName) then
 		zoneText1 = continentName
 		debug("AddZone Continent: " .. zoneText1)
 		zonePath = continentName
 	end
 
-	if not Soundtrack.IsNullOrEmpty(zoneText) then
+	if not IsNullOrEmpty(zoneText) then
 		zoneText2 = continentName .. "/" .. zoneText
 		debug("AddZone ZoneText: " .. zoneText2)
 		zonePath = zoneText2
 	end
 
-	if zoneText ~= zoneSubText and not Soundtrack.IsNullOrEmpty(zoneSubText) then
+	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
 		zoneText3 = zonePath .. "/" .. zoneSubText
 		debug("AddZone SubZoneText: " .. zoneText3)
 		zonePath = zoneText3
@@ -100,7 +100,7 @@ function Soundtrack_ZoneEvents_AddZones()
 	if
 		zoneText ~= minimapZoneText
 		and zoneSubText ~= minimapZoneText
-		and not Soundtrack.IsNullOrEmpty(minimapZoneText)
+		and not IsNullOrEmpty(minimapZoneText)
 	then
 		zoneText4 = zonePath .. "/" .. minimapZoneText
 		debug("AddZone MinimapZoneText: " .. zoneText4)
@@ -166,19 +166,19 @@ local function OnZoneChanged()
 	local zoneText1, zoneText2, zoneText3, zoneText4
 	local zonePath
 
-	if not Soundtrack.IsNullOrEmpty(continentName) then
+	if not IsNullOrEmpty(continentName) then
 		zoneText1 = continentName
 		debug("OnZoneChanged Continent: " .. zoneText1)
 		zonePath = continentName
 	end
 
-	if not Soundtrack.IsNullOrEmpty(zoneText) then
+	if not IsNullOrEmpty(zoneText) then
 		zoneText2 = continentName .. "/" .. zoneText
 		debug("OnZoneChanged ZoneText: " .. zoneText2)
 		zonePath = zoneText2
 	end
 
-	if zoneText ~= zoneSubText and not Soundtrack.IsNullOrEmpty(zoneSubText) then
+	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
 		zoneText3 = zonePath .. "/" .. zoneSubText
 		debug("OnZoneChanged SubZoneText: " .. zoneText3)
 		zonePath = zoneText3
@@ -187,7 +187,7 @@ local function OnZoneChanged()
 	if
 		zoneText ~= minimapZoneText
 		and zoneSubText ~= minimapZoneText
-		and not Soundtrack.IsNullOrEmpty(minimapZoneText)
+		and not IsNullOrEmpty(minimapZoneText)
 	then
 		zoneText4 = zonePath .. "/" .. minimapZoneText
 		debug("OnZoneChanged MinimapZoneText: " .. zoneText4)

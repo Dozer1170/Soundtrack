@@ -180,6 +180,15 @@ local eventTypes = {
 	ST_DEBUFF_SCRIPT,
 }
 
+-- Returns the number of seconds in "mm.ss" format
+local function FormatDuration(seconds)
+	if not seconds then
+		return ""
+	else
+		return string.format("%i:%02i", math.floor(seconds / 60), seconds % 60)
+	end
+end
+
 function SoundtrackFrame_Initialize()
 	OptionsTab.Initialize()
 end
@@ -356,7 +365,7 @@ local function SoundtrackFrame_TimeToUpdateTitle()
 end
 
 local function SoundtrackFrame_NewMovingTitle(title, oldTitle)
-	local titleClean = Soundtrack.Util.CleanString(title)
+	local titleClean = CleanString(title)
 	if oldTitle == nil then
 		backwards = false
 		return string.sub(titleClean, 1, MAX_TITLE_LENGTH)
@@ -367,7 +376,7 @@ local function SoundtrackFrame_NewMovingTitle(title, oldTitle)
 		oldTitle = string.sub(oldTitle, 1, MAX_TITLE_LENGTH)
 	end
 	-- Check if oldTitle is part of title
-	local oldTitleClean = Soundtrack.Util.CleanString(oldTitle)
+	local oldTitleClean = CleanString(oldTitle)
 	local arg1, arg2 = string.find(titleClean, oldTitleClean, 1, true)
 	-- arg1 = starting position where string found
 	-- arg2 = ending position of string found, inclusive
@@ -481,7 +490,7 @@ function SoundtrackFrame_RefreshTrackProgress()
 		currentTime = GetTime() - timer.Start
 	end
 
-	local textRemain = Soundtrack.Util.FormatDuration(duration - currentTime)
+	local textRemain = FormatDuration(duration - currentTime)
 	SoundtrackFrame_StatusBarTrackText2:SetText(textRemain)
 	SoundtrackControlFrame_StatusBarTrackText2:SetText(textRemain)
 
@@ -502,7 +511,7 @@ local function SoundtrackFrame_RefreshCurrentlyPlaying()
 	else
 		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
 		local eventName = Soundtrack.Events.Stack[stackLevel].eventName
-		SoundtrackFrame_StatusBarEventText1:SetText(Soundtrack.GetPathFileName(eventName))
+		SoundtrackFrame_StatusBarEventText1:SetText(GetPathFileName(eventName))
 		local event = Soundtrack.GetEvent(tableName, eventName)
 
 		if event and event.tracks then
@@ -580,7 +589,7 @@ function SoundtrackFrame_TouchEvents()
 			else
 				playOnceText = "Once"
 			end
-			local eventText = Soundtrack.GetPathFileName(eventName)
+			local eventText = GetPathFileName(eventName)
 			label:SetText(i .. ") " .. eventText .. " (" .. playOnceText .. ")")
 		end
 	end
@@ -1685,7 +1694,7 @@ function SoundtrackFrame_RefreshTracks()
 				if SoundtrackFrame.nameHeaderType == "filePath" or SoundtrackFrame.nameHeaderType == nil then
 					nameText:SetText(Soundtrack_SortedTracks[i])
 				elseif SoundtrackFrame.nameHeaderType == "fileName" then
-					nameText:SetText(Soundtrack.GetPathFileName(Soundtrack_SortedTracks[i]))
+					nameText:SetText(GetPathFileName(Soundtrack_SortedTracks[i]))
 				elseif SoundtrackFrame.nameHeaderType == "title" then
 					nameText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].title)
 				end
@@ -1705,7 +1714,7 @@ function SoundtrackFrame_RefreshTracks()
 				-- Show duration of track
 				local durationLabel = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextDuration"]
 				local duration = Soundtrack_Tracks[Soundtrack_SortedTracks[i]].length
-				durationLabel:SetText(Soundtrack.Util.FormatDuration(duration))
+				durationLabel:SetText(FormatDuration(duration))
 
 				icon = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "Icon"]
 				icon:Hide()
@@ -1792,7 +1801,7 @@ function SoundtrackFrame_RefreshAssignedTracks()
 				if SoundtrackFrame.nameHeaderType == "filePath" or SoundtrackFrame.nameHeaderType == nil then
 					nameText:SetText(assignedTracks[i])
 				elseif SoundtrackFrame.nameHeaderType == "fileName" then
-					nameText:SetText(Soundtrack.GetPathFileName(assignedTracks[i]))
+					nameText:SetText(GetPathFileName(assignedTracks[i]))
 				elseif SoundtrackFrame.nameHeaderType == "title" then
 					nameText:SetText(Soundtrack_Tracks[assignedTracks[i]].title)
 				end
@@ -1810,7 +1819,7 @@ function SoundtrackFrame_RefreshAssignedTracks()
 				-- Show duration of track
 				local durationLabel = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextDuration"]
 				local duration = Soundtrack_Tracks[assignedTracks[i]].length
-				durationLabel:SetText(Soundtrack.Util.FormatDuration(duration))
+				durationLabel:SetText(FormatDuration(duration))
 
 				icon = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "Icon"]
 				icon:Hide()

@@ -20,10 +20,6 @@ StaticPopupDialogs["SOUNDTRACK_REMOVETRACK"] = {
 	hideOnEscape = 1,
 }
 
-local function debug(msg)
-	Soundtrack.Util.DebugPrint("[Library]: " .. msg, 0.25, 0.25, 1.0)
-end
-
 function Soundtrack.Library.AddTrack(trackName, _length, _title, _artist, _album, _extension)
 	if _extension == nil then
 		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album }
@@ -71,7 +67,7 @@ function Soundtrack.Library.StopMusic()
 
 	-- Play EmptyTrack
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
-	debug("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
+	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
 	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
 	SoundtrackFrame_TouchTracks()
 end
@@ -79,13 +75,13 @@ end
 function Soundtrack.Library.PauseMusic()
 	-- Play EmptyTrack
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
-	debug("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
+	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
 	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
 	SoundtrackFrame_TouchTracks()
 end
 
 function Soundtrack.Library.StopTrack()
-	debug("StopTrack()")
+	Soundtrack.Chat.TraceLibrary("StopTrack()")
 	fadeOut = true
 	nextTrackInfo = nil
 end
@@ -93,7 +89,7 @@ end
 local function DelayedPlayMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
 	SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
-	debug("PlayMusic(" .. nextFileName .. ")")
+	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
 	PlayMusic(nextFileName)
 	SoundtrackFrame_TouchTracks()
 end
@@ -129,19 +125,16 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 
 	nextTrackInfo = Soundtrack_Tracks[trackName]
 
-	-- TODO : Change DefaultScore name
 	if nextTrackInfo.defaultTrack then
-		--clean out Default filenames. Keep DataID number after ^^
-		--first find index location from trackName
 		local newTrackName = trackName
-		debug("PlayDefaultMusicFileName(" .. newTrackName .. ")")
+		Soundtrack.Chat.TraceLibrary("PlayDefaultMusicFileName(" .. newTrackName .. ")")
 		local dtrackIndexB, dtrackIndexE = string.find(newTrackName, "////")
 		if not dtrackIndexB then
 			dtrackIndexB = 0
 			dtrackIndexE = 0
 		else
 			newTrackName = string.sub(newTrackName, dtrackIndexE + 1)
-			debug("PlayDefaultMusicCroppedName(" .. newTrackName .. ")")
+			Soundtrack.Chat.TraceLibrary("PlayDefaultMusicCroppedName(" .. newTrackName .. ")")
 		end
 		nextFileName = "" .. newTrackName .. ""
 	else
@@ -161,7 +154,7 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 		-- Start fading out current song
 		fadeOut = true
 	else
-		debug("PlaySoundFile(" .. nextFileName .. ")") -- EDITED, replaced fileName with nextFileName
+		Soundtrack.Chat.TraceLibrary("PlaySoundFile(" .. nextFileName .. ")") -- EDITED, replaced fileName with nextFileName
 		PlaySoundFile(nextFileName) -- sound effect. play the music overlapping other music
 		nextTrackInfo = nil
 	end
@@ -186,7 +179,7 @@ function Soundtrack.Library.RemoveTrack(trackName)
 			for _, v in SoundtrackAddon.db.profile.events[eventTab] do
 				for i, tn in ipairs(v.tracks) do
 					if tn == trackName then
-						debug("Removed assigned track " .. trackName)
+						Soundtrack.Chat.TraceLibrary("Removed assigned track " .. trackName)
 						table.remove(v.tracks, i)
 						break
 					end

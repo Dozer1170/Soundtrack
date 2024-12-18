@@ -4,12 +4,7 @@ local function CleanupTableEvents(savedEventTable, liveEventTable)
 	for key, _ in pairs(savedEventTable) do
 		if liveEventTable[key] == nil and key ~= "Preview" then
 			savedEventTable[key] = nil
-			DEFAULT_CHAT_FRAME:AddMessage(
-				"Soundtrack: Found obsolete event " .. key .. " removing from saved data.",
-				1.0,
-				0.0,
-				0.0
-			)
+			Soundtrack.Chat.Message("Found obsolete event " .. key .. " removing from saved data.")
 		end
 	end
 end
@@ -26,7 +21,7 @@ local function PurgeOldTracksFromTable(eventTableName)
 		-- Find tracks to remove
 		for _, trackName in ipairs(v.tracks) do
 			if not Soundtrack_Tracks[trackName] then
-				Soundtrack.Message("Removed obsolete track " .. trackName)
+				Soundtrack.Chat.Message("Removed obsolete track " .. trackName)
 				table.insert(tracksToRemove, trackName)
 			end
 		end

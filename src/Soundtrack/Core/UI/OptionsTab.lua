@@ -64,7 +64,7 @@ end
 
 function OptionsTab_ToggleDebugMode()
 	SoundtrackAddon.db.profile.settings.Debug = not SoundtrackAddon.db.profile.settings.Debug
-	Soundtrack.Util.InitDebugChatFrame()
+	Soundtrack.Chat.InitDebugChatFrame()
 end
 
 function OptionsTab_ToggleShowTrackInformation()

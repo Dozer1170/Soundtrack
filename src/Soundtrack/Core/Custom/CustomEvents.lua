@@ -12,15 +12,15 @@ local function debug(msg)
 end
 
 function Soundtrack.CustomEvents.RenameEvent(tableName, oldEventName, newEventName)
-	if Soundtrack.IsNullOrEmpty(tableName) then
+	if IsNullOrEmpty(tableName) then
 		Soundtrack.Error("Custom RenameEvent: Nil table")
 		return
 	end
-	if Soundtrack.IsNullOrEmpty(oldEventName) then
+	if IsNullOrEmpty(oldEventName) then
 		Soundtrack.Error("Custom RenmeEvent: Nil old event")
 		return
 	end
-	if Soundtrack.IsNullOrEmpty(newEventName) then
+	if IsNullOrEmpty(newEventName) then
 		Soundtrack.Error("Custom RenameEvent: Nil new event " .. oldEventName)
 		return
 	end

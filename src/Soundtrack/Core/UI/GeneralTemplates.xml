@@ -211,7 +211,7 @@
         </Layers>
     <Scripts>
       <OnClick>
-                Soundtrack.Util.DebugPrint("Column header clicked!")
+                Soundtrack.Chat.Debug("Column header clicked!")
                 if ( self.sortType ) then
                 Soundtrack.SortTracks(self.sortType);
                 end

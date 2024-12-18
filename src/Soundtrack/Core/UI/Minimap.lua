@@ -1,7 +1,7 @@
 -- Minimap Button Handling
 
 local function debug(msg)
-	Soundtrack.Util.DebugPrint(msg)
+	Soundtrack.Chat.Debug(msg)
 end
 
 local icon = LibStub("LibDBIcon-1.0")

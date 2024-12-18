@@ -398,9 +398,9 @@
                         SoundtrackAddon.db.profile.settings.EnableZoneMusic = not
                         SoundtrackAddon.db.profile.settings.EnableZoneMusic
                         if SoundtrackAddon.db.profile.settings.EnableZoneMusic == true then
-                        Soundtrack.Util.DebugPrint("Zone Music ON")
+                        Soundtrack.Chat.Debug("Zone Music ON")
                         else
-                        Soundtrack.Util.DebugPrint("Zone Music OFF")
+                        Soundtrack.Chat.Debug("Zone Music OFF")
                         end
                     </OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENABLE_ZONE_MUSIC,
