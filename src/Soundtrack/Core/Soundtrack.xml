@@ -6,8 +6,8 @@
   <Script file="Localization\Localization.es.lua"/>
   <Script file="Localization\Localization.en.lua"/>
   <Script file="Constants.lua"/>
-  <Script file="SoundtrackTimers.lua"/>
-  <Script file="SoundtrackLibrary.lua"/>
+  <Script file="Timers.lua"/>
+  <Script file="Library.lua"/>
   <Script file="Events.lua"/>
   <Script file="DefaultTracks.lua"/>
   <Script file="Soundtrack.lua"/>
