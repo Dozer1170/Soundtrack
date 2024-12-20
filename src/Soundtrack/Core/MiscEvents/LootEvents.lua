@@ -41,7 +41,7 @@ function Soundtrack.LootEvents.OnEvent(eventName, lootString, player)
 	end
 
 	local playerName = UnitName("player")
-	Soundtrack.TraceCustom(
+	Soundtrack.Chat.TraceCustom(
 		"Loot message event: "
 			.. tostring(lootString)
 			.. " player: "

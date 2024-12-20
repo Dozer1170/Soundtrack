@@ -6,7 +6,7 @@ local isCurrentlyFlying = false
 local InFlight = false
 
 local function debug(msg)
-	Soundtrack.TraceEvents(msg)
+	Soundtrack.Chat.TraceEvents(msg)
 end
 
 local function Soundtrack_MountEvents_PlayIfTracksAvailable(tableName, eventName)

@@ -43,46 +43,46 @@ function Soundtrack.Chat.Message(text)
 	ChatPrint("Soundtrack: " .. text)
 end
 
-function Soundtrack.Error(text)
+function Soundtrack.Chat.Error(text)
 	ChatPrint("Soundtrack: Error: " .. text, 1, 0.25, 0.0)
 end
 
-function Soundtrack.Warning(text)
+function Soundtrack.Chat.Warning(text)
 	Soundtrack.Chat.Debug("Soundtrack: Warning: " .. text, 0.75, 0.75, 0.0)
 end
 
-function Soundtrack.Trace(text)
+function Soundtrack.Chat.Trace(text)
 	Soundtrack.Chat.Debug("[Trace]: " .. text, 0.75, 0.75, 0.75)
 end
 
-function Soundtrack.TraceLibrary(text)
+function Soundtrack.Chat.TraceLibrary(text)
 	Soundtrack.Chat.Debug("[Library]: " .. text, 0.25, 0.25, 1.0)
 end
 
-function Soundtrack.TraceBattle(text)
+function Soundtrack.Chat.TraceBattle(text)
 	Soundtrack.Chat.Debug("[Battle]: " .. text, 1.0, 0.0, 0.0)
 end
 
-function Soundtrack.TracePetBattles(text)
+function Soundtrack.Chat.TracePetBattles(text)
 	Soundtrack.Chat.Debug("[Pet Battles]: " .. text, 0.5, 1.0, 0.0)
 end
 
-function Soundtrack.TraceZones(text)
+function Soundtrack.Chat.TraceZones(text)
 	Soundtrack.Chat.Debug("[Zones]: " .. text, 0.0, 0.50, 0.0)
 end
 
-function Soundtrack.TraceFrame(text)
+function Soundtrack.Chat.TraceFrame(text)
 	Soundtrack.Chat.Debug("[Frame]: " .. text, 0.75, 0.75, 0.0)
 end
 
-function Soundtrack.TraceEvents(text)
+function Soundtrack.Chat.TraceEvents(text)
 	Soundtrack.Chat.Debug("[Events]: " .. text, 0.0, 1.0, 1.0)
 end
 
-function Soundtrack.TraceCustom(text)
+function Soundtrack.Chat.TraceCustom(text)
 	Soundtrack.Chat.Debug("[Custom]: " .. text, 1.0, 0.0, 0.5)
 end
 
-function Soundtrack.TraceProfiles(text)
+function Soundtrack.Chat.TraceProfiles(text)
 	Soundtrack.Chat.Debug("[Profiles]: " .. text, 0.75, 1.0, 0.25)
 end

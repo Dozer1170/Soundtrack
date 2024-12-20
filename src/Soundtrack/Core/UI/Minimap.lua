@@ -41,7 +41,7 @@ end
 function SoundtrackMinimap_ToggleMinimap()
 	SoundtrackAddon.db.profile.minimap.hide = not SoundtrackAddon.db.profile.minimap.hide
 	if SoundtrackAddon.db.profile.minimap.hide then
-		Soundtrack.TraceFrame(SOUNDTRACK_MINIMAP_BUTTON_HIDDEN)
+		Soundtrack.Chat.TraceFrame(SOUNDTRACK_MINIMAP_BUTTON_HIDDEN)
 		icon:Hide("SoundtrackAddon")
 	else
 		icon:Show("SoundtrackAddon")

@@ -5,7 +5,7 @@ local updateInterval = 1
 local zoneType = nil
 
 local function debug(msg)
-	Soundtrack.TraceZones(msg)
+	Soundtrack.Chat.TraceZones(msg)
 end
 
 local function FindContinentByZone()

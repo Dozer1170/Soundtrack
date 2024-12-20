@@ -7,7 +7,7 @@ end
 function Soundtrack.DanceEvents.OnEvent(_, event, ...)
 	local arg1, arg2 = ...
 
-	Soundtrack.TraceCustom(event)
+	Soundtrack.Chat.TraceCustom(event)
 	if not SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		return
 	end

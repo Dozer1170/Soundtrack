@@ -30,7 +30,7 @@ function OptionsTab.Refresh()
 	OptionsTab_HidePlaybackButtons:SetChecked(s.HideControlButtons)
 
 	local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
-	Soundtrack.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
+	Soundtrack.Chat.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
 	if cvar_LoopMusic == "0" then
 		OptionsTab_LoopMusic:SetChecked(false)
 	else
@@ -44,11 +44,11 @@ function OptionsTab_ToggleLoopMusic()
 	if OptionsTab_LoopMusic:GetChecked() == 1 then
 		SetCVar("Sound_ZoneMusicNoDelay", 1, "SoundtrackSound_ZoneMusicNoDelay_1")
 		local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
-		Soundtrack.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
+		Soundtrack.Chat.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
 	else
 		SetCVar("Sound_ZoneMusicNoDelay", 0, "SoundtrackSound_ZoneMusicNoDelay_0")
 		local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
-		Soundtrack.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
+		Soundtrack.Chat.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
 	end
 end
 

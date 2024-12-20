@@ -299,7 +299,7 @@ local function SelectActiveTab()
 
 	if stackLevel > 0 then
 		-- Select currently playing table tab
-		Soundtrack.TraceFrame("Selecting currently playing tab")
+		Soundtrack.Chat.TraceFrame("Selecting currently playing tab")
 		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
 		SEVT.SelectedEventsTable = tableName
 		PanelTemplates_SetTab(SoundtrackFrame, GetTabIndex(tableName))
@@ -550,7 +550,7 @@ SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST = {
 function SoundtrackFrame_ColumnHeaderNameDropDown_OnClick(self)
 	UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, self:GetID())
 	SoundtrackFrame.nameHeaderType = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[self:GetID()].type
-	Soundtrack.TraceFrame("Refreshing tracks with " .. SoundtrackFrame.nameHeaderType)
+	Soundtrack.Chat.TraceFrame("Refreshing tracks with " .. SoundtrackFrame.nameHeaderType)
 	if
 		self.sortType == "name" and SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "fileName"
 		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "filePath"
@@ -914,7 +914,7 @@ function SoundtrackFrame_RefreshCustomEvent()
 	end
 
 	if customEvent.type == nil then
-		Soundtrack.TraceFrame("Nil type on " .. SoundtrackFrame_SelectedEvent)
+		Soundtrack.Chat.TraceFrame("Nil type on " .. SoundtrackFrame_SelectedEvent)
 		customEvent.type = ST_UPDATE_SCRIPT
 	end
 
@@ -924,7 +924,7 @@ function SoundtrackFrame_RefreshCustomEvent()
 end
 
 function SoundtrackFrameEventButton_OnClick(self, mouseButton, _)
-	Soundtrack.TraceFrame("EventButton_OnClick")
+	Soundtrack.Chat.TraceFrame("EventButton_OnClick")
 
 	Soundtrack.Events.Pause(false)
 
@@ -938,10 +938,10 @@ function SoundtrackFrameEventButton_OnClick(self, mouseButton, _)
 		-- Do nothing
 	elseif event.expanded then
 		event.expanded = false
-		Soundtrack.TraceFrame(SoundtrackFrame_SelectedEvent .. " is now collapsed")
+		Soundtrack.Chat.TraceFrame(SoundtrackFrame_SelectedEvent .. " is now collapsed")
 	else
 		event.expanded = true
-		Soundtrack.TraceFrame(SoundtrackFrame_SelectedEvent .. " is now expanded")
+		Soundtrack.Chat.TraceFrame(SoundtrackFrame_SelectedEvent .. " is now expanded")
 	end
 
 	Soundtrack_OnTreeChanged(SEVT.SelectedEventsTable)
@@ -977,7 +977,7 @@ function SoundtrackFrameAddZoneButton_OnClick()
 end
 
 function SoundtrackFrameCollapseAllZoneButton_OnClick()
-	Soundtrack.TraceFrame("Collapsing all zone events")
+	Soundtrack.Chat.TraceFrame("Collapsing all zone events")
 	for _, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
 		eventNode.expanded = false
 	end
@@ -986,7 +986,7 @@ function SoundtrackFrameCollapseAllZoneButton_OnClick()
 end
 
 function SoundtrackFrameExpandAllZoneButton_OnClick()
-	Soundtrack.TraceFrame("Expanding all zone events")
+	Soundtrack.Chat.TraceFrame("Expanding all zone events")
 	for _, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
 		eventNode.expanded = true
 	end
@@ -1096,7 +1096,7 @@ function SoundtrackFrame_AddPlaylist(playlistName)
 end
 
 function SoundtrackFrameDeletePlaylistButton_OnClick()
-	Soundtrack.TraceFrame("Deleting " .. SoundtrackFrame_SelectedEvent)
+	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame_SelectedEvent)
 	Soundtrack.Events.DeleteEvent(ST_PLAYLISTS, SoundtrackFrame_SelectedEvent)
 	SoundtrackFrame_RefreshEvents()
 end
@@ -1104,7 +1104,7 @@ end
 function SoundtrackFrameEventMenu_Initialize() end
 
 function SoundtrackFrame_StatusBar_OnClick(_, _, _)
-	Soundtrack.TraceFrame("StatusBar_OnClick")
+	Soundtrack.Chat.TraceFrame("StatusBar_OnClick")
 	local menu = _G["SoundtrackControlFrame_PlaylistMenu"]
 	local button = _G["SoundtrackControlFrame_StatusBarTrack"]
 	menu.point = "TOPLEFT"
@@ -1113,10 +1113,10 @@ function SoundtrackFrame_StatusBar_OnClick(_, _, _)
 end
 
 function SoundtrackControlFrame_PlaylistMenu_OnClick(self)
-	Soundtrack.TraceFrame("PlaylistMenu_OnClick")
+	Soundtrack.Chat.TraceFrame("PlaylistMenu_OnClick")
 
 	local table = Soundtrack.Events.GetTable(ST_PLAYLISTS)
-	Soundtrack.TraceFrame(self:GetID())
+	Soundtrack.Chat.TraceFrame(self:GetID())
 
 	local i = 1
 	local eventName = nil
@@ -1221,7 +1221,7 @@ function PlayPreviewTrack(trackName)
 end
 
 function SoundtrackFrameTrackButton_OnClick(self, _, _)
-	Soundtrack.TraceFrame("OnClick")
+	Soundtrack.Chat.TraceFrame("OnClick")
 
 	Soundtrack.Events.Pause(false)
 
@@ -1261,7 +1261,7 @@ end
 
 function SoundtrackFrameClearButton_OnClick()
 	if not SoundtrackFrame_SelectedEvent then
-		Soundtrack.Error("The Clear button was enabled without a selected event")
+		Soundtrack.Chat.Error("The Clear button was enabled without a selected event")
 		return
 	end
 
@@ -1461,11 +1461,11 @@ end
 
 function SoundtrackFrame_RefreshEvents()
 	if not SoundtrackFrame:IsVisible() or not SEVT.SelectedEventsTable then
-		Soundtrack.TraceFrame("Skipping event refresh")
+		Soundtrack.Chat.TraceFrame("Skipping event refresh")
 		return
 	end
 
-	Soundtrack.TraceFrame("SEVT.SelectedEventsTable: " .. SEVT.SelectedEventsTable)
+	Soundtrack.Chat.TraceFrame("SEVT.SelectedEventsTable: " .. SEVT.SelectedEventsTable)
 	local flatEventsTable = GetFlatEventsTable()
 
 	-- The selected event was deleted, activate another one if possible
@@ -1906,7 +1906,7 @@ function SoundtrackFrameDeleteTargetButton_OnClick()
 end
 
 function SoundtrackFrame_DeleteTarget(eventName)
-	Soundtrack.TraceFrame("Deleting " .. SoundtrackFrame_SelectedEvent)
+	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame_SelectedEvent)
 	Soundtrack.Events.DeleteEvent("Boss", eventName)
 	SoundtrackFrame_RefreshEvents()
 end

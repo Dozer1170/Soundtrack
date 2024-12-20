@@ -41,7 +41,7 @@ local targetName = nil
 local zoneText
 
 function Soundtrack.PetBattleEvents.OnEvent(_, event)
-	Soundtrack.TracePetBattles(event)
+	Soundtrack.Chat.TracePetBattles(event)
 
 	if event == "PET_BATTLE_OPENING_START" then
 		Soundtrack.PetBattleEvents.BattleEngaged()
@@ -87,10 +87,10 @@ function Soundtrack.PetBattleEvents.BattleEngaged()
 		end
 
 		if C_PetBattles.IsWildBattle() then
-			Soundtrack.TracePetBattles(zoneText .. "=continentText " .. SOUNDTRACK_WILD_BATTLE)
+			Soundtrack.Chat.TracePetBattles(zoneText .. "=continentText " .. SOUNDTRACK_WILD_BATTLE)
 			Soundtrack.PlayEvent(ST_PETBATTLES, zoneText .. " " .. SOUNDTRACK_WILD_BATTLE)
 		elseif not C_PetBattles.IsWildBattle() then
-			Soundtrack.TracePetBattles(zoneText .. " " .. SOUNDTRACK_NPC_BATTLE)
+			Soundtrack.Chat.TracePetBattles(zoneText .. " " .. SOUNDTRACK_NPC_BATTLE)
 			Soundtrack.PlayEvent(ST_PETBATTLES, zoneText .. " " .. SOUNDTRACK_NPC_BATTLE)
 		end
 	end
@@ -105,7 +105,7 @@ end
 
 function Soundtrack.PetBattleEvents.GetPlayerTargetInfo()
 	targetName = UnitName("target")
-	Soundtrack.TracePetBattles("Target name is: " .. targetName)
+	Soundtrack.Chat.TracePetBattles("Target name is: " .. targetName)
 	if UnitIsPlayer("target") then
 		isPlayer = true
 	else
@@ -116,23 +116,23 @@ end
 function Soundtrack.PetBattleEvents.CheckPlayerTarget()
 	if isPlayer then
 		if Soundtrack.Events.EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
-			Soundtrack.TracePetBattles("Target player has known named event")
+			Soundtrack.Chat.TracePetBattles("Target player has known named event")
 			if Soundtrack.Events.EventHasTracks(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
 				hasTracks = true
 			end
 		else
-			Soundtrack.TracePetBattles("Target player does not have a known named event")
+			Soundtrack.Chat.TracePetBattles("Target player does not have a known named event")
 			hasTracks = false
 			targetName = nil
 		end
 	else
 		if Soundtrack.Events.EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName) then
-			Soundtrack.TracePetBattles("Target NPC has known named event")
+			Soundtrack.Chat.TracePetBattles("Target NPC has known named event")
 			if Soundtrack.Events.EventHasTracks(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName) then
 				hasTracks = true
 			end
 		else
-			Soundtrack.TracePetBattles("Target NPC does not have a known named event")
+			Soundtrack.Chat.TracePetBattles("Target NPC does not have a known named event")
 			hasTracks = false
 			targetName = nil
 		end

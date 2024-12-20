@@ -36,13 +36,13 @@ function ProfilesTab_InitDropDown(func, skipCurrentProfile)
 end
 
 function ProfilesTab_LoadProfileDropDownItemSelected(_, profileName)
-	Soundtrack.TraceProfiles("Selected profile to load: " .. profileName)
+	Soundtrack.Chat.TraceProfiles("Selected profile to load: " .. profileName)
 	SoundtrackAddon.db:SetProfile(profileName)
 	ProfilesTab_ReloadProfile()
 end
 
 function ProfilesTab_CopyFromProfileDropDownItemSelected(_, profileName)
-	Soundtrack.TraceProfiles("Selected profile to copy from: " .. profileName)
+	Soundtrack.Chat.TraceProfiles("Selected profile to copy from: " .. profileName)
 
 	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
 	StaticPopupDialogs[PROFILES_COPY_CONFIRM] = {
@@ -65,7 +65,7 @@ function ProfilesTab_CopyFromProfileDropDownItemSelected(_, profileName)
 end
 
 function ProfilesTab_DeleteProfileDropDownItemSelected(_, profileName)
-	Soundtrack.TraceProfiles("Selected profile to delete: " .. profileName)
+	Soundtrack.Chat.TraceProfiles("Selected profile to delete: " .. profileName)
 
 	StaticPopupDialogs[PROFILES_DELETE_CONFIRM] = {
 		text = "Are you sure you want to DELETE the " .. profileName .. " profile? You cannot undo this.",
@@ -83,7 +83,7 @@ end
 
 function ProfilesTab_CreateNewProfile()
 	local profileName = NewProfileEditBox:GetText()
-	Soundtrack.TraceProfiles("Requested to create new profile: " .. profileName)
+	Soundtrack.Chat.TraceProfiles("Requested to create new profile: " .. profileName)
 
 	local profiles = SoundtrackAddon.db:GetProfiles()
 	if HasValue(profiles, profileName) then
@@ -103,7 +103,7 @@ function ProfilesTab_CreateNewProfile()
 end
 
 function ProfilesTab_ResetCurrentProfile()
-	Soundtrack.TraceProfiles("Requested to reset current profile")
+	Soundtrack.Chat.TraceProfiles("Requested to reset current profile")
 	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
 	StaticPopupDialogs[PROFILES_RESET_CONFIRM] = {
 		text = "Are you sure you want to RESET the "

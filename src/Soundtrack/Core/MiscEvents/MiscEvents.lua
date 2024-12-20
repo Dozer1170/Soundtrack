@@ -6,7 +6,7 @@
 ]]
 
 local function debug(msg)
-	Soundtrack.TraceCustom(msg)
+	Soundtrack.Chat.TraceCustom(msg)
 end
 
 Soundtrack.Misc = {}

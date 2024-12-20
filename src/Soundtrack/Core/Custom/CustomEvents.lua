@@ -8,27 +8,27 @@
 Soundtrack.CustomEvents = {}
 
 local function debug(msg)
-	Soundtrack.TraceCustom(msg)
+	Soundtrack.Chat.TraceCustom(msg)
 end
 
 function Soundtrack.CustomEvents.RenameEvent(tableName, oldEventName, newEventName)
 	if IsNullOrEmpty(tableName) then
-		Soundtrack.Error("Custom RenameEvent: Nil table")
+		Soundtrack.Chat.Error("Custom RenameEvent: Nil table")
 		return
 	end
 	if IsNullOrEmpty(oldEventName) then
-		Soundtrack.Error("Custom RenmeEvent: Nil old event")
+		Soundtrack.Chat.Error("Custom RenmeEvent: Nil old event")
 		return
 	end
 	if IsNullOrEmpty(newEventName) then
-		Soundtrack.Error("Custom RenameEvent: Nil new event " .. oldEventName)
+		Soundtrack.Chat.Error("Custom RenameEvent: Nil new event " .. oldEventName)
 		return
 	end
 
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if not eventTable then
-		Soundtrack.Error("Custom RenameEvent: Cannot find table : " .. tableName)
+		Soundtrack.Chat.Error("Custom RenameEvent: Cannot find table : " .. tableName)
 		return
 	end
 

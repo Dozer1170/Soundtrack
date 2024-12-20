@@ -27,7 +27,7 @@ local currentEventName = nil
 
 local function VerifyStackLevel(stackLevel)
 	if not stackLevel or not (stackLevel >= 1 and stackLevel <= Soundtrack.MaxStackLevel) then
-		Soundtrack.Error("BAD STACK LEVEL " .. stackLevel)
+		Soundtrack.Chat.Error("BAD STACK LEVEL " .. stackLevel)
 	end
 end
 
@@ -61,8 +61,8 @@ end
 
 local nextTrack -- Hack because of fading issue
 -- Attempts to play a random track on a specific event table. Returns true if it found a track to play.
-function Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
-	Soundtrack.TraceEvents("Soundrack.Events.PlayRandomTrackByTable (" .. tableName .. ", " .. eventName .. ")")
+function Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
+	Soundtrack.Chat.TraceEvents("Soundtrack.Events.PlayRandomTrackByTable (" .. tableName .. ", " .. eventName .. ")")
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if eventTable[eventName] then
@@ -75,9 +75,9 @@ function Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 
 				if eventTable[eventName].random then
 					-- if eventTable[eventName].random and tableName ~= "Playlists" then
-					--Soundtrack.TraceEvents("Random")
+					--Soundtrack.Chat.TraceEvents("Random")
 					index = random(1, numTracks)
-					--Soundtrack.TraceEvents("Random index: "..index)
+					--Soundtrack.Chat.TraceEvents("Random index: "..index)
 
 					-- Avoid playing same track twice
 					if index == eventTable[eventName].lastTrackIndex then
@@ -86,9 +86,9 @@ function Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 							index = 1
 						end
 					end
-				--Soundtrack.TraceEvents("Adjusted Random index: "..index)
+				--Soundtrack.Chat.TraceEvents("Adjusted Random index: "..index)
 				else
-					--Soundtrack.TraceEvents("Non random")
+					--Soundtrack.Chat.TraceEvents("Non random")
 					-- Non random playback
 					if not eventTable[eventName].lastTrackIndex then
 						index = 1
@@ -110,7 +110,7 @@ function Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 				elseif eventTable[eventName].soundEffect then
 					Soundtrack.Library.PlayTrack(trackName, eventTable[eventName].soundEffect)
 				else
-					Soundtrack.TraceEvents("Paused")
+					Soundtrack.Chat.TraceEvents("Paused")
 				end
 				return true
 			end
@@ -155,7 +155,7 @@ local function GetValidStackLevel()
 			if validStackLevel == 0 and trackCount > 0 then
 				validStackLevel = i
 			elseif not event.continuous then
-				Soundtrack.TraceEvents("Removing obsolete event: " .. Soundtrack.Events.Stack[i].eventName)
+				Soundtrack.Chat.TraceEvents("Removing obsolete event: " .. Soundtrack.Events.Stack[i].eventName)
 				Soundtrack.Events.Stack[i].eventName = nil
 				Soundtrack.Events.Stack[i].tableName = nil
 				Soundtrack.Events.Stack[i].offset = 0
@@ -222,9 +222,9 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 				Soundtrack.Timers.Remove("TrackFinished")
 
 				nextTrack = nil
-				local res = Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
+				local res = Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 				if not res then
-					Soundtrack.TraceEvents("Not supposed to play invalid events.")
+					Soundtrack.Chat.TraceEvents("Not supposed to play invalid events.")
 				end
 
 				currentTableName = tableName
@@ -246,7 +246,7 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 								local randomSilence = 0
 								if SoundtrackAddon.db.profile.settings.Silence > 0 then
 									randomSilence = random(5, SoundtrackAddon.db.profile.settings.Silence)
-									Soundtrack.TraceEvents(
+									Soundtrack.Chat.TraceEvents(
 										"Adding " .. randomSilence .. " seconds of silence after track"
 									)
 								end
@@ -273,7 +273,7 @@ function Soundtrack.Events.GetTable(eventTableName)
 
 	local eventTable = SoundtrackAddon.db.profile.events[eventTableName]
 	if not eventTable then
-		Soundtrack.Error("Attempt to access invalid event table (" .. eventTableName .. ")")
+		Soundtrack.Chat.Error("Attempt to access invalid event table (" .. eventTableName .. ")")
 		return nil
 	end
 
@@ -289,13 +289,13 @@ function Soundtrack.Events.Add(eventTableName, eventName, trackName)
 
 	local eventTable = Soundtrack.Events.GetTable(eventTableName)
 	if not eventTable then
-		Soundtrack.TraceEvents("Cannot find table : " .. eventTableName)
+		Soundtrack.Chat.TraceEvents("Cannot find table : " .. eventTableName)
 		return
 	end
 
 	if not eventTable[eventName] then
 		if not trackName then
-			Soundtrack.TraceEvents("Add Event: " .. eventTableName .. ": " .. eventName)
+			Soundtrack.Chat.TraceEvents("Add Event: " .. eventTableName .. ": " .. eventName)
 		end
 
 		-- Create event
@@ -335,7 +335,7 @@ function Soundtrack.Events.DeleteEvent(tableName, eventName)
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 	if eventTable then
 		if eventTable[eventName] then
-			Soundtrack.TraceEvents("Removing event: " .. eventName)
+			Soundtrack.Chat.TraceEvents("Removing event: " .. eventName)
 			eventTable[eventName] = nil
 		end
 		Soundtrack.SortEvents(tableName)
@@ -351,7 +351,7 @@ function Soundtrack.Events.RenameEvent(tableName, oldName, newName)
 
 	local eventTable = SoundtrackAddon.db.profile.events[tableName]
 	if eventTable and eventTable[oldName] then
-		Soundtrack.TraceEvents("Renaming event: " .. oldName .. " => " .. newName)
+		Soundtrack.Chat.TraceEvents("Renaming event: " .. oldName .. " => " .. newName)
 		local event = eventTable[oldName]
 		eventTable[newName] = event
 		eventTable[oldName] = nil
@@ -373,7 +373,7 @@ function Soundtrack.Events.RenameEvent(tableName, oldName, newName)
 end
 
 function Soundtrack.Events.ClearEvent(eventTableName, eventName)
-	Soundtrack.TraceEvents("ClearEvent(" .. eventTableName .. ", " .. eventName)
+	Soundtrack.Chat.TraceEvents("ClearEvent(" .. eventTableName .. ", " .. eventName)
 	local eventTable = Soundtrack.Events.GetTable(eventTableName)
 
 	eventTable[eventName].tracks = {}
@@ -382,24 +382,24 @@ end
 -- Adds an event on the stack and refreshes active track
 function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRestart, _, offset)
 	if eventName == nil then
-		Soundtrack.TraceEvents("Attempting to PlayEvent with a nil name!")
+		Soundtrack.Chat.TraceEvents("Attempting to PlayEvent with a nil name!")
 		return
 	end
 
 	if not stackLevel then
-		Soundtrack.TraceEvents("Cannot PlayEvent(" .. eventName .. "). It has no priority level.")
+		Soundtrack.Chat.TraceEvents("Cannot PlayEvent(" .. eventName .. "). It has no priority level.")
 		return
 	end
 
 	VerifyStackLevel(stackLevel)
 
 	if not tableName then
-		Soundtrack.TraceEvents("PlayEvent: Invalid table name")
+		Soundtrack.Chat.TraceEvents("PlayEvent: Invalid table name")
 		return
 	end
 
 	if not eventName then
-		Soundtrack.TraceEvents("PlayEvent: Invalid event name")
+		Soundtrack.Chat.TraceEvents("PlayEvent: Invalid event name")
 		return
 	end
 
@@ -428,7 +428,7 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 	else
 		playOnceText = "Once"
 	end
-	Soundtrack.TraceEvents("PlayEvent(" .. tableName .. ", " .. eventName .. ", " .. stackLevel .. ") " .. playOnceText)
+	Soundtrack.Chat.TraceEvents("PlayEvent(" .. tableName .. ", " .. eventName .. ", " .. stackLevel .. ") " .. playOnceText)
 
 	if not offset then
 		offset = 0
@@ -438,7 +438,7 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 	if event.soundEffect then
 		if eventHasTracks then
 			-- Sound effects are never added to the stack
-			Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
+			Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 		end
 	else
 		if eventHasTracks then
@@ -483,11 +483,11 @@ function Soundtrack.Events.PlaybackPlayStop()
 		currentEvent = Soundtrack.Events.Stack[stackLevel].eventName
 	end
 	if Soundtrack.Events.Paused and currentEvent ~= SOUNDTRACK_NO_EVENT_PLAYING then
-		Soundtrack.TraceEvents("All music unpaused")
+		Soundtrack.Chat.TraceEvents("All music unpaused")
 		Soundtrack.Events.Paused = false
 		Soundtrack.Events.RestartLastEvent(0)
 	else
-		Soundtrack.TraceEvents("All music paused")
+		Soundtrack.Chat.TraceEvents("All music paused")
 		Soundtrack.Events.Paused = true
 		Soundtrack.Library.StopMusic()
 	end
@@ -495,7 +495,7 @@ function Soundtrack.Events.PlaybackPlayStop()
 end
 
 function Soundtrack.Events.PlaybackTrueStop()
-	Soundtrack.TraceEvents("All music stopped")
+	Soundtrack.Chat.TraceEvents("All music stopped")
 	Soundtrack.StopEventAtLevel(Soundtrack.Events.GetCurrentStackLevel())
 	Soundtrack.Library.StopMusic()
 	SoundtrackFrame_RefreshPlaybackControls()

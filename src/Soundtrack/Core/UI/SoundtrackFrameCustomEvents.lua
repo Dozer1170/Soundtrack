@@ -86,7 +86,7 @@ function SoundtrackFrameEditCustomEventButton_OnClick()
 end
 
 function SoundtrackFrameSaveCustomEventButton_OnClick()
-	Soundtrack.TraceFrame("Saving " .. SoundtrackFrame_SelectedEvent)
+	Soundtrack.Chat.TraceFrame("Saving " .. SoundtrackFrame_SelectedEvent)
 	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame_SelectedEvent]
 
 	customEvent.priority = tonumber(getglobal("SoundtrackFrame_Priority"):GetText())
@@ -100,7 +100,7 @@ function SoundtrackFrameSaveCustomEventButton_OnClick()
 	end
 
 	local eventType = customEvent.type
-	Soundtrack.TraceFrame(customEvent.type)
+	Soundtrack.Chat.TraceFrame(customEvent.type)
 	if eventType == ST_EVENT_SCRIPT then
 		customEvent.eventtype = ST_EVENT_SCRIPT
 		customEvent.trigger = getglobal("SoundtrackFrame_EventTrigger"):GetText()
@@ -108,11 +108,11 @@ function SoundtrackFrameSaveCustomEventButton_OnClick()
 	elseif eventType == ST_BUFF_SCRIPT then
 		customEvent.eventtype = ST_BUFF_SCRIPT
 		customEvent.spellId = tonumber(getglobal("SoundtrackFrame_EventTrigger"):GetText())
-		Soundtrack.TraceFrame(customEvent.spellId)
+		Soundtrack.Chat.TraceFrame(customEvent.spellId)
 	elseif eventType == ST_DEBUFF_SCRIPT then
 		customEvent.eventtype = ST_DEBUFF_SCRIPT
 		customEvent.spellId = tonumber(getglobal("SoundtrackFrame_EventTrigger"):GetText())
-		Soundtrack.TraceFrame(customEvent.spellId)
+		Soundtrack.Chat.TraceFrame(customEvent.spellId)
 	elseif eventType == ST_UPDATE_SCRIPT then
 		customEvent.eventtype = ST_UPDATE_SCRIPT
 	end

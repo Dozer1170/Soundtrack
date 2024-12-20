@@ -134,7 +134,7 @@ local function SetUserEventsToCorrectLevel()
 
 	for j, v in pairs(tableName) do
 		v.priority = ST_BOSS_LVL
-		Soundtrack.Trace(j .. " set to " .. ST_BOSS_LVL)
+		Soundtrack.Chat.Trace(j .. " set to " .. ST_BOSS_LVL)
 	end
 
 	tableName = Soundtrack.Events.GetTable("Playlists")
@@ -144,7 +144,7 @@ local function SetUserEventsToCorrectLevel()
 
 	for j, v in pairs(tableName) do
 		v.priority = ST_PLAYLIST_LVL
-		Soundtrack.Trace(j .. " set to " .. ST_PLAYLIST_LVL)
+		Soundtrack.Chat.Trace(j .. " set to " .. ST_PLAYLIST_LVL)
 	end
 end
 
@@ -173,7 +173,7 @@ function Soundtrack.LoadTracks()
 	-- Create events table
 	for _, eventTabName in ipairs(Soundtrack_EventTabs) do
 		if not SoundtrackAddon.db.profile.events[eventTabName] then
-			Soundtrack.TraceEvents("Creating table " .. eventTabName)
+			Soundtrack.Chat.TraceEvents("Creating table " .. eventTabName)
 			SoundtrackAddon.db.profile.events[eventTabName] = {}
 		end
 	end
@@ -227,7 +227,7 @@ function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soun
 		end
 		return -- event is already registered
 	else
-		Soundtrack.TraceEvents("AddEvent: " .. tableName .. ": " .. eventName)
+		Soundtrack.Chat.TraceEvents("AddEvent: " .. tableName .. ": " .. eventName)
 		eventTable[eventName] = {
 			tracks = {},
 			lastTrackIndex = 0,
@@ -259,7 +259,7 @@ function Soundtrack.RemoveEvent(tableName, eventName)
 
 	local event = eventTable[eventName]
 	if event then
-		Soundtrack.TraceEvents("RemoveEvent: " .. tableName .. ": " .. eventName)
+		Soundtrack.Chat.TraceEvents("RemoveEvent: " .. tableName .. ": " .. eventName)
 		eventTable[eventName] = nil
 	end
 end
@@ -297,7 +297,7 @@ function Soundtrack.RenameEvent(tableName, oldEventName, newEventName, _priority
 		return -- event is already registered
 	end
 
-	Soundtrack.TraceEvents("RenameEvent: " .. tableName .. ": " .. oldEventName .. " to " .. newEventName)
+	Soundtrack.Chat.TraceEvents("RenameEvent: " .. tableName .. ": " .. oldEventName .. " to " .. newEventName)
 
 	eventTable[newEventName] = eventTable[oldEventName]
 
@@ -399,7 +399,7 @@ function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 		sfxText = " (SFX)"
 	end
 
-	Soundtrack.TraceEvents(
+	Soundtrack.Chat.TraceEvents(
 		"PlayEvent("
 			.. tableName
 			.. ", "
@@ -416,7 +416,7 @@ function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 		Soundtrack.Error("Cannot play event " .. eventName .. ". It has no priority!")
 	elseif event.soundEffect then
 		-- Sound effects are never added to the stack
-		Soundrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
+		Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 	else
 		if Soundtrack.Events.GetEventAtStackLevel(event.priority) ~= eventName then
 			Soundtrack.Events.Stack[event.priority].tableName = tableName
@@ -433,7 +433,7 @@ function Soundtrack.StopEventAtLevel(stackLevel)
 		return
 	else
 		if Soundtrack.Events.Stack[stackLevel].eventName ~= nil then
-			Soundtrack.TraceEvents("StopEvent(" .. stackLevel .. ")")
+			Soundtrack.Chat.TraceEvents("StopEvent(" .. stackLevel .. ")")
 			-- Remove the event from the stack.
 			Soundtrack.Events.Stack[stackLevel].eventName = nil
 			Soundtrack.Events.Stack[stackLevel].tableName = nil
@@ -446,7 +446,7 @@ end
 function Soundtrack.StopEvent(tableName, eventName)
 	local event = Soundtrack.GetEvent(tableName, eventName)
 	if event then
-		Soundtrack.TraceEvents("StopEvent(" .. tableName .. ", " .. eventName .. ")")
+		Soundtrack.Chat.TraceEvents("StopEvent(" .. tableName .. ", " .. eventName .. ")")
 		Soundtrack.StopEventAtLevel(event.priority)
 	end
 end

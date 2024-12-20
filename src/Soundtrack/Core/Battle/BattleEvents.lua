@@ -63,7 +63,7 @@ local function GetDifficultyFromText(difficultyText)
 			return i
 		end
 	end
-	Soundtrack.TraceBattle("Cannot find difficulty : " .. difficultyText)
+	Soundtrack.Chat.TraceBattle("Cannot find difficulty : " .. difficultyText)
 	return 0
 end
 
@@ -74,7 +74,7 @@ local function GetClassificationLevel(classificationText)
 			return i
 		end
 	end
-	Soundtrack.TraceBattle("Cannot find classification : " .. classificationText)
+	Soundtrack.Chat.TraceBattle("Cannot find classification : " .. classificationText)
 	return 0
 end
 
@@ -236,7 +236,7 @@ function GetGroupEnemyLevel()
 			if bossTable then
 				local bossEvent = bossTable[unitName]
 				if bossEvent then
-					Soundtrack.TraceBattle(unitName .. " is a boss.")
+					Soundtrack.Chat.TraceBattle(unitName .. " is a boss.")
 					isBoss = true
 					if Soundtrack.Events.EventHasTracks(ST_BOSS, unitName) then
 						bossName = unitName
@@ -350,7 +350,7 @@ local function StartVictoryMusic()
 end
 
 local function StopCombatMusic()
-	Soundtrack.TraceBattle("Stop Combat Music")
+	Soundtrack.Chat.TraceBattle("Stop Combat Music")
 	StartVictoryMusic()
 	currentBattleTypeIndex = 0 -- we are out of battle
 	--Reset difficulties outside of combat. -Gotest
@@ -473,7 +473,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 	elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
 		if eventType == "PARTY_KILL" then --CSCIGUY added 8-10-18
 			hostileDeathCount = hostileDeathCount + 1
-			Soundtrack.TraceBattle("Death count: " .. hostileDeathCount)
+			Soundtrack.Chat.TraceBattle("Death count: " .. hostileDeathCount)
 		else
 			if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 				for _, v in pairs(Soundtrack_BattleEvents) do
@@ -486,7 +486,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 	elseif event == "PLAYER_UNGHOST" then
 		Soundtrack.StopEvent(ST_MISC, SOUNDTRACK_GHOST)
 	elseif event == "PLAYER_ALIVE" then
-		Soundtrack.TraceBattle("PLAYER_ALIVE")
+		Soundtrack.Chat.TraceBattle("PLAYER_ALIVE")
 		if UnitIsDeadOrGhost("player") then
 			Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_GHOST)
 			currentBattleTypeIndex = 0
@@ -494,7 +494,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 			Soundtrack.StopEvent(ST_MISC, SOUNDTRACK_GHOST)
 		end
 	elseif event == "PLAYER_DEAD" then
-		Soundtrack.TraceBattle("PLAYER_DEAD")
+		Soundtrack.Chat.TraceBattle("PLAYER_DEAD")
 		if UnitIsDeadOrGhost("player") then
 			Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
 			Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
@@ -507,7 +507,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		end
 		currentBattleTypeIndex = 0 -- out of combat
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
-		Soundtrack.TraceBattle("ZONE_CHANGED_NEW_AREA")
+		Soundtrack.Chat.TraceBattle("ZONE_CHANGED_NEW_AREA")
 		local inInstance, instanceType = IsInInstance()
 		if inInstance and (instanceType == "party" or instanceType == "raid") then
 			local _, _, encountersTotal, _ = GetInstanceLockTimeRemaining()
