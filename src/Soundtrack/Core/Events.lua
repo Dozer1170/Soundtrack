@@ -26,7 +26,7 @@ local currentTableName = nil
 local currentEventName = nil
 
 local function VerifyStackLevel(stackLevel)
-	if not stackLevel or not (stackLevel >= 1 and stackLevel <= Soundtrack.MaxStackLevel) then
+	if not stackLevel or stackLevel < 1 or stackLevel > Soundtrack.MaxStackLevel then
 		Soundtrack.Chat.Error("BAD STACK LEVEL " .. stackLevel)
 	end
 end
@@ -428,7 +428,9 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 	else
 		playOnceText = "Once"
 	end
-	Soundtrack.Chat.TraceEvents("PlayEvent(" .. tableName .. ", " .. eventName .. ", " .. stackLevel .. ") " .. playOnceText)
+	Soundtrack.Chat.TraceEvents(
+		"PlayEvent(" .. tableName .. ", " .. eventName .. ", " .. stackLevel .. ") " .. playOnceText
+	)
 
 	if not offset then
 		offset = 0
