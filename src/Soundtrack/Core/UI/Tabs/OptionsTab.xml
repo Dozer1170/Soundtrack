@@ -61,7 +61,7 @@
         <Scripts>
           <OnLoad>OptionsTab_EnableMinimapButton.Text:SetText(SOUNDTRACK_SHOW_MINIMAP_BUTTON)
                     </OnLoad>
-          <OnClick>OptionsTab_ToggleMinimapButton()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleMinimapButton()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_MINIMAP_BUTTON,
                         SOUNDTRACK_SHOW_MINIMAP_BUTTON_TIP)
                     </OnEnter>
@@ -75,7 +75,7 @@
         <Scripts>
           <OnLoad>OptionsTab_ShowPlaybackControls.Text:SetText(SOUNDTRACK_SHOW_PLAYBACK_CONTROLS)
                     </OnLoad>
-          <OnClick>OptionsTab_ToggleShowPlaybackControls()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleShowPlaybackControls()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_PLAYBACK_CONTROLS,
                         SOUNDTRACK_SHOW_PLAYBACK_CONTROLS_TIP)
                     </OnEnter>
@@ -115,7 +115,7 @@
         <Scripts>
           <OnLoad>OptionsTab_ShowTrackInformation.Text:SetText(SOUNDTRACK_SHOW_TRACK_INFO)
                     </OnLoad>
-          <OnClick>OptionsTab_ToggleShowTrackInformation()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleShowTrackInformation()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_TRACK_INFO, SOUNDTRACK_SHOW_TRACK_INFO_TIP
                         )
                     </OnEnter>
@@ -154,7 +154,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)</OnLoad>
-          <OnClick>OptionsTab_ToggleShowDefaultMusic()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleShowDefaultMusic()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEFAULT_MUSIC, SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -322,7 +322,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_LoopMusic.Text:SetText(SOUNDTRACK_LOOP_MUSIC)</OnLoad>
-          <OnClick>OptionsTab_ToggleLoopMusic()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleLoopMusic()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOOP_MUSIC, SOUNDTRACK_LOOP_MUSIC_TIP)
                     </OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -366,7 +366,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_EnableDebugMode.Text:SetText(SOUNDTRACK_SHOW_DEBUG)</OnLoad>
-          <OnClick>OptionsTab_ToggleDebugMode()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleDebugMode()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEBUG, SOUNDTRACK_SHOW_DEBUG_TIP)
                     </OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -378,7 +378,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_ShowEventStack.Text:SetText(SOUNDTRACK_SHOW_EVENT_STACK)</OnLoad>
-          <OnClick>OptionsTab_ToggleShowEventStack()</OnClick>
+          <OnClick>Soundtrack.OptionsTab.ToggleShowEventStack()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_EVENT_STACK,
                         SOUNDTRACK_SHOW_EVENT_STACK_TIP)
                     </OnEnter>
