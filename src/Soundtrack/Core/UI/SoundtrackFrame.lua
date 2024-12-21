@@ -127,20 +127,6 @@ StaticPopupDialogs["SOUNDTRACK_ADD_PLAYLIST_POPUP"] = {
 	hideOnEscape = 1,
 }
 
-StaticPopupDialogs["SOUNDTRACK_DELETE_MISC_POPUP"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_REMOVE_QUESTION,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function()
-		SoundtrackFrame_DeleteMisc(SoundtrackFrame_SelectedEvent)
-	end,
-	enterClicksFirstButton = 1,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
 StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
 	preferredIndex = 3,
 	text = SOUNDTRACK_REMOVE_QUESTION,
@@ -1281,47 +1267,34 @@ function SoundtrackFrame_RefreshShowingTab()
 	SoundtrackFrameOptionsTab:Hide()
 	SoundtrackFrameProfilesFrame:Hide()
 	SoundtrackFrameAboutFrame:Hide()
-	-- Battle events tab
 	if SoundtrackFrame.selectedTab == 1 then
 		SEVT.SelectedEventsTable = "Battle"
 		SoundtrackFrameEventFrame:Show()
-		-- Boss tab
 	elseif SoundtrackFrame.selectedTab == 2 then
 		SEVT.SelectedEventsTable = "Boss"
 		SoundtrackFrameEventFrame:Show()
-		-- Zones tab
 	elseif SoundtrackFrame.selectedTab == 3 then
 		SEVT.SelectedEventsTable = "Zone"
 		SoundtrackFrameEventFrame:Show()
-		-- Pet Battles tab
 	elseif SoundtrackFrame.selectedTab == 4 then
 		SEVT.SelectedEventsTable = "Pet Battles"
 		SoundtrackFrameEventFrame:Show()
-		-- Dance tab
 	elseif SoundtrackFrame.selectedTab == 5 then
 		SEVT.SelectedEventsTable = "Dance"
 		SoundtrackFrameEventFrame:Show()
-		-- Misc tab
 	elseif SoundtrackFrame.selectedTab == 6 then
 		SEVT.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
-
-		-- Custom tab
 	elseif SoundtrackFrame.selectedTab == 7 then
 		SEVT.SelectedEventsTable = "Custom"
 		SoundtrackFrameEventFrame:Show()
-
-		-- Playlists tab
 	elseif SoundtrackFrame.selectedTab == 8 then
 		SEVT.SelectedEventsTable = "Playlists"
 		SoundtrackFrameEventFrame:Show()
-		-- Options tab
 	elseif SoundtrackFrame.selectedTab == 9 then
 		SoundtrackFrameOptionsTab:Show()
-		-- Profiles tab
 	elseif SoundtrackFrame.selectedTab == 10 then
 		SoundtrackFrameProfilesFrame:Show()
-		-- About tab
 	elseif SoundtrackFrame.selectedTab == 11 then
 		SoundtrackFrameAboutFrame:Show()
 	end
@@ -1885,17 +1858,6 @@ function SoundtrackFrame_MoveAssignedTrack(direction)
 
 		SoundtrackFrame_RefreshAssignedTracks()
 	end
-end
-
-function SoundtrackFrameDeleteMiscEventButton_OnClick()
-	if SoundtrackFrame_SelectedEvent then
-		StaticPopup_Show("SOUNDTRACK_DELETE_MISC_POPUP")
-	end
-end
-
-function SoundtrackFrame_DeleteMisc(eventName)
-	Soundtrack.Events.DeleteEvent("Misc", eventName)
-	SoundtrackFrame_RefreshEvents()
 end
 
 -- DELETE TARGET BUTTON

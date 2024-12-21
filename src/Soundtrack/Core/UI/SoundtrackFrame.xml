@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="SoundtrackFrame.lua"/>
-  <Include file="SoundtrackFrameCustomEvents.lua"/>
-  <Include file="EventsTab.xml"/>
-  <Include file="OptionsTab.lua"/>
-  <Include file="OptionsTab.xml"/>
-  <Include file="ProfilesTab.lua"/>
-  <Include file="ProfilesTab.xml"/>
-  <Include file="AboutTab.xml"/>
+  <Include file="Tabs/CustomTab.lua"/>
+  <Include file="Tabs/MiscTab.lua"/>
+  <Include file="Tabs/EventsTab.xml"/>
+  <Include file="Tabs/OptionsTab.xml"/>
+  <Include file="Tabs/ProfilesTab.xml"/>
+  <Include file="Tabs/AboutTab.xml"/>
   <!-- ALL TEXTURES -->
   <Texture name="Soundtrack_PlayingIconTexture" file="Interface\Addons\Soundtrack\Images\PlayingIcon" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <Texture name="Soundtrack_PreviousTexture" file="Interface\AddOns\Soundtrack\Images\Previous" inherits="Soundtrack_TextureTemplate" virtual="true"/>
