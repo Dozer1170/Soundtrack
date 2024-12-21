@@ -1,26 +1,28 @@
+Soundtrack.ProfilesTab = {}
+
 local PROFILES_COPY_CONFIRM = "PROFILES_COPY_CONFIRM"
 local PROFILES_DELETE_CONFIRM = "PROFILES_DELETE_CONFIRM"
 local PROFILES_RESET_CONFIRM = "PROFILES_RESET_CONFIRM"
 local PROFILE_ALREADY_EXISTS = "PROFILE_ALREADY_EXISTS"
 
-function ProfilesTab_OnLoad()
+function Soundtrack.ProfilesTab.OnLoad()
 	LoadProfileDropDown.initialize = function()
-		ProfilesTab_InitDropDown(ProfilesTab_LoadProfileDropDownItemSelected, false)
+		Soundtrack.ProfilesTab.InitDropDown(Soundtrack.ProfilesTab.LoadProfileDropDownItemSelected, false)
 	end
 	LoadProfileDropDownText:SetText("Load Profile")
 
 	CopyFromProfileDropDown.initialize = function()
-		ProfilesTab_InitDropDown(ProfilesTab_CopyFromProfileDropDownItemSelected, true)
+		Soundtrack.ProfilesTab.InitDropDown(ProfilesTab_CopyFromProfileDropDownItemSelected, true)
 	end
 	CopyFromProfileDropDownText:SetText("Copy From")
 
 	DeleteProfileDropDown.initialize = function()
-		ProfilesTab_InitDropDown(ProfilesTab_DeleteProfileDropDownItemSelected, true)
+		Soundtrack.ProfilesTab.InitDropDown(Soundtrack.ProfilesTab.DeleteProfileDropDownItemSelected, true)
 	end
 	DeleteProfileDropDownText:SetText("Delete Profile")
 end
 
-function ProfilesTab_InitDropDown(func, skipCurrentProfile)
+function Soundtrack.ProfilesTab.InitDropDown(func, skipCurrentProfile)
 	local profiles = SoundtrackAddon.db:GetProfiles()
 	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
 	local info = UIDropDownMenu_CreateInfo()
@@ -35,10 +37,10 @@ function ProfilesTab_InitDropDown(func, skipCurrentProfile)
 	end
 end
 
-function ProfilesTab_LoadProfileDropDownItemSelected(_, profileName)
+function Soundtrack.ProfilesTab.LoadProfileDropDownItemSelected(_, profileName)
 	Soundtrack.Chat.TraceProfiles("Selected profile to load: " .. profileName)
 	SoundtrackAddon.db:SetProfile(profileName)
-	ProfilesTab_ReloadProfile()
+	Soundtrack.ProfilesTab.ReloadProfile()
 end
 
 function ProfilesTab_CopyFromProfileDropDownItemSelected(_, profileName)
@@ -55,7 +57,7 @@ function ProfilesTab_CopyFromProfileDropDownItemSelected(_, profileName)
 		button2 = "No",
 		OnAccept = function()
 			SoundtrackAddon.db:CopyProfile(profileName)
-			ProfilesTab_ReloadProfile()
+			Soundtrack.ProfilesTab.ReloadProfile()
 		end,
 		timeout = 0,
 		whileDead = true,
@@ -64,7 +66,7 @@ function ProfilesTab_CopyFromProfileDropDownItemSelected(_, profileName)
 	StaticPopup_Show(PROFILES_COPY_CONFIRM)
 end
 
-function ProfilesTab_DeleteProfileDropDownItemSelected(_, profileName)
+function Soundtrack.ProfilesTab.DeleteProfileDropDownItemSelected(_, profileName)
 	Soundtrack.Chat.TraceProfiles("Selected profile to delete: " .. profileName)
 
 	StaticPopupDialogs[PROFILES_DELETE_CONFIRM] = {
@@ -81,7 +83,7 @@ function ProfilesTab_DeleteProfileDropDownItemSelected(_, profileName)
 	StaticPopup_Show(PROFILES_DELETE_CONFIRM)
 end
 
-function ProfilesTab_CreateNewProfile()
+function Soundtrack.ProfilesTab.CreateNewProfile()
 	local profileName = NewProfileEditBox:GetText()
 	Soundtrack.Chat.TraceProfiles("Requested to create new profile: " .. profileName)
 
@@ -99,10 +101,10 @@ function ProfilesTab_CreateNewProfile()
 
 	SoundtrackAddon.db:SetProfile(profileName)
 	NewProfileEditBox:SetText("")
-	ProfilesTab_ReloadProfile()
+	Soundtrack.ProfilesTab.ReloadProfile()
 end
 
-function ProfilesTab_ResetCurrentProfile()
+function Soundtrack.ProfilesTab.ResetCurrentProfile()
 	Soundtrack.Chat.TraceProfiles("Requested to reset current profile")
 	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
 	StaticPopupDialogs[PROFILES_RESET_CONFIRM] = {
@@ -113,7 +115,7 @@ function ProfilesTab_ResetCurrentProfile()
 		button2 = "No",
 		OnAccept = function()
 			SoundtrackAddon.db:ResetProfile()
-			ProfilesTab_ReloadProfile()
+			Soundtrack.ProfilesTab.ReloadProfile()
 		end,
 		timeout = 0,
 		whileDead = true,
@@ -122,7 +124,7 @@ function ProfilesTab_ResetCurrentProfile()
 	StaticPopup_Show(PROFILES_RESET_CONFIRM)
 end
 
-function ProfilesTab_ReloadProfile()
+function Soundtrack.ProfilesTab.ReloadProfile()
 	_TracksLoaded = false
 	SoundtrackAddon:VARIABLES_LOADED()
 	ProfilesTab_RefreshProfilesFrame()

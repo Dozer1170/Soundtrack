@@ -51,7 +51,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>ProfilesTab_CreateNewProfile()</OnClick>
+          <OnClick>Soundtrack.ProfilesTab.CreateNewProfile()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, "Create New Profile", "Create a new profile with the name provided.")</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -95,15 +95,15 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>ProfilesTab_ResetCurrentProfile()</OnClick>
+          <OnClick>Soundtrack.ProfilesTab.ResetCurrentProfile()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, "Reset Current Profile", "Resets the current profile to default settings.")</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
     </Frames>
     <Scripts>
-      <OnShow>ProfilesTab_RefreshProfilesFrame()</OnShow>
-      <OnLoad>ProfilesTab_OnLoad()</OnLoad>
+      <OnShow>Soundtrack.ProfilesTab.RefreshProfilesFrame()</OnShow>
+      <OnLoad>Soundtrack.ProfilesTab.OnLoad()</OnLoad>
     </Scripts>
   </Frame>
 </Ui>
