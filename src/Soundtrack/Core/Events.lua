@@ -391,6 +391,7 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 		return
 	end
 
+	print("Stack level: " .. stackLevel)
 	VerifyStackLevel(stackLevel)
 
 	if not tableName then
