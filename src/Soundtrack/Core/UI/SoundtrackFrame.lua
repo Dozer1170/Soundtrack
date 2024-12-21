@@ -176,7 +176,7 @@ local function FormatDuration(seconds)
 end
 
 function SoundtrackFrame_Initialize()
-	OptionsTab.Initialize()
+	Soundtrack.OptionsTab.Initialize()
 end
 
 function Soundtrack.IndexOf(_table, value)
