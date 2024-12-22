@@ -346,7 +346,8 @@ local function RegisterGeneralStrings()
 		"The minimap button was hidden. You can access Soundtrack's UI by using the /soundtrack command."
 
 	SOUNDTRACK_REMOVE_QUESTION = "Do you want to remove this?"
-	SOUNDTRACK_PURGE_EVENTS_QUESTION = "MyTracks.lua changed.\n\nPurge obsolete tracks?"
+	SOUNDTRACK_PURGE_EVENTS_QUESTION =
+		"MyTracks.lua changed.\n\nWARNING!!!!! THIS WILL REMOVE TRACK ASSIGNMENTS FOR TRACKS YOU REMOVED FROM YOUR LIBRARY!!! YOU PROBABLY DON'T WANT TO DO THIS IF ALL YOUR TRACKS ARE MISSING FORM THE LIST. \n\nPurge obsolete tracks?"
 	SOUNDTRACK_GEN_LIBRARY =
 		"Exit the game, run GenerateMyLibrary.py, and reenter game to create MyTracks.lua for Soundtrack to work properly."
 	SOUNDTRACK_NO_MYTRACKS = "MyTracks.lua not found.\n\nRun Soundtrack without MyTracks.lua?"

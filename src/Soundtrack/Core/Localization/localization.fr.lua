@@ -349,7 +349,8 @@ local function RegisterGeneralStrings()
 		"Le bouton minimap est cache. Vous pouvez acceder a l'interface utilisateur de Soundtrack en utilisant la commande /soundtrack ou /st."
 
 	SOUNDTRACK_REMOVE_QUESTION = "Voulez-vous le supprimer ?"
-	SOUNDTRACK_PURGE_EVENTS_QUESTION = "MyTracks.lua  a change.\n\n Retirer pistes obsoletes ?"
+	SOUNDTRACK_PURGE_EVENTS_QUESTION =
+		"MyTracks.lua a été modifié.\n\nATTENTION !!!!! CELA SUPPRIMERA LES ASSIGNATIONS DE PISTES POUR LES PISTES QUE VOUS AVEZ SUPPRIMÉES DE VOTRE BIBLIOTHÈQUE !!! VOUS NE VOUDREZ PROBABLEMENT PAS FAIRE CELA SI TOUTES VOS PISTES MANQUENT DE LA LISTE. \n\nPurger les pistes obsolètes ?"
 	SOUNDTRACK_GEN_LIBRARY =
 		"Quittez le jeu, executez GenerateMyLibrary.py , et entrer de nouveau en jeu pour creer MyTracks.lua pour Soundtrack afin de fonctionner correctement."
 	SOUNDTRACK_NO_MYTRACKS = "MyTracks.lua introuvable.\n\n Executer Soundtrack sans MyTracks.lua ?"

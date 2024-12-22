@@ -1,3 +1,5 @@
+Soundtrack.TracksLoaded = false
+
 StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"] = {
 	preferredIndex = 3,
 	text = SOUNDTRACK_NO_MYTRACKS,
@@ -25,8 +27,6 @@ StaticPopupDialogs["SOUNDTRACK_NO_PURGE_POPUP"] = {
 	whileDead = 1,
 	hideOnEscape = 1,
 }
-
-local _TracksLoaded = false
 local offset = 0
 local nextUpdateTime = 0
 local updateInterval = 0.1
@@ -98,9 +98,8 @@ local function SetUserEventsToCorrectLevel()
 		return
 	end
 
-	for j, v in pairs(tableName) do
+	for _, v in pairs(tableName) do
 		v.priority = ST_BOSS_LVL
-		Soundtrack.Chat.Trace(j .. " set to " .. ST_BOSS_LVL)
 	end
 
 	tableName = Soundtrack.Events.GetTable("Playlists")
@@ -108,9 +107,8 @@ local function SetUserEventsToCorrectLevel()
 		return
 	end
 
-	for j, v in pairs(tableName) do
+	for _, v in pairs(tableName) do
 		v.priority = ST_PLAYLIST_LVL
-		Soundtrack.Chat.Trace(j .. " set to " .. ST_PLAYLIST_LVL)
 	end
 end
 
@@ -125,10 +123,10 @@ function Soundtrack.LoadTracks()
 	-- Load tracks in generated script if available
 	Soundtrack_LoadDefaultTracks()
 
-	if Soundtrack_LoadMyTracks and not _TracksLoaded then
+	if Soundtrack_LoadMyTracks and not Soundtrack.TracksLoaded then
 		Soundtrack_LoadMyTracks()
 		SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = false
-		_TracksLoaded = true
+		Soundtrack.TracksLoaded = true
 	elseif not Soundtrack_LoadMyTracks and not SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks then
 		StaticPopup_Show("ST_NO_LOADMYTRACKS_POPUP")
 		error(SOUNDTRACK_ERROR_LOADING)

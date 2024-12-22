@@ -79,7 +79,7 @@ end
 
 function Soundtrack.OptionsTab.ToggleShowDefaultMusic()
 	SoundtrackAddon.db.profile.settings.ShowDefaultMusic = not SoundtrackAddon.db.profile.settings.ShowDefaultMusic
-	_TracksLoaded = false
+	Soundtrack.TracksLoaded = false
 	Soundtrack.LoadTracks()
 end
 

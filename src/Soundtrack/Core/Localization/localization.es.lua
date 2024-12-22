@@ -348,7 +348,8 @@ local function RegisterGeneralStrings()
 		"El boton del minimapa se ocultaba. Puede acceder a la interfaz de usuario Soundtrack con /soundtrack o /st."
 
 	SOUNDTRACK_REMOVE_QUESTION = "�Quieres eliminar este?"
-	SOUNDTRACK_PURGE_EVENTS_QUESTION = "MyTracks.lua cambiado.\n\n�Eliminar pistas obsoleto?"
+	SOUNDTRACK_PURGE_EVENTS_QUESTION =
+		"MyTracks.lua ha cambiado.\n\n¡¡¡¡ADVERTENCIA!!!!! ESTO ELIMINARA LAS ASIGNACIONES DE PISTAS PARA LAS PISTAS QUE HAYA ELIMINADO DE SU BIBLIOTECA. PROBABLEMENTE NO QUIERA HACER ESTO SI TODAS SUS PISTAS FALTAN EN LA LISTA. \n\n¿Purgar pistas obsoletas?"
 	SOUNDTRACK_GEN_LIBRARY =
 		"Salir del juego, ejecutar GenerateMyLibrary.py, y volver a entrar al juego de crear MyTracks.lua de Soundtrack para funcionar correctamente"
 	SOUNDTRACK_NO_MYTRACKS = "MyTracks.lua no encontrado.\n\n�Ejecutar Soundtrack sin MyTracks.lua?"
