@@ -41,7 +41,7 @@ end
 -- General check boxes
 
 function Soundtrack.OptionsTab.ToggleLoopMusic()
-	if Soundtrack.OptionsTab.LoopMusic:GetChecked() == 1 then
+	if OptionsTab_LoopMusic:GetChecked() == 1 then
 		SetCVar("Sound_ZoneMusicNoDelay", 1, "SoundtrackSound_ZoneMusicNoDelay_1")
 		local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
 		Soundtrack.Chat.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)

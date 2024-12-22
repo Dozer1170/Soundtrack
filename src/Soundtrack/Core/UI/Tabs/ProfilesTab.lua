@@ -12,7 +12,7 @@ function Soundtrack.ProfilesTab.OnLoad()
 	LoadProfileDropDownText:SetText("Load Profile")
 
 	CopyFromProfileDropDown.initialize = function()
-		Soundtrack.ProfilesTab.InitDropDown(ProfilesTab_CopyFromProfileDropDownItemSelected, true)
+		Soundtrack.ProfilesTab.InitDropDown(Soundtrack.ProfilesTab.CopyFromProfileDropDownItemSelected, true)
 	end
 	CopyFromProfileDropDownText:SetText("Copy From")
 
@@ -43,7 +43,7 @@ function Soundtrack.ProfilesTab.LoadProfileDropDownItemSelected(_, profileName)
 	Soundtrack.ProfilesTab.ReloadProfile()
 end
 
-function ProfilesTab_CopyFromProfileDropDownItemSelected(_, profileName)
+function Soundtrack.ProfilesTab.CopyFromProfileDropDownItemSelected(_, profileName)
 	Soundtrack.Chat.TraceProfiles("Selected profile to copy from: " .. profileName)
 
 	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()

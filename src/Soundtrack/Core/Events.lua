@@ -26,7 +26,7 @@ local currentTableName = nil
 local currentEventName = nil
 
 local function VerifyStackLevel(stackLevel)
-	if not stackLevel or stackLevel < 1 or stackLevel > Soundtrack.MaxStackLevel then
+	if not stackLevel or stackLevel < 1 or stackLevel > Soundtrack.Events.MaxStackLevel then
 		Soundtrack.Chat.Error("BAD STACK LEVEL " .. stackLevel)
 	end
 end
@@ -391,7 +391,6 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 		return
 	end
 
-	print("Stack level: " .. stackLevel)
 	VerifyStackLevel(stackLevel)
 
 	if not tableName then
