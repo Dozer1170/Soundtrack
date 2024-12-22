@@ -5,12 +5,13 @@
   <Script file="Localization\Localization.fr.lua"/>
   <Script file="Localization\Localization.es.lua"/>
   <Script file="Localization\Localization.en.lua"/>
-  <Script file="Soundtrack.lua"/>
+  <Script file="Globals.lua"/>
   <Script file="Constants.lua"/>
   <Script file="Timers.lua"/>
   <Script file="Library.lua"/>
   <Script file="Events.lua"/>
   <Script file="DefaultTracks.lua"/>
+  <Script file="Soundtrack.lua"/>
   <Frame name="SoundtrackDUMMY" hidden="false">
     <Scripts>
       <OnUpdate>Soundtrack.OnUpdate(self, elapsed)</OnUpdate>

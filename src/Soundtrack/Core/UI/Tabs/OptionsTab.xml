@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Include file="Tabs/OptionsTab.lua"/>
+  <Script file="OptionsTab.lua"/>
   <Frame name="SoundtrackFrameOptionsTabTemplate" hidden="true" virtual="true">
     <Size>
       <RelDimension x="0.5" y="0.8"/>
@@ -201,7 +201,7 @@
           </Layer>
         </Layers>
         <Scripts>
-          <OnLoad> OptionsTab_PlaybackButtonsLocationDropDown.Text:SetText("Playback Controls Buttons"); </OnLoad>
+          <OnLoad>OptionsTab_PlaybackButtonsLocationDropDown.Text:SetText("Playback Controls Buttons"); </OnLoad>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS_TIP) </OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -459,7 +459,7 @@
       </CheckButton>
     </Frames>
     <Scripts>
-      <OnShow>OptionsTab.Refresh()</OnShow>
+      <OnShow>Soundtrack.OptionsTab.Refresh()</OnShow>
     </Scripts>
   </Frame>
 </Ui>

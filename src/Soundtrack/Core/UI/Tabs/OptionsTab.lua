@@ -10,31 +10,31 @@ end
 function Soundtrack.OptionsTab.Refresh()
 	local s = SoundtrackAddon.db.profile.settings
 
-	Soundtrack.OptionsTab.EnableMinimapButton:SetChecked(not SoundtrackAddon.db.profile.minimap.hide)
-	Soundtrack.OptionsTab.EnableDebugMode:SetChecked(s.Debug)
-	Soundtrack.OptionsTab.ShowTrackInformation:SetChecked(s.ShowTrackInformation)
-	Soundtrack.OptionsTab.LockNowPlayingFrame:SetChecked(s.LockNowPlayingFrame)
-	Soundtrack.OptionsTab.ShowDefaultMusic:SetChecked(s.ShowDefaultMusic)
-	Soundtrack.OptionsTab.ShowPlaybackControls:SetChecked(s.ShowPlaybackControls)
-	Soundtrack.OptionsTab.LockPlaybackControls:SetChecked(s.LockPlaybackControls)
-	Soundtrack.OptionsTab.ShowEventStack:SetChecked(s.ShowEventStack)
-	Soundtrack.OptionsTab.AutoAddZones:SetChecked(s.AutoAddZones)
-	Soundtrack.OptionsTab.AutoEscalateBattleMusic:SetChecked(s.EscalateBattleMusic)
-	Soundtrack.OptionsTab.YourEnemyLevelOnly:SetChecked(s.YourEnemyLevelOnly)
+	OptionsTab_EnableMinimapButton:SetChecked(not SoundtrackAddon.db.profile.minimap.hide)
+	OptionsTab_EnableDebugMode:SetChecked(s.Debug)
+	OptionsTab_ShowTrackInformation:SetChecked(s.ShowTrackInformation)
+	OptionsTab_LockNowPlayingFrame:SetChecked(s.LockNowPlayingFrame)
+	OptionsTab_ShowDefaultMusic:SetChecked(s.ShowDefaultMusic)
+	OptionsTab_ShowPlaybackControls:SetChecked(s.ShowPlaybackControls)
+	OptionsTab_LockPlaybackControls:SetChecked(s.LockPlaybackControls)
+	OptionsTab_ShowEventStack:SetChecked(s.ShowEventStack)
+	OptionsTab_AutoAddZones:SetChecked(s.AutoAddZones)
+	OptionsTab_AutoEscalateBattleMusic:SetChecked(s.EscalateBattleMusic)
+	OptionsTab_YourEnemyLevelOnly:SetChecked(s.YourEnemyLevelOnly)
 
-	Soundtrack.OptionsTab.EnableZoneMusic:SetChecked(s.EnableZoneMusic)
-	Soundtrack.OptionsTab.EnableBattleMusic:SetChecked(s.EnableBattleMusic)
-	Soundtrack.OptionsTab.EnableMiscMusic:SetChecked(s.EnableMiscMusic)
-	Soundtrack.OptionsTab.EnableCustomMusic:SetChecked(s.EnableCustomMusic)
+	OptionsTab_EnableZoneMusic:SetChecked(s.EnableZoneMusic)
+	OptionsTab_EnableBattleMusic:SetChecked(s.EnableBattleMusic)
+	OptionsTab_EnableMiscMusic:SetChecked(s.EnableMiscMusic)
+	OptionsTab_EnableCustomMusic:SetChecked(s.EnableCustomMusic)
 
-	Soundtrack.OptionsTab.HidePlaybackButtons:SetChecked(s.HideControlButtons)
+	OptionsTab_HidePlaybackButtons:SetChecked(s.HideControlButtons)
 
 	local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
 	Soundtrack.Chat.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
 	if cvar_LoopMusic == "0" then
-		Soundtrack.OptionsTab.LoopMusic:SetChecked(false)
+		OptionsTab_LoopMusic:SetChecked(false)
 	else
-		Soundtrack.OptionsTab.LoopMusic:SetChecked(true)
+		OptionsTab_LoopMusic:SetChecked(true)
 	end
 end
 
@@ -115,18 +115,15 @@ end
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnLoad()
 	SoundtrackFrame.selectedLocation = GetCurrentPlaybackButtonsLocation()
 	UIDropDownMenu_Initialize(
-		Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown,
+		OptionsTab_PlaybackButtonsLocationDropDown,
 		Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_Initialize
 	)
 end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_Initialize()
 	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations(GetPlaybackButtonsLocations())
-	UIDropDownMenu_SetSelectedID(
-		Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown,
-		SoundtrackFrame.selectedLocation
-	)
-	UIDropDownMenu_SetWidth(Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown, 160)
+	UIDropDownMenu_SetSelectedID(OptionsTab_PlaybackButtonsLocationDropDown, SoundtrackFrame.selectedLocation)
+	UIDropDownMenu_SetWidth(OptionsTab_PlaybackButtonsLocationDropDown, 160)
 end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations(locationsTexts)
@@ -137,7 +134,7 @@ function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations(loc
 		local checked = false
 		if currentLocation == i then
 			checked = true
-			UIDropDownMenu_SetText(Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown, locationText)
+			UIDropDownMenu_SetText(OptionsTab_PlaybackButtonsLocationDropDown, locationText)
 		end
 
 		info = {}
@@ -148,7 +145,7 @@ function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations(loc
 end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedID(Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown, self:GetID())
+	UIDropDownMenu_SetSelectedID(OptionsTab_PlaybackButtonsLocationDropDown, self:GetID())
 	SoundtrackFrame.selectedLocation = self:GetID()
 	-- Save settings.
 	SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = locations[SoundtrackFrame.selectedLocation]
@@ -189,15 +186,15 @@ end
 function Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
 	SoundtrackFrame.selectedCooldown = GetCurrentBattleCooldown()
 	UIDropDownMenu_Initialize(
-		Soundtrack.OptionsTab.BattleCooldownDropDown,
+		OptionsTab_BattleCooldownDropDown,
 		Soundtrack.OptionsTab.BattleCooldownDropDown_Initialize
 	)
 end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_Initialize()
 	Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns(GetBattleCooldowns())
-	UIDropDownMenu_SetSelectedID(Soundtrack.OptionsTab.BattleCooldownDropDown, SoundtrackFrame.selectedCooldown)
-	UIDropDownMenu_SetWidth(Soundtrack.OptionsTab.BattleCooldownDropDown, 130)
+	UIDropDownMenu_SetSelectedID(OptionsTab_BattleCooldownDropDown, SoundtrackFrame.selectedCooldown)
+	UIDropDownMenu_SetWidth(OptionsTab_BattleCooldownDropDown, 130)
 end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns(cooldownTexts)
@@ -208,7 +205,7 @@ function Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns(cooldownText
 		local checked = nil
 		if currentCooldown == i then
 			checked = 1
-			UIDropDownMenu_SetText(Soundtrack.OptionsTab.BattleCooldownDropDown, cooldownText)
+			UIDropDownMenu_SetText(OptionsTab_BattleCooldownDropDown, cooldownText)
 		end
 
 		info = {}
@@ -220,7 +217,7 @@ function Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns(cooldownText
 end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedID(Soundtrack.OptionsTab.BattleCooldownDropDown, self:GetID())
+	UIDropDownMenu_SetSelectedID(OptionsTab_BattleCooldownDropDown, self:GetID())
 	SoundtrackFrame.selectedCooldown = self:GetID()
 	-- Save settings.
 	SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackFrame.selectedCooldown]
@@ -263,15 +260,12 @@ end
 
 function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnLoad()
 	SoundtrackFrame.selectedLowHealthPercent = GetCurrentLowHealthPercent()
-	UIDropDownMenu_SetSelectedID(
-		Soundtrack.OptionsTab.LowHealthPercentDropDown,
-		SoundtrackFrame.selectedLowHealthPercent
-	)
+	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, SoundtrackFrame.selectedLowHealthPercent)
 	UIDropDownMenu_Initialize(
-		Soundtrack.OptionsTab.LowHealthPercentDropDown,
+		OptionsTab_LowHealthPercentDropDown,
 		Soundtrack.OptionsTab.LowHealthPercentDropDown_Initialize
 	)
-	UIDropDownMenu_SetWidth(Soundtrack.OptionsTab.LowHealthPercentDropDown, 130)
+	UIDropDownMenu_SetWidth(OptionsTab_LowHealthPercentDropDown, 130)
 end
 
 function Soundtrack.OptionsTab.LowHealthPercentDropDown_LoadPercents(lowHealthTexts)
@@ -282,7 +276,7 @@ function Soundtrack.OptionsTab.LowHealthPercentDropDown_LoadPercents(lowHealthTe
 		local checked = nil
 		if currentLowHealthPercent == i then
 			checked = 1
-			UIDropDownMenu_SetText(Soundtrack.OptionsTab.LowHealthPercentDropDown, lowHealthTexts[i])
+			UIDropDownMenu_SetText(OptionsTab_LowHealthPercentDropDown, lowHealthTexts[i])
 		end
 
 		info = {}
@@ -298,7 +292,7 @@ function Soundtrack.OptionsTab.LowHealthPercentDropDown_Initialize()
 end
 
 function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedID(Soundtrack.OptionsTab.LowHealthPercentDropDown, self:GetID())
+	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, self:GetID())
 	SoundtrackFrame.selectedLowHealthPercent = self:GetID()
 	-- Save settings.
 	SoundtrackAddon.db.profile.settings.LowHealthPercent = lowhealthpercents[SoundtrackFrame.selectedLowHealthPercent]
@@ -341,13 +335,13 @@ end
 
 function Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
 	SoundtrackFrame.selectedSilence = GetCurrentSilence()
-	UIDropDownMenu_Initialize(Soundtrack.OptionsTab.SilenceDropDown, Soundtrack.OptionsTab.SilenceDropDown_Initialize)
-	UIDropDownMenu_SetWidth(Soundtrack.OptionsTab.SilenceDropDown, 130)
+	UIDropDownMenu_Initialize(OptionsTab_SilenceDropDown, Soundtrack.OptionsTab.SilenceDropDown_Initialize)
+	UIDropDownMenu_SetWidth(OptionsTab_SilenceDropDown, 130)
 end
 
 function Soundtrack.OptionsTab.SilenceDropDown_Initialize()
 	Soundtrack.OptionsTab.SilenceDropDown_LoadSilences(GetSilences())
-	UIDropDownMenu_SetSelectedID(Soundtrack.OptionsTab.SilenceDropDown, SoundtrackFrame.selectedSilence)
+	UIDropDownMenu_SetSelectedID(OptionsTab_SilenceDropDown, SoundtrackFrame.selectedSilence)
 end
 
 function Soundtrack.OptionsTab.SilenceDropDown_LoadSilences(silencesTexts)
@@ -369,7 +363,7 @@ function Soundtrack.OptionsTab.SilenceDropDown_LoadSilences(silencesTexts)
 end
 
 function Soundtrack.OptionsTab.SilenceDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedID(Soundtrack.OptionsTab.SilenceDropDown, self:GetID())
+	UIDropDownMenu_SetSelectedID(OptionsTab_SilenceDropDown, self:GetID())
 	SoundtrackFrame.selectedSilence = self:GetID()
 	SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackFrame.selectedSilence]
 end

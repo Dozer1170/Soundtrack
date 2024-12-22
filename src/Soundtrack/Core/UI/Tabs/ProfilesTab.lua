@@ -127,10 +127,10 @@ end
 function Soundtrack.ProfilesTab.ReloadProfile()
 	_TracksLoaded = false
 	SoundtrackAddon:VARIABLES_LOADED()
-	ProfilesTab_RefreshProfilesFrame()
+	Soundtrack.ProfilesTab.RefreshProfilesFrame()
 end
 
-function ProfilesTab_RefreshProfilesFrame()
+function Soundtrack.ProfilesTab.RefreshProfilesFrame()
 	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
 	CurrentProfileName:SetText(currentProfile)
 end

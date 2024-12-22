@@ -1,28 +1,3 @@
-Soundtrack = {
-	RegisteredEvents = {},
-	Settings = {},
-}
-
-Soundtrack_EventTabs = {
-	"Battle",
-	"Boss",
-	"Zone",
-	"Pet Battles",
-	"Dance",
-	"Misc",
-	"Custom",
-	"Playlists",
-}
-
-Soundtrack_BattleEvents = {}
-Soundtrack_MiscEvents = {}
-Soundtrack_FlatEvents = {} -- Event nodes, but with collapsed events removed. used to match scrolling lists
-Soundtrack_EventNodes = {} -- Like sorted events, except its in a tree structure
-Soundtrack_Profiles = {}
-Soundtrack_Tracks = nil
-Soundtrack_SortedTracks = {}
-Soundtrack_Tooltip = nil
-
 StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"] = {
 	preferredIndex = 3,
 	text = SOUNDTRACK_NO_MYTRACKS,
@@ -117,15 +92,6 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	Soundtrack.Cleanup.CleanupOldEvents()
 end
 
-local function ToggleFrameLock()
-	-- If option true, then disable mouse.
-	local enableMouse = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame
-	NowPlayingTextFrame:EnableMouse(enableMouse)
-
-	enableMouse = not SoundtrackAddon.db.profile.settings.LockPlaybackControls
-	SoundtrackControlFrame:EnableMouse(enableMouse)
-end
-
 local function SetUserEventsToCorrectLevel()
 	local tableName = Soundtrack.Events.GetTable("Boss")
 	if not tableName then
@@ -177,8 +143,6 @@ function Soundtrack.LoadTracks()
 			SoundtrackAddon.db.profile.events[eventTabName] = {}
 		end
 	end
-
-	ToggleFrameLock()
 
 	-- Remove obsolete predefined events
 	Soundtrack.Timers.AddTimer("PurgeOldTracksFromEvents", 10, Soundtrack.Cleanup.PurgeOldTracksFromEvents)
