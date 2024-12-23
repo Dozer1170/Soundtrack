@@ -157,11 +157,11 @@ end
 
 function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soundEffect)
 	if IsNullOrEmpty(tableName) then
-		Soundtrack.Error("AddEvent: Nil table")
+		Soundtrack.Chat.Error("AddEvent: Nil table")
 		return
 	end
 	if IsNullOrEmpty(eventName) then
-		Soundtrack.Error("AddEvent: Nil event")
+		Soundtrack.Chat.Error("AddEvent: Nil event")
 		return
 	end
 
@@ -174,7 +174,7 @@ function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soun
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if not eventTable then
-		Soundtrack.Error("AddEvent: Cannot find table : " .. tableName)
+		Soundtrack.Chat.Error("AddEvent: Cannot find table : " .. tableName)
 		return
 	end
 
@@ -205,17 +205,17 @@ end
 
 function Soundtrack.RemoveEvent(tableName, eventName)
 	if IsNullOrEmpty(tableName) then
-		Soundtrack.Error("RemoveEvent: Nil table")
+		Soundtrack.Chat.Error("RemoveEvent: Nil table")
 		return
 	end
 	if IsNullOrEmpty(eventName) then
-		Soundtrack.Error("RemoveEvent: Nil event")
+		Soundtrack.Chat.Error("RemoveEvent: Nil event")
 		return
 	end
 
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 	if not eventTable then
-		Soundtrack.Error("RemoveEvent: Cannot find table : " .. tableName)
+		Soundtrack.Chat.Error("RemoveEvent: Cannot find table : " .. tableName)
 		return
 	end
 
@@ -228,22 +228,22 @@ end
 
 function Soundtrack.RenameEvent(tableName, oldEventName, newEventName, _priority, _continuous, _soundEffect)
 	if IsNullOrEmpty(tableName) then
-		Soundtrack.Error("RenameEvent: Nil table")
+		Soundtrack.Chat.Error("RenameEvent: Nil table")
 		return
 	end
 	if IsNullOrEmpty(oldEventName) then
-		Soundtrack.Error("RenmeEvent: Nil old event")
+		Soundtrack.Chat.Error("RenmeEvent: Nil old event")
 		return
 	end
 	if IsNullOrEmpty(newEventName) then
-		Soundtrack.Error("RenameEvent: Nil new event " .. oldEventName)
+		Soundtrack.Chat.Error("RenameEvent: Nil new event " .. oldEventName)
 		return
 	end
 
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if not eventTable then
-		Soundtrack.Error("RenameEvent: Cannot find table : " .. tableName)
+		Soundtrack.Chat.Error("RenameEvent: Cannot find table : " .. tableName)
 		return
 	end
 
@@ -329,11 +329,11 @@ end
 
 function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 	if not tableName then
-		Soundtrack.Error("PlayEvent: Invalid table name")
+		Soundtrack.Chat.Error("PlayEvent: Invalid table name")
 		return
 	end
 	if not eventName then
-		Soundtrack.Error("PlayEvent: Invalid event name")
+		Soundtrack.Chat.Error("PlayEvent: Invalid event name")
 		return
 	end
 
@@ -375,7 +375,7 @@ function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 
 	-- Add event on the stack
 	if not event.priority then
-		Soundtrack.Error("Cannot play event " .. eventName .. ". It has no priority!")
+		Soundtrack.Chat.Error("Cannot play event " .. eventName .. ". It has no priority!")
 	elseif event.soundEffect then
 		-- Sound effects are never added to the stack
 		Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
