@@ -88,7 +88,7 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	Soundtrack.Misc.Initialize()
 	Soundtrack.CustomEvents.CustomInitialize()
 	SoundtrackFrame_RefreshShowingTab()
-	SoundtrackFrame_Initialize()
+	SoundtrackFrame.Initialize()
 	Soundtrack.Cleanup.CleanupOldEvents()
 end
 

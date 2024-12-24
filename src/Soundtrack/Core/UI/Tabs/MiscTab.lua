@@ -4,7 +4,7 @@ StaticPopupDialogs["SOUNDTRACK_DELETE_MISC_POPUP"] = {
 	button1 = ACCEPT,
 	button2 = CANCEL,
 	OnAccept = function()
-		SoundtrackFrame_DeleteMisc(SoundtrackFrame_SelectedEvent)
+		SoundtrackFrame_DeleteMisc(SoundtrackFrame.SelectedEvent)
 	end,
 	enterClicksFirstButton = 1,
 	timeout = 0,
@@ -13,7 +13,7 @@ StaticPopupDialogs["SOUNDTRACK_DELETE_MISC_POPUP"] = {
 }
 
 function SoundtrackFrameDeleteMiscEventButton_OnClick()
-	if SoundtrackFrame_SelectedEvent then
+	if SoundtrackFrame.SelectedEvent then
 		StaticPopup_Show("SOUNDTRACK_DELETE_MISC_POPUP")
 	end
 end

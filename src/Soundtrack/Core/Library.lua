@@ -13,7 +13,7 @@ StaticPopupDialogs["SOUNDTRACK_REMOVETRACK"] = {
 	button1 = "OK",
 	button2 = "Cancel",
 	OnAccept = function()
-		Soundtrack.Library.RemoveTrack(SoundtrackFrame_SelectedTrack)
+		Soundtrack.Library.RemoveTrack(SoundtrackFrame.SelectedTrack)
 	end,
 	timeout = 0,
 	whileDead = 1,
