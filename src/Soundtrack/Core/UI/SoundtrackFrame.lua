@@ -45,11 +45,7 @@ local function ShowSubFrame(frameName)
 	end
 end
 
-function SoundtrackFrame.Initialize()
-	Soundtrack.OptionsTab.Initialize()
-end
-
-function SoundtrackFrame.RefreshEventSubFrame()
+local function RefreshEventSubFrame()
 	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
 
 	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
@@ -57,14 +53,18 @@ function SoundtrackFrame.RefreshEventSubFrame()
 	end
 end
 
+function SoundtrackFrame.Initialize()
+	Soundtrack.OptionsTab.Initialize()
+end
+
 function SoundtrackFrame.ShowAssignedTracksSubFrame()
 	currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
-	SoundtrackFrame.RefreshEventSubFrame()
+	RefreshEventSubFrame()
 end
 
 function SoundtrackFrame.ShowEventSettingsSubFrame()
 	currentSubFrame = SUB_FRAME_EVENT_SETTINGS
-	SoundtrackFrame.RefreshEventSubFrame()
+	RefreshEventSubFrame()
 end
 
 function SoundtrackFrame.OnLoad(self)
@@ -1225,7 +1225,7 @@ function SoundtrackFrame_OnTabChanged()
 		end
 
 		if SoundtrackFrame.SelectedEventsTable ~= "Options" then
-			SoundtrackFrame.RefreshEventSubFrame()
+			RefreshEventSubFrame()
 		end
 
 		if SoundtrackFrame.SelectedEventsTable ~= "Playlists" then
