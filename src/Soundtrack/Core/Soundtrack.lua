@@ -27,9 +27,9 @@ StaticPopupDialogs["SOUNDTRACK_NO_PURGE_POPUP"] = {
 	whileDead = 1,
 	hideOnEscape = 1,
 }
+
 local offset = 0
 local nextUpdateTime = 0
-local updateInterval = 0.1
 
 SoundtrackAddon = LibStub("AceAddon-3.0"):NewAddon("SoundtrackAddon", "AceEvent-3.0")
 _G.SOUNDTRACK_BINDING_HEADER = C_AddOns.GetAddOnMetadata(..., "Title")
@@ -450,13 +450,10 @@ end
 
 function Soundtrack.OnUpdate(_, deltaT)
 	local currentTime = GetTime()
-
 	Soundtrack.Library.OnUpdate(deltaT)
-
 	if currentTime >= nextUpdateTime then
-		nextUpdateTime = currentTime + updateInterval
+		nextUpdateTime = currentTime + UI_UPDATE_INTERVAL
 		Soundtrack.Timers.OnUpdate(deltaT)
-		SoundtrackFrame_RefreshTrackProgress()
 	end
 end
 

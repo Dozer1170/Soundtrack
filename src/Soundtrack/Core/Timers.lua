@@ -5,6 +5,8 @@ Soundtrack.Timers.CooldownTime = 0 -- time (in seconds) since cooldowns last upd
 Soundtrack.Timers.CooldownLimit = 1 -- time (in seconds) before cooldowns are updated
 Soundtrack.Timers.CurrentTime = GetTime()
 
+UI_UPDATE_INTERVAL = 0.1
+
 -- Will trigger the callback in a specified amount of time (in seconds)
 -- The timer gets removed from the list when it is triggered
 function Soundtrack.Timers.AddTimer(name, duration, callback)

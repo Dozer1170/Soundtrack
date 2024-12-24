@@ -7,7 +7,7 @@ local EVENTS_TO_DISPLAY = 21
 local TRACKS_TO_DISPLAY = 16
 local ASSIGNED_TRACKS_TO_DISPLAY = 7
 
-local eventTypes = {
+local EVENT_TYPES = {
 	ST_EVENT_SCRIPT,
 	ST_UPDATE_SCRIPT,
 	ST_BUFF_SCRIPT,
@@ -20,7 +20,10 @@ local EVENT_SUB_FRAMES = {
 	SUB_FRAME_ASSIGNED_TRACKS,
 	SUB_FRAME_EVENT_SETTINGS,
 }
+
 local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
+local nextUpdateTime = 0
+local suspendRenameEvent = false
 
 local function GetFlatEventsTable()
 	return Soundtrack_FlatEvents[SoundtrackFrame.SelectedEventsTable]
@@ -32,6 +35,69 @@ local function FormatDuration(seconds)
 		return ""
 	else
 		return string.format("%i:%02i", math.floor(seconds / 60), seconds % 60)
+	end
+end
+
+local function RefreshEventSettings()
+	if SoundtrackFrame.SelectedEvent then
+		suspendRenameEvent = true
+		_G["SoundtrackFrame_EventName"]:SetText(SoundtrackFrame.SelectedEvent)
+		suspendRenameEvent = false
+
+		local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
+		local event = eventTable[SoundtrackFrame.SelectedEvent]
+		if event then
+			SoundtrackFrame_RandomCheckButton:SetChecked(event.random)
+			SoundtrackFrame_ContinuousCheckBox:SetChecked(event.continuous)
+			SoundtrackFrame_SoundEffectCheckBox:SetChecked(event.soundEffect)
+		end
+	end
+end
+
+local function SelectActiveTab()
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+
+	if stackLevel > 0 then
+		Soundtrack.Chat.TraceFrame("Selecting currently playing tab")
+		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
+		SoundtrackFrame.SelectedEventsTable = tableName
+		PanelTemplates_SetTab(SoundtrackFrame, TabUtils.GetTabIndex(tableName))
+		SoundtrackFrame_OnTabChanged()
+	end
+end
+
+local function SetStatusBarProgress(statusBarID, max, current)
+	-- Skill bar objects
+	local statusBar = _G[statusBarID]
+	local statusBarBackground = _G[statusBarID .. "Background"]
+	local statusBarFillBar = _G[statusBarID .. "FillBar"]
+	local statusBarLabel = _G[statusBarID .. "Text1"]
+
+	statusBarFillBar:Hide()
+	statusBarBackground:Hide()
+
+	-- Set bar color depending on skill cost
+	if max then
+		statusBar:SetStatusBarColor(0.0, 0.75, 0.0, 0.5)
+		statusBarBackground:SetVertexColor(0.0, 0.5, 0.0, 0.5)
+		statusBarFillBar:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+	else
+		statusBar:SetStatusBarColor(0.25, 0.25, 0.25)
+		statusBar:SetMinMaxValues(0, 0)
+		statusBar:SetValue(1)
+		statusBarBackground:SetVertexColor(0.75, 0.75, 0.75, 0.5)
+		statusBarFillBar:Hide()
+		return
+	end
+
+	statusBar:SetMinMaxValues(0, max)
+	statusBar:SetValue(current)
+	if current <= max and max ~= 0 then
+		local fillBarWidth = (current / max) * (statusBar:GetWidth() - 4)
+		statusBarFillBar:SetPoint("TOPRIGHT", statusBarLabel, "TOPLEFT", fillBarWidth, 0)
+		statusBarFillBar:Show()
+	else
+		statusBarFillBar:Hide()
 	end
 end
 
@@ -75,114 +141,25 @@ function SoundtrackFrame.OnLoad(self)
 end
 
 function SoundtrackFrame.OnUpdate()
-	SoundtrackFrame.MovingTitle.Update()
-end
-
-local suspendRenameEvent = false
-
-local function RefreshEventSettings()
-	if SoundtrackFrame.SelectedEvent then
-		suspendRenameEvent = true
-		_G["SoundtrackFrame_EventName"]:SetText(SoundtrackFrame.SelectedEvent)
-		suspendRenameEvent = false
-
-		local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-		local event = eventTable[SoundtrackFrame.SelectedEvent]
-		if event then
-			SoundtrackFrame_RandomCheckButton:SetChecked(event.random)
-			SoundtrackFrame_ContinuousCheckBox:SetChecked(event.continuous)
-			SoundtrackFrame_SoundEffectCheckBox:SetChecked(event.soundEffect)
-		end
+	local currentTime = GetTime()
+	if currentTime >= nextUpdateTime then
+		nextUpdateTime = currentTime + UI_UPDATE_INTERVAL
+		SoundtrackFrame.MovingTitle.Update()
+		SoundtrackFrame.RefreshTrackProgress()
 	end
 end
 
-local function GetTabIndex(tableName)
-	if tableName == "Battle" then
-		return 1
-	elseif tableName == "Boss" then
-		return 2
-	elseif tableName == "Zone" then
-		return 3
-	elseif tableName == "Pet Battles" then
-		return 4
-	elseif tableName == "Dance" then
-		return 5
-	elseif tableName == "Misc" then
-		return 6
-	elseif tableName == "Custom" then
-		return 7
-	elseif tableName == "Playlists" then
-		return 8
-	else
-		return 0
-	end
-end
-
--- Makes sure we select the correct tab that
--- contains the currently playing event.
-local function SelectActiveTab()
-	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
-
-	if stackLevel > 0 then
-		-- Select currently playing table tab
-		Soundtrack.Chat.TraceFrame("Selecting currently playing tab")
-		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
-		SoundtrackFrame.SelectedEventsTable = tableName
-		PanelTemplates_SetTab(SoundtrackFrame, GetTabIndex(tableName))
-		SoundtrackFrame_OnTabChanged()
-	end
-end
-
-function SoundtrackFrame_StatusBarSetProgress(statusBarID, max, current)
-	-- Skill bar objects
-	local statusBar = _G[statusBarID]
-	local statusBarBackground = _G[statusBarID .. "Background"]
-	local statusBarFillBar = _G[statusBarID .. "FillBar"]
-	local statusBarLabel = _G[statusBarID .. "Text1"]
-
-	statusBarFillBar:Hide()
-	statusBarBackground:Hide()
-
-	-- Set bar color depending on skill cost
-	if max then
-		statusBar:SetStatusBarColor(0.0, 0.75, 0.0, 0.5)
-		statusBarBackground:SetVertexColor(0.0, 0.5, 0.0, 0.5)
-		statusBarFillBar:SetVertexColor(0.0, 1.0, 0.0, 0.5)
-	else
-		statusBar:SetStatusBarColor(0.25, 0.25, 0.25)
-		statusBar:SetMinMaxValues(0, 0)
-		statusBar:SetValue(1)
-		statusBarBackground:SetVertexColor(0.75, 0.75, 0.75, 0.5)
-
-		--statusBar:SetStatusBarColor(0.5, 0.5, 0.5, 0.5)
-		--statusBarBackground:SetVertexColor(0.5, 0.5, 0.5, 0.5)
-		statusBarFillBar:Hide()
-		--statusBarFillBar:SetVertexColor(1.0, 1.0, 1.0, 0.5)
-		return
-	end
-
-	statusBar:SetMinMaxValues(0, max)
-	statusBar:SetValue(current)
-	if current <= max and max ~= 0 then
-		local fillBarWidth = (current / max) * (statusBar:GetWidth() - 4)
-		statusBarFillBar:SetPoint("TOPRIGHT", statusBarLabel, "TOPLEFT", fillBarWidth, 0)
-		statusBarFillBar:Show()
-	else
-		statusBarFillBar:Hide()
-	end
-end
-
-function SoundtrackFrame_RefreshTrackProgress()
+function SoundtrackFrame.RefreshTrackProgress()
 	if not Soundtrack.Library.CurrentlyPlayingTrack then
-		SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarTrack", nil, nil)
-		SoundtrackFrame_StatusBarSetProgress("SoundtrackControlFrame_StatusBarTrack", nil, nil)
+		SetStatusBarProgress("SoundtrackFrame_StatusBarTrack", nil, nil)
+		SetStatusBarProgress("SoundtrackControlFrame_StatusBarTrack", nil, nil)
 		return
 	end
 
 	local track = Soundtrack_Tracks[Soundtrack.Library.CurrentlyPlayingTrack]
 	if not track then
-		SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarTrack", nil, nil)
-		SoundtrackFrame_StatusBarSetProgress("SoundtrackControlFrame_StatusBarTrack", nil, nil)
+		SetStatusBarProgress("SoundtrackFrame_StatusBarTrack", nil, nil)
+		SetStatusBarProgress("SoundtrackControlFrame_StatusBarTrack", nil, nil)
 		return
 	end
 
@@ -197,8 +174,8 @@ function SoundtrackFrame_RefreshTrackProgress()
 	SoundtrackFrame_StatusBarTrackText2:SetText(textRemain)
 	SoundtrackControlFrame_StatusBarTrackText2:SetText(textRemain)
 
-	SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarTrack", duration, currentTime)
-	SoundtrackFrame_StatusBarSetProgress("SoundtrackControlFrame_StatusBarTrack", duration, currentTime)
+	SetStatusBarProgress("SoundtrackFrame_StatusBarTrack", duration, currentTime)
+	SetStatusBarProgress("SoundtrackControlFrame_StatusBarTrack", duration, currentTime)
 end
 
 local function SoundtrackFrame_RefreshCurrentlyPlaying()
@@ -209,8 +186,8 @@ local function SoundtrackFrame_RefreshCurrentlyPlaying()
 	if stackLevel == 0 then
 		SoundtrackFrame_StatusBarEventText1:SetText(SOUNDTRACK_NO_EVENT_PLAYING)
 		SoundtrackFrame_StatusBarEventText2:SetText("")
-		SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarEvent", nil, nil)
-		SoundtrackFrame_StatusBarSetProgress("SoundtrackControlFrame_StatusBarEvent", nil, nil)
+		SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", nil, nil)
+		SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", nil, nil)
 	else
 		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
 		local eventName = Soundtrack.Events.Stack[stackLevel].eventName
@@ -223,8 +200,8 @@ local function SoundtrackFrame_RefreshCurrentlyPlaying()
 			if Soundtrack.Library.CurrentlyPlayingTrack then
 				local curTrackIndex = IndexOf(event.tracks, currentTrack)
 				SoundtrackFrame_StatusBarEventText2:SetText(curTrackIndex .. " / " .. numTracks)
-				SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarEvent", numTracks, curTrackIndex)
-				SoundtrackFrame_StatusBarSetProgress("SoundtrackControlFrame_StatusBarEvent", numTracks, curTrackIndex)
+				SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", numTracks, curTrackIndex)
+				SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", numTracks, curTrackIndex)
 			else
 				SoundtrackFrame_StatusBarEventText2:SetText(numTracks .. " tracks")
 			end
@@ -619,7 +596,7 @@ function SoundtrackFrame_RefreshCustomEvent()
 		customEvent.type = ST_UPDATE_SCRIPT
 	end
 
-	local eventTypeIndex = IndexOf(eventTypes, customEvent.type)
+	local eventTypeIndex = IndexOf(EVENT_TYPES, customEvent.type)
 	UIDropDownMenu_SetSelectedID(SoundtrackFrame_EventTypeDropDown, eventTypeIndex)
 	UIDropDownMenu_SetText(SoundtrackFrame_EventTypeDropDown, customEvent.type)
 end
@@ -1467,8 +1444,8 @@ function SoundtrackFrame_EventTypeDropDown_AddInfo(id, caption)
 end
 
 function SoundtrackFrame_EventTypeDropDown_Initialize()
-	for i = 1, #eventTypes do
-		SoundtrackFrame_EventTypeDropDown_AddInfo(i, eventTypes[i])
+	for i = 1, #EVENT_TYPES do
+		SoundtrackFrame_EventTypeDropDown_AddInfo(i, EVENT_TYPES[i])
 	end
 end
 
@@ -1482,17 +1459,17 @@ function SoundtrackFrame_EventTypeDropDown_OnClick(self)
 
 	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent]
 
-	customEvent.type = eventTypes[selectedId]
+	customEvent.type = EVENT_TYPES[selectedId]
 
-	if eventTypes[selectedId] == ST_UPDATE_SCRIPT then
+	if EVENT_TYPES[selectedId] == ST_UPDATE_SCRIPT then
 		if customEvent.script == nil then
 			customEvent.swcript = "type your update script here"
 		end
-	elseif eventTypes[selectedId] == ST_BUFF_SCRIPT then
+	elseif EVENT_TYPES[selectedId] == ST_BUFF_SCRIPT then
 		if customEvent.spellId == nil then
 			customEvent.spellId = "0"
 		end
-	elseif eventTypes[selectedId] == ST_EVENT_SCRIPT then
+	elseif EVENT_TYPES[selectedId] == ST_EVENT_SCRIPT then
 		if customEvent.trigger == nil then
 			customEvent.trigger = "UNIT_AURA"
 		end
