@@ -575,13 +575,13 @@
                     </Layers>
                     <Scripts>
                       <OnLoad>
-                                                UIDropDownMenu_Initialize(self, SoundtrackFrame_ColumnHeaderNameDropDown_Initialize);
+                                                UIDropDownMenu_Initialize(self, SoundtrackFrame.InitializeColumnHeaderNameDropDown);
                                                 UIDropDownMenu_SetWidth(self, 80);
                                                 UIDropDownMenu_SetButtonWidth(self, 24);
                                                 UIDropDownMenu_JustifyText(self, "LEFT")
                                             </OnLoad>
                       <OnShow>
-                                                UIDropDownMenu_Initialize(self, SoundtrackFrame_ColumnHeaderNameDropDown_Initialize);
+                                                UIDropDownMenu_Initialize(self, SoundtrackFrame.InitializeColumnHeaderNameDropDown);
                                                 UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, 1);
                                             </OnShow>
                       <OnEnter>SoundtrackFrame_ColumnHeaderNameHighlightTexture:Show();</OnEnter>

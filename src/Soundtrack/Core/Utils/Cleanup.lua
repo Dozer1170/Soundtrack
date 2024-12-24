@@ -58,6 +58,18 @@ local function OnConfirmPurgeOldTracks()
 	end
 end
 
+StaticPopupDialogs["SOUNDTRACK_NO_PURGE_POPUP"] = {
+	preferredIndex = 3,
+	text = SOUNDTRACK_GEN_LIBRARY,
+	button1 = ACCEPT,
+	button2 = CANCEL,
+	OnAccept = function() end,
+	OnCancel = function() end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = 1,
+}
+
 StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 	preferredIndex = 3,
 	text = SOUNDTRACK_PURGE_EVENTS_QUESTION,

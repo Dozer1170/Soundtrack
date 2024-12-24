@@ -14,6 +14,12 @@ local EVENT_TYPES = {
 	ST_DEBUFF_SCRIPT,
 }
 
+SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST = {
+	{ name = "File Path", type = "filePath" },
+	{ name = "File Name", type = "fileName" },
+	{ name = "Title", type = "title" },
+}
+
 local SUB_FRAME_ASSIGNED_TRACKS = "SoundtrackFrameAssignedTracks"
 local SUB_FRAME_EVENT_SETTINGS = "SoundtrackFrame_EventSettings"
 local EVENT_SUB_FRAMES = {
@@ -98,6 +104,21 @@ local function SetStatusBarProgress(statusBarID, max, current)
 		statusBarFillBar:Show()
 	else
 		statusBarFillBar:Hide()
+	end
+end
+
+local function OnColumnHeaderNameDropDownClick(self)
+	UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, self:GetID())
+	SoundtrackFrame.nameHeaderType = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[self:GetID()].type
+	Soundtrack.Chat.TraceFrame("Refreshing tracks with " .. SoundtrackFrame.nameHeaderType)
+	if
+		self.sortType == "name" and SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "fileName"
+		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "filePath"
+		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "title"
+	then
+		Soundtrack.SortTracks(SoundtrackFrame.nameHeaderType)
+	else
+		Soundtrack.SortTracks(self.sortType)
 	end
 end
 
@@ -219,32 +240,11 @@ local function SoundtrackFrame_RefreshCurrentlyPlaying()
 	SoundtrackControlFrame_StatusBarTrackText2:SetText(SoundtrackFrame_StatusBarTrackText2:GetText()) -- time
 end
 
-SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST = {
-	{ name = "File Path", type = "filePath" },
-	{ name = "File Name", type = "fileName" },
-	{ name = "Title", type = "title" },
-}
-
-function SoundtrackFrame_ColumnHeaderNameDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, self:GetID())
-	SoundtrackFrame.nameHeaderType = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[self:GetID()].type
-	Soundtrack.Chat.TraceFrame("Refreshing tracks with " .. SoundtrackFrame.nameHeaderType)
-	if
-		self.sortType == "name" and SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "fileName"
-		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "filePath"
-		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "title"
-	then
-		Soundtrack.SortTracks(SoundtrackFrame.nameHeaderType)
-	else
-		Soundtrack.SortTracks(self.sortType)
-	end
-end
-
-function SoundtrackFrame_ColumnHeaderNameDropDown_Initialize()
+function SoundtrackFrame.InitializeColumnHeaderNameDropDown()
 	local info = UIDropDownMenu_CreateInfo()
 	for i = 1, #SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST, 1 do
 		info.text = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[i].name
-		info.func = SoundtrackFrame_ColumnHeaderNameDropDown_OnClick
+		info.func = OnColumnHeaderNameDropDownClick
 		UIDropDownMenu_AddButton(info)
 	end
 end
@@ -622,7 +622,7 @@ function SoundtrackFrameEventButton_OnClick(self, mouseButton, _)
 		Soundtrack.Chat.TraceFrame(SoundtrackFrame.SelectedEvent .. " is now expanded")
 	end
 
-	Soundtrack_OnTreeChanged(SoundtrackFrame.SelectedEventsTable)
+	SoundtrackFrame.OnEventTreeChanged(SoundtrackFrame.SelectedEventsTable)
 
 	SoundtrackFrame_RefreshEvents()
 
@@ -659,7 +659,7 @@ function SoundtrackFrameCollapseAllZoneButton_OnClick()
 	for _, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
 		eventNode.expanded = false
 	end
-	Soundtrack_OnTreeChanged("Zone")
+	SoundtrackFrame.OnEventTreeChanged("Zone")
 	SoundtrackFrame_RefreshEvents()
 end
 
@@ -668,7 +668,7 @@ function SoundtrackFrameExpandAllZoneButton_OnClick()
 	for _, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
 		eventNode.expanded = true
 	end
-	Soundtrack_OnTreeChanged("Zone")
+	SoundtrackFrame.OnEventTreeChanged("Zone")
 	SoundtrackFrame_RefreshEvents()
 end
 

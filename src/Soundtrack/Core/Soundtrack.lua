@@ -16,20 +16,53 @@ StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"] = {
 	whileDead = 1,
 }
 
-StaticPopupDialogs["SOUNDTRACK_NO_PURGE_POPUP"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_GEN_LIBRARY,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function() end,
-	OnCancel = function() end,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
 local offset = 0
 local nextUpdateTime = 0
+
+local function SetUserEventsToCorrectLevel()
+	local tableName = Soundtrack.Events.GetTable("Boss")
+	if not tableName then
+		return
+	end
+
+	for _, v in pairs(tableName) do
+		v.priority = ST_BOSS_LVL
+	end
+
+	tableName = Soundtrack.Events.GetTable("Playlists")
+	if not tableName then
+		return
+	end
+
+	for _, v in pairs(tableName) do
+		v.priority = ST_PLAYLIST_LVL
+	end
+end
+
+-- Returns a flat list of tree nodes, based on whether each level is expanded or not
+local function GetFlattenedEventNodes(eventTableName, rootNode, list)
+	table.insert(list, rootNode)
+
+	-- if expandable
+	if table.getn(rootNode.nodes) >= 1 then
+		local event = SoundtrackAddon.db.profile.events[eventTableName][rootNode.tag]
+			or error("Cannot locate event " .. rootNode.name)
+		if not event then
+			return
+		end
+
+		-- By default every event is expanded
+		if event.expanded == nil then
+			event.expanded = true
+		end
+
+		if event.expanded then
+			for _, n in ipairs(rootNode.nodes) do
+				GetFlattenedEventNodes(eventTableName, n, list)
+			end
+		end
+	end
+end
 
 SoundtrackAddon = LibStub("AceAddon-3.0"):NewAddon("SoundtrackAddon", "AceEvent-3.0")
 _G.SOUNDTRACK_BINDING_HEADER = C_AddOns.GetAddOnMetadata(..., "Title")
@@ -90,26 +123,6 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	SoundtrackFrame_RefreshShowingTab()
 	SoundtrackFrame.Initialize()
 	Soundtrack.Cleanup.CleanupOldEvents()
-end
-
-local function SetUserEventsToCorrectLevel()
-	local tableName = Soundtrack.Events.GetTable("Boss")
-	if not tableName then
-		return
-	end
-
-	for _, v in pairs(tableName) do
-		v.priority = ST_BOSS_LVL
-	end
-
-	tableName = Soundtrack.Events.GetTable("Playlists")
-	if not tableName then
-		return
-	end
-
-	for _, v in pairs(tableName) do
-		v.priority = ST_PLAYLIST_LVL
-	end
 end
 
 function Soundtrack.LoadTracks()
@@ -413,33 +426,8 @@ function Soundtrack.StopEvent(tableName, eventName)
 	end
 end
 
--- Returns a flat list of tree nodes, based on whether each level is expanded or not
-local function GetFlattenedEventNodes(eventTableName, rootNode, list)
-	table.insert(list, rootNode)
-
-	-- if expandable
-	if table.getn(rootNode.nodes) >= 1 then
-		local event = SoundtrackAddon.db.profile.events[eventTableName][rootNode.tag]
-			or error("Cannot locate event " .. rootNode.name)
-		if not event then
-			return
-		end
-
-		-- By default every event is expanded
-		if event.expanded == nil then
-			event.expanded = true
-		end
-
-		if event.expanded then
-			for _, n in ipairs(rootNode.nodes) do
-				GetFlattenedEventNodes(eventTableName, n, list)
-			end
-		end
-	end
-end
-
 -- Call after events have changed or been expanded/collapsed
-function Soundtrack_OnTreeChanged(eventTableName)
+function SoundtrackFrame.OnEventTreeChanged(eventTableName)
 	-- Remove collapsed portions from Sorted events
 	Soundtrack_FlatEvents[eventTableName] = {}
 	local rootEventNode = Soundtrack_EventNodes[eventTableName]
