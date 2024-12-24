@@ -798,7 +798,7 @@
                   </Anchor>
                 </Anchors>
                 <Scripts>
-                  <OnClick>SoundtrackFrame.showAssignedFrame = true; SoundtrackFrame_OnSelectedEventTabChanged()</OnClick>
+                  <OnClick>SoundtrackFrame.ShowEventSettingsSubFrame()</OnClick>
                 </Scripts>
               </Button>
               <!-- EVENT SETTINGS HEADER -->
@@ -810,7 +810,7 @@
                   <Anchor point="LEFT" relativeTo="SoundtrackFrameColumnHeaderAssignedTracks" relativePoint="RIGHT"/>
                 </Anchors>
                 <Scripts>
-                  <OnClick>SoundtrackFrame.showAssignedFrame = false; SoundtrackFrame_OnSelectedEventTabChanged()</OnClick>
+                  <OnClick>SoundtrackFrame.ShowAssignedTracksSubFrame()</OnClick>
                   <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_SETTINGS, SOUNDTRACK_EVENT_SETTINGS_TIP)</OnEnter>
                   <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>

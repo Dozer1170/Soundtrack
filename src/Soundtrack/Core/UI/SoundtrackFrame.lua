@@ -42,13 +42,16 @@ function Soundtrack.IndexOf(_table, value)
 	return 0
 end
 
-local eventSubFrames = {
-	"SoundtrackFrameAssignedTracks",
-	"SoundtrackFrame_EventSettings",
+local SUB_FRAME_ASSIGNED_TRACKS = "SoundtrackFrameAssignedTracks"
+local SUB_FRAME_EVENT_SETTINGS = "SoundtrackFrame_EventSettings"
+local EVENT_SUB_FRAMES = {
+	SUB_FRAME_ASSIGNED_TRACKS,
+	SUB_FRAME_EVENT_SETTINGS,
 }
+local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
 
-function SoundtrackFrame_ShowSubFrame(frameName)
-	for _, value in ipairs(eventSubFrames) do
+local function ShowSubFrame(frameName)
+	for _, value in ipairs(EVENT_SUB_FRAMES) do
 		if value == frameName then
 			_G[value]:Show()
 		else
@@ -57,16 +60,22 @@ function SoundtrackFrame_ShowSubFrame(frameName)
 	end
 end
 
-function SoundtrackFrame_RefreshEventSettings() end
-
 function SoundtrackFrame_OnSelectedEventTabChanged()
-	if SoundtrackFrame.showAssignedFrame then
-		SoundtrackFrame_ShowSubFrame("SoundtrackFrameAssignedTracks")
+	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
+
+	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
 		SoundtrackFrame_RefreshAssignedTracks()
-	else
-		SoundtrackFrame_ShowSubFrame("SoundtrackFrame_EventSettings")
-		SoundtrackFrame_RefreshEventSettings()
 	end
+end
+
+function SoundtrackFrame.ShowAssignedTracksSubFrame()
+	currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
+	SoundtrackFrame_OnSelectedEventTabChanged()
+end
+
+function SoundtrackFrame.ShowEventSettingsSubFrame()
+	currentSubFrame = SUB_FRAME_EVENT_SETTINGS
+	SoundtrackFrame_OnSelectedEventTabChanged()
 end
 
 SoundtrackFrame_SelectedEvent = nil
@@ -79,8 +88,6 @@ end
 local suspendRenameEvent = false
 
 function SoundtrackFrame_OnLoad(self)
-	SoundtrackFrame.showAssignedFrame = true
-
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
 	PanelTemplates_SetNumTabs(self, 11)
