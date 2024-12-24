@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="SoundtrackFrame.lua"/>
+  <Include file="MovingTitle.lua"
   <Include file="EventsList.xml"/>
   <Include file="Tabs/CustomTab.lua"/>
   <Include file="Tabs/MiscTab.lua"/>
@@ -276,11 +277,11 @@
                 self:RegisterForDrag("LeftButton")
                 SoundtrackFrame_OnLoad(self)
             </OnLoad>
+      <OnUpdate>SoundtrackFrame_OnUpdate()</OnUpdate>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
       <OnShow>SoundtrackFrame_OnShow()</OnShow>
       <OnHide>SoundtrackFrame_OnHide()</OnHide>
-      <OnEvent>SoundtrackFrame_OnEvent(self, event, ...)</OnEvent>
       <OnMouseWheel>return</OnMouseWheel>
     </Scripts>
   </Frame>

@@ -1,159 +1,8 @@
+SoundtrackFrame = {}
+
 local EVENTS_TO_DISPLAY = 21
 local TRACKS_TO_DISPLAY = 16
 local ASSIGNED_TRACKS_TO_DISPLAY = 7
-EVENTS_ITEM_HEIGHT = 21
-
-StaticPopupDialogs["SOUNDTRACK_ADD_BOSS"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_ADD_BOSS_TIP,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	hasEditBox = 1,
-	maxLetters = 100,
-	OnAccept = function(self)
-		local editBox = _G[self:GetName() .. "EditBox"]
-		SoundtrackFrame_AddNamedBoss(editBox:GetText())
-	end,
-	OnShow = function(self)
-		_G[self:GetName() .. "EditBox"]:SetFocus()
-	end,
-	OnHide = function(self)
-		if ChatFrame1EditBox:IsVisible() then
-			ChatFrame1EditBox:SetFocus()
-		end
-		_G[self:GetName() .. "EditBox"]:SetText("")
-	end,
-	EditBoxOnEnterPressed = function(self)
-		local editBox = _G[self:GetName() .. "EditBox"]
-		SoundtrackFrame_AddNamedBoss(editBox:GetText())
-		self:Hide()
-	end,
-	EditBoxOnEscapePressed = function(self)
-		self:Hide()
-	end,
-	timeout = 0,
-	exclusive = 1,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
-StaticPopupDialogs["SOUNDTRACK_ADD_WORLD_BOSS"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_ADD_BOSS_TIP,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	hasEditBox = 1,
-	maxLetters = 100,
-	OnAccept = function(self)
-		local editBox = _G[self:GetName() .. "EditBox"]
-		SoundtrackFrame_AddNamedWorldBoss(editBox:GetText())
-	end,
-	OnShow = function(self)
-		_G[self:GetName() .. "EditBox"]:SetFocus()
-	end,
-	OnHide = function(self)
-		if ChatFrame1EditBox:IsVisible() then
-			ChatFrame1EditBox:SetFocus()
-		end
-		_G[self:GetName() .. "EditBox"]:SetText("")
-	end,
-	EditBoxOnEnterPressed = function(self)
-		local editBox = _G[self:GetName() .. "EditBox"]
-		SoundtrackFrame_AddNamedWorldBoss(editBox:GetText())
-		self:Hide()
-	end,
-	EditBoxOnEscapePressed = function(self)
-		self:Hide()
-	end,
-	timeout = 0,
-	exclusive = 1,
-	whileDead = 1,
-	hideOnEscape = 0,
-}
-
-StaticPopupDialogs["SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP"] = {
-	preferredIndex = 3,
-	text = "Do you want to remove this pet battle event?",
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function(self)
-		SoundtrackFrame_RemovePetBattleTarget(SoundtrackFrame_SelectedEvent)
-	end,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
-StaticPopupDialogs["SOUNDTRACK_REMOVE_ZONE_POPUP"] = {
-	preferredIndex = 3,
-	text = "Do you want to remove this zone?",
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function(self)
-		SoundtrackFrame_RemoveZone(SoundtrackFrame_SelectedEvent)
-	end,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
-StaticPopupDialogs["SOUNDTRACK_ADD_PLAYLIST_POPUP"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_ENTER_PLAYLIST_NAME,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	hasEditBox = 1,
-	maxLetters = 100,
-	OnAccept = function(self)
-		local playlistName = _G[self:GetName() .. "EditBox"]
-		SoundtrackFrame_AddPlaylist(playlistName:GetText())
-	end,
-	OnShow = function(self)
-		_G[self:GetName() .. "EditBox"]:SetFocus()
-		_G[self:GetName() .. "EditBox"]:SetText("")
-	end,
-	OnHide = function(self) end,
-	EditBoxOnEnterPressed = function(self)
-		local playlistName = _G[self:GetName()]
-		SoundtrackFrame_AddPlaylist(playlistName:GetText())
-		self:GetParent():Hide()
-	end,
-	EditBoxOnEscapePressed = function(self)
-		self:GetParent():Hide()
-	end,
-	timeout = 0,
-	exclusive = 1,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
-StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_REMOVE_QUESTION,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function()
-		SoundtrackFrame_DeleteTarget(SoundtrackFrame_SelectedEvent)
-	end,
-	enterClicksFirstButton = 1,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
-StaticPopupDialogs["SOUNDTRACK_CLEAR_SELECTED_EVENT"] = {
-	preferredIndex = 3,
-	text = SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION,
-	button1 = ACCEPT,
-	button2 = CANCEL,
-	OnAccept = function()
-		SoundtrackFrame_ClearEvent(SoundtrackFrame_SelectedEvent)
-	end,
-	enterClicksFirstButton = 1,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
 
 local SEVT = {
 	SelectedEventsTable = nil,
@@ -238,7 +87,9 @@ function SoundtrackFrame_OnLoad(self)
 	PanelTemplates_SetTab(self, 1)
 end
 
-function SoundtrackFrame_OnEvent(_, _, ...) end
+function SoundtrackFrame_OnUpdate()
+	SoundtrackFrame.MovingTitle.Update()
+end
 
 local function RefreshEventSettings()
 	if SoundtrackFrame_SelectedEvent then
@@ -332,129 +183,6 @@ function SoundtrackFrame_StatusBarSetProgress(statusBarID, max, current)
 	end
 end
 
--- Lunaqua: Moves the title
-local MAX_TITLE_LENGTH = 30
-local backwards = true
-local hold = 0
-local holdLimit = 4
-local titleDelayTime = 0
-local titleUpdateTime = 0.5
-
-local function SoundtrackFrame_TimeToUpdateTitle()
-	local titleCurrentTime = GetTime()
-	if titleCurrentTime < titleDelayTime then
-		return false
-	else
-		titleDelayTime = titleCurrentTime + titleUpdateTime
-		return true
-	end
-end
-
-local function SoundtrackFrame_NewMovingTitle(title, oldTitle)
-	local titleClean = CleanString(title)
-	if oldTitle == nil then
-		backwards = false
-		return string.sub(titleClean, 1, MAX_TITLE_LENGTH)
-	end
-
-	-- Check old title length
-	if string.len(oldTitle) > MAX_TITLE_LENGTH then
-		oldTitle = string.sub(oldTitle, 1, MAX_TITLE_LENGTH)
-	end
-	-- Check if oldTitle is part of title
-	local oldTitleClean = CleanString(oldTitle)
-	local arg1, arg2 = string.find(titleClean, oldTitleClean, 1, true)
-	-- arg1 = starting position where string found
-	-- arg2 = ending position of string found, inclusive
-
-	if arg1 == nil then
-		-- Different track name, start up a new title.
-		backwards = false
-		if string.len(titleClean) > MAX_TITLE_LENGTH then
-			return string.sub(titleClean, 1, MAX_TITLE_LENGTH)
-		else
-			return titleClean
-		end
-	elseif SoundtrackFrame_TimeToUpdateTitle() then
-		if string.len(titleClean) > MAX_TITLE_LENGTH then
-			if backwards == true then
-				-- Going backwards, check if at front of string
-				if arg1 == 1 then
-					if hold < holdLimit then
-						-- Hold at end until hold = holdLimit
-						hold = hold + 1
-						return oldTitleClean
-					elseif hold >= holdLimit then
-						-- hold = holdLimit, string goes forward
-						hold = 0
-						backwards = false
-						return string.sub(titleClean, arg1 + 1, arg2 + 1)
-					end
-				else
-					return string.sub(titleClean, arg1 - 1, arg2 - 1)
-				end
-			else
-				-- Going forwards, check if at end of string
-				if arg2 == string.len(titleClean) then
-					if hold < holdLimit then
-						-- Hold at end until hold = holdLimit
-						hold = hold + 1
-						return oldTitleClean
-					elseif hold >= holdLimit then
-						-- hold = holdLimit, string goes backwards now
-						hold = 0
-						backwards = true
-						return string.sub(titleClean, arg1 - 1, arg2 - 1)
-					end
-				else
-					return string.sub(titleClean, arg1 + 1, arg2 + 1)
-				end
-			end
-		else
-			return titleClean
-		end
-	else
-		return oldTitleClean
-	end
-end
-
-function SoundtrackFrame_MovingTitle()
-	-- Refresh event
-	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
-
-	local track
-	if Soundtrack_Tracks ~= nil then
-		-- Check to avoid nil error
-		track = Soundtrack_Tracks[currentTrack]
-	else
-		track = false
-	end
-	if not track then
-		SoundtrackFrame_StatusBarTrackText1:SetText(SOUNDTRACK_NO_TRACKS_PLAYING)
-		SoundtrackFrame_StatusBarTrackText2:SetText("")
-	else
-		local oldTitle = SoundtrackFrame_StatusBarTrackText1:GetText()
-		if SoundtrackFrame.nameHeaderType == "filePath" then
-			local text = SoundtrackFrame_NewMovingTitle(track.title, oldTitle)
-			SoundtrackFrame_StatusBarTrackText1:SetText(text)
-		elseif SoundtrackFrame.nameHeaderType == "fileName" then
-			local text = SoundtrackFrame_NewMovingTitle(track.title, oldTitle)
-			SoundtrackFrame_StatusBarTrackText1:SetText(text)
-		else
-			if track.title == nil or track.title == "" then
-				local text = SoundtrackFrame_NewMovingTitle(currentTrack, oldTitle)
-				SoundtrackFrame_StatusBarTrackText1:SetText(text)
-			else
-				local text = SoundtrackFrame_NewMovingTitle(track.title, oldTitle)
-				SoundtrackFrame_StatusBarTrackText1:SetText(text)
-			end
-		end
-	end
-
-	SoundtrackControlFrame_StatusBarTrackText1:SetText(SoundtrackFrame_StatusBarTrackText1:GetText())
-	SoundtrackControlFrame_StatusBarTrackText2:SetText(SoundtrackFrame_StatusBarTrackText2:GetText())
-end
-
 function SoundtrackFrame_RefreshTrackProgress()
 	if not Soundtrack.Library.CurrentlyPlayingTrack then
 		SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarTrack", nil, nil)
@@ -515,8 +243,6 @@ local function SoundtrackFrame_RefreshCurrentlyPlaying()
 			SoundtrackFrame_StatusBarEventText2:SetText("")
 		end
 	end
-
-	SoundtrackFrame_MovingTitle()
 
 	-- Refresh control frame too
 	SoundtrackControlFrame_StatusBarTrackText1:SetWidth(215)
@@ -985,6 +711,40 @@ function SoundtrackFrameAddBossTargetButton_OnClick()
 	if targetName then
 		SoundtrackFrame_AddNamedBoss(targetName)
 	else
+		StaticPopupDialogs["SOUNDTRACK_ADD_BOSS"] = {
+			preferredIndex = 3,
+			text = SOUNDTRACK_ADD_BOSS_TIP,
+			button1 = ACCEPT,
+			button2 = CANCEL,
+			hasEditBox = 1,
+			maxLetters = 100,
+			OnAccept = function(self)
+				local editBox = _G[self:GetName() .. "EditBox"]
+				SoundtrackFrame_AddNamedBoss(editBox:GetText())
+			end,
+			OnShow = function(self)
+				_G[self:GetName() .. "EditBox"]:SetFocus()
+			end,
+			OnHide = function(self)
+				if ChatFrame1EditBox:IsVisible() then
+					ChatFrame1EditBox:SetFocus()
+				end
+				_G[self:GetName() .. "EditBox"]:SetText("")
+			end,
+			EditBoxOnEnterPressed = function(self)
+				local editBox = _G[self:GetName() .. "EditBox"]
+				SoundtrackFrame_AddNamedBoss(editBox:GetText())
+				self:Hide()
+			end,
+			EditBoxOnEscapePressed = function(self)
+				self:Hide()
+			end,
+			timeout = 0,
+			exclusive = 1,
+			whileDead = 1,
+			hideOnEscape = 1,
+		}
+
 		StaticPopup_Show("SOUNDTRACK_ADD_BOSS")
 	end
 end
@@ -1002,6 +762,40 @@ function SoundtrackFrameAddWorldBossTargetButton_OnClick()
 	if targetName then
 		SoundtrackFrame_AddNamedWorldBoss(targetName)
 	else
+		StaticPopupDialogs["SOUNDTRACK_ADD_WORLD_BOSS"] = {
+			preferredIndex = 3,
+			text = SOUNDTRACK_ADD_BOSS_TIP,
+			button1 = ACCEPT,
+			button2 = CANCEL,
+			hasEditBox = 1,
+			maxLetters = 100,
+			OnAccept = function(self)
+				local editBox = _G[self:GetName() .. "EditBox"]
+				SoundtrackFrame_AddNamedWorldBoss(editBox:GetText())
+			end,
+			OnShow = function(self)
+				_G[self:GetName() .. "EditBox"]:SetFocus()
+			end,
+			OnHide = function(self)
+				if ChatFrame1EditBox:IsVisible() then
+					ChatFrame1EditBox:SetFocus()
+				end
+				_G[self:GetName() .. "EditBox"]:SetText("")
+			end,
+			EditBoxOnEnterPressed = function(self)
+				local editBox = _G[self:GetName() .. "EditBox"]
+				SoundtrackFrame_AddNamedWorldBoss(editBox:GetText())
+				self:Hide()
+			end,
+			EditBoxOnEscapePressed = function(self)
+				self:Hide()
+			end,
+			timeout = 0,
+			exclusive = 1,
+			whileDead = 1,
+			hideOnEscape = 0,
+		}
+
 		StaticPopup_Show("SOUNDTRACK_ADD_WORLD_BOSS")
 	end
 end
@@ -1043,6 +837,19 @@ function SoundtrackFrame_AddPetBattleTarget(targetName, isPlayer)
 end
 
 function SoundtrackFrameRemovePetBattleTargetButton_OnClick()
+	StaticPopupDialogs["SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP"] = {
+		preferredIndex = 3,
+		text = "Do you want to remove this pet battle event?",
+		button1 = ACCEPT,
+		button2 = CANCEL,
+		OnAccept = function(self)
+			SoundtrackFrame_RemovePetBattleTarget(SoundtrackFrame_SelectedEvent)
+		end,
+		timeout = 0,
+		whileDead = 1,
+		hideOnEscape = 1,
+	}
+
 	StaticPopup_Show("SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP")
 end
 
@@ -1051,6 +858,19 @@ function SoundtrackFrame_RemovePetBattleTarget(eventName)
 end
 
 function SoundtrackFrameRemoveZoneButton_OnClick()
+	StaticPopupDialogs["SOUNDTRACK_REMOVE_ZONE_POPUP"] = {
+		preferredIndex = 3,
+		text = "Do you want to remove this zone?",
+		button1 = ACCEPT,
+		button2 = CANCEL,
+		OnAccept = function(self)
+			SoundtrackFrame_RemoveZone(SoundtrackFrame_SelectedEvent)
+		end,
+		timeout = 0,
+		whileDead = 1,
+		hideOnEscape = 1,
+	}
+
 	StaticPopup_Show("SOUNDTRACK_REMOVE_ZONE_POPUP")
 end
 function SoundtrackFrame_RemoveZone(eventName)
@@ -1058,6 +878,36 @@ function SoundtrackFrame_RemoveZone(eventName)
 end
 
 function SoundtrackFrameAddPlaylistButton_OnClick(_)
+	StaticPopupDialogs["SOUNDTRACK_ADD_PLAYLIST_POPUP"] = {
+		preferredIndex = 3,
+		text = SOUNDTRACK_ENTER_PLAYLIST_NAME,
+		button1 = ACCEPT,
+		button2 = CANCEL,
+		hasEditBox = 1,
+		maxLetters = 100,
+		OnAccept = function(self)
+			local playlistName = _G[self:GetName() .. "EditBox"]
+			SoundtrackFrame_AddPlaylist(playlistName:GetText())
+		end,
+		OnShow = function(self)
+			_G[self:GetName() .. "EditBox"]:SetFocus()
+			_G[self:GetName() .. "EditBox"]:SetText("")
+		end,
+		OnHide = function(self) end,
+		EditBoxOnEnterPressed = function(self)
+			local playlistName = _G[self:GetName()]
+			SoundtrackFrame_AddPlaylist(playlistName:GetText())
+			self:GetParent():Hide()
+		end,
+		EditBoxOnEscapePressed = function(self)
+			self:GetParent():Hide()
+		end,
+		timeout = 0,
+		exclusive = 1,
+		whileDead = 1,
+		hideOnEscape = 1,
+	}
+
 	StaticPopup_Show("SOUNDTRACK_ADD_PLAYLIST_POPUP")
 end
 
@@ -1251,7 +1101,20 @@ function SoundtrackFrameClearButton_OnClick()
 		return
 	end
 
-	-- TODO: Test this popup
+	StaticPopupDialogs["SOUNDTRACK_CLEAR_SELECTED_EVENT"] = {
+		preferredIndex = 3,
+		text = SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION,
+		button1 = ACCEPT,
+		button2 = CANCEL,
+		OnAccept = function()
+			SoundtrackFrame_ClearEvent(SoundtrackFrame_SelectedEvent)
+		end,
+		enterClicksFirstButton = 1,
+		timeout = 0,
+		whileDead = 1,
+		hideOnEscape = 1,
+	}
+
 	StaticPopup_Show("SOUNDTRACK_CLEAR_SELECTED_EVENT")
 end
 
@@ -1863,6 +1726,20 @@ end
 -- DELETE TARGET BUTTON
 function SoundtrackFrameDeleteTargetButton_OnClick()
 	if SoundtrackFrame_SelectedEvent then
+		StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
+			preferredIndex = 3,
+			text = SOUNDTRACK_REMOVE_QUESTION,
+			button1 = ACCEPT,
+			button2 = CANCEL,
+			OnAccept = function()
+				SoundtrackFrame_DeleteTarget(SoundtrackFrame_SelectedEvent)
+			end,
+			enterClicksFirstButton = 1,
+			timeout = 0,
+			whileDead = 1,
+			hideOnEscape = 1,
+		}
+
 		StaticPopup_Show("SOUNDTRACK_DELETE_TARGET_POPUP")
 	end
 end

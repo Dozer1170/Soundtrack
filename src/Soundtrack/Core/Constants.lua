@@ -1,4 +1,4 @@
--- Lunaqua: Moved ST_BUFF_LVL from 8 to 12
+-- Event Levels
 ST_CONTINENT_LVL = 1 -- Level 1: Continent
 ST_ZONE_LVL = 2 -- Level 2: Region
 ST_SUBZONE_LVL = 3 -- Level 3: Zones
@@ -29,3 +29,6 @@ ST_UPDATE_SCRIPT = "Update Script"
 ST_EVENT_SCRIPT = "Event Script"
 ST_BUFF_SCRIPT = "Buff"
 ST_DEBUFF_SCRIPT = "Debuff"
+
+-- UI Stuff
+EVENTS_ITEM_HEIGHT = 21

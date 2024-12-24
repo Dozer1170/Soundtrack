@@ -452,7 +452,6 @@ function Soundtrack.OnUpdate(_, deltaT)
 	local currentTime = GetTime()
 
 	Soundtrack.Library.OnUpdate(deltaT)
-	SoundtrackFrame_MovingTitle()
 
 	if currentTime >= nextUpdateTime then
 		nextUpdateTime = currentTime + updateInterval
