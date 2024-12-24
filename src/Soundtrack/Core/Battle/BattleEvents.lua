@@ -361,7 +361,7 @@ end
 
 local function AnalyzeBattleSituation()
 	local battleType, bossName, hasLowHealth = GetBattleType()
-	local battleTypeIndex = Soundtrack.IndexOf(battleEvents, battleType)
+	local battleTypeIndex = IndexOf(battleEvents, battleType)
 
 	-- If we're in cooldown, but a higher battle is already playing, keep that one,
 	-- otherwise we can escalate the battle music.

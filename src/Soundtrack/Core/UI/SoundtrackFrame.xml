@@ -275,9 +275,9 @@
 
                 self:SetBackdropColor(.1,.1,.1,.9)
                 self:RegisterForDrag("LeftButton")
-                SoundtrackFrame_OnLoad(self)
+                SoundtrackFrame.OnLoad(self)
             </OnLoad>
-      <OnUpdate>SoundtrackFrame_OnUpdate()</OnUpdate>
+      <OnUpdate>SoundtrackFrame.OnUpdate()</OnUpdate>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
       <OnShow>SoundtrackFrame_OnShow()</OnShow>

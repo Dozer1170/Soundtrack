@@ -15,6 +15,18 @@ local eventTypes = {
 	ST_DEBUFF_SCRIPT,
 }
 
+local SUB_FRAME_ASSIGNED_TRACKS = "SoundtrackFrameAssignedTracks"
+local SUB_FRAME_EVENT_SETTINGS = "SoundtrackFrame_EventSettings"
+local EVENT_SUB_FRAMES = {
+	SUB_FRAME_ASSIGNED_TRACKS,
+	SUB_FRAME_EVENT_SETTINGS,
+}
+local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
+
+local function GetFlatEventsTable()
+	return Soundtrack_FlatEvents[SEVT.SelectedEventsTable]
+end
+
 -- Returns the number of seconds in "mm.ss" format
 local function FormatDuration(seconds)
 	if not seconds then
@@ -28,28 +40,6 @@ function SoundtrackFrame_Initialize()
 	Soundtrack.OptionsTab.Initialize()
 end
 
-function Soundtrack.IndexOf(_table, value)
-	if _table == nil then
-		return 0
-	end
-
-	for i = 1, #_table do
-		if _table[i] == value then
-			return i
-		end
-	end
-
-	return 0
-end
-
-local SUB_FRAME_ASSIGNED_TRACKS = "SoundtrackFrameAssignedTracks"
-local SUB_FRAME_EVENT_SETTINGS = "SoundtrackFrame_EventSettings"
-local EVENT_SUB_FRAMES = {
-	SUB_FRAME_ASSIGNED_TRACKS,
-	SUB_FRAME_EVENT_SETTINGS,
-}
-local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
-
 local function ShowSubFrame(frameName)
 	for _, value in ipairs(EVENT_SUB_FRAMES) do
 		if value == frameName then
@@ -60,7 +50,7 @@ local function ShowSubFrame(frameName)
 	end
 end
 
-function SoundtrackFrame_OnSelectedEventTabChanged()
+function SoundtrackFrame.RefreshEventSubFrame()
 	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
 
 	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
@@ -70,33 +60,29 @@ end
 
 function SoundtrackFrame.ShowAssignedTracksSubFrame()
 	currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
-	SoundtrackFrame_OnSelectedEventTabChanged()
+	SoundtrackFrame.RefreshEventSubFrame()
 end
 
 function SoundtrackFrame.ShowEventSettingsSubFrame()
 	currentSubFrame = SUB_FRAME_EVENT_SETTINGS
-	SoundtrackFrame_OnSelectedEventTabChanged()
+	SoundtrackFrame.RefreshEventSubFrame()
 end
 
 SoundtrackFrame_SelectedEvent = nil
 SoundtrackFrame_SelectedTrack = nil
 
-local function GetFlatEventsTable()
-	return Soundtrack_FlatEvents[SEVT.SelectedEventsTable]
-end
-
-local suspendRenameEvent = false
-
-function SoundtrackFrame_OnLoad(self)
+function SoundtrackFrame.OnLoad(self)
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
 	PanelTemplates_SetNumTabs(self, 11)
 	PanelTemplates_SetTab(self, 1)
 end
 
-function SoundtrackFrame_OnUpdate()
+function SoundtrackFrame.OnUpdate()
 	SoundtrackFrame.MovingTitle.Update()
 end
+
+local suspendRenameEvent = false
 
 local function RefreshEventSettings()
 	if SoundtrackFrame_SelectedEvent then
@@ -239,7 +225,7 @@ local function SoundtrackFrame_RefreshCurrentlyPlaying()
 			local numTracks = getn(event.tracks)
 
 			if Soundtrack.Library.CurrentlyPlayingTrack then
-				local curTrackIndex = Soundtrack.IndexOf(event.tracks, currentTrack)
+				local curTrackIndex = IndexOf(event.tracks, currentTrack)
 				SoundtrackFrame_StatusBarEventText2:SetText(curTrackIndex .. " / " .. numTracks)
 				SoundtrackFrame_StatusBarSetProgress("SoundtrackFrame_StatusBarEvent", numTracks, curTrackIndex)
 				SoundtrackFrame_StatusBarSetProgress("SoundtrackControlFrame_StatusBarEvent", numTracks, curTrackIndex)
@@ -637,7 +623,7 @@ function SoundtrackFrame_RefreshCustomEvent()
 		customEvent.type = ST_UPDATE_SCRIPT
 	end
 
-	local eventTypeIndex = Soundtrack.IndexOf(eventTypes, customEvent.type)
+	local eventTypeIndex = IndexOf(eventTypes, customEvent.type)
 	UIDropDownMenu_SetSelectedID(SoundtrackFrame_EventTypeDropDown, eventTypeIndex)
 	UIDropDownMenu_SetText(SoundtrackFrame_EventTypeDropDown, customEvent.type)
 end
@@ -1239,7 +1225,7 @@ function SoundtrackFrame_OnTabChanged()
 		end
 
 		if SEVT.SelectedEventsTable ~= "Options" then
-			SoundtrackFrame_OnSelectedEventTabChanged()
+			SoundtrackFrame.RefreshEventSubFrame()
 		end
 
 		if SEVT.SelectedEventsTable ~= "Playlists" then
@@ -1598,7 +1584,7 @@ local function SoundtrackFrame_RefreshUpDownButtons()
 	local eventTable = Soundtrack.Events.GetTable(SEVT.SelectedEventsTable)
 	if eventTable[SoundtrackFrame_SelectedEvent] ~= nil then
 		local event = eventTable[SoundtrackFrame_SelectedEvent]
-		local currentIndex = Soundtrack.IndexOf(event.tracks, SoundtrackFrame_SelectedTrack)
+		local currentIndex = IndexOf(event.tracks, SoundtrackFrame_SelectedTrack)
 
 		if currentIndex > 0 and currentIndex > 1 then
 			_G["SoundtrackFrameMoveUp"]:Enable()
@@ -1708,7 +1694,7 @@ function SoundtrackFrame_MoveAssignedTrack(direction)
 	local eventTable = Soundtrack.Events.GetTable(SEVT.SelectedEventsTable)
 	if eventTable[SoundtrackFrame_SelectedEvent] ~= nil then
 		local event = eventTable[SoundtrackFrame_SelectedEvent]
-		local currentIndex = Soundtrack.IndexOf(event.tracks, SoundtrackFrame_SelectedTrack)
+		local currentIndex = IndexOf(event.tracks, SoundtrackFrame_SelectedTrack)
 
 		if currentIndex > 0 then
 			if direction < 0 and currentIndex > 1 then
