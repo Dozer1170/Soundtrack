@@ -188,6 +188,6 @@ function Soundtrack.Library.RemoveTrack(trackName)
 		end
 
 		-- Refresh assigned counts
-		SoundtrackFrame_RefreshEvents()
+		SoundtrackFrame.RefreshEvents()
 	end
 end

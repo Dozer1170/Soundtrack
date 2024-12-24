@@ -122,6 +122,47 @@ local function OnColumnHeaderNameDropDownClick(self)
 	end
 end
 
+local function RefreshCurrentlyPlaying()
+	-- Refresh event
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
+
+	if stackLevel == 0 then
+		SoundtrackFrame_StatusBarEventText1:SetText(SOUNDTRACK_NO_EVENT_PLAYING)
+		SoundtrackFrame_StatusBarEventText2:SetText("")
+		SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", nil, nil)
+		SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", nil, nil)
+	else
+		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
+		local eventName = Soundtrack.Events.Stack[stackLevel].eventName
+		SoundtrackFrame_StatusBarEventText1:SetText(GetPathFileName(eventName))
+		local event = Soundtrack.GetEvent(tableName, eventName)
+
+		if event and event.tracks then
+			local numTracks = getn(event.tracks)
+
+			if Soundtrack.Library.CurrentlyPlayingTrack then
+				local curTrackIndex = IndexOf(event.tracks, currentTrack)
+				SoundtrackFrame_StatusBarEventText2:SetText(curTrackIndex .. " / " .. numTracks)
+				SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", numTracks, curTrackIndex)
+				SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", numTracks, curTrackIndex)
+			else
+				SoundtrackFrame_StatusBarEventText2:SetText(numTracks .. " tracks")
+			end
+		else
+			SoundtrackFrame_StatusBarEventText2:SetText("")
+		end
+	end
+
+	-- Refresh control frame too
+	SoundtrackControlFrame_StatusBarTrackText1:SetWidth(215)
+	SoundtrackControlFrame_StatusBarEventText1:SetWidth(215)
+	SoundtrackControlFrame_StatusBarEventText1:SetText(SoundtrackFrame_StatusBarEventText1:GetText()) -- event name
+	SoundtrackControlFrame_StatusBarEventText2:SetText(SoundtrackFrame_StatusBarEventText2:GetText()) -- track number in list
+	SoundtrackControlFrame_StatusBarTrackText1:SetText(SoundtrackFrame_StatusBarTrackText1:GetText()) -- track name
+	SoundtrackControlFrame_StatusBarTrackText2:SetText(SoundtrackFrame_StatusBarTrackText2:GetText()) -- time
+end
+
 local function ShowSubFrame(frameName)
 	for _, value in ipairs(EVENT_SUB_FRAMES) do
 		if value == frameName then
@@ -199,47 +240,6 @@ function SoundtrackFrame.RefreshTrackProgress()
 	SetStatusBarProgress("SoundtrackControlFrame_StatusBarTrack", duration, currentTime)
 end
 
-local function SoundtrackFrame_RefreshCurrentlyPlaying()
-	-- Refresh event
-	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
-	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
-
-	if stackLevel == 0 then
-		SoundtrackFrame_StatusBarEventText1:SetText(SOUNDTRACK_NO_EVENT_PLAYING)
-		SoundtrackFrame_StatusBarEventText2:SetText("")
-		SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", nil, nil)
-		SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", nil, nil)
-	else
-		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
-		local eventName = Soundtrack.Events.Stack[stackLevel].eventName
-		SoundtrackFrame_StatusBarEventText1:SetText(GetPathFileName(eventName))
-		local event = Soundtrack.GetEvent(tableName, eventName)
-
-		if event and event.tracks then
-			local numTracks = getn(event.tracks)
-
-			if Soundtrack.Library.CurrentlyPlayingTrack then
-				local curTrackIndex = IndexOf(event.tracks, currentTrack)
-				SoundtrackFrame_StatusBarEventText2:SetText(curTrackIndex .. " / " .. numTracks)
-				SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", numTracks, curTrackIndex)
-				SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", numTracks, curTrackIndex)
-			else
-				SoundtrackFrame_StatusBarEventText2:SetText(numTracks .. " tracks")
-			end
-		else
-			SoundtrackFrame_StatusBarEventText2:SetText("")
-		end
-	end
-
-	-- Refresh control frame too
-	SoundtrackControlFrame_StatusBarTrackText1:SetWidth(215)
-	SoundtrackControlFrame_StatusBarEventText1:SetWidth(215)
-	SoundtrackControlFrame_StatusBarEventText1:SetText(SoundtrackFrame_StatusBarEventText1:GetText()) -- event name
-	SoundtrackControlFrame_StatusBarEventText2:SetText(SoundtrackFrame_StatusBarEventText2:GetText()) -- track number in list
-	SoundtrackControlFrame_StatusBarTrackText1:SetText(SoundtrackFrame_StatusBarTrackText1:GetText()) -- track name
-	SoundtrackControlFrame_StatusBarTrackText2:SetText(SoundtrackFrame_StatusBarTrackText2:GetText()) -- time
-end
-
 function SoundtrackFrame.InitializeColumnHeaderNameDropDown()
 	local info = UIDropDownMenu_CreateInfo()
 	for i = 1, #SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST, 1 do
@@ -249,9 +249,8 @@ function SoundtrackFrame.InitializeColumnHeaderNameDropDown()
 	end
 end
 
--- Functions to call from outside, to refresh the UI partially
-function SoundtrackFrame_TouchEvents()
-	SoundtrackFrame_RefreshCurrentlyPlaying()
+function SoundtrackFrame.OnEventStackChanged()
+	RefreshCurrentlyPlaying()
 
 	for i = 1, Soundtrack.Events.MaxStackLevel, 1 do
 		local tableName = Soundtrack.Events.Stack[i].tableName
@@ -272,13 +271,13 @@ function SoundtrackFrame_TouchEvents()
 		end
 	end
 
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 -- Functions to call from outside, to refresh the UI partially
 function SoundtrackFrame_TouchTracks()
 	SoundtrackFrame_RefreshTracks()
-	SoundtrackFrame_RefreshCurrentlyPlaying()
+	RefreshCurrentlyPlaying()
 end
 
 function SoundtrackFrame_RefreshProfilesFrame() end
@@ -552,7 +551,7 @@ function SoundtrackFrame_ToggleContinuousMusic()
 end
 
 function SoundtrackFrame_OnShow()
-	SoundtrackFrame_RefreshCurrentlyPlaying()
+	RefreshCurrentlyPlaying()
 	SelectActiveTab()
 	SoundtrackFrame_RefreshShowingTab()
 end
@@ -624,7 +623,7 @@ function SoundtrackFrameEventButton_OnClick(self, mouseButton, _)
 
 	SoundtrackFrame.OnEventTreeChanged(SoundtrackFrame.SelectedEventsTable)
 
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 
 	if mouseButton == "RightButton" and SoundtrackFrame.SelectedEventsTable == "Zone" then
 		-- Toggle menu
@@ -651,7 +650,7 @@ function SoundtrackFrameAddZoneButton_OnClick()
 		SoundtrackFrame.SelectedEvent = GetRealZoneText()
 	end
 
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameCollapseAllZoneButton_OnClick()
@@ -660,7 +659,7 @@ function SoundtrackFrameCollapseAllZoneButton_OnClick()
 		eventNode.expanded = false
 	end
 	SoundtrackFrame.OnEventTreeChanged("Zone")
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameExpandAllZoneButton_OnClick()
@@ -669,7 +668,7 @@ function SoundtrackFrameExpandAllZoneButton_OnClick()
 		eventNode.expanded = true
 	end
 	SoundtrackFrame.OnEventTreeChanged("Zone")
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameAddBossTargetButton_OnClick()
@@ -720,7 +719,7 @@ function SoundtrackFrame_AddNamedBoss(targetName)
 	local lowhealthbossname = targetName .. " " .. SOUNDTRACK_LOW_HEALTH
 	Soundtrack.AddEvent("Boss", lowhealthbossname, ST_BOSS_LVL, true)
 	SoundtrackFrame.SelectedEvent = targetName
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameAddWorldBossTargetButton_OnClick()
@@ -776,7 +775,7 @@ function SoundtrackFrame_AddNamedWorldBoss(targetName)
 	local bossEvent = bossTable[lowhealthbossname]
 	bossEvent.worldboss = true
 	SoundtrackFrame.SelectedEvent = targetName
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameAddPetBattleTargetButton_OnClick()
@@ -799,7 +798,7 @@ function SoundtrackFrame_AddPetBattleTarget(targetName, isPlayer)
 		Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName, ST_NPC_LVL, true)
 	end
 	SoundtrackFrame.SelectedEvent = targetName
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameRemovePetBattleTargetButton_OnClick()
@@ -894,13 +893,13 @@ function SoundtrackFrame_AddPlaylist(playlistName)
 	Soundtrack.AddEvent("Playlists", playlistName, ST_PLAYLIST_LVL, true)
 	SoundtrackFrame.SelectedEvent = playlistName
 	Soundtrack.SortEvents("Playlists")
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameDeletePlaylistButton_OnClick()
 	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame.SelectedEvent)
 	Soundtrack.Events.DeleteEvent(ST_PLAYLISTS, SoundtrackFrame.SelectedEvent)
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameEventMenu_Initialize() end
@@ -990,7 +989,7 @@ function SoundtrackFrameTrackCheckBox_OnClick(self, _, _)
 	end
 
 	-- To refresh assigned track counts.
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 	SoundtrackFrame_RefreshTracks()
 end
 
@@ -1013,7 +1012,7 @@ function SoundtrackFrameAssignedTrackCheckBox_OnClick(self, _, _)
 	end
 
 	-- To refresh assigned track counts.
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 	SoundtrackFrame_RefreshTracks()
 end
 
@@ -1062,7 +1061,7 @@ function SoundtrackFrameAllButton_OnClick()
 	for i = 1, #Soundtrack_SortedTracks, 1 do
 		Soundtrack.AssignTrack(SoundtrackFrame.SelectedEvent, Soundtrack_SortedTracks[i])
 	end
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrameClearButton_OnClick()
@@ -1091,7 +1090,7 @@ end
 function SoundtrackFrame_ClearEvent(eventToClear)
 	Soundtrack.Events.ClearEvent(SoundtrackFrame.SelectedEventsTable, eventToClear)
 
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 function SoundtrackFrame_RefreshShowingTab()
@@ -1149,7 +1148,7 @@ function SoundtrackFrame_OnTabChanged()
 			SoundtrackFrame.SelectedEvent = table[1].tag
 		end
 
-		SoundtrackFrame_RefreshEvents()
+		SoundtrackFrame.RefreshEvents()
 
 		if SoundtrackFrame.SelectedEventsTable == "Zone" then
 			SoundtrackFrameAddZoneButton:Show()
@@ -1265,7 +1264,7 @@ local function GetEventDepth(eventPath)
 	end
 end
 
-function SoundtrackFrame_RefreshEvents()
+function SoundtrackFrame.RefreshEvents()
 	if not SoundtrackFrame:IsVisible() or not SoundtrackFrame.SelectedEventsTable then
 		Soundtrack.Chat.TraceFrame("Skipping event refresh")
 		return
@@ -1396,7 +1395,7 @@ function SoundtrackFrame_RenameEvent()
 			SoundtrackFrame.SelectedEvent,
 			_G["SoundtrackFrame_EventName"]:GetText()
 		)
-		SoundtrackFrame_RefreshEvents()
+		SoundtrackFrame.RefreshEvents()
 	end
 end
 
@@ -1719,7 +1718,7 @@ end
 function SoundtrackFrame_DeleteTarget(eventName)
 	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame.SelectedEvent)
 	Soundtrack.Events.DeleteEvent("Boss", eventName)
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 -- COPIED TRACKS BUTTONS
@@ -1732,7 +1731,7 @@ function SoundtrackFrameCopyCopiedTracksButton_OnClick()
 		for i = 0, #event.tracks do
 			CopiedTracks[i] = event.tracks[i]
 		end
-		SoundtrackFrame_RefreshEvents()
+		SoundtrackFrame.RefreshEvents()
 	end
 end
 
@@ -1741,7 +1740,7 @@ function SoundtrackFramePasteCopiedTracksButton_OnClick()
 		for i = 0, #CopiedTracks do
 			Soundtrack.Events.Add(SoundtrackFrame.SelectedEventsTable, SoundtrackFrame.SelectedEvent, CopiedTracks[i])
 		end
-		SoundtrackFrame_RefreshEvents()
+		SoundtrackFrame.RefreshEvents()
 	end
 end
 

@@ -88,7 +88,7 @@ StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 function Soundtrack.Cleanup.CleanupOldEvents()
 	CleanupTableEvents(SoundtrackAddon.db.profile.events[ST_MISC], Soundtrack.RegisteredEvents[ST_MISC])
 
-	SoundtrackFrame_RefreshEvents()
+	SoundtrackFrame.RefreshEvents()
 end
 
 -- Removes obsolete tracks from event assignments

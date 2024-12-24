@@ -180,7 +180,7 @@ end
 -- and avoids playing unnecessary events.
 function Soundtrack.Events.OnStackChanged(forceRestart)
 	-- Remove any playOnce events that do not have any valid tracks or they will never be removed
-	SoundtrackFrame_TouchEvents()
+	SoundtrackFrame.OnEventStackChanged()
 
 	local validStackLevel = GetValidStackLevel()
 	if validStackLevel == 0 then

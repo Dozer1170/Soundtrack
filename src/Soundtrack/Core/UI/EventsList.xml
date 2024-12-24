@@ -76,7 +76,7 @@
               </Layer>
             </Layers>
             <Scripts>
-              <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackFrame_RefreshEvents)
+              <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackFrame.RefreshEvents)
                             </OnVerticalScroll>
             </Scripts>
           </ScrollFrame>
