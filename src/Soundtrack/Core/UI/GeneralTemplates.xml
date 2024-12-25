@@ -354,7 +354,7 @@
         </HitRectInsets>
         <Scripts>
           <OnClick>
-                        SoundtrackFrame_StatusBar_OnClick(self, button, down)
+                        SoundtrackFrame.OnStatusBarClick(self, button, down)
                     </OnClick>
         </Scripts>
         <NormalTexture name="$parentNormal" file="Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder"/>

@@ -373,61 +373,15 @@ function SoundtrackFrame.OnEventButtonClick(self, mouseButton, _)
 	end
 end
 
-function SoundtrackFrameEventMenu_Initialize() end
+function SoundtrackFrame.EventMenuInitialize() end
 
-function SoundtrackFrame_StatusBar_OnClick(_, _, _)
+function SoundtrackFrame.OnStatusBarClick(_, _, _)
 	Soundtrack.Chat.TraceFrame("StatusBar_OnClick")
 	local menu = _G["SoundtrackControlFrame_PlaylistMenu"]
 	local button = _G["SoundtrackControlFrame_StatusBarTrack"]
 	menu.point = "TOPLEFT"
 	menu.relativePoint = "BOTTOMLEFT"
 	ToggleDropDownMenu(1, nil, menu, button, 0, 0)
-end
-
-function SoundtrackControlFrame_PlaylistMenu_OnClick(self)
-	Soundtrack.Chat.TraceFrame("PlaylistMenu_OnClick")
-
-	local table = Soundtrack.Events.GetTable(ST_PLAYLISTS)
-	Soundtrack.Chat.TraceFrame(self:GetID())
-
-	local i = 1
-	local eventName = nil
-	for k, _ in pairs(table) do
-		if i == self:GetID() then
-			eventName = k
-		end
-		i = i + 1
-	end
-
-	if eventName then
-		Soundtrack.PlayEvent(ST_PLAYLISTS, eventName)
-	end
-end
-
-function SoundtrackControlFrame_PlaylistMenu_Initialize()
-	local playlistTable = Soundtrack.Events.GetTable(ST_PLAYLISTS)
-
-	table.sort(playlistTable, function(a, b)
-		return a < b
-	end)
-	table.sort(playlistTable, function(a, b)
-		return a > b
-	end)
-	table.sort(playlistTable, function(a, b)
-		return a > b
-	end)
-	table.sort(playlistTable, function(a, b)
-		return a < b
-	end)
-
-	for k, _ in pairs(playlistTable) do
-		local info = {}
-		info.text = k
-		info.value = k
-		info.func = SoundtrackControlFrame_PlaylistMenu_OnClick
-		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info, 1)
-	end
 end
 
 function SoundtrackFrameTrackMenu_Initialize()

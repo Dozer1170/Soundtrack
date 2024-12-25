@@ -220,7 +220,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>self:SetFrameLevel(0); UIDropDownMenu_SetWidth(self, 180)</OnLoad>
-          <OnShow>UIDropDownMenu_Initialize(self, SoundtrackFrameEventMenu_Initialize, "MENU")</OnShow>
+          <OnShow>UIDropDownMenu_Initialize(self, SoundtrackFrame.EventMenuInitialize, "MENU")</OnShow>
         </Scripts>
       </Frame>
       <Button name="SoundtrackFrameCopyCopiedTracksButton" inherits="UIPanelButtonTemplate" text="Copy">

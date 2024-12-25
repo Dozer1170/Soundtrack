@@ -304,7 +304,7 @@
             UIDropDownMenu_SetWidth(self, 180);
             </OnLoad>
           <OnShow>
-            UIDropDownMenu_Initialize(self, SoundtrackControlFrame_PlaylistMenu_Initialize, "MENU");
+            UIDropDownMenu_Initialize(self, SoundtrackFrame.PlaylistMenuInitialize, "MENU");
             </OnShow>
         </Scripts>
       </Frame>
