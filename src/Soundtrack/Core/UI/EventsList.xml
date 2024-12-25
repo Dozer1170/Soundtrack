@@ -278,7 +278,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddPlaylistButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameAddPlaylistButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnAddPlaylistButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_PLAYLIST, SOUNDTRACK_ADD_PLAYLIST_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -292,7 +292,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameDeletePlaylistButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameDeletePlaylistButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnDeletePlaylistButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_PLAYLIST, SOUNDTRACK_REMOVE_PLAYLIST_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -320,7 +320,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameRemoveZoneButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameRemoveZoneButton_OnClick()</OnClick>
+          <OnClick>Soundtrack.OnFrameRemoveZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_ZONE, SOUNDTRACK_REMOVE_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -416,7 +416,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddPetBattlesTargetButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameAddPetBattleTargetButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnAddPetBattleTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_ADD_TARGET, SOUNDTRACK_PETBATTLES_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
