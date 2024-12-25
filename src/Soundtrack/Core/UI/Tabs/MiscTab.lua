@@ -20,5 +20,5 @@ end
 
 function SoundtrackFrame_DeleteMisc(eventName)
 	Soundtrack.Events.DeleteEvent("Misc", eventName)
-	SoundtrackFrame.RefreshEvents()
+	SoundtrackFrame.UpdateEventsUI()
 end

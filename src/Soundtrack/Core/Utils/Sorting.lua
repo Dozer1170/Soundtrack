@@ -141,7 +141,7 @@ function Soundtrack.SortEvents(eventTableName)
 	-- Print tree
 	Soundtrack.Chat.TraceFrame("SortEvents")
 	SoundtrackFrame.OnEventTreeChanged(eventTableName)
-	SoundtrackFrame.RefreshEvents()
+	SoundtrackFrame.UpdateEventsUI()
 end
 
 function Soundtrack.SortAllEvents()

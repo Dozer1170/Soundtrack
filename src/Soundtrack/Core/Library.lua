@@ -69,7 +69,7 @@ function Soundtrack.Library.StopMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
 	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
 	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
-	SoundtrackFrame_TouchTracks()
+	SoundtrackFrame.UpdateTracksUI()
 end
 
 function Soundtrack.Library.PauseMusic()
@@ -77,7 +77,7 @@ function Soundtrack.Library.PauseMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
 	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
 	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
-	SoundtrackFrame_TouchTracks()
+	SoundtrackFrame.UpdateTracksUI()
 end
 
 function Soundtrack.Library.StopTrack()
@@ -91,7 +91,7 @@ local function DelayedPlayMusic()
 	SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
 	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
 	PlayMusic(nextFileName)
-	SoundtrackFrame_TouchTracks()
+	SoundtrackFrame.UpdateTracksUI()
 end
 
 function Soundtrack.Library.OnUpdate(_, _)
@@ -108,7 +108,7 @@ function Soundtrack.Library.OnUpdate(_, _)
 			nextTrackInfo = nil
 		end
 
-		SoundtrackFrame_TouchTracks()
+		SoundtrackFrame.UpdateTracksUI()
 		fadeOut = false
 	end
 end
@@ -160,7 +160,7 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	end
 
 	-- Update the UI if its opened
-	SoundtrackFrame_TouchTracks()
+	SoundtrackFrame.UpdateTracksUI()
 end
 
 -- Removes a track from the library.
@@ -188,6 +188,6 @@ function Soundtrack.Library.RemoveTrack(trackName)
 		end
 
 		-- Refresh assigned counts
-		SoundtrackFrame.RefreshEvents()
+		SoundtrackFrame.UpdateEventsUI()
 	end
 end

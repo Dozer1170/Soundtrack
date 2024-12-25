@@ -306,7 +306,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddZoneButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameAddZoneButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnAddZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_ZONE, SOUNDTRACK_ADD_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -334,7 +334,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameExpandAllZoneButton.Text:SetText(SOUNDTRACK_EXPAND_ALL_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameExpandAllZoneButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnExpandAllZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EXPAND_ALL_BUTTON, SOUNDTRACK_EXPAND_ALL_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -348,7 +348,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameCollapseAllZoneButton.Text:SetText(SOUNDTRACK_COLLAPSE_ALL_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameCollapseAllZoneButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnCollapseAllZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COLLAPSE_ALL_BUTTON, SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -362,7 +362,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddBossTargetButton.Text:SetText(SOUNDTRACK_ADD_TARGET_PARTY_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameAddBossTargetButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnAddBossTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_TARGET_PARTY, SOUNDTRACK_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -380,7 +380,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddWorldBossTargetButton.Text:SetText(SOUNDTRACK_ADD_TARGET_RAID_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameAddWorldBossTargetButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnAddWorldBossTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_TARGET_RAID, SOUNDTRACK_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -991,7 +991,7 @@
                     </Anchors>
                     <Scripts>
                       <OnLoad>SoundtrackFrame_RandomCheckButton.Text:SetText(SOUNDTRACK_RANDOM)</OnLoad>
-                      <OnClick>SoundtrackFrame_ToggleRandomMusic()</OnClick>
+                      <OnClick>SoundtrackFrame.ToggleRandomMusic()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_RANDOM, SOUNDTRACK_RANDOM_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -1002,7 +1002,7 @@
                     </Anchors>
                     <Scripts>
                       <OnLoad>SoundtrackFrame_SoundEffectCheckBox.Text:SetText(SOUNDTRACK_SOUND_EFFECT)</OnLoad>
-                      <OnClick>SoundtrackFrame_ToggleSoundEffect()</OnClick>
+                      <OnClick>SoundtrackFrame.ToggleSoundEffect()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SOUND_EFFECT, SOUNDTRACK_SOUND_EFFECT_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -1013,7 +1013,7 @@
                     </Anchors>
                     <Scripts>
                       <OnLoad>SoundtrackFrame_ContinuousCheckBox.Text:SetText(SOUNDTRACK_CONTINUOUS)</OnLoad>
-                      <OnClick>SoundtrackFrame_ToggleContinuousMusic()</OnClick>
+                      <OnClick>SoundtrackFrame.ToggleContinuousMusic()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CONTINUOUS, SOUNDTRACK_CONTINUOUS_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>

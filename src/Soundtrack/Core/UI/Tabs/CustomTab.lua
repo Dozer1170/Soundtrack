@@ -74,15 +74,15 @@ function SoundtrackFrame_AddCustomEvent(eventName)
 
 	Soundtrack.CustomEvents.RegisterEventScript(eventName, "UNIT_AURA", 4, true, script)
 	SoundtrackFrame.SelectedEvent = eventName
-	SoundtrackFrame.RefreshEvents()
-	SoundtrackFrame_RefreshCustomEvent()
+	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackFrame.UpdateCustomEventUI()
 end
 
 function SoundtrackFrameEditCustomEventButton_OnClick()
 	_G["SoundtrackFrameRightPanelTracks"]:Hide()
 	_G["SoundtrackFrameRightPanelEditEvent"]:Show()
 
-	SoundtrackFrame_RefreshCustomEvent()
+	SoundtrackFrame.UpdateCustomEventUI()
 end
 
 function SoundtrackFrameSaveCustomEventButton_OnClick()
@@ -131,5 +131,5 @@ end
 function SoundtrackFrame_DeleteCustom(eventName)
 	SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent] = nil
 	Soundtrack.Events.DeleteEvent("Custom", eventName)
-	SoundtrackFrame.RefreshEvents()
+	SoundtrackFrame.UpdateEventsUI()
 end

@@ -42,7 +42,7 @@
         </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
-      <OnClick>SoundtrackFrameEventButton_OnClick(self, button, down)</OnClick>
+      <OnClick>SoundtrackFrame.OnEventButtonClick(self, button, down)</OnClick>
     </Scripts>
     <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
   </Button>

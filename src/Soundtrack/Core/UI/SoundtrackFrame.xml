@@ -280,8 +280,8 @@
       <OnUpdate>SoundtrackFrame.OnUpdate()</OnUpdate>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
-      <OnShow>SoundtrackFrame_OnShow()</OnShow>
-      <OnHide>SoundtrackFrame_OnHide()</OnHide>
+      <OnShow>SoundtrackFrame.OnShow()</OnShow>
+      <OnHide>SoundtrackFrame.OnHide()</OnHide>
       <OnMouseWheel>return</OnMouseWheel>
     </Scripts>
   </Frame>
