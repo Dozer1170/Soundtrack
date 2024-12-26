@@ -118,13 +118,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>SoundtrackFrameTrackCheckBox_OnClick(self, button, down)</OnClick>
+          <OnClick>SoundtrackFrame.OnTrackCheckBoxClick(self, button, down)</OnClick>
         </Scripts>
       </CheckButton>
     </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
-      <OnClick>SoundtrackFrameTrackButton_OnClick(self, button, down)</OnClick>
+      <OnClick>SoundtrackFrame.OnTrackButtonClick(self, button, down)</OnClick>
     </Scripts>
     <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
   </Button>
@@ -196,13 +196,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>SoundtrackFrameAssignedTrackCheckBox_OnClick(self, button, down);</OnClick>
+          <OnClick>SoundtrackFrame.OnAssignedTrackCheckBoxClick(self, button, down);</OnClick>
         </Scripts>
       </CheckButton>
     </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp");</OnLoad>
-      <OnClick>SoundtrackFrameAssignedTrackButton_OnClick(self, button, down);</OnClick>
+      <OnClick>SoundtrackFrame.OnAssignedTrackButtonClick(self, button, down);</OnClick>
     </Scripts>
     <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
   </Button>

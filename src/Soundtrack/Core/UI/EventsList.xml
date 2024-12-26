@@ -774,7 +774,7 @@
             </Anchors>
             <Scripts>
               <OnLoad>self:SetFrameLevel(0); UIDropDownMenu_SetWidth(self, 180)</OnLoad>
-              <OnShow>UIDropDownMenu_Initialize(self, SoundtrackFrameTrackMenu_Initialize, "MENU")</OnShow>
+              <OnShow>UIDropDownMenu_Initialize(self, SoundtrackFrame.TrackMenuInitialize, "MENU")</OnShow>
             </Scripts>
           </Frame>
           <Frame name="SoundtrackFrame_AssignedFrame">
@@ -900,7 +900,7 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnClick>SoundtrackFrameAllButton_OnClick()</OnClick>
+                      <OnClick>SoundtrackFrame.OnAllButtonClick()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ALL, SOUNDTRACK_ALL_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
