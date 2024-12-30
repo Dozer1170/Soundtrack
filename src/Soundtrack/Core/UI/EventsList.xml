@@ -41,7 +41,7 @@
               </Anchor>
             </Anchors>
             <Scripts>
-              <OnTextChanged>SoundtrackFrame_OnEventFilterChanged()</OnTextChanged>
+              <OnTextChanged>SoundtrackFrame.OnEventFilterChanged()</OnTextChanged>
               <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_FILTER, SOUNDTRACK_EVENT_FILTER_TIP)</OnEnter>
               <OnLeave>Soundtrack.HideTip()</OnLeave>
             </Scripts>
@@ -530,7 +530,7 @@
                   </Anchor>
                 </Anchors>
                 <Scripts>
-                  <OnTextChanged>SoundtrackFrame_OnFilterChanged()</OnTextChanged>
+                  <OnTextChanged>SoundtrackFrame.OnFilterChanged()</OnTextChanged>
                   <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_TRACK_FILTER, SOUNDTRACK_TRACK_FILTER_TIP)</OnEnter>
                   <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
@@ -913,7 +913,7 @@
                       <Anchor point="RIGHT" relativeTo="SoundtrackFrameAllButton" relativePoint="LEFT"/>
                     </Anchors>
                     <Scripts>
-                      <OnClick>SoundtrackFrameClearButton_OnClick()</OnClick>
+                      <OnClick>SoundtrackFrame.OnClearButtonClick()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLEAR, SOUNDTRACK_CLEAR_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -976,7 +976,7 @@
                     </Anchors>
                     <Scripts>
                       <OnTabPressed>SoundtrackFrame_EventTrigger:SetFocus()</OnTabPressed>
-                      <OnEnterPressed>SoundtrackFrame_RenameEvent()</OnEnterPressed>
+                      <OnEnterPressed>SoundtrackFrame.RenameEvent()</OnEnterPressed>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_NAME, SOUNDTRACK_NAME_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>

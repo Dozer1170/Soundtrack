@@ -36,7 +36,7 @@ function SoundtrackFrame.UpdateEventsUI()
 		end
 	end
 
-	SoundtrackFrame_DisableAllEventButtons()
+	SoundtrackFrame.DisableAllEventButtons()
 
 	local numEvents = #flatEventsTable
 	local button
