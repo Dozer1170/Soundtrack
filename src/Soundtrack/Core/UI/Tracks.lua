@@ -24,7 +24,7 @@ function SoundtrackFrame.OnTrackCheckBoxClick(self, _, _)
 	SoundtrackFrame.SelectedTrack = Soundtrack_SortedTracks[self:GetID() + listOffset] -- track file name
 
 	if SoundtrackFrame.SelectedEvent then
-		if SoundtrackFrame_IsTrackActive(SoundtrackFrame.SelectedTrack) then
+		if Soundtrack.Library.IsTrackActive(SoundtrackFrame.SelectedTrack) then
 			Soundtrack.Events.Remove(
 				SoundtrackFrame.SelectedEventsTable,
 				SoundtrackFrame.SelectedEvent,
@@ -48,7 +48,7 @@ function SoundtrackFrame.OnAssignedTrackCheckBoxClick(self, _, _)
 		SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent].tracks
 	SoundtrackFrame.SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
 
-	if SoundtrackFrame_IsTrackActive(SoundtrackFrame.SelectedTrack) then
+	if Soundtrack.Library.IsTrackActive(SoundtrackFrame.SelectedTrack) then
 		Soundtrack.Events.Remove(
 			SoundtrackFrame.SelectedEventsTable,
 			SoundtrackFrame.SelectedEvent,

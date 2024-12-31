@@ -473,22 +473,6 @@ function SoundtrackFrame.RenameEvent()
 	end
 end
 
--- Checks if a particular track is already set for an event
-function SoundtrackFrame_IsTrackActive(trackName)
-	local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
-	if not event then
-		return false
-	end
-
-	for _, tn in ipairs(event.tracks) do
-		if tn == trackName then
-			return true
-		end
-	end
-
-	return false
-end
-
 function SoundtrackFrame_Toggle()
 	if SoundtrackFrame:IsVisible() then
 		SoundtrackFrame:Hide()
@@ -611,7 +595,7 @@ function SoundtrackFrame_RefreshTracks()
 
 				if SoundtrackFrame.SelectedEvent ~= nil then
 					-- Update the highlight if that track is active for the event.
-					if SoundtrackFrame_IsTrackActive(Soundtrack_SortedTracks[i]) then
+					if Soundtrack.Library.IsTrackActive(Soundtrack_SortedTracks[i]) then
 						checkBox:SetChecked(true)
 					else
 						checkBox:SetChecked(false)
@@ -716,7 +700,7 @@ function SoundtrackFrame_RefreshAssignedTracks()
 
 				if SoundtrackFrame.SelectedEvent ~= nil then
 					-- Update the highlight if that track is active for the event.
-					if SoundtrackFrame_IsTrackActive(assignedTracks[i]) then
+					if Soundtrack.Library.IsTrackActive(assignedTracks[i]) then
 						checkBox:SetChecked(true)
 					else
 						checkBox:SetChecked(false)

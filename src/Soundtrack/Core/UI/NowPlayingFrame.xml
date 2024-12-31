@@ -1,19 +1,5 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script>
-    function SetNowPlayingText(title, artist, album)
-		if (SoundtrackAddon.db.profile.settings.ShowTrackInformation) then
-			TrackTextString:SetText(title);
-			AlbumTextString:SetText(album);
-			ArtistTextString:SetText(artist);
-			TrackTextBG1:SetText("|cff444444"..title);
-			AlbumTextBG1:SetText("|cff444444"..album);
-			ArtistTextBG1:SetText("|cff444444"..artist);
-			UIFrameFlashStop(NowPlayingTextFrame);
-			UIFrameFlash(NowPlayingTextFrame, 1, 1, 10, false, 8, 0);
-		end
-    end
-  </Script>
   <!-- These frames are shown when the current track changes -->
   <Frame name="NowPlayingTextFrame" movable="true" enableMouse="true" parent="UIParent" frameStrata="LOW" toplevel="true">
     <Anchors>
@@ -87,11 +73,7 @@
       </Layer>
     </Layers>
     <Scripts>
-      <OnLoad>
-
-
-	  self:RegisterForDrag("LeftButton")
-      </OnLoad>
+      <OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
       <OnEvent>

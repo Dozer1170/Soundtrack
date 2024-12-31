@@ -88,7 +88,7 @@ end
 
 local function DelayedPlayMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
-	SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
+	Soundrack.Library.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
 	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
 	PlayMusic(nextFileName)
 	SoundtrackFrame.UpdateTracksUI()
@@ -100,7 +100,7 @@ function Soundtrack.Library.OnUpdate(_, _)
 	local frameText = SoundtrackFrame_StatusBarEventText1:GetText()
 
 	if fadeOut == true or (stackLevel == 0 and frameText == SOUNDTRACK_NO_EVENT_PLAYING and currentTrack ~= nil) then
-		StopMusic()
+		Soundtrack.Library.StopMusic()
 		Soundtrack.Library.CurrentlyPlayingTrack = nil
 
 		if nextTrackInfo ~= nil then
@@ -111,6 +111,22 @@ function Soundtrack.Library.OnUpdate(_, _)
 		SoundtrackFrame.UpdateTracksUI()
 		fadeOut = false
 	end
+end
+
+-- Checks if a particular track is already set for an event
+function Soundtrack.Library.IsTrackActive(trackName)
+	local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
+	if not event then
+		return false
+	end
+
+	for _, tn in ipairs(event.tracks) do
+		if tn == trackName then
+			return true
+		end
+	end
+
+	return false
 end
 
 function Soundtrack.Library.PlayTrack(trackName, soundEffect)
