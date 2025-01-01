@@ -88,9 +88,9 @@ end
 
 local function DelayedPlayMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
-	Soundrack.Library.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
 	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
 	PlayMusic(nextFileName)
+	SoundtrackFrame.NowPlayingFrame.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
 	SoundtrackFrame.UpdateTracksUI()
 end
 

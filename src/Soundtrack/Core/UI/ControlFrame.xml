@@ -134,15 +134,13 @@
         </Anchors>
         <Scripts>
           <OnClick>
-            Soundtrack.Events.PlaybackNext();
+            SoundtrackFrame.ControlFrame.OnNextButtonClick()
             </OnClick>
           <OnEnter>
-            Soundtrack.ShowTip(self, SOUNDTRACK_NEXT, SOUNDTRACK_NEXT_TIP);
-            SoundtrackControlFrame_NextButton:SetAlpha(1.0)
+            SoundtrackFrame.ControlFrame.OnNextButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_NextButton:SetAlpha(.6)
+            SoundtrackFrame.ControlFrame.OnNextButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -155,15 +153,13 @@
             SoundtrackFrame_RefreshPlaybackControls()
             </OnLoad>
           <OnClick>
-            Soundtrack.Events.PlaybackPlayStop();
+            SoundtrackFrame.ControlFrame.OnStopButtonClick()
             </OnClick>
           <OnEnter>
-            Soundtrack.ShowTip(self, SOUNDTRACK_PAUSE, SOUNDTRACK_PAUSE_TIP);
-            SoundtrackControlFrame_StopButton:SetAlpha(1.0)
+            SoundtrackFrame.ControlFrame.OnStopButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_StopButton:SetAlpha(.6)
+            SoundtrackFrame.ControlFrame.OnStopButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -176,15 +172,13 @@
             SoundtrackFrame_RefreshPlaybackControls()
             </OnLoad>
           <OnClick>
-            Soundtrack.Events.PlaybackPlayStop();
+            SoundtrackFrame.ControlFrame.OnPlayButtonClick()
             </OnClick>
           <OnEnter>
-            Soundtrack.ShowTip(self, SOUNDTRACK_PLAY, SOUNDTRACK_PLAY_TIP);
-            SoundtrackControlFrame_PlayButton:SetAlpha(1.0)
+            SoundtrackFrame.ControlFrame.OnPlayButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_PlayButton:SetAlpha(.6)
+            SoundtrackFrame.ControlFrame.OnPlayButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -195,15 +189,13 @@
         </Anchors>
         <Scripts>
           <OnClick>
-            Soundtrack.Events.PlaybackPrevious();
+            SoundtrackFrame.ControlFrame.OnPreviousButtonClick()
             </OnClick>
           <OnEnter>
-            Soundtrack.ShowTip(self, SOUNDTRACK_PREVIOUS, SOUNDTRACK_PREVIOUS_TIP)
-            SoundtrackControlFrame_PreviousButton:SetAlpha(1.0);
+            SoundtrackFrame.ControlFrame.OnPreviousButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_PreviousButton:SetAlpha(.6);
+            SoundtrackFrame.ControlFrame.OnPreviousButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -220,16 +212,13 @@
             SoundtrackFrame_RefreshPlaybackControls()
             </OnLoad>
           <OnClick>
-            Soundtrack.Events.PlaybackTrueStop();
-            --Soundtrack.StopEventAtLevel(Soundtrack.Events.GetCurrentStackLevel());
+            SoundtrackFrame.ControlFrame.OnTrueStopButtonClick()
             </OnClick>
           <OnEnter>
-            Soundtrack.ShowTip(self, SOUNDTRACK_STOP, SOUNDTRACK_STOP_TIP);
-            SoundtrackControlFrame_TrueStopButton:SetAlpha(1.0)
+            SoundtrackFrame.ControlFrame.OnTrueStopButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_TrueStopButton:SetAlpha(.6)
+            SoundtrackFrame.ControlFrame.OnTrueStopButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -242,16 +231,13 @@
             SoundtrackFrame_RefreshPlaybackControls()
             </OnLoad>
           <OnClick>
-            SoundtrackReportFrame:SetPoint("CENTER",UIParent,"CENTER",0,0)
-            SoundtrackReportFrame:Show()
+            SoundtrackFrame.ControlFrame.OnReportButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackControlFrame_ReportButton:SetAlpha(1.0)
-            Soundtrack.ShowTip(self, SOUNDTRACK_REPORT, SOUNDTRACK_REPORT_TIP)
+            SoundtrackFrame.ControlFrame.OnReportButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_ReportButton:SetAlpha(.6)
+            SoundtrackFrame.ControlFrame.OnReportButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -261,33 +247,17 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-
             SoundtrackFrame_RefreshPlaybackControls()
-            </OnLoad>
+          </OnLoad>
           <OnClick>
-            local currentTrackName = Soundtrack.Library.CurrentlyPlayingTrack
-            if currentTrackName ~= nil and
-            currentTrackName ~= "None" then
-            local track = Soundtrack_Tracks[currentTrackName]
-            -- UI/NowPlayingFrame.lua
-            SetNowPlayingText(track.title, track.artist, track.album)
-            end
-            </OnClick>
+            SoundtrackFrame.ControlFrame.OnInfoButtonClick()
+          </OnClick>
           <OnEnter>
-            SoundtrackControlFrame_InfoButton:SetAlpha(1.0)
-            local currentTrackName = Soundtrack.Library.CurrentlyPlayingTrack
-            if currentTrackName ~= nil and
-            currentTrackName ~= "None" then
-            local track = Soundtrack_Tracks[currentTrackName]
-            Soundtrack.ShowTip(self, track.title, nil, track.artist, track.album)
-            else
-            Soundtrack.ShowTip(self, SOUNDTRACK_INFO, SOUNDTRACK_INFO_TIP)
-            end
-            </OnEnter>
+            SoundtrackFrame.ControlFrame.OnInfoButtonEnter(self)
+          </OnEnter>
           <OnLeave>
-            Soundtrack.HideTip();
-            SoundtrackControlFrame_InfoButton:SetAlpha(.6)
-            </OnLeave>
+            SoundtrackFrame.ControlFrame.OnInfoButtonLeave()
+          </OnLeave>
         </Scripts>
       </Button>
       <Frame name="SoundtrackControlFrame_PlaylistMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="false">
@@ -302,10 +272,10 @@
           <OnLoad>
             self:SetFrameLevel(0);
             UIDropDownMenu_SetWidth(self, 180);
-            </OnLoad>
+          </OnLoad>
           <OnShow>
             UIDropDownMenu_Initialize(self, SoundtrackFrame.PlaylistMenuInitialize, "MENU");
-            </OnShow>
+          </OnShow>
         </Scripts>
       </Frame>
     </Frames>
