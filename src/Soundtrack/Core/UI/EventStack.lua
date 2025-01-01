@@ -1,4 +1,4 @@
-function SoundtrackFrame.UpdateEventStackUI()
+function SoundtrackUI.UpdateEventStackUI()
 	for i = 1, Soundtrack.Events.MaxStackLevel, 1 do
 		local tableName = Soundtrack.Events.Stack[i].tableName
 		local eventName = Soundtrack.Events.Stack[i].eventName
@@ -19,7 +19,7 @@ function SoundtrackFrame.UpdateEventStackUI()
 	end
 end
 
-function SoundtrackFrame.RefreshEventStack()
+function SoundtrackUI.RefreshEventStack()
 	local controlFrame = _G["SoundtrackControlFrame"]
 	if controlFrame then
 		if SoundtrackAddon.db.profile.settings.ShowPlaybackControls then

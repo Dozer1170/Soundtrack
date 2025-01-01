@@ -4,15 +4,15 @@ local function AddPetBattleTarget(targetName, isPlayer)
 	else
 		Soundtrack.AddEvent(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_NAMEDNPCS .. "/" .. targetName, ST_NPC_LVL, true)
 	end
-	SoundtrackFrame.SelectedEvent = targetName
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.SelectedEvent = targetName
+	SoundtrackUI.UpdateEventsUI()
 end
 
 local function RemovePetBattleTarget(eventName)
 	Soundtrack.Events.DeleteEvent(ST_PETBATTLES, eventName)
 end
 
-function SoundtrackFrame.OnAddPetBattleTargetButtonClick()
+function SoundtrackUI.OnAddPetBattleTargetButtonClick()
 	local targetName = UnitName("target")
 	local isPlayer
 	if UnitIsPlayer("target") then
@@ -25,14 +25,14 @@ function SoundtrackFrame.OnAddPetBattleTargetButtonClick()
 	end
 end
 
-function SoundtrackFrame.OnRemovePetBattleTargetButtonClick()
+function SoundtrackUI.OnRemovePetBattleTargetButtonClick()
 	StaticPopupDialogs["SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP"] = {
 		preferredIndex = 3,
 		text = "Do you want to remove this pet battle event?",
 		button1 = ACCEPT,
 		button2 = CANCEL,
 		OnAccept = function(_)
-			RemovePetBattleTarget(SoundtrackFrame.SelectedEvent)
+			RemovePetBattleTarget(SoundtrackUI.SelectedEvent)
 		end,
 		timeout = 0,
 		whileDead = 1,

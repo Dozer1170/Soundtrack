@@ -73,7 +73,7 @@ function Soundtrack.SortTracks(sortCriteria)
 		table.sort(Soundtrack_SortedTracks, CompareTracksByTitle)
 	end
 
-	SoundtrackFrame.RefreshTracks()
+	SoundtrackUI.RefreshTracks()
 end
 
 local function GetChildNode(rootNode, childNodeName)
@@ -141,7 +141,7 @@ function Soundtrack.SortEvents(eventTableName)
 	-- Print tree
 	Soundtrack.Chat.TraceFrame("SortEvents")
 	Soundtrack.OnEventTreeChanged(eventTableName)
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
 function Soundtrack.SortAllEvents()

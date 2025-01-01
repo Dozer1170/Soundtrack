@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
   <Script file="ControlFrame.lua"/>
+  <Script file="PlaybackControls.lua"/>
   <!-- These frames are shown when the current track changes -->
   <Frame name="SoundtrackControlFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
     <Size>
@@ -135,13 +136,13 @@
         </Anchors>
         <Scripts>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnNextButtonClick()
+            SoundtrackUI.ControlFrame.OnNextButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnNextButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnNextButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnNextButtonLeave()
+            SoundtrackUI.ControlFrame.OnNextButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -150,17 +151,14 @@
           <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="SoundtrackControlFrame_NextButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            SoundtrackFrame_RefreshPlaybackControls()
-            </OnLoad>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnStopButtonClick()
+            SoundtrackUI.ControlFrame.OnStopButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnStopButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnStopButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnStopButtonLeave()
+            SoundtrackUI.ControlFrame.OnStopButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -169,17 +167,14 @@
           <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="SoundtrackControlFrame_NextButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            SoundtrackFrame_RefreshPlaybackControls()
-            </OnLoad>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnPlayButtonClick()
+            SoundtrackUI.ControlFrame.OnPlayButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnPlayButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnPlayButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnPlayButtonLeave()
+            SoundtrackUI.ControlFrame.OnPlayButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -190,13 +185,13 @@
         </Anchors>
         <Scripts>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnPreviousButtonClick()
+            SoundtrackUI.ControlFrame.OnPreviousButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnPreviousButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnPreviousButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnPreviousButtonLeave()
+            SoundtrackUI.ControlFrame.OnPreviousButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -209,17 +204,14 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            SoundtrackFrame_RefreshPlaybackControls()
-            </OnLoad>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnTrueStopButtonClick()
+            SoundtrackUI.ControlFrame.OnTrueStopButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnTrueStopButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnTrueStopButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnTrueStopButtonLeave()
+            SoundtrackUI.ControlFrame.OnTrueStopButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -228,17 +220,14 @@
           <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackControlFrame_TrueStopButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            SoundtrackFrame_RefreshPlaybackControls()
-            </OnLoad>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnReportButtonClick()
+            SoundtrackUI.ControlFrame.OnReportButtonClick()
             </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnReportButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnReportButtonEnter(self)
             </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnReportButtonLeave()
+            SoundtrackUI.ControlFrame.OnReportButtonLeave()
             </OnLeave>
         </Scripts>
       </Button>
@@ -247,17 +236,14 @@
           <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="SoundtrackControlFrame_TrueStopButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            SoundtrackFrame_RefreshPlaybackControls()
-          </OnLoad>
           <OnClick>
-            SoundtrackFrame.ControlFrame.OnInfoButtonClick()
+            SoundtrackUI.ControlFrame.OnInfoButtonClick()
           </OnClick>
           <OnEnter>
-            SoundtrackFrame.ControlFrame.OnInfoButtonEnter(self)
+            SoundtrackUI.ControlFrame.OnInfoButtonEnter(self)
           </OnEnter>
           <OnLeave>
-            SoundtrackFrame.ControlFrame.OnInfoButtonLeave()
+            SoundtrackUI.ControlFrame.OnInfoButtonLeave()
           </OnLeave>
         </Scripts>
       </Button>
@@ -275,7 +261,7 @@
             UIDropDownMenu_SetWidth(self, 180);
           </OnLoad>
           <OnShow>
-            UIDropDownMenu_Initialize(self, SoundtrackFrame.PlaylistMenuInitialize, "MENU");
+            UIDropDownMenu_Initialize(self, SoundtrackUI.PlaylistMenuInitialize, "MENU");
           </OnShow>
         </Scripts>
       </Frame>
@@ -295,6 +281,7 @@
         SoundtrackFrame_RefreshPlaybackControls();
         self:SetBackdropColor(.1,.1,.1,.9)
         self:RegisterForDrag("LeftButton")
+        SoundtrackFrame_RefreshPlaybackControls()
       </OnLoad>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>

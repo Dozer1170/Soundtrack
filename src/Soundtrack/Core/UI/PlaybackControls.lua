@@ -151,7 +151,7 @@ function SoundtrackFrame_RefreshPlaybackControls()
 		end
 	end
 
-	SoundtrackFrame.RefreshEventStack()
+	SoundtrackUI.RefreshEventStack()
 end
 
 function SoundtrackFrame_HideControlButtons()

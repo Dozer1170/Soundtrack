@@ -13,9 +13,9 @@ local function AddPlaylist(playlistName)
 		playlistName = indexedName
 	end
 	Soundtrack.AddEvent("Playlists", playlistName, ST_PLAYLIST_LVL, true)
-	SoundtrackFrame.SelectedEvent = playlistName
+	SoundtrackUI.SelectedEvent = playlistName
 	Soundtrack.SortEvents("Playlists")
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
 local function OnPlaylistMenuClick(self)
@@ -38,7 +38,7 @@ local function OnPlaylistMenuClick(self)
 	end
 end
 
-function SoundtrackFrame.OnAddPlaylistButtonClick(_)
+function SoundtrackUI.OnAddPlaylistButtonClick(_)
 	StaticPopupDialogs["SOUNDTRACK_ADD_PLAYLIST_POPUP"] = {
 		preferredIndex = 3,
 		text = SOUNDTRACK_ENTER_PLAYLIST_NAME,
@@ -72,13 +72,13 @@ function SoundtrackFrame.OnAddPlaylistButtonClick(_)
 	StaticPopup_Show("SOUNDTRACK_ADD_PLAYLIST_POPUP")
 end
 
-function SoundtrackFrame.OnDeletePlaylistButtonClick()
-	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame.SelectedEvent)
-	Soundtrack.Events.DeleteEvent(ST_PLAYLISTS, SoundtrackFrame.SelectedEvent)
-	SoundtrackFrame.UpdateEventsUI()
+function SoundtrackUI.OnDeletePlaylistButtonClick()
+	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackUI.SelectedEvent)
+	Soundtrack.Events.DeleteEvent(ST_PLAYLISTS, SoundtrackUI.SelectedEvent)
+	SoundtrackUI.UpdateEventsUI()
 end
 
-function SoundtrackFrame.PlaylistMenuInitialize()
+function SoundtrackUI.PlaylistMenuInitialize()
 	local playlistTable = Soundtrack.Events.GetTable(ST_PLAYLISTS)
 
 	table.sort(playlistTable, function(a, b)

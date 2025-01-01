@@ -1,4 +1,4 @@
-SoundtrackFrame.MovingTitle = {}
+SoundtrackUI.MovingTitle = {}
 
 -- Lunaqua: Moves the title
 local MAX_TITLE_LENGTH = 30
@@ -86,7 +86,7 @@ local function CreateNext(title, oldTitle)
 	end
 end
 
-function SoundtrackFrame.MovingTitle.Update()
+function SoundtrackUI.MovingTitle.Update()
 	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
 
 	if not Soundtrack_Tracks then
@@ -99,10 +99,10 @@ function SoundtrackFrame.MovingTitle.Update()
 		SoundtrackFrame_StatusBarTrackText2:SetText("")
 	else
 		local oldTitle = SoundtrackFrame_StatusBarTrackText1:GetText()
-		if SoundtrackFrame.nameHeaderType == "filePath" then
+		if SoundtrackUI.nameHeaderType == "filePath" then
 			local text = CreateNext(track.title, oldTitle)
 			SoundtrackFrame_StatusBarTrackText1:SetText(text)
-		elseif SoundtrackFrame.nameHeaderType == "fileName" then
+		elseif SoundtrackUI.nameHeaderType == "fileName" then
 			local text = CreateNext(track.title, oldTitle)
 			SoundtrackFrame_StatusBarTrackText1:SetText(text)
 		else

@@ -29,7 +29,7 @@ end
 
 function SoundtrackMinimap_IconFrame_OnClick(_, _)
 	Debug("Minimap button OnClick")
-	SoundtrackFrame.Toggle()
+	SoundtrackUI.Toggle()
 end
 
 function SoundtrackMinimap_OnTooltipShow(tooltip)

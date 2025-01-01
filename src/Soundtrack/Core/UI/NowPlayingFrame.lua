@@ -1,6 +1,6 @@
-SoundtrackFrame.NowPlayingFrame = {}
+SoundtrackUI.NowPlayingFrame = {}
 
-function SoundtrackFrame.NowPlayingFrame.SetNowPlayingText(title, artist, album)
+function SoundtrackUI.NowPlayingFrame.SetNowPlayingText(title, artist, album)
 	if SoundtrackAddon.db.profile.settings.ShowTrackInformation then
 		TrackTextString:SetText(title)
 		AlbumTextString:SetText(album)

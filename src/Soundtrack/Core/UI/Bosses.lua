@@ -2,8 +2,8 @@ local function AddNamedBoss(targetName)
 	Soundtrack.AddEvent("Boss", targetName, ST_BOSS_LVL, true)
 	local lowhealthbossname = targetName .. " " .. SOUNDTRACK_LOW_HEALTH
 	Soundtrack.AddEvent("Boss", lowhealthbossname, ST_BOSS_LVL, true)
-	SoundtrackFrame.SelectedEvent = targetName
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.SelectedEvent = targetName
+	SoundtrackUI.UpdateEventsUI()
 end
 
 local function AddNamedWorldBoss(targetName)
@@ -15,11 +15,11 @@ local function AddNamedWorldBoss(targetName)
 	Soundtrack.AddEvent("Boss", lowhealthbossname, ST_BOSS_LVL, true)
 	local bossEvent = bossTable[lowhealthbossname]
 	bossEvent.worldboss = true
-	SoundtrackFrame.SelectedEvent = targetName
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.SelectedEvent = targetName
+	SoundtrackUI.UpdateEventsUI()
 end
 
-function SoundtrackFrame.OnAddBossTargetButtonClick()
+function SoundtrackUI.OnAddBossTargetButtonClick()
 	local targetName = UnitName("target")
 	if targetName then
 		AddNamedBoss(targetName)
@@ -62,7 +62,7 @@ function SoundtrackFrame.OnAddBossTargetButtonClick()
 	end
 end
 
-function SoundtrackFrame.OnAddWorldBossTargetButtonClick()
+function SoundtrackUI.OnAddWorldBossTargetButtonClick()
 	local targetName = UnitName("target")
 	if targetName then
 		AddNamedWorldBoss(targetName)

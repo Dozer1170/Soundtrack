@@ -120,8 +120,8 @@ function SoundtrackAddon:VARIABLES_LOADED()
 	Soundtrack.Auras.Initialize()
 	Soundtrack.Misc.Initialize()
 	Soundtrack.CustomEvents.CustomInitialize()
-	SoundtrackFrame.RefreshShowingTab()
-	SoundtrackFrame.Initialize()
+	SoundtrackUI.RefreshShowingTab()
+	SoundtrackUI.Initialize()
 	Soundtrack.Cleanup.CleanupOldEvents()
 end
 

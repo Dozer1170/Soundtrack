@@ -34,7 +34,7 @@ StaticPopupDialogs["SOUNDTRACK_DELETE_CUSTOM_POPUP"] = {
 	button1 = ACCEPT,
 	button2 = CANCEL,
 	OnAccept = function()
-		SoundtrackFrame_DeleteCustom(SoundtrackFrame.SelectedEvent)
+		SoundtrackFrame_DeleteCustom(SoundtrackUI.SelectedEvent)
 	end,
 	enterClicksFirstButton = 1,
 	timeout = 0,
@@ -73,30 +73,30 @@ function SoundtrackFrame_AddCustomEvent(eventName)
 		.. '") \n'
 
 	Soundtrack.CustomEvents.RegisterEventScript(eventName, "UNIT_AURA", 4, true, script)
-	SoundtrackFrame.SelectedEvent = eventName
-	SoundtrackFrame.UpdateEventsUI()
-	SoundtrackFrame.UpdateCustomEventUI()
+	SoundtrackUI.SelectedEvent = eventName
+	SoundtrackUI.UpdateEventsUI()
+	SoundtrackUI.UpdateCustomEventUI()
 end
 
 function SoundtrackFrameEditCustomEventButton_OnClick()
 	_G["SoundtrackFrameRightPanelTracks"]:Hide()
 	_G["SoundtrackFrameRightPanelEditEvent"]:Show()
 
-	SoundtrackFrame.UpdateCustomEventUI()
+	SoundtrackUI.UpdateCustomEventUI()
 end
 
 function SoundtrackFrameSaveCustomEventButton_OnClick()
-	Soundtrack.Chat.TraceFrame("Saving " .. SoundtrackFrame.SelectedEvent)
-	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent]
+	Soundtrack.Chat.TraceFrame("Saving " .. SoundtrackUI.SelectedEvent)
+	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackUI.SelectedEvent]
 
 	customEvent.priority = tonumber(getglobal("SoundtrackFrame_Priority"):GetText())
 	customEvent.continuous = getglobal("SoundtrackFrame_ContinuousCheckBox"):GetChecked()
 
 	local eventTable = Soundtrack.Events.GetTable("Custom")
-	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
-		eventTable[SoundtrackFrame.SelectedEvent].priority = customEvent.priority
-		eventTable[SoundtrackFrame.SelectedEvent].continuous = customEvent.continuous
-		eventTable[SoundtrackFrame.SelectedEvent].soundEffect = customEvent.soundEffect
+	if eventTable[SoundtrackUI.SelectedEvent] ~= nil then
+		eventTable[SoundtrackUI.SelectedEvent].priority = customEvent.priority
+		eventTable[SoundtrackUI.SelectedEvent].continuous = customEvent.continuous
+		eventTable[SoundtrackUI.SelectedEvent].soundEffect = customEvent.soundEffect
 	end
 
 	local eventType = customEvent.type
@@ -123,13 +123,13 @@ function SoundtrackFrameSaveCustomEventButton_OnClick()
 end
 
 function SoundtrackFrameDeleteCustomEventButton_OnClick()
-	if SoundtrackFrame.SelectedEvent then
+	if SoundtrackUI.SelectedEvent then
 		StaticPopup_Show("SOUNDTRACK_DELETE_CUSTOM_POPUP")
 	end
 end
 
 function SoundtrackFrame_DeleteCustom(eventName)
-	SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent] = nil
+	SoundtrackAddon.db.profile.customEvents[SoundtrackUI.SelectedEvent] = nil
 	Soundtrack.Events.DeleteEvent("Custom", eventName)
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end

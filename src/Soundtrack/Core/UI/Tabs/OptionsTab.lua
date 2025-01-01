@@ -113,7 +113,7 @@ local function GetCurrentPlaybackButtonsLocation()
 end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnLoad()
-	SoundtrackFrame.selectedLocation = GetCurrentPlaybackButtonsLocation()
+	SoundtrackUI.selectedLocation = GetCurrentPlaybackButtonsLocation()
 	UIDropDownMenu_Initialize(
 		OptionsTab_PlaybackButtonsLocationDropDown,
 		Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_Initialize
@@ -122,12 +122,12 @@ end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_Initialize()
 	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations(GetPlaybackButtonsLocations())
-	UIDropDownMenu_SetSelectedID(OptionsTab_PlaybackButtonsLocationDropDown, SoundtrackFrame.selectedLocation)
+	UIDropDownMenu_SetSelectedID(OptionsTab_PlaybackButtonsLocationDropDown, SoundtrackUI.selectedLocation)
 	UIDropDownMenu_SetWidth(OptionsTab_PlaybackButtonsLocationDropDown, 160)
 end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations(locationsTexts)
-	local currentLocation = SoundtrackFrame.selectedLocation
+	local currentLocation = SoundtrackUI.selectedLocation
 	local info
 
 	for i, locationText in ipairs(locationsTexts) do
@@ -146,9 +146,9 @@ end
 
 function Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnClick(self)
 	UIDropDownMenu_SetSelectedID(OptionsTab_PlaybackButtonsLocationDropDown, self:GetID())
-	SoundtrackFrame.selectedLocation = self:GetID()
+	SoundtrackUI.selectedLocation = self:GetID()
 	-- Save settings.
-	SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = locations[SoundtrackFrame.selectedLocation]
+	SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = locations[SoundtrackUI.selectedLocation]
 	SoundtrackFrame_RefreshPlaybackControls()
 end
 
@@ -184,7 +184,7 @@ local function GetCurrentBattleCooldown()
 end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
-	SoundtrackFrame.selectedCooldown = GetCurrentBattleCooldown()
+	SoundtrackUI.selectedCooldown = GetCurrentBattleCooldown()
 	UIDropDownMenu_Initialize(
 		OptionsTab_BattleCooldownDropDown,
 		Soundtrack.OptionsTab.BattleCooldownDropDown_Initialize
@@ -193,12 +193,12 @@ end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_Initialize()
 	Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns(GetBattleCooldowns())
-	UIDropDownMenu_SetSelectedID(OptionsTab_BattleCooldownDropDown, SoundtrackFrame.selectedCooldown)
+	UIDropDownMenu_SetSelectedID(OptionsTab_BattleCooldownDropDown, SoundtrackUI.selectedCooldown)
 	UIDropDownMenu_SetWidth(OptionsTab_BattleCooldownDropDown, 130)
 end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns(cooldownTexts)
-	local currentCooldown = SoundtrackFrame.selectedCooldown
+	local currentCooldown = SoundtrackUI.selectedCooldown
 	local info
 
 	for i, cooldownText in ipairs(cooldownTexts) do
@@ -218,9 +218,9 @@ end
 
 function Soundtrack.OptionsTab.BattleCooldownDropDown_OnClick(self)
 	UIDropDownMenu_SetSelectedID(OptionsTab_BattleCooldownDropDown, self:GetID())
-	SoundtrackFrame.selectedCooldown = self:GetID()
+	SoundtrackUI.selectedCooldown = self:GetID()
 	-- Save settings.
-	SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackFrame.selectedCooldown]
+	SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackUI.selectedCooldown]
 end
 
 -- Low health percent dropdown
@@ -259,8 +259,8 @@ local function GetCurrentLowHealthPercent()
 end
 
 function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnLoad()
-	SoundtrackFrame.selectedLowHealthPercent = GetCurrentLowHealthPercent()
-	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, SoundtrackFrame.selectedLowHealthPercent)
+	SoundtrackUI.selectedLowHealthPercent = GetCurrentLowHealthPercent()
+	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, SoundtrackUI.selectedLowHealthPercent)
 	UIDropDownMenu_Initialize(
 		OptionsTab_LowHealthPercentDropDown,
 		Soundtrack.OptionsTab.LowHealthPercentDropDown_Initialize
@@ -269,7 +269,7 @@ function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnLoad()
 end
 
 function Soundtrack.OptionsTab.LowHealthPercentDropDown_LoadPercents(lowHealthTexts)
-	local currentLowHealthPercent = SoundtrackFrame.selectedLowHealthPercent
+	local currentLowHealthPercent = SoundtrackUI.selectedLowHealthPercent
 	local info
 
 	for i = 1, #lowHealthTexts, 1 do
@@ -293,9 +293,9 @@ end
 
 function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnClick(self)
 	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, self:GetID())
-	SoundtrackFrame.selectedLowHealthPercent = self:GetID()
+	SoundtrackUI.selectedLowHealthPercent = self:GetID()
 	-- Save settings.
-	SoundtrackAddon.db.profile.settings.LowHealthPercent = lowhealthpercents[SoundtrackFrame.selectedLowHealthPercent]
+	SoundtrackAddon.db.profile.settings.LowHealthPercent = lowhealthpercents[SoundtrackUI.selectedLowHealthPercent]
 end
 
 -- Silence dropdown
@@ -334,18 +334,18 @@ local function GetCurrentSilence()
 end
 
 function Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
-	SoundtrackFrame.selectedSilence = GetCurrentSilence()
+	SoundtrackUI.selectedSilence = GetCurrentSilence()
 	UIDropDownMenu_Initialize(OptionsTab_SilenceDropDown, Soundtrack.OptionsTab.SilenceDropDown_Initialize)
 	UIDropDownMenu_SetWidth(OptionsTab_SilenceDropDown, 130)
 end
 
 function Soundtrack.OptionsTab.SilenceDropDown_Initialize()
 	Soundtrack.OptionsTab.SilenceDropDown_LoadSilences(GetSilences())
-	UIDropDownMenu_SetSelectedID(OptionsTab_SilenceDropDown, SoundtrackFrame.selectedSilence)
+	UIDropDownMenu_SetSelectedID(OptionsTab_SilenceDropDown, SoundtrackUI.selectedSilence)
 end
 
 function Soundtrack.OptionsTab.SilenceDropDown_LoadSilences(silencesTexts)
-	local currentSilence = SoundtrackFrame.selectedSilence
+	local currentSilence = SoundtrackUI.selectedSilence
 	local info
 
 	for i = 1, #silencesTexts, 1 do
@@ -364,6 +364,6 @@ end
 
 function Soundtrack.OptionsTab.SilenceDropDown_OnClick(self)
 	UIDropDownMenu_SetSelectedID(OptionsTab_SilenceDropDown, self:GetID())
-	SoundtrackFrame.selectedSilence = self:GetID()
-	SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackFrame.selectedSilence]
+	SoundtrackUI.selectedSilence = self:GetID()
+	SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackUI.selectedSilence]
 end

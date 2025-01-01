@@ -13,7 +13,7 @@ StaticPopupDialogs["SOUNDTRACK_REMOVETRACK"] = {
 	button1 = "OK",
 	button2 = "Cancel",
 	OnAccept = function()
-		Soundtrack.Library.RemoveTrack(SoundtrackFrame.SelectedTrack)
+		Soundtrack.Library.RemoveTrack(SoundtrackUI.SelectedTrack)
 	end,
 	timeout = 0,
 	whileDead = 1,
@@ -69,7 +69,7 @@ function Soundtrack.Library.StopMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
 	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
 	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
-	SoundtrackFrame.UpdateTracksUI()
+	SoundtrackUI.UpdateTracksUI()
 end
 
 function Soundtrack.Library.PauseMusic()
@@ -77,7 +77,7 @@ function Soundtrack.Library.PauseMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
 	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
 	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
-	SoundtrackFrame.UpdateTracksUI()
+	SoundtrackUI.UpdateTracksUI()
 end
 
 function Soundtrack.Library.StopTrack()
@@ -90,8 +90,8 @@ local function DelayedPlayMusic()
 	Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
 	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
 	PlayMusic(nextFileName)
-	SoundtrackFrame.NowPlayingFrame.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
-	SoundtrackFrame.UpdateTracksUI()
+	SoundtrackUI.NowPlayingFrame.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
+	SoundtrackUI.UpdateTracksUI()
 end
 
 function Soundtrack.Library.OnUpdate(_, _)
@@ -108,14 +108,14 @@ function Soundtrack.Library.OnUpdate(_, _)
 			nextTrackInfo = nil
 		end
 
-		SoundtrackFrame.UpdateTracksUI()
+		SoundtrackUI.UpdateTracksUI()
 		fadeOut = false
 	end
 end
 
 -- Checks if a particular track is already set for an event
 function Soundtrack.Library.IsTrackActive(trackName)
-	local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
+	local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][SoundtrackUI.SelectedEvent]
 	if not event then
 		return false
 	end
@@ -176,7 +176,7 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	end
 
 	-- Update the UI if its opened
-	SoundtrackFrame.UpdateTracksUI()
+	SoundtrackUI.UpdateTracksUI()
 end
 
 -- Removes a track from the library.
@@ -204,6 +204,6 @@ function Soundtrack.Library.RemoveTrack(trackName)
 		end
 
 		-- Refresh assigned counts
-		SoundtrackFrame.UpdateEventsUI()
+		SoundtrackUI.UpdateEventsUI()
 	end
 end

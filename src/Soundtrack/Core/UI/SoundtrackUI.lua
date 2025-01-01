@@ -1,6 +1,6 @@
-SoundtrackFrame.SelectedEvent = nil
-SoundtrackFrame.SelectedTrack = nil
-SoundtrackFrame.SelectedEventsTable = nil
+SoundtrackUI.SelectedEvent = nil
+SoundtrackUI.SelectedTrack = nil
+SoundtrackUI.SelectedEventsTable = nil
 
 local EVENTS_TO_DISPLAY = 21
 
@@ -30,22 +30,22 @@ local suspendRenameEvent = false
 local copiedTracks = {}
 
 local function TabChanged()
-	if SoundtrackFrame.SelectedEventsTable == nil then
+	if SoundtrackUI.SelectedEventsTable == nil then
 	else
 		Soundtrack.StopEvent(ST_MISC, "Preview") -- Stop preview track
 
 		-- Select first event if possible
-		SoundtrackFrame.SelectedEvent = nil
+		SoundtrackUI.SelectedEvent = nil
 
 		local table = GetFlatEventsTable()
 
 		if table and #(GetFlatEventsTable()) >= 1 then
-			SoundtrackFrame.SelectedEvent = table[1].tag
+			SoundtrackUI.SelectedEvent = table[1].tag
 		end
 
-		SoundtrackFrame.UpdateEventsUI()
+		SoundtrackUI.UpdateEventsUI()
 
-		if SoundtrackFrame.SelectedEventsTable == "Zone" then
+		if SoundtrackUI.SelectedEventsTable == "Zone" then
 			SoundtrackFrameAddZoneButton:Show()
 			SoundtrackFrameRemoveZoneButton:Show()
 			SoundtrackFrameCollapseAllZoneButton:Show()
@@ -57,7 +57,7 @@ local function TabChanged()
 			SoundtrackFrameExpandAllZoneButton:Hide()
 		end
 
-		if SoundtrackFrame.SelectedEventsTable == "Pet Battles" then
+		if SoundtrackUI.SelectedEventsTable == "Pet Battles" then
 			SoundtrackFrameAddPetBattlesTargetButton:Show()
 			SoundtrackFrameDeletePetBattlesTargetButton:Show()
 		else
@@ -65,7 +65,7 @@ local function TabChanged()
 			SoundtrackFrameDeletePetBattlesTargetButton:Hide()
 		end
 
-		if SoundtrackFrame.SelectedEventsTable == "Boss" then
+		if SoundtrackUI.SelectedEventsTable == "Boss" then
 			SoundtrackFrameAddBossTargetButton:Show()
 			SoundtrackFrameAddWorldBossTargetButton:Show()
 			SoundtrackFrameDeleteTargetButton:Show()
@@ -75,7 +75,7 @@ local function TabChanged()
 			SoundtrackFrameDeleteTargetButton:Hide()
 		end
 
-		if SoundtrackFrame.SelectedEventsTable == "Custom" then
+		if SoundtrackUI.SelectedEventsTable == "Custom" then
 			SoundtrackFrameAddCustomEventButton:Show()
 			SoundtrackFrameEditCustomEventButton:Show()
 			SoundtrackFrameDeleteCustomEventButton:Show()
@@ -87,7 +87,7 @@ local function TabChanged()
 			_G["SoundtrackFrameRightPanelEditEvent"]:Hide()
 		end
 
-		if SoundtrackFrame.SelectedEventsTable == "Playlists" then
+		if SoundtrackUI.SelectedEventsTable == "Playlists" then
 			SoundtrackFrameAddPlaylistButton:Show()
 			SoundtrackFrameDeletePlaylistButton:Show()
 		else
@@ -95,11 +95,11 @@ local function TabChanged()
 			SoundtrackFrameDeletePlaylistButton:Hide()
 		end
 
-		if SoundtrackFrame.SelectedEventsTable ~= "Options" then
+		if SoundtrackUI.SelectedEventsTable ~= "Options" then
 			RefreshEventSubFrame()
 		end
 
-		if SoundtrackFrame.SelectedEventsTable ~= "Playlists" then
+		if SoundtrackUI.SelectedEventsTable ~= "Playlists" then
 			Soundtrack.StopEventAtLevel(ST_PLAYLIST_LVL) -- Stop playlists when we go out of the playlist panel
 		end
 	end
@@ -111,7 +111,7 @@ local function SelectActiveTab()
 	if stackLevel > 0 then
 		Soundtrack.Chat.TraceFrame("Selecting currently playing tab")
 		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
-		SoundtrackFrame.SelectedEventsTable = tableName
+		SoundtrackUI.SelectedEventsTable = tableName
 		PanelTemplates_SetTab(SoundtrackFrame, TabUtils.GetTabIndex(tableName))
 		TabChanged()
 	end
@@ -154,14 +154,14 @@ end
 
 local function OnColumnHeaderNameDropDownClick(self)
 	UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, self:GetID())
-	SoundtrackFrame.nameHeaderType = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[self:GetID()].type
-	Soundtrack.Chat.TraceFrame("Refreshing tracks with " .. SoundtrackFrame.nameHeaderType)
+	SoundtrackUI.nameHeaderType = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[self:GetID()].type
+	Soundtrack.Chat.TraceFrame("Refreshing tracks with " .. SoundtrackUI.nameHeaderType)
 	if
 		self.sortType == "name" and SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "fileName"
 		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "filePath"
 		or SoundtrackAddon.db.profile.settings.TrackSortingCriteria == "title"
 	then
-		Soundtrack.SortTracks(SoundtrackFrame.nameHeaderType)
+		Soundtrack.SortTracks(SoundtrackUI.nameHeaderType)
 	else
 		Soundtrack.SortTracks(self.sortType)
 	end
@@ -209,9 +209,9 @@ local function RefreshCurrentlyPlaying()
 end
 
 local function ClearEvent(eventToClear)
-	Soundtrack.Events.ClearEvent(SoundtrackFrame.SelectedEventsTable, eventToClear)
+	Soundtrack.Events.ClearEvent(SoundtrackUI.SelectedEventsTable, eventToClear)
 
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
 local function SoundtrackFrame_EventTypeDropDown_OnClick(self)
@@ -222,7 +222,7 @@ local function SoundtrackFrame_EventTypeDropDown_OnClick(self)
 		return
 	end
 
-	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent]
+	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackUI.SelectedEvent]
 
 	customEvent.type = EVENT_TYPES[selectedId]
 
@@ -243,7 +243,7 @@ local function SoundtrackFrame_EventTypeDropDown_OnClick(self)
 		end
 	end
 
-	SoundtrackFrame.UpdateCustomEventUI()
+	SoundtrackUI.UpdateCustomEventUI()
 end
 
 local function SoundtrackFrame_EventTypeDropDown_AddInfo(id, caption)
@@ -267,9 +267,9 @@ local function SoundtrackFrame_EventTypeDropDown_Initialize()
 end
 
 local function DeleteTarget(eventName)
-	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame.SelectedEvent)
+	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackUI.SelectedEvent)
 	Soundtrack.Events.DeleteEvent("Boss", eventName)
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
 local function ShowSubFrame(frameName)
@@ -286,41 +286,41 @@ local function RefreshEventSubFrame()
 	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
 
 	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
-		SoundtrackFrame.RefreshAssignedTracks()
+		SoundtrackUI.RefreshAssignedTracks()
 	end
 end
 
-function SoundtrackFrame.Initialize()
+function SoundtrackUI.Initialize()
 	Soundtrack.OptionsTab.Initialize()
 end
 
-function SoundtrackFrame.ShowAssignedTracksSubFrame()
+function SoundtrackUI.ShowAssignedTracksSubFrame()
 	currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
 	RefreshEventSubFrame()
 end
 
-function SoundtrackFrame.ShowEventSettingsSubFrame()
+function SoundtrackUI.ShowEventSettingsSubFrame()
 	currentSubFrame = SUB_FRAME_EVENT_SETTINGS
 	RefreshEventSubFrame()
 end
 
-function SoundtrackFrame.OnLoad(self)
+function SoundtrackUI.OnLoad(self)
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
 	PanelTemplates_SetNumTabs(self, 11)
 	PanelTemplates_SetTab(self, 1)
 end
 
-function SoundtrackFrame.OnUpdate()
+function SoundtrackUI.OnUpdate()
 	local currentTime = GetTime()
 	if currentTime >= nextUpdateTime then
 		nextUpdateTime = currentTime + UI_UPDATE_INTERVAL
-		SoundtrackFrame.MovingTitle.Update()
-		SoundtrackFrame.RefreshTrackProgress()
+		SoundtrackUI.MovingTitle.Update()
+		SoundtrackUI.RefreshTrackProgress()
 	end
 end
 
-function SoundtrackFrame.RefreshTrackProgress()
+function SoundtrackUI.RefreshTrackProgress()
 	if not Soundtrack.Library.CurrentlyPlayingTrack then
 		SetStatusBarProgress("SoundtrackFrame_StatusBarTrack", nil, nil)
 		SetStatusBarProgress("SoundtrackControlFrame_StatusBarTrack", nil, nil)
@@ -349,7 +349,7 @@ function SoundtrackFrame.RefreshTrackProgress()
 	SetStatusBarProgress("SoundtrackControlFrame_StatusBarTrack", duration, currentTime)
 end
 
-function SoundtrackFrame.InitializeColumnHeaderNameDropDown()
+function SoundtrackUI.InitializeColumnHeaderNameDropDown()
 	local info = UIDropDownMenu_CreateInfo()
 	for i = 1, #SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST, 1 do
 		info.text = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[i].name
@@ -358,54 +358,54 @@ function SoundtrackFrame.InitializeColumnHeaderNameDropDown()
 	end
 end
 
-function SoundtrackFrame.OnEventStackChanged()
+function SoundtrackUI.OnEventStackChanged()
 	RefreshCurrentlyPlaying()
-	SoundtrackFrame.UpdateEventStackUI()
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventStackUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
-function SoundtrackFrame.UpdateTracksUI()
-	SoundtrackFrame.RefreshTracks()
+function SoundtrackUI.UpdateTracksUI()
+	SoundtrackUI.RefreshTracks()
 	RefreshCurrentlyPlaying()
 end
 
-function SoundtrackFrame.ToggleRandomMusic()
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-	if eventTable[SoundtrackFrame.SelectedEvent] then
-		eventTable[SoundtrackFrame.SelectedEvent].random = not eventTable[SoundtrackFrame.SelectedEvent].random
+function SoundtrackUI.ToggleRandomMusic()
+	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+	if eventTable[SoundtrackUI.SelectedEvent] then
+		eventTable[SoundtrackUI.SelectedEvent].random = not eventTable[SoundtrackUI.SelectedEvent].random
 	end
 end
 
-function SoundtrackFrame.ToggleSoundEffect()
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-	if eventTable[SoundtrackFrame.SelectedEvent] then
-		eventTable[SoundtrackFrame.SelectedEvent].soundEffect =
-			not eventTable[SoundtrackFrame.SelectedEvent].soundEffect
+function SoundtrackUI.ToggleSoundEffect()
+	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+	if eventTable[SoundtrackUI.SelectedEvent] then
+		eventTable[SoundtrackUI.SelectedEvent].soundEffect =
+			not eventTable[SoundtrackUI.SelectedEvent].soundEffect
 	end
 end
 
-function SoundtrackFrame.ToggleContinuousMusic()
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-	if eventTable[SoundtrackFrame.SelectedEvent] then
-		eventTable[SoundtrackFrame.SelectedEvent].continuous = not eventTable[SoundtrackFrame.SelectedEvent].continuous
+function SoundtrackUI.ToggleContinuousMusic()
+	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+	if eventTable[SoundtrackUI.SelectedEvent] then
+		eventTable[SoundtrackUI.SelectedEvent].continuous = not eventTable[SoundtrackUI.SelectedEvent].continuous
 	end
 end
 
-function SoundtrackFrame.OnShow()
+function SoundtrackUI.OnShow()
 	RefreshCurrentlyPlaying()
 	SelectActiveTab()
-	SoundtrackFrame.RefreshShowingTab()
+	SoundtrackUI.RefreshShowingTab()
 end
 
-function SoundtrackFrame.OnHide()
+function SoundtrackUI.OnHide()
 	Soundtrack.StopEventAtLevel(ST_PREVIEW_LVL)
 
-	if SoundtrackFrame.SelectedEventsTable ~= "Playlists" then
+	if SoundtrackUI.SelectedEventsTable ~= "Playlists" then
 		Soundtrack.StopEventAtLevel(ST_PLAYLIST_LVL)
 	end
 end
 
-function SoundtrackFrame.OnStatusBarClick(_, _, _)
+function SoundtrackUI.OnStatusBarClick(_, _, _)
 	Soundtrack.Chat.TraceFrame("StatusBar_OnClick")
 	local menu = _G["SoundtrackControlFrame_PlaylistMenu"]
 	local button = _G["SoundtrackControlFrame_StatusBarTrack"]
@@ -414,8 +414,8 @@ function SoundtrackFrame.OnStatusBarClick(_, _, _)
 	ToggleDropDownMenu(1, nil, menu, button, 0, 0)
 end
 
-function SoundtrackFrame.OnClearButtonClick()
-	if not SoundtrackFrame.SelectedEvent then
+function SoundtrackUI.OnClearButtonClick()
+	if not SoundtrackUI.SelectedEvent then
 		Soundtrack.Chat.Error("The Clear button was enabled without a selected event")
 		return
 	end
@@ -426,7 +426,7 @@ function SoundtrackFrame.OnClearButtonClick()
 		button1 = ACCEPT,
 		button2 = CANCEL,
 		OnAccept = function()
-			ClearEvent(SoundtrackFrame.SelectedEvent)
+			ClearEvent(SoundtrackUI.SelectedEvent)
 		end,
 		enterClicksFirstButton = 1,
 		timeout = 0,
@@ -437,76 +437,76 @@ function SoundtrackFrame.OnClearButtonClick()
 	StaticPopup_Show("SOUNDTRACK_CLEAR_SELECTED_EVENT")
 end
 
-function SoundtrackFrame.RefreshShowingTab()
-	SoundtrackFrame.SelectedEventsTable = nil
+function SoundtrackUI.RefreshShowingTab()
+	SoundtrackUI.SelectedEventsTable = nil
 	SoundtrackFrameEventFrame:Hide()
 	SoundtrackFrameOptionsTab:Hide()
 	SoundtrackFrameProfilesFrame:Hide()
 	SoundtrackFrameAboutFrame:Hide()
-	if SoundtrackFrame.selectedTab == 1 then
-		SoundtrackFrame.SelectedEventsTable = "Battle"
+	if SoundtrackUI.selectedTab == 1 then
+		SoundtrackUI.SelectedEventsTable = "Battle"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 2 then
-		SoundtrackFrame.SelectedEventsTable = "Boss"
+	elseif SoundtrackUI.selectedTab == 2 then
+		SoundtrackUI.SelectedEventsTable = "Boss"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 3 then
-		SoundtrackFrame.SelectedEventsTable = "Zone"
+	elseif SoundtrackUI.selectedTab == 3 then
+		SoundtrackUI.SelectedEventsTable = "Zone"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 4 then
-		SoundtrackFrame.SelectedEventsTable = "Pet Battles"
+	elseif SoundtrackUI.selectedTab == 4 then
+		SoundtrackUI.SelectedEventsTable = "Pet Battles"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 5 then
-		SoundtrackFrame.SelectedEventsTable = "Dance"
+	elseif SoundtrackUI.selectedTab == 5 then
+		SoundtrackUI.SelectedEventsTable = "Dance"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 6 then
-		SoundtrackFrame.SelectedEventsTable = "Misc"
+	elseif SoundtrackUI.selectedTab == 6 then
+		SoundtrackUI.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 7 then
-		SoundtrackFrame.SelectedEventsTable = "Custom"
+	elseif SoundtrackUI.selectedTab == 7 then
+		SoundtrackUI.SelectedEventsTable = "Custom"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 8 then
-		SoundtrackFrame.SelectedEventsTable = "Playlists"
+	elseif SoundtrackUI.selectedTab == 8 then
+		SoundtrackUI.SelectedEventsTable = "Playlists"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 9 then
+	elseif SoundtrackUI.selectedTab == 9 then
 		SoundtrackFrameOptionsTab:Show()
-	elseif SoundtrackFrame.selectedTab == 10 then
+	elseif SoundtrackUI.selectedTab == 10 then
 		SoundtrackFrameProfilesFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 11 then
+	elseif SoundtrackUI.selectedTab == 11 then
 		SoundtrackFrameAboutFrame:Show()
 	end
 
 	TabChanged()
 end
 
-function SoundtrackFrame.OnFilterChanged()
+function SoundtrackUI.OnFilterChanged()
 	Soundtrack.trackFilter = SoundtrackFrame_TrackFilter:GetText()
 	Soundtrack.SortTracks()
 end
 
-function SoundtrackFrame.OnEventFilterChanged()
+function SoundtrackUI.OnEventFilterChanged()
 	Soundtrack.eventFilter = SoundtrackFrame_EventFilter:GetText()
 	Soundtrack.SortAllEvents()
 end
 
-function SoundtrackFrame.DisableAllEventButtons()
+function SoundtrackUI.DisableAllEventButtons()
 	for i = 1, EVENTS_TO_DISPLAY, 1 do
 		local button = _G["SoundtrackFrameEventButton" .. i]
 		button:Hide()
 	end
 end
 
-function SoundtrackFrame.RenameEvent()
-	if SoundtrackFrame.SelectedEvent and not suspendRenameEvent then
+function SoundtrackUI.RenameEvent()
+	if SoundtrackUI.SelectedEvent and not suspendRenameEvent then
 		Soundtrack.Events.RenameEvent(
-			SoundtrackFrame.SelectedEventsTable,
-			SoundtrackFrame.SelectedEvent,
+			SoundtrackUI.SelectedEventsTable,
+			SoundtrackUI.SelectedEvent,
 			_G["SoundtrackFrame_EventName"]:GetText()
 		)
-		SoundtrackFrame.UpdateEventsUI()
+		SoundtrackUI.UpdateEventsUI()
 	end
 end
 
-function SoundtrackFrame.Toggle()
+function SoundtrackUI.Toggle()
 	if SoundtrackFrame:IsVisible() then
 		SoundtrackFrame:Hide()
 	else
@@ -514,16 +514,16 @@ function SoundtrackFrame.Toggle()
 	end
 end
 
-function SoundtrackFrame.EventTypeDropDownOnLoad(self)
+function SoundtrackUI.EventTypeDropDownOnLoad(self)
 	UIDropDownMenu_Initialize(self, SoundtrackFrame_EventTypeDropDown_Initialize)
 	UIDropDownMenu_SetWidth(self, 130)
 end
 
-function SoundtrackFrame.RefreshUpDownButtons()
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
-		local event = eventTable[SoundtrackFrame.SelectedEvent]
-		local currentIndex = IndexOf(event.tracks, SoundtrackFrame.SelectedTrack)
+function SoundtrackUI.RefreshUpDownButtons()
+	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+	if eventTable[SoundtrackUI.SelectedEvent] ~= nil then
+		local event = eventTable[SoundtrackUI.SelectedEvent]
+		local currentIndex = IndexOf(event.tracks, SoundtrackUI.SelectedTrack)
 
 		if currentIndex > 0 and currentIndex > 1 then
 			_G["SoundtrackFrameMoveUp"]:Enable()
@@ -540,15 +540,15 @@ function SoundtrackFrame.RefreshUpDownButtons()
 end
 
 -- DELETE TARGET BUTTON
-function SoundtrackFrame.OnDeleteTargetButtonClick()
-	if SoundtrackFrame.SelectedEvent then
+function SoundtrackUI.OnDeleteTargetButtonClick()
+	if SoundtrackUI.SelectedEvent then
 		StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
 			preferredIndex = 3,
 			text = SOUNDTRACK_REMOVE_QUESTION,
 			button1 = ACCEPT,
 			button2 = CANCEL,
 			OnAccept = function()
-				DeleteTarget(SoundtrackFrame.SelectedEvent)
+				DeleteTarget(SoundtrackUI.SelectedEvent)
 			end,
 			enterClicksFirstButton = 1,
 			timeout = 0,
@@ -560,27 +560,27 @@ function SoundtrackFrame.OnDeleteTargetButtonClick()
 	end
 end
 
-function SoundtrackFrame.OnCopyTracksButtonClick()
-	if SoundtrackFrame.SelectedEvent then
+function SoundtrackUI.OnCopyTracksButtonClick()
+	if SoundtrackUI.SelectedEvent then
 		copiedTracks = {}
-		local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-		local event = eventTable[SoundtrackFrame.SelectedEvent]
+		local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+		local event = eventTable[SoundtrackUI.SelectedEvent]
 		for i = 0, #event.tracks do
 			copiedTracks[i] = event.tracks[i]
 		end
-		SoundtrackFrame.UpdateEventsUI()
+		SoundtrackUI.UpdateEventsUI()
 	end
 end
 
-function SoundtrackFrame.OnPasteTracksButtonClick()
-	if SoundtrackFrame.SelectedEvent then
+function SoundtrackUI.OnPasteTracksButtonClick()
+	if SoundtrackUI.SelectedEvent then
 		for i = 0, #copiedTracks do
-			Soundtrack.Events.Add(SoundtrackFrame.SelectedEventsTable, SoundtrackFrame.SelectedEvent, copiedTracks[i])
+			Soundtrack.Events.Add(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent, copiedTracks[i])
 		end
-		SoundtrackFrame.UpdateEventsUI()
+		SoundtrackUI.UpdateEventsUI()
 	end
 end
 
-function SoundtrackFrame.OnClearCopiedTracksButtonClick()
+function SoundtrackUI.OnClearCopiedTracksButtonClick()
 	copiedTracks = {}
 end

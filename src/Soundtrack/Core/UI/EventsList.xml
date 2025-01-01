@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="../Tooltip.lua"/>
+  <Script file="Tooltip.lua"/>
   <Frame name="SoundtrackFrameEventFrameTemplate" setAllPoints="true" virtual="true">
     <Frames>
       <!-- EVENT LIST -->
@@ -41,7 +41,7 @@
               </Anchor>
             </Anchors>
             <Scripts>
-              <OnTextChanged>SoundtrackFrame.OnEventFilterChanged()</OnTextChanged>
+              <OnTextChanged>SoundtrackUI.OnEventFilterChanged()</OnTextChanged>
               <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_FILTER, SOUNDTRACK_EVENT_FILTER_TIP)</OnEnter>
               <OnLeave>Soundtrack.HideTip()</OnLeave>
             </Scripts>
@@ -76,7 +76,7 @@
               </Layer>
             </Layers>
             <Scripts>
-              <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackFrame.RefreshEvents)
+              <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackUI.RefreshEvents)
                             </OnVerticalScroll>
             </Scripts>
           </ScrollFrame>
@@ -220,7 +220,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>self:SetFrameLevel(0); UIDropDownMenu_SetWidth(self, 180)</OnLoad>
-          <OnShow>UIDropDownMenu_Initialize(self, SoundtrackFrame.EventMenuInitialize, "MENU")</OnShow>
+          <OnShow>UIDropDownMenu_Initialize(self, SoundtrackUI.EventMenuInitialize, "MENU")</OnShow>
         </Scripts>
       </Frame>
       <Button name="SoundtrackFrameCopyCopiedTracksButton" inherits="UIPanelButtonTemplate" text="Copy">
@@ -236,7 +236,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameCopyCopiedTracksButton.Text:SetText(SOUNDTRACK_COPY_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnCopyTracksButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnCopyTracksButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COPY_TRACKS, SOUNDTRACK_COPY_TRACKS_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -250,7 +250,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFramePasteCopiedTracksButton.Text:SetText(SOUNDTRACK_PASTE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnPasteTracksButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnPasteTracksButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PASTE_TRACKS, SOUNDTRACK_PASTE_TRACKS_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -264,7 +264,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameClearCopiedTracksButton.Text:SetText(SOUNDTRACK_CLEAR_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnClearCopiedTracksButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnClearCopiedTracksButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLEAR_TRACKS, SOUNDTRACK_CLEAR_TRACKS_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -278,7 +278,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddPlaylistButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnAddPlaylistButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnAddPlaylistButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_PLAYLIST, SOUNDTRACK_ADD_PLAYLIST_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -292,7 +292,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameDeletePlaylistButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnDeletePlaylistButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnDeletePlaylistButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_PLAYLIST, SOUNDTRACK_REMOVE_PLAYLIST_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -306,7 +306,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddZoneButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnAddZoneButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnAddZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_ZONE, SOUNDTRACK_ADD_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -320,7 +320,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameRemoveZoneButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnFrameRemoveZoneButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnFrameRemoveZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_ZONE, SOUNDTRACK_REMOVE_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -334,7 +334,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameExpandAllZoneButton.Text:SetText(SOUNDTRACK_EXPAND_ALL_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnExpandAllZoneButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnExpandAllZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EXPAND_ALL_BUTTON, SOUNDTRACK_EXPAND_ALL_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -348,7 +348,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameCollapseAllZoneButton.Text:SetText(SOUNDTRACK_COLLAPSE_ALL_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnCollapseAllZoneButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnCollapseAllZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COLLAPSE_ALL_BUTTON, SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -362,7 +362,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddBossTargetButton.Text:SetText(SOUNDTRACK_ADD_TARGET_PARTY_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnAddBossTargetButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnAddBossTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_TARGET_PARTY, SOUNDTRACK_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -380,7 +380,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddWorldBossTargetButton.Text:SetText(SOUNDTRACK_ADD_TARGET_RAID_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnAddWorldBossTargetButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnAddWorldBossTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_TARGET_RAID, SOUNDTRACK_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -398,7 +398,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameDeleteTargetButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnDeleteTargetButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnDeleteTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_TARGET, SOUNDTRACK_REMOVE_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -416,7 +416,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameAddPetBattlesTargetButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnAddPetBattleTargetButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnAddPetBattleTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_ADD_TARGET, SOUNDTRACK_PETBATTLES_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -434,7 +434,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameDeletePetBattlesTargetButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrame.OnRemovePetBattleTargetButtonClick()</OnClick>
+          <OnClick>SoundtrackUI.OnRemovePetBattleTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_REMOVE_TARGET, SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -530,7 +530,7 @@
                   </Anchor>
                 </Anchors>
                 <Scripts>
-                  <OnTextChanged>SoundtrackFrame.OnFilterChanged()</OnTextChanged>
+                  <OnTextChanged>SoundtrackUI.OnFilterChanged()</OnTextChanged>
                   <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_TRACK_FILTER, SOUNDTRACK_TRACK_FILTER_TIP)</OnEnter>
                   <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
@@ -575,22 +575,22 @@
                     </Layers>
                     <Scripts>
                       <OnLoad>
-                                                UIDropDownMenu_Initialize(self, SoundtrackFrame.InitializeColumnHeaderNameDropDown);
+                                                UIDropDownMenu_Initialize(self, SoundtrackUI.InitializeColumnHeaderNameDropDown);
                                                 UIDropDownMenu_SetWidth(self, 80);
                                                 UIDropDownMenu_SetButtonWidth(self, 24);
                                                 UIDropDownMenu_JustifyText(self, "LEFT")
                                             </OnLoad>
                       <OnShow>
-                                                UIDropDownMenu_Initialize(self, SoundtrackFrame.InitializeColumnHeaderNameDropDown);
+                                                UIDropDownMenu_Initialize(self, SoundtrackUI.InitializeColumnHeaderNameDropDown);
                                                 UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, 1);
                                             </OnShow>
                       <OnEnter>SoundtrackFrame_ColumnHeaderNameHighlightTexture:Show();</OnEnter>
                       <OnLeave>SoundtrackFrame_ColumnHeaderNameHighlightTexture:Hide();</OnLeave>
                       <OnMouseUp>
                                                 Soundtrack.Chat.Debug("Column header clicked!")
-                                                SoundtrackFrame.nameHeaderType =
+                                                SoundtrackUI.nameHeaderType =
                                                 SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[UIDropDownMenu_GetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown)].type
-                                                Soundtrack.SortTracks(SoundtrackFrame.nameHeaderType);
+                                                Soundtrack.SortTracks(SoundtrackUI.nameHeaderType);
                                             </OnMouseUp>
                     </Scripts>
                   </Frame>
@@ -652,7 +652,7 @@
                   </Layer>
                 </Layers>
                 <Scripts>
-                  <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackFrame.RefreshTracks)
+                  <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackUI.RefreshTracks)
                                     </OnVerticalScroll>
                 </Scripts>
               </ScrollFrame>
@@ -774,7 +774,7 @@
             </Anchors>
             <Scripts>
               <OnLoad>self:SetFrameLevel(0); UIDropDownMenu_SetWidth(self, 180)</OnLoad>
-              <OnShow>UIDropDownMenu_Initialize(self, SoundtrackFrame.TrackMenuInitialize, "MENU")</OnShow>
+              <OnShow>UIDropDownMenu_Initialize(self, SoundtrackUI.TrackMenuInitialize, "MENU")</OnShow>
             </Scripts>
           </Frame>
           <Frame name="SoundtrackFrame_AssignedFrame">
@@ -798,7 +798,7 @@
                   </Anchor>
                 </Anchors>
                 <Scripts>
-                  <OnClick>SoundtrackFrame.ShowEventSettingsSubFrame()</OnClick>
+                  <OnClick>SoundtrackUI.ShowEventSettingsSubFrame()</OnClick>
                 </Scripts>
               </Button>
               <!-- EVENT SETTINGS HEADER -->
@@ -810,7 +810,7 @@
                   <Anchor point="LEFT" relativeTo="SoundtrackFrameColumnHeaderAssignedTracks" relativePoint="RIGHT"/>
                 </Anchors>
                 <Scripts>
-                  <OnClick>SoundtrackFrame.ShowAssignedTracksSubFrame()</OnClick>
+                  <OnClick>SoundtrackUI.ShowAssignedTracksSubFrame()</OnClick>
                   <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_SETTINGS, SOUNDTRACK_EVENT_SETTINGS_TIP)</OnEnter>
                   <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
@@ -848,7 +848,7 @@
                       </Layer>
                     </Layers>
                     <Scripts>
-                      <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackFrame.RefreshAssignedTracks)
+                      <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackUI.RefreshAssignedTracks)
                                             </OnVerticalScroll>
                     </Scripts>
                   </ScrollFrame>
@@ -899,7 +899,7 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnClick>SoundtrackFrame.OnAllButtonClick()</OnClick>
+                      <OnClick>SoundtrackUI.OnAllButtonClick()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ALL, SOUNDTRACK_ALL_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -912,7 +912,7 @@
                       <Anchor point="RIGHT" relativeTo="SoundtrackFrameAllButton" relativePoint="LEFT"/>
                     </Anchors>
                     <Scripts>
-                      <OnClick>SoundtrackFrame.OnClearButtonClick()</OnClick>
+                      <OnClick>SoundtrackUI.OnClearButtonClick()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLEAR, SOUNDTRACK_CLEAR_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -929,7 +929,7 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnClick>SoundtrackFrame.MoveAssignedTrack(1)</OnClick>
+                      <OnClick>SoundtrackUI.MoveAssignedTrack(1)</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_DOWN, SOUNDTRACK_DOWN_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -942,7 +942,7 @@
                       <Anchor point="RIGHT" relativeTo="SoundtrackFrameMoveDown" relativePoint="LEFT"/>
                     </Anchors>
                     <Scripts>
-                      <OnClick>SoundtrackFrame.MoveAssignedTrack(-1);</OnClick>
+                      <OnClick>SoundtrackUI.MoveAssignedTrack(-1);</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_UP, SOUNDTRACK_UP_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -975,7 +975,7 @@
                     </Anchors>
                     <Scripts>
                       <OnTabPressed>SoundtrackFrame_EventTrigger:SetFocus()</OnTabPressed>
-                      <OnEnterPressed>SoundtrackFrame.RenameEvent()</OnEnterPressed>
+                      <OnEnterPressed>SoundtrackUI.RenameEvent()</OnEnterPressed>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_NAME, SOUNDTRACK_NAME_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -990,7 +990,7 @@
                     </Anchors>
                     <Scripts>
                       <OnLoad>SoundtrackFrame_RandomCheckButton.Text:SetText(SOUNDTRACK_RANDOM)</OnLoad>
-                      <OnClick>SoundtrackFrame.ToggleRandomMusic()</OnClick>
+                      <OnClick>SoundtrackUI.ToggleRandomMusic()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_RANDOM, SOUNDTRACK_RANDOM_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -1001,7 +1001,7 @@
                     </Anchors>
                     <Scripts>
                       <OnLoad>SoundtrackFrame_SoundEffectCheckBox.Text:SetText(SOUNDTRACK_SOUND_EFFECT)</OnLoad>
-                      <OnClick>SoundtrackFrame.ToggleSoundEffect()</OnClick>
+                      <OnClick>SoundtrackUI.ToggleSoundEffect()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SOUND_EFFECT, SOUNDTRACK_SOUND_EFFECT_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -1012,7 +1012,7 @@
                     </Anchors>
                     <Scripts>
                       <OnLoad>SoundtrackFrame_ContinuousCheckBox.Text:SetText(SOUNDTRACK_CONTINUOUS)</OnLoad>
-                      <OnClick>SoundtrackFrame.ToggleContinuousMusic()</OnClick>
+                      <OnClick>SoundtrackUI.ToggleContinuousMusic()</OnClick>
                       <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CONTINUOUS, SOUNDTRACK_CONTINUOUS_TIP)</OnEnter>
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
@@ -1088,7 +1088,7 @@
               <Anchor point="LEFT" relativeTo="SoundtrackFrame_FontStringType" relativePoint="RIGHT"/>
             </Anchors>
             <Scripts>
-              <OnLoad>SoundtrackFrame.EventTypeDropDownOnLoad(self)</OnLoad>
+              <OnLoad>SoundtrackUI.EventTypeDropDownOnLoad(self)</OnLoad>
               <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_TYPE, SOUNDTRACK_EVENT_TYPE_TIP)</OnEnter>
               <OnLeave>Soundtrack.HideTip()</OnLeave>
             </Scripts>

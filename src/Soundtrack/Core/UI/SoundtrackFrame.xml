@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="SoundtrackFrame.lua"/>
+  <Script file="SoundtrackUI.lua"/>
   <Script file="Bosses.lua" />
   <Script file="EventStack.lua" />
   <Script file="Events.lua" />
   <Script file="MovingTitle.lua" />
   <Script file="PetBattles.lua" />
-  <Script file="PlaybackControls.lua" />
   <Script file="Playlists.lua" />
   <Script file="Tracks.lua" />
   <Script file="Zones.lua" />
@@ -213,7 +212,6 @@
           <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackFrame_PreviousButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrame_RefreshPlaybackControls()</OnLoad>
           <OnClick>Soundtrack.Events.PlaybackPlayStop()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PLAY, SOUNDTRACK_PLAY_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -227,7 +225,6 @@
           <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SoundtrackFrame_PlayButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrame_RefreshPlaybackControls()</OnLoad>
           <OnClick>Soundtrack.Events.PlaybackPlayStop()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PAUSE, SOUNDTRACK_PAUSE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -283,13 +280,13 @@
 
                 self:SetBackdropColor(.1,.1,.1,.9)
                 self:RegisterForDrag("LeftButton")
-                SoundtrackFrame.OnLoad(self)
+                SoundtrackUI.OnLoad(self)
             </OnLoad>
-      <OnUpdate>SoundtrackFrame.OnUpdate()</OnUpdate>
+      <OnUpdate>SoundtrackUI.OnUpdate()</OnUpdate>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
-      <OnShow>SoundtrackFrame.OnShow()</OnShow>
-      <OnHide>SoundtrackFrame.OnHide()</OnHide>
+      <OnShow>SoundtrackUI.OnShow()</OnShow>
+      <OnHide>SoundtrackUI.OnHide()</OnHide>
       <OnMouseWheel>return</OnMouseWheel>
     </Scripts>
   </Frame>

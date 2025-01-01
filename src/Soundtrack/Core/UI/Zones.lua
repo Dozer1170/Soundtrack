@@ -7,40 +7,40 @@ local function ToggleZoneExpansion(expanded)
 		eventNode.expanded = expanded
 	end
 	Soundtrack.OnEventTreeChanged("Zone")
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
-function SoundtrackFrame.OnAddZoneButtonClick()
+function SoundtrackUI.OnAddZoneButtonClick()
 	Soundtrack_ZoneEvents_AddZones()
 
 	-- Select the newly added area.
 	if GetSubZoneText() ~= nil then
-		SoundtrackFrame.SelectedEvent = GetSubZoneText()
+		SoundtrackUI.SelectedEvent = GetSubZoneText()
 	else
-		SoundtrackFrame.SelectedEvent = GetRealZoneText()
+		SoundtrackUI.SelectedEvent = GetRealZoneText()
 	end
 
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
-function SoundtrackFrame.OnCollapseAllZoneButtonClick()
+function SoundtrackUI.OnCollapseAllZoneButtonClick()
 	Soundtrack.Chat.TraceFrame("Collapsing all zone events")
 	ToggleZoneExpansion(false)
 end
 
-function SoundtrackFrame.OnExpandAllZoneButtonClick()
+function SoundtrackUI.OnExpandAllZoneButtonClick()
 	Soundtrack.Chat.TraceFrame("Expanding all zone events")
 	ToggleZoneExpansion(true)
 end
 
-function SoundtrackFrame.OnFrameRemoveZoneButtonClick()
+function SoundtrackUI.OnFrameRemoveZoneButtonClick()
 	StaticPopupDialogs["SOUNDTRACK_REMOVE_ZONE_POPUP"] = {
 		preferredIndex = 3,
 		text = "Do you want to remove this zone?",
 		button1 = ACCEPT,
 		button2 = CANCEL,
 		OnAccept = function(self)
-			RemoveZone(SoundtrackFrame.SelectedEvent)
+			RemoveZone(SoundtrackUI.SelectedEvent)
 		end,
 		timeout = 0,
 		whileDead = 1,

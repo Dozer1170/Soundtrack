@@ -1,11 +1,11 @@
 local function RefreshEventSettings()
-	if SoundtrackFrame.SelectedEvent then
+	if SoundtrackUI.SelectedEvent then
 		suspendRenameEvent = true
-		_G["SoundtrackFrame_EventName"]:SetText(SoundtrackFrame.SelectedEvent)
+		_G["SoundtrackFrame_EventName"]:SetText(SoundtrackUI.SelectedEvent)
 		suspendRenameEvent = false
 
-		local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-		local event = eventTable[SoundtrackFrame.SelectedEvent]
+		local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+		local event = eventTable[SoundtrackUI.SelectedEvent]
 		if event then
 			SoundtrackFrame_RandomCheckButton:SetChecked(event.random)
 			SoundtrackFrame_ContinuousCheckBox:SetChecked(event.continuous)
@@ -14,29 +14,27 @@ local function RefreshEventSettings()
 	end
 end
 
-function SoundtrackFrame.UpdateEventsUI()
-	if not SoundtrackFrame:IsVisible() or not SoundtrackFrame.SelectedEventsTable then
+function SoundtrackUI.UpdateEventsUI()
+	if not SoundtrackFrame:IsVisible() or not SoundtrackUI.SelectedEventsTable then
 		Soundtrack.Chat.TraceFrame("Skipping event refresh")
 		return
 	end
 
-	Soundtrack.Chat.TraceFrame("SoundtrackFrame.SelectedEventsTable: " .. SoundtrackFrame.SelectedEventsTable)
+	Soundtrack.Chat.TraceFrame("SoundtrackUI.SelectedEventsTable: " .. SoundtrackUI.SelectedEventsTable)
 	local flatEventsTable = GetFlatEventsTable()
 
 	-- The selected event was deleted, activate another one if possible
-	if SoundtrackFrame.SelectedEventsTable and SoundtrackFrame.SelectedEvent then
-		if
-			not SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
-		then
+	if SoundtrackUI.SelectedEventsTable and SoundtrackUI.SelectedEvent then
+		if not SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][SoundtrackUI.SelectedEvent] then
 			if table.maxn(flatEventsTable) > 0 then
-				SoundtrackFrame.SelectedEvent = flatEventsTable[1].tag
+				SoundtrackUI.SelectedEvent = flatEventsTable[1].tag
 			else
-				SoundtrackFrame.SelectedEvent = ""
+				SoundtrackUI.SelectedEvent = ""
 			end
 		end
 	end
 
-	SoundtrackFrame.DisableAllEventButtons()
+	SoundtrackUI.DisableAllEventButtons()
 
 	local numEvents = #flatEventsTable
 	local button
@@ -70,7 +68,7 @@ function SoundtrackFrame.UpdateEventsUI()
 				button:SetID(buttonIndex)
 				button:Show()
 
-				local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][eventName]
+				local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][eventName]
 
 				-- Add expandable (+ or -) texture
 				local collapserTexture = _G["SoundtrackFrameEventButton" .. buttonIndex .. "CollapserTexture"]
@@ -114,7 +112,7 @@ function SoundtrackFrame.UpdateEventsUI()
 				icon:Hide()
 
 				-- Update the highlight if that track is active for the event.
-				if eventName == SoundtrackFrame.SelectedEvent then
+				if eventName == SoundtrackUI.SelectedEvent then
 					button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
 					button:LockHighlight()
 				else
@@ -133,13 +131,13 @@ function SoundtrackFrame.UpdateEventsUI()
 	-- ScrollFrame stuff
 	FauxScrollFrame_Update(SoundtrackFrameEventScrollFrame, numEvents + 1, EVENTS_TO_DISPLAY, EVENTS_ITEM_HEIGHT)
 
-	SoundtrackFrame.RefreshTracks()
+	SoundtrackUI.RefreshTracks()
 	--SoundtrackFrame_RefreshCurrentlyPlaying()
 	RefreshEventSettings()
 end
 
-function SoundtrackFrame.UpdateCustomEventUI()
-	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent]
+function SoundtrackUI.UpdateCustomEventUI()
+	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackUI.SelectedEvent]
 
 	if customEvent == nil then
 		return
@@ -165,7 +163,7 @@ function SoundtrackFrame.UpdateCustomEventUI()
 	end
 
 	if customEvent.type == nil then
-		Soundtrack.Chat.TraceFrame("Nil type on " .. SoundtrackFrame.SelectedEvent)
+		Soundtrack.Chat.TraceFrame("Nil type on " .. SoundtrackUI.SelectedEvent)
 		customEvent.type = ST_UPDATE_SCRIPT
 	end
 
@@ -174,7 +172,7 @@ function SoundtrackFrame.UpdateCustomEventUI()
 	UIDropDownMenu_SetText(SoundtrackFrame_EventTypeDropDown, customEvent.type)
 end
 
-function SoundtrackFrame.OnEventButtonClick(self, mouseButton, _)
+function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 	Soundtrack.Chat.TraceFrame("EventButton_OnClick")
 
 	Soundtrack.Events.Pause(false)
@@ -182,36 +180,36 @@ function SoundtrackFrame.OnEventButtonClick(self, mouseButton, _)
 	local flatEventsTable = GetFlatEventsTable()
 	local button = _G["SoundtrackFrameEventButton" .. self:GetID() .. "ButtonTextName"]
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameEventScrollFrame)
-	SoundtrackFrame.SelectedEvent = flatEventsTable[self:GetID() + listOffset].tag -- The event name.
+	SoundtrackUI.SelectedEvent = flatEventsTable[self:GetID() + listOffset].tag -- The event name.
 
-	local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
+	local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][SoundtrackUI.SelectedEvent]
 	if mouseButton == "RightButton" then
 		-- Do nothing
 	elseif event.expanded then
 		event.expanded = false
-		Soundtrack.Chat.TraceFrame(SoundtrackFrame.SelectedEvent .. " is now collapsed")
+		Soundtrack.Chat.TraceFrame(SoundtrackUI.SelectedEvent .. " is now collapsed")
 	else
 		event.expanded = true
-		Soundtrack.Chat.TraceFrame(SoundtrackFrame.SelectedEvent .. " is now expanded")
+		Soundtrack.Chat.TraceFrame(SoundtrackUI.SelectedEvent .. " is now expanded")
 	end
 
-	Soundtrack.OnEventTreeChanged(SoundtrackFrame.SelectedEventsTable)
+	Soundtrack.OnEventTreeChanged(SoundtrackUI.SelectedEventsTable)
 
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 
-	if mouseButton == "RightButton" and SoundtrackFrame.SelectedEventsTable == "Zone" then
+	if mouseButton == "RightButton" and SoundtrackUI.SelectedEventsTable == "Zone" then
 		-- Toggle menu
 		local menu = _G["SoundtrackFrameEventMenu"]
 		menu.point = "TOPRIGHT"
 		menu.relativePoint = "CENTER"
 		ToggleDropDownMenu(1, nil, menu, button, 0, 0)
-	elseif SoundtrackFrame.SelectedEventsTable == "Playlists" then
-		Soundtrack.PlayEvent(SoundtrackFrame.SelectedEventsTable, SoundtrackFrame.SelectedEvent)
+	elseif SoundtrackUI.SelectedEventsTable == "Playlists" then
+		Soundtrack.PlayEvent(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent)
 	end
 
-	if SoundtrackFrame.SelectedEventsTable == "Custom" then
-		SoundtrackFrame.UpdateCustomEventUI()
+	if SoundtrackUI.SelectedEventsTable == "Custom" then
+		SoundtrackUI.UpdateCustomEventUI()
 	end
 end
 
-function SoundtrackFrame.EventMenuInitialize() end
+function SoundtrackUI.EventMenuInitialize() end

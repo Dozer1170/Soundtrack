@@ -5,3 +5,5 @@ SOUNDTRACK_REMOVETRACK - is this even possible?
 Entire SoundtrackFrame
 ControlFrame
 Now playing frame
+
+Add event: nil event in classic

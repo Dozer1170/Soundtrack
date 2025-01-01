@@ -24,7 +24,7 @@ local function DisableAllAssignedTrackButtons()
 	end
 end
 
-function SoundtrackFrame.TrackMenuInitialize()
+function SoundtrackUI.TrackMenuInitialize()
 	-- Remove track
 	local info = {}
 	info.text = SOUNDTRACK_REMOVE_TRACK
@@ -36,92 +36,92 @@ function SoundtrackFrame.TrackMenuInitialize()
 	UIDropDownMenu_AddButton(info, 1)
 end
 
-function SoundtrackFrame.OnTrackCheckBoxClick(self, _, _)
+function SoundtrackUI.OnTrackCheckBoxClick(self, _, _)
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameTrackScrollFrame)
-	SoundtrackFrame.SelectedTrack = Soundtrack_SortedTracks[self:GetID() + listOffset] -- track file name
+	SoundtrackUI.SelectedTrack = Soundtrack_SortedTracks[self:GetID() + listOffset] -- track file name
 
-	if SoundtrackFrame.SelectedEvent then
-		if Soundtrack.Library.IsTrackActive(SoundtrackFrame.SelectedTrack) then
+	if SoundtrackUI.SelectedEvent then
+		if Soundtrack.Library.IsTrackActive(SoundtrackUI.SelectedTrack) then
 			Soundtrack.Events.Remove(
-				SoundtrackFrame.SelectedEventsTable,
-				SoundtrackFrame.SelectedEvent,
-				SoundtrackFrame.SelectedTrack
+				SoundtrackUI.SelectedEventsTable,
+				SoundtrackUI.SelectedEvent,
+				SoundtrackUI.SelectedTrack
 			)
 		else
 			-- Add the track to the events list.
-			Soundtrack.AssignTrack(SoundtrackFrame.SelectedEvent, SoundtrackFrame.SelectedTrack)
+			Soundtrack.AssignTrack(SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
 		end
 	end
 
 	-- To refresh assigned track counts.
-	SoundtrackFrame.UpdateEventsUI()
-	SoundtrackFrame.RefreshTracks()
+	SoundtrackUI.UpdateEventsUI()
+	SoundtrackUI.RefreshTracks()
 end
 
-function SoundtrackFrame.OnAssignedTrackCheckBoxClick(self, _, _)
+function SoundtrackUI.OnAssignedTrackCheckBoxClick(self, _, _)
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameAssignedTracksScrollFrame)
 
 	local assignedTracks =
-		SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent].tracks
-	SoundtrackFrame.SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
+		SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][SoundtrackUI.SelectedEvent].tracks
+	SoundtrackUI.SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
 
-	if Soundtrack.Library.IsTrackActive(SoundtrackFrame.SelectedTrack) then
+	if Soundtrack.Library.IsTrackActive(SoundtrackUI.SelectedTrack) then
 		Soundtrack.Events.Remove(
-			SoundtrackFrame.SelectedEventsTable,
-			SoundtrackFrame.SelectedEvent,
-			SoundtrackFrame.SelectedTrack
+			SoundtrackUI.SelectedEventsTable,
+			SoundtrackUI.SelectedEvent,
+			SoundtrackUI.SelectedTrack
 		)
 	else
 		-- Add the track to the events list.
-		Soundtrack.AssignTrack(SoundtrackFrame.SelectedEvent, SoundtrackFrame.SelectedTrack)
+		Soundtrack.AssignTrack(SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
 	end
 
 	-- To refresh assigned track counts.
-	SoundtrackFrame.UpdateEventsUI()
-	SoundtrackFrame.RefreshTracks()
+	SoundtrackUI.UpdateEventsUI()
+	SoundtrackUI.RefreshTracks()
 end
 
-function SoundtrackFrame.OnTrackButtonClick(self, _, _)
+function SoundtrackUI.OnTrackButtonClick(self, _, _)
 	Soundtrack.Chat.TraceFrame("OnClick")
 
 	Soundtrack.Events.Pause(false)
 
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameTrackScrollFrame)
-	SoundtrackFrame.SelectedTrack = Soundtrack_SortedTracks[self:GetID() + listOffset] -- track file name
+	SoundtrackUI.SelectedTrack = Soundtrack_SortedTracks[self:GetID() + listOffset] -- track file name
 
-	PlayPreviewTrack(SoundtrackFrame.SelectedTrack)
+	PlayPreviewTrack(SoundtrackUI.SelectedTrack)
 
-	SoundtrackFrame.RefreshTracks()
+	SoundtrackUI.RefreshTracks()
 end
 
-function SoundtrackFrame.OnAssignedTrackButtonClick(self, _, _)
+function SoundtrackUI.OnAssignedTrackButtonClick(self, _, _)
 	Soundtrack.Events.Pause(false)
 
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameAssignedTracksScrollFrame)
 
 	local assignedTracks =
-		SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent].tracks
+		SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][SoundtrackUI.SelectedEvent].tracks
 
-	SoundtrackFrame.SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
+	SoundtrackUI.SelectedTrack = assignedTracks[self:GetID() + listOffset] -- track file name
 
-	PlayPreviewTrack(SoundtrackFrame.SelectedTrack)
+	PlayPreviewTrack(SoundtrackUI.SelectedTrack)
 
-	SoundtrackFrame.RefreshTracks()
+	SoundtrackUI.RefreshTracks()
 end
 
-function SoundtrackFrame.OnAllButtonClick()
+function SoundtrackUI.OnAllButtonClick()
 	-- Start by clearing all tracks
-	Soundtrack.Events.ClearEvent(SoundtrackFrame.SelectedEventsTable, SoundtrackFrame.SelectedEvent)
+	Soundtrack.Events.ClearEvent(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent)
 
 	-- The highlight all of them
 	for i = 1, #Soundtrack_SortedTracks, 1 do
-		Soundtrack.AssignTrack(SoundtrackFrame.SelectedEvent, Soundtrack_SortedTracks[i])
+		Soundtrack.AssignTrack(SoundtrackUI.SelectedEvent, Soundtrack_SortedTracks[i])
 	end
-	SoundtrackFrame.UpdateEventsUI()
+	SoundtrackUI.UpdateEventsUI()
 end
 
-function SoundtrackFrame.RefreshTracks()
-	if not SoundtrackFrame:IsVisible() or SoundtrackFrame.SelectedEventsTable == nil then
+function SoundtrackUI.RefreshTracks()
+	if not SoundtrackFrame:IsVisible() or SoundtrackUI.SelectedEventsTable == nil then
 		return
 	end
 
@@ -137,11 +137,11 @@ function SoundtrackFrame.RefreshTracks()
 			if buttonIndex <= TRACKS_TO_DISPLAY then
 				local nameText = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextName"]
 
-				if SoundtrackFrame.nameHeaderType == "filePath" or SoundtrackFrame.nameHeaderType == nil then
+				if SoundtrackUI.nameHeaderType == "filePath" or SoundtrackUI.nameHeaderType == nil then
 					nameText:SetText(Soundtrack_SortedTracks[i])
-				elseif SoundtrackFrame.nameHeaderType == "fileName" then
+				elseif SoundtrackUI.nameHeaderType == "fileName" then
 					nameText:SetText(GetPathFileName(Soundtrack_SortedTracks[i]))
-				elseif SoundtrackFrame.nameHeaderType == "title" then
+				elseif SoundtrackUI.nameHeaderType == "title" then
 					nameText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].title)
 				end
 
@@ -168,13 +168,13 @@ function SoundtrackFrame.RefreshTracks()
 				local checkBox = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "CheckBox"]
 				checkBox:SetID(buttonIndex)
 
-				if Soundtrack_SortedTracks[i] == SoundtrackFrame.SelectedTrack then
+				if Soundtrack_SortedTracks[i] == SoundtrackUI.SelectedTrack then
 					button:LockHighlight()
 				else
 					button:UnlockHighlight()
 				end
 
-				if SoundtrackFrame.SelectedEvent ~= nil then
+				if SoundtrackUI.SelectedEvent ~= nil then
 					-- Update the highlight if that track is active for the event.
 					if Soundtrack.Library.IsTrackActive(Soundtrack_SortedTracks[i]) then
 						checkBox:SetChecked(true)
@@ -194,21 +194,21 @@ function SoundtrackFrame.RefreshTracks()
 	-- ScrollFrame stuff
 	FauxScrollFrame_Update(SoundtrackFrameTrackScrollFrame, numTracks + 1, TRACKS_TO_DISPLAY, EVENTS_ITEM_HEIGHT)
 
-	SoundtrackFrame.RefreshAssignedTracks()
+	SoundtrackUI.RefreshAssignedTracks()
 end
 
-function SoundtrackFrame.RefreshAssignedTracks()
-	if not SoundtrackFrame:IsVisible() or SoundtrackFrame.SelectedEventsTable == nil then
+function SoundtrackUI.RefreshAssignedTracks()
+	if not SoundtrackFrame:IsVisible() or SoundtrackUI.SelectedEventsTable == nil then
 		return
 	end
 
 	DisableAllAssignedTrackButtons()
 
-	if SoundtrackFrame.SelectedEvent == nil then
+	if SoundtrackUI.SelectedEvent == nil then
 		return
 	end
 
-	local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
+	local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][SoundtrackUI.SelectedEvent]
 	if event == nil then
 		return
 	end
@@ -224,11 +224,11 @@ function SoundtrackFrame.RefreshAssignedTracks()
 			if buttonIndex <= ASSIGNED_TRACKS_TO_DISPLAY then
 				local nameText = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextName"]
 
-				if SoundtrackFrame.nameHeaderType == "filePath" or SoundtrackFrame.nameHeaderType == nil then
+				if SoundtrackUI.nameHeaderType == "filePath" or SoundtrackUI.nameHeaderType == nil then
 					nameText:SetText(assignedTracks[i])
-				elseif SoundtrackFrame.nameHeaderType == "fileName" then
+				elseif SoundtrackUI.nameHeaderType == "fileName" then
 					nameText:SetText(GetPathFileName(assignedTracks[i]))
-				elseif SoundtrackFrame.nameHeaderType == "title" then
+				elseif SoundtrackUI.nameHeaderType == "title" then
 					nameText:SetText(Soundtrack_Tracks[assignedTracks[i]].title)
 				end
 
@@ -253,13 +253,13 @@ function SoundtrackFrame.RefreshAssignedTracks()
 				local checkBox = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "CheckBox"]
 				checkBox:SetID(buttonIndex)
 
-				if assignedTracks[i] == SoundtrackFrame.SelectedTrack then
+				if assignedTracks[i] == SoundtrackUI.SelectedTrack then
 					button:LockHighlight()
 				else
 					button:UnlockHighlight()
 				end
 
-				if SoundtrackFrame.SelectedEvent ~= nil then
+				if SoundtrackUI.SelectedEvent ~= nil then
 					-- Update the highlight if that track is active for the event.
 					if Soundtrack.Library.IsTrackActive(assignedTracks[i]) then
 						checkBox:SetChecked(true)
@@ -284,14 +284,14 @@ function SoundtrackFrame.RefreshAssignedTracks()
 		EVENTS_ITEM_HEIGHT
 	)
 
-	SoundtrackFrame.RefreshUpDownButtons()
+	SoundtrackUI.RefreshUpDownButtons()
 end
 
-function SoundtrackFrame.MoveAssignedTrack(direction)
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
-		local event = eventTable[SoundtrackFrame.SelectedEvent]
-		local currentIndex = IndexOf(event.tracks, SoundtrackFrame.SelectedTrack)
+function SoundtrackUI.MoveAssignedTrack(direction)
+	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
+	if eventTable[SoundtrackUI.SelectedEvent] ~= nil then
+		local event = eventTable[SoundtrackUI.SelectedEvent]
+		local currentIndex = IndexOf(event.tracks, SoundtrackUI.SelectedTrack)
 
 		if currentIndex > 0 then
 			if direction < 0 and currentIndex > 1 then
@@ -309,6 +309,6 @@ function SoundtrackFrame.MoveAssignedTrack(direction)
 			end
 		end
 
-		SoundtrackFrame.RefreshAssignedTracks()
+		SoundtrackUI.RefreshAssignedTracks()
 	end
 end

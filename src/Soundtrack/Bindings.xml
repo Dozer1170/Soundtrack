@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Bindings>
   <Binding name="Toggle soundtrack window" category="SOUNDTRACK_BINDING_HEADER">
-        SoundtrackFrame.Toggle();
+        SoundtrackUI.Toggle();
     </Binding>
   <Binding name="Play/Pause track" category="SOUNDTRACK_BINDING_HEADER">
         Soundtrack.Events.PlaybackPlayStop();

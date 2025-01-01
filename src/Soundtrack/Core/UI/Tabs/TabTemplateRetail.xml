@@ -5,7 +5,7 @@
     <Scripts>
       <OnClick>
         PanelTemplates_Tab_OnClick(self, SoundtrackFrame);
-        SoundtrackFrame.RefreshShowingTab();
+        SoundtrackUI.RefreshShowingTab();
       </OnClick>
     </Scripts>
   </Button>
