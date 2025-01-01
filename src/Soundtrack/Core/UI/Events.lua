@@ -195,7 +195,7 @@ function SoundtrackFrame.OnEventButtonClick(self, mouseButton, _)
 		Soundtrack.Chat.TraceFrame(SoundtrackFrame.SelectedEvent .. " is now expanded")
 	end
 
-	SoundtrackFrame.OnEventTreeChanged(SoundtrackFrame.SelectedEventsTable)
+	Soundtrack.OnEventTreeChanged(SoundtrackFrame.SelectedEventsTable)
 
 	SoundtrackFrame.UpdateEventsUI()
 

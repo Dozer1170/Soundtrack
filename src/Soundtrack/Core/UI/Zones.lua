@@ -6,7 +6,7 @@ local function ToggleZoneExpansion(expanded)
 	for _, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
 		eventNode.expanded = expanded
 	end
-	SoundtrackFrame.OnEventTreeChanged("Zone")
+	Soundtrack.OnEventTreeChanged("Zone")
 	SoundtrackFrame.UpdateEventsUI()
 end
 

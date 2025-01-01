@@ -1,4 +1,3 @@
-SoundtrackFrame = {}
 SoundtrackFrame.SelectedEvent = nil
 SoundtrackFrame.SelectedTrack = nil
 SoundtrackFrame.SelectedEventsTable = nil

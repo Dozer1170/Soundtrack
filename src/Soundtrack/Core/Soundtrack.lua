@@ -427,7 +427,7 @@ function Soundtrack.StopEvent(tableName, eventName)
 end
 
 -- Call after events have changed or been expanded/collapsed
-function SoundtrackFrame.OnEventTreeChanged(eventTableName)
+function Soundtrack.OnEventTreeChanged(eventTableName)
 	-- Remove collapsed portions from Sorted events
 	Soundtrack_FlatEvents[eventTableName] = {}
 	local rootEventNode = Soundtrack_EventNodes[eventTableName]

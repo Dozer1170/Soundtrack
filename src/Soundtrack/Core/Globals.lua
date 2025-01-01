@@ -3,6 +3,8 @@ Soundtrack = {
 	Settings = {},
 }
 
+SoundtrackFrame = {}
+
 Soundtrack_EventTabs = {
 	"Battle",
 	"Boss",
