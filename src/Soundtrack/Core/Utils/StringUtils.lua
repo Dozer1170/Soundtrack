@@ -46,3 +46,12 @@ function CleanString(str)
 	cleanstr = string.gsub(cleanstr, "\\", "")
 	return cleanstr
 end
+
+-- Returns the number of seconds in "mm.ss" format
+function FormatDuration(seconds)
+	if not seconds then
+		return ""
+	else
+		return string.format("%i:%02i", math.floor(seconds / 60), seconds % 60)
+	end
+end

@@ -4,8 +4,6 @@ SoundtrackFrame.SelectedTrack = nil
 SoundtrackFrame.SelectedEventsTable = nil
 
 local EVENTS_TO_DISPLAY = 21
-local TRACKS_TO_DISPLAY = 16
-local ASSIGNED_TRACKS_TO_DISPLAY = 7
 
 local EVENT_TYPES = {
 	ST_EVENT_SCRIPT,
@@ -30,15 +28,6 @@ local EVENT_SUB_FRAMES = {
 local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
 local nextUpdateTime = 0
 local suspendRenameEvent = false
-
--- Returns the number of seconds in "mm.ss" format
-local function FormatDuration(seconds)
-	if not seconds then
-		return ""
-	else
-		return string.format("%i:%02i", math.floor(seconds / 60), seconds % 60)
-	end
-end
 
 local function TabChanged()
 	if SoundtrackFrame.SelectedEventsTable == nil then
@@ -225,17 +214,55 @@ local function ClearEvent(eventToClear)
 	SoundtrackFrame.UpdateEventsUI()
 end
 
-local function DisableAllTrackButtons()
-	for i = 1, TRACKS_TO_DISPLAY, 1 do
-		local button = _G["SoundtrackFrameTrackButton" .. i]
-		button:Hide()
+local function SoundtrackFrame_EventTypeDropDown_OnClick(self)
+	local oldSelectedId = UIDropDownMenu_GetSelectedID(SoundtrackFrame_EventTypeDropDown)
+	local selectedId = self:GetID()
+
+	if selectedId == oldSelectedId then
+		return
 	end
+
+	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent]
+
+	customEvent.type = EVENT_TYPES[selectedId]
+
+	if EVENT_TYPES[selectedId] == ST_UPDATE_SCRIPT then
+		if customEvent.script == nil then
+			customEvent.swcript = "type your update script here"
+		end
+	elseif EVENT_TYPES[selectedId] == ST_BUFF_SCRIPT then
+		if customEvent.spellId == nil then
+			customEvent.spellId = "0"
+		end
+	elseif EVENT_TYPES[selectedId] == ST_EVENT_SCRIPT then
+		if customEvent.trigger == nil then
+			customEvent.trigger = "UNIT_AURA"
+		end
+		if customEvent.script == nil then
+			customEvent.script = "type in your event script here"
+		end
+	end
+
+	SoundtrackFrame.UpdateCustomEventUI()
 end
 
-local function DisableAllAssignedTrackButtons()
-	for i = 1, ASSIGNED_TRACKS_TO_DISPLAY, 1 do
-		local button = _G["SoundtrackAssignedTrackButton" .. i]
-		button:Hide()
+local function SoundtrackFrame_EventTypeDropDown_AddInfo(id, caption)
+	local info = UIDropDownMenu_CreateInfo()
+	info.value = id
+	info.text = caption
+	info.func = SoundtrackFrame_EventTypeDropDown_OnClick
+	local checked = nil
+	local selectedId = UIDropDownMenu_GetSelectedID(SoundtrackFrame_EventTypeDropDown)
+	if selectedId ~= nil and selectedId == id then
+		checked = 1
+	end
+	info.checked = checked
+	UIDropDownMenu_AddButton(info)
+end
+
+local function SoundtrackFrame_EventTypeDropDown_Initialize()
+	for i = 1, #EVENT_TYPES do
+		SoundtrackFrame_EventTypeDropDown_AddInfo(i, EVENT_TYPES[i])
 	end
 end
 
@@ -473,7 +500,7 @@ function SoundtrackFrame.RenameEvent()
 	end
 end
 
-function SoundtrackFrame_Toggle()
+function SoundtrackFrame.Toggle()
 	if SoundtrackFrame:IsVisible() then
 		SoundtrackFrame:Hide()
 	else
@@ -481,142 +508,12 @@ function SoundtrackFrame_Toggle()
 	end
 end
 
-function SoundtrackFrame_EventTypeDropDown_OnLoad(self)
+function SoundtrackFrame.EventTypeDropDownOnLoad(self)
 	UIDropDownMenu_Initialize(self, SoundtrackFrame_EventTypeDropDown_Initialize)
 	UIDropDownMenu_SetWidth(self, 130)
 end
 
-function SoundtrackFrame_EventTypeDropDown_AddInfo(id, caption)
-	local info = UIDropDownMenu_CreateInfo()
-	info.value = id
-	info.text = caption
-	info.func = SoundtrackFrame_EventTypeDropDown_OnClick
-	local checked = nil
-	local selectedId = UIDropDownMenu_GetSelectedID(SoundtrackFrame_EventTypeDropDown)
-	if selectedId ~= nil and selectedId == id then
-		checked = 1
-	end
-	info.checked = checked
-	UIDropDownMenu_AddButton(info)
-end
-
-function SoundtrackFrame_EventTypeDropDown_Initialize()
-	for i = 1, #EVENT_TYPES do
-		SoundtrackFrame_EventTypeDropDown_AddInfo(i, EVENT_TYPES[i])
-	end
-end
-
-function SoundtrackFrame_EventTypeDropDown_OnClick(self)
-	local oldSelectedId = UIDropDownMenu_GetSelectedID(SoundtrackFrame_EventTypeDropDown)
-	local selectedId = self:GetID()
-
-	if selectedId == oldSelectedId then
-		return
-	end
-
-	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackFrame.SelectedEvent]
-
-	customEvent.type = EVENT_TYPES[selectedId]
-
-	if EVENT_TYPES[selectedId] == ST_UPDATE_SCRIPT then
-		if customEvent.script == nil then
-			customEvent.swcript = "type your update script here"
-		end
-	elseif EVENT_TYPES[selectedId] == ST_BUFF_SCRIPT then
-		if customEvent.spellId == nil then
-			customEvent.spellId = "0"
-		end
-	elseif EVENT_TYPES[selectedId] == ST_EVENT_SCRIPT then
-		if customEvent.trigger == nil then
-			customEvent.trigger = "UNIT_AURA"
-		end
-		if customEvent.script == nil then
-			customEvent.script = "type in your event script here"
-		end
-	end
-
-	SoundtrackFrame.UpdateCustomEventUI()
-end
-
--- get shown and you can check things on/off anyways.
-function SoundtrackFrame_RefreshTracks()
-	if not SoundtrackFrame:IsVisible() or SoundtrackFrame.SelectedEventsTable == nil then
-		return
-	end
-
-	DisableAllTrackButtons()
-	local numTracks = table.maxn(Soundtrack_SortedTracks)
-	local icon
-	local button
-	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameTrackScrollFrame)
-	local buttonIndex
-	for i = 1, numTracks, 1 do
-		if i > listOffset and i < listOffset + TRACKS_TO_DISPLAY then
-			buttonIndex = i - listOffset
-			if buttonIndex <= TRACKS_TO_DISPLAY then
-				local nameText = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextName"]
-
-				if SoundtrackFrame.nameHeaderType == "filePath" or SoundtrackFrame.nameHeaderType == nil then
-					nameText:SetText(Soundtrack_SortedTracks[i])
-				elseif SoundtrackFrame.nameHeaderType == "fileName" then
-					nameText:SetText(GetPathFileName(Soundtrack_SortedTracks[i]))
-				elseif SoundtrackFrame.nameHeaderType == "title" then
-					nameText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].title)
-				end
-
-				local albumText = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextAlbum"]
-				albumText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].album)
-
-				local artistText = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextArtist"]
-				artistText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].artist)
-
-				button = _G["SoundtrackFrameTrackButton" .. buttonIndex]
-
-				button:SetID(buttonIndex)
-
-				button:Show()
-
-				-- Show duration of track
-				local durationLabel = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextDuration"]
-				local duration = Soundtrack_Tracks[Soundtrack_SortedTracks[i]].length
-				durationLabel:SetText(FormatDuration(duration))
-
-				icon = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "Icon"]
-				icon:Hide()
-
-				local checkBox = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "CheckBox"]
-				checkBox:SetID(buttonIndex)
-
-				if Soundtrack_SortedTracks[i] == SoundtrackFrame.SelectedTrack then
-					button:LockHighlight()
-				else
-					button:UnlockHighlight()
-				end
-
-				if SoundtrackFrame.SelectedEvent ~= nil then
-					-- Update the highlight if that track is active for the event.
-					if Soundtrack.Library.IsTrackActive(Soundtrack_SortedTracks[i]) then
-						checkBox:SetChecked(true)
-					else
-						checkBox:SetChecked(false)
-					end
-
-					-- Update the icon
-					if Soundtrack.Library.CurrentlyPlayingTrack == Soundtrack_SortedTracks[i] then
-						icon:Show()
-					end
-				end
-			end
-		end
-	end
-
-	-- ScrollFrame stuff
-	FauxScrollFrame_Update(SoundtrackFrameTrackScrollFrame, numTracks + 1, TRACKS_TO_DISPLAY, EVENTS_ITEM_HEIGHT)
-
-	SoundtrackFrame_RefreshAssignedTracks()
-end
-
-local function SoundtrackFrame_RefreshUpDownButtons()
+function SoundtrackFrame_RefreshUpDownButtons()
 	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
 	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
 		local event = eventTable[SoundtrackFrame.SelectedEvent]
@@ -633,122 +530,6 @@ local function SoundtrackFrame_RefreshUpDownButtons()
 		else
 			_G["SoundtrackFrameMoveDown"]:Disable()
 		end
-	end
-end
-
-function SoundtrackFrame_RefreshAssignedTracks()
-	if not SoundtrackFrame:IsVisible() or SoundtrackFrame.SelectedEventsTable == nil then
-		return
-	end
-
-	DisableAllAssignedTrackButtons()
-
-	if SoundtrackFrame.SelectedEvent == nil then
-		return
-	end
-
-	local event = SoundtrackAddon.db.profile.events[SoundtrackFrame.SelectedEventsTable][SoundtrackFrame.SelectedEvent]
-	if event == nil then
-		return
-	end
-
-	local icon
-	local button
-	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameAssignedTracksScrollFrame)
-	local buttonIndex
-	local assignedTracks = event.tracks
-	for i = 1, #assignedTracks, 1 do
-		if i > listOffset and i < listOffset + ASSIGNED_TRACKS_TO_DISPLAY then
-			buttonIndex = i - listOffset
-			if buttonIndex <= ASSIGNED_TRACKS_TO_DISPLAY then
-				local nameText = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextName"]
-
-				if SoundtrackFrame.nameHeaderType == "filePath" or SoundtrackFrame.nameHeaderType == nil then
-					nameText:SetText(assignedTracks[i])
-				elseif SoundtrackFrame.nameHeaderType == "fileName" then
-					nameText:SetText(GetPathFileName(assignedTracks[i]))
-				elseif SoundtrackFrame.nameHeaderType == "title" then
-					nameText:SetText(Soundtrack_Tracks[assignedTracks[i]].title)
-				end
-
-				local albumText = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextAlbum"]
-				albumText:SetText(Soundtrack_Tracks[assignedTracks[i]].album)
-
-				local artistText = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextArtist"]
-				artistText:SetText(Soundtrack_Tracks[assignedTracks[i]].artist)
-
-				button = _G["SoundtrackAssignedTrackButton" .. buttonIndex]
-				button:SetID(buttonIndex)
-				button:Show()
-
-				-- Show duration of track
-				local durationLabel = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextDuration"]
-				local duration = Soundtrack_Tracks[assignedTracks[i]].length
-				durationLabel:SetText(FormatDuration(duration))
-
-				icon = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "Icon"]
-				icon:Hide()
-
-				local checkBox = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "CheckBox"]
-				checkBox:SetID(buttonIndex)
-
-				if assignedTracks[i] == SoundtrackFrame.SelectedTrack then
-					button:LockHighlight()
-				else
-					button:UnlockHighlight()
-				end
-
-				if SoundtrackFrame.SelectedEvent ~= nil then
-					-- Update the highlight if that track is active for the event.
-					if Soundtrack.Library.IsTrackActive(assignedTracks[i]) then
-						checkBox:SetChecked(true)
-					else
-						checkBox:SetChecked(false)
-					end
-
-					-- Update the icon
-					if Soundtrack.Library.CurrentlyPlayingTrack == assignedTracks[i] then
-						icon:Show()
-					end
-				end
-			end
-		end
-	end
-
-	-- ScrollFrame stuff
-	FauxScrollFrame_Update(
-		SoundtrackFrameAssignedTracksScrollFrame,
-		#assignedTracks + 1,
-		ASSIGNED_TRACKS_TO_DISPLAY,
-		EVENTS_ITEM_HEIGHT
-	)
-
-	SoundtrackFrame_RefreshUpDownButtons()
-end
-
-function SoundtrackFrame_MoveAssignedTrack(direction)
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
-	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
-		local event = eventTable[SoundtrackFrame.SelectedEvent]
-		local currentIndex = IndexOf(event.tracks, SoundtrackFrame.SelectedTrack)
-
-		if currentIndex > 0 then
-			if direction < 0 and currentIndex > 1 then
-				-- Move up
-				local newIndex = currentIndex - 1
-				local temp = event.tracks[newIndex]
-				event.tracks[newIndex] = event.tracks[currentIndex]
-				event.tracks[currentIndex] = temp
-			elseif direction > 0 and currentIndex < #event.tracks then
-				-- Move down
-				local newIndex = currentIndex + 1
-				local temp = event.tracks[newIndex]
-				event.tracks[newIndex] = event.tracks[currentIndex]
-				event.tracks[currentIndex] = temp
-			end
-		end
-
-		SoundtrackFrame_RefreshAssignedTracks()
 	end
 end
 

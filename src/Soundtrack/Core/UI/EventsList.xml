@@ -1089,7 +1089,7 @@
               <Anchor point="LEFT" relativeTo="SoundtrackFrame_FontStringType" relativePoint="RIGHT"/>
             </Anchors>
             <Scripts>
-              <OnLoad>SoundtrackFrame_EventTypeDropDown_OnLoad(self)</OnLoad>
+              <OnLoad>SoundtrackFrame.EventTypeDropDownOnLoad(self)</OnLoad>
               <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_TYPE, SOUNDTRACK_EVENT_TYPE_TIP)</OnEnter>
               <OnLeave>Soundtrack.HideTip()</OnLeave>
             </Scripts>
