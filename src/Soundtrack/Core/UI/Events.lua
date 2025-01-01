@@ -133,7 +133,7 @@ function SoundtrackFrame.UpdateEventsUI()
 	-- ScrollFrame stuff
 	FauxScrollFrame_Update(SoundtrackFrameEventScrollFrame, numEvents + 1, EVENTS_TO_DISPLAY, EVENTS_ITEM_HEIGHT)
 
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 	--SoundtrackFrame_RefreshCurrentlyPlaying()
 	RefreshEventSettings()
 end

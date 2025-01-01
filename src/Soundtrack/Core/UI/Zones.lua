@@ -33,7 +33,7 @@ function SoundtrackFrame.OnExpandAllZoneButtonClick()
 	ToggleZoneExpansion(true)
 end
 
-function Soundtrack.OnFrameRemoveZoneButtonClick()
+function SoundtrackFrame.OnFrameRemoveZoneButtonClick()
 	StaticPopupDialogs["SOUNDTRACK_REMOVE_ZONE_POPUP"] = {
 		preferredIndex = 3,
 		text = "Do you want to remove this zone?",

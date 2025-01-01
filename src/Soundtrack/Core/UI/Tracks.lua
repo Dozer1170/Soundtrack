@@ -55,7 +55,7 @@ function SoundtrackFrame.OnTrackCheckBoxClick(self, _, _)
 
 	-- To refresh assigned track counts.
 	SoundtrackFrame.UpdateEventsUI()
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 end
 
 function SoundtrackFrame.OnAssignedTrackCheckBoxClick(self, _, _)
@@ -78,7 +78,7 @@ function SoundtrackFrame.OnAssignedTrackCheckBoxClick(self, _, _)
 
 	-- To refresh assigned track counts.
 	SoundtrackFrame.UpdateEventsUI()
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 end
 
 function SoundtrackFrame.OnTrackButtonClick(self, _, _)
@@ -91,7 +91,7 @@ function SoundtrackFrame.OnTrackButtonClick(self, _, _)
 
 	PlayPreviewTrack(SoundtrackFrame.SelectedTrack)
 
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 end
 
 function SoundtrackFrame.OnAssignedTrackButtonClick(self, _, _)
@@ -106,7 +106,7 @@ function SoundtrackFrame.OnAssignedTrackButtonClick(self, _, _)
 
 	PlayPreviewTrack(SoundtrackFrame.SelectedTrack)
 
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 end
 
 function SoundtrackFrame.OnAllButtonClick()
@@ -120,7 +120,7 @@ function SoundtrackFrame.OnAllButtonClick()
 	SoundtrackFrame.UpdateEventsUI()
 end
 
-function SoundtrackFrame_RefreshTracks()
+function SoundtrackFrame.RefreshTracks()
 	if not SoundtrackFrame:IsVisible() or SoundtrackFrame.SelectedEventsTable == nil then
 		return
 	end
@@ -194,10 +194,10 @@ function SoundtrackFrame_RefreshTracks()
 	-- ScrollFrame stuff
 	FauxScrollFrame_Update(SoundtrackFrameTrackScrollFrame, numTracks + 1, TRACKS_TO_DISPLAY, EVENTS_ITEM_HEIGHT)
 
-	SoundtrackFrame_RefreshAssignedTracks()
+	SoundtrackFrame.RefreshAssignedTracks()
 end
 
-function SoundtrackFrame_RefreshAssignedTracks()
+function SoundtrackFrame.RefreshAssignedTracks()
 	if not SoundtrackFrame:IsVisible() or SoundtrackFrame.SelectedEventsTable == nil then
 		return
 	end
@@ -287,7 +287,7 @@ function SoundtrackFrame_RefreshAssignedTracks()
 	SoundtrackFrame.RefreshUpDownButtons()
 end
 
-function SoundtrackFrame_MoveAssignedTrack(direction)
+function SoundtrackFrame.MoveAssignedTrack(direction)
 	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
 	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
 		local event = eventTable[SoundtrackFrame.SelectedEvent]
@@ -309,6 +309,6 @@ function SoundtrackFrame_MoveAssignedTrack(direction)
 			end
 		end
 
-		SoundtrackFrame_RefreshAssignedTracks()
+		SoundtrackFrame.RefreshAssignedTracks()
 	end
 end

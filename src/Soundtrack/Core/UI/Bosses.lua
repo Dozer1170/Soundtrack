@@ -62,7 +62,7 @@ function SoundtrackFrame.OnAddBossTargetButtonClick()
 	end
 end
 
-function SoundtrackFrameAddWorldBossTargetButton_OnClick()
+function SoundtrackFrame.OnAddWorldBossTargetButtonClick()
 	local targetName = UnitName("target")
 	if targetName then
 		AddNamedWorldBoss(targetName)

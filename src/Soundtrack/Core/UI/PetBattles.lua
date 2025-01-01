@@ -25,7 +25,7 @@ function SoundtrackFrame.OnAddPetBattleTargetButtonClick()
 	end
 end
 
-function SoundtrackFrameRemovePetBattleTargetButton_OnClick()
+function SoundtrackFrame.OnRemovePetBattleTargetButtonClick()
 	StaticPopupDialogs["SOUNDTRACK_REMOVE_PETBATTLETARGET_POPUP"] = {
 		preferredIndex = 3,
 		text = "Do you want to remove this pet battle event?",

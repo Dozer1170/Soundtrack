@@ -2,3 +2,6 @@ Moving title.lua
 Sub frames - assigned tracks and event settings
 Check if you can even delete a misc event
 SOUNDTRACK_REMOVETRACK - is this even possible?
+Entire SoundtrackFrame
+ControlFrame
+Now playing frame

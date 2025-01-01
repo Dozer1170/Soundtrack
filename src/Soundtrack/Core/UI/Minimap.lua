@@ -1,6 +1,6 @@
 -- Minimap Button Handling
 
-local function debug(msg)
+local function Debug(msg)
 	Soundtrack.Chat.Debug(msg)
 end
 
@@ -28,7 +28,7 @@ function SoundtrackMinimap_Initialize()
 end
 
 function SoundtrackMinimap_IconFrame_OnClick(_, _)
-	debug("Minimap button OnClick")
+	Debug("Minimap button OnClick")
 	SoundtrackFrame.Toggle()
 end
 

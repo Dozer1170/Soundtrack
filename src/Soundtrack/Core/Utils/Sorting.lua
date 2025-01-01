@@ -73,7 +73,7 @@ function Soundtrack.SortTracks(sortCriteria)
 		table.sort(Soundtrack_SortedTracks, CompareTracksByTitle)
 	end
 
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 end
 
 local function GetChildNode(rootNode, childNodeName)

@@ -287,7 +287,7 @@ local function RefreshEventSubFrame()
 	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
 
 	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
-		SoundtrackFrame_RefreshAssignedTracks()
+		SoundtrackFrame.RefreshAssignedTracks()
 	end
 end
 
@@ -366,7 +366,7 @@ function SoundtrackFrame.OnEventStackChanged()
 end
 
 function SoundtrackFrame.UpdateTracksUI()
-	SoundtrackFrame_RefreshTracks()
+	SoundtrackFrame.RefreshTracks()
 	RefreshCurrentlyPlaying()
 end
 
