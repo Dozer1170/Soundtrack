@@ -31,6 +31,7 @@ local copiedTracks = {}
 
 local function TabChanged()
 	if SoundtrackUI.SelectedEventsTable == nil then
+		Soundtrack.Chat.Error("Selected events table is nil")
 	else
 		Soundtrack.StopEvent(ST_MISC, "Preview") -- Stop preview track
 
@@ -45,7 +46,7 @@ local function TabChanged()
 
 		SoundtrackUI.UpdateEventsUI()
 
-		if SoundtrackUI.SelectedEventsTable == "Zone" then
+		if SoundtrackUI.SelectedEventsTable == ST_ZONE then
 			SoundtrackFrameAddZoneButton:Show()
 			SoundtrackFrameRemoveZoneButton:Show()
 			SoundtrackFrameCollapseAllZoneButton:Show()
@@ -57,7 +58,7 @@ local function TabChanged()
 			SoundtrackFrameExpandAllZoneButton:Hide()
 		end
 
-		if SoundtrackUI.SelectedEventsTable == "Pet Battles" then
+		if SoundtrackUI.SelectedEventsTable == ST_PETBATTLES then
 			SoundtrackFrameAddPetBattlesTargetButton:Show()
 			SoundtrackFrameDeletePetBattlesTargetButton:Show()
 		else
@@ -65,7 +66,7 @@ local function TabChanged()
 			SoundtrackFrameDeletePetBattlesTargetButton:Hide()
 		end
 
-		if SoundtrackUI.SelectedEventsTable == "Boss" then
+		if SoundtrackUI.SelectedEventsTable == ST_BOSS then
 			SoundtrackFrameAddBossTargetButton:Show()
 			SoundtrackFrameAddWorldBossTargetButton:Show()
 			SoundtrackFrameDeleteTargetButton:Show()
@@ -75,7 +76,7 @@ local function TabChanged()
 			SoundtrackFrameDeleteTargetButton:Hide()
 		end
 
-		if SoundtrackUI.SelectedEventsTable == "Custom" then
+		if SoundtrackUI.SelectedEventsTable == ST_CUSTOM then
 			SoundtrackFrameAddCustomEventButton:Show()
 			SoundtrackFrameEditCustomEventButton:Show()
 			SoundtrackFrameDeleteCustomEventButton:Show()
@@ -87,7 +88,7 @@ local function TabChanged()
 			_G["SoundtrackFrameRightPanelEditEvent"]:Hide()
 		end
 
-		if SoundtrackUI.SelectedEventsTable == "Playlists" then
+		if SoundtrackUI.SelectedEventsTable == ST_PLAYLISTS then
 			SoundtrackFrameAddPlaylistButton:Show()
 			SoundtrackFrameDeletePlaylistButton:Show()
 		else
@@ -95,11 +96,11 @@ local function TabChanged()
 			SoundtrackFrameDeletePlaylistButton:Hide()
 		end
 
-		if SoundtrackUI.SelectedEventsTable ~= "Options" then
+		if SoundtrackUI.SelectedEventsTable ~= ST_OPTIONS then
 			RefreshEventSubFrame()
 		end
 
-		if SoundtrackUI.SelectedEventsTable ~= "Playlists" then
+		if SoundtrackUI.SelectedEventsTable ~= ST_PLAYLISTS then
 			Soundtrack.StopEventAtLevel(ST_PLAYLIST_LVL) -- Stop playlists when we go out of the playlist panel
 		end
 	end
@@ -304,11 +305,11 @@ function SoundtrackUI.ShowEventSettingsSubFrame()
 	RefreshEventSubFrame()
 end
 
-function SoundtrackUI.OnLoad(self)
+function SoundtrackUI.OnLoad()
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
-	PanelTemplates_SetNumTabs(self, 11)
-	PanelTemplates_SetTab(self, 1)
+	PanelTemplates_SetNumTabs(SoundtrackFrame, 11)
+	PanelTemplates_SetTab(SoundtrackFrame, 1)
 end
 
 function SoundtrackUI.OnUpdate()
@@ -379,8 +380,7 @@ end
 function SoundtrackUI.ToggleSoundEffect()
 	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
 	if eventTable[SoundtrackUI.SelectedEvent] then
-		eventTable[SoundtrackUI.SelectedEvent].soundEffect =
-			not eventTable[SoundtrackUI.SelectedEvent].soundEffect
+		eventTable[SoundtrackUI.SelectedEvent].soundEffect = not eventTable[SoundtrackUI.SelectedEvent].soundEffect
 	end
 end
 

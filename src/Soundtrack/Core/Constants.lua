@@ -24,6 +24,7 @@ ST_DANCE = "Dance"
 ST_MISC = "Misc"
 ST_CUSTOM = "Custom"
 ST_PLAYLISTS = "Playlists"
+ST_OPTIONS = "Options"
 
 ST_UPDATE_SCRIPT = "Update Script"
 ST_EVENT_SCRIPT = "Event Script"

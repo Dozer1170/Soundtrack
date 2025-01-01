@@ -280,7 +280,7 @@
 
                 self:SetBackdropColor(.1,.1,.1,.9)
                 self:RegisterForDrag("LeftButton")
-                SoundtrackUI.OnLoad(self)
+                SoundtrackUI.OnLoad()
             </OnLoad>
       <OnUpdate>SoundtrackUI.OnUpdate()</OnUpdate>
       <OnDragStart>self:StartMoving();</OnDragStart>
