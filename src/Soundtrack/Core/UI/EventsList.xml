@@ -236,7 +236,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameCopyCopiedTracksButton.Text:SetText(SOUNDTRACK_COPY_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameCopyCopiedTracksButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnCopyTracksButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COPY_TRACKS, SOUNDTRACK_COPY_TRACKS_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -250,7 +250,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFramePasteCopiedTracksButton.Text:SetText(SOUNDTRACK_PASTE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFramePasteCopiedTracksButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnPasteTracksButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PASTE_TRACKS, SOUNDTRACK_PASTE_TRACKS_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -264,7 +264,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameClearCopiedTracksButton.Text:SetText(SOUNDTRACK_CLEAR_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameClearCopiedTracksButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnClearCopiedTracksButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLEAR_TRACKS, SOUNDTRACK_CLEAR_TRACKS_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -398,7 +398,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>SoundtrackFrameDeleteTargetButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackFrameDeleteTargetButton_OnClick()</OnClick>
+          <OnClick>SoundtrackFrame.OnDeleteTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_TARGET, SOUNDTRACK_REMOVE_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>

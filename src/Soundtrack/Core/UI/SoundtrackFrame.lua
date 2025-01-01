@@ -28,6 +28,7 @@ local EVENT_SUB_FRAMES = {
 local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
 local nextUpdateTime = 0
 local suspendRenameEvent = false
+local copiedTracks = {}
 
 local function TabChanged()
 	if SoundtrackFrame.SelectedEventsTable == nil then
@@ -264,6 +265,12 @@ local function SoundtrackFrame_EventTypeDropDown_Initialize()
 	for i = 1, #EVENT_TYPES do
 		SoundtrackFrame_EventTypeDropDown_AddInfo(i, EVENT_TYPES[i])
 	end
+end
+
+local function DeleteTarget(eventName)
+	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame.SelectedEvent)
+	Soundtrack.Events.DeleteEvent("Boss", eventName)
+	SoundtrackFrame.UpdateEventsUI()
 end
 
 local function ShowSubFrame(frameName)
@@ -513,7 +520,7 @@ function SoundtrackFrame.EventTypeDropDownOnLoad(self)
 	UIDropDownMenu_SetWidth(self, 130)
 end
 
-function SoundtrackFrame_RefreshUpDownButtons()
+function SoundtrackFrame.RefreshUpDownButtons()
 	local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
 	if eventTable[SoundtrackFrame.SelectedEvent] ~= nil then
 		local event = eventTable[SoundtrackFrame.SelectedEvent]
@@ -534,7 +541,7 @@ function SoundtrackFrame_RefreshUpDownButtons()
 end
 
 -- DELETE TARGET BUTTON
-function SoundtrackFrameDeleteTargetButton_OnClick()
+function SoundtrackFrame.OnDeleteTargetButtonClick()
 	if SoundtrackFrame.SelectedEvent then
 		StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
 			preferredIndex = 3,
@@ -542,7 +549,7 @@ function SoundtrackFrameDeleteTargetButton_OnClick()
 			button1 = ACCEPT,
 			button2 = CANCEL,
 			OnAccept = function()
-				SoundtrackFrame_DeleteTarget(SoundtrackFrame.SelectedEvent)
+				DeleteTarget(SoundtrackFrame.SelectedEvent)
 			end,
 			enterClicksFirstButton = 1,
 			timeout = 0,
@@ -554,35 +561,27 @@ function SoundtrackFrameDeleteTargetButton_OnClick()
 	end
 end
 
-function SoundtrackFrame_DeleteTarget(eventName)
-	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackFrame.SelectedEvent)
-	Soundtrack.Events.DeleteEvent("Boss", eventName)
-	SoundtrackFrame.UpdateEventsUI()
-end
-
--- COPIED TRACKS BUTTONS
-CopiedTracks = {}
-function SoundtrackFrameCopyCopiedTracksButton_OnClick()
+function SoundtrackFrame.OnCopyTracksButtonClick()
 	if SoundtrackFrame.SelectedEvent then
-		CopiedTracks = {}
+		copiedTracks = {}
 		local eventTable = Soundtrack.Events.GetTable(SoundtrackFrame.SelectedEventsTable)
 		local event = eventTable[SoundtrackFrame.SelectedEvent]
 		for i = 0, #event.tracks do
-			CopiedTracks[i] = event.tracks[i]
+			copiedTracks[i] = event.tracks[i]
 		end
 		SoundtrackFrame.UpdateEventsUI()
 	end
 end
 
-function SoundtrackFramePasteCopiedTracksButton_OnClick()
+function SoundtrackFrame.OnPasteTracksButtonClick()
 	if SoundtrackFrame.SelectedEvent then
-		for i = 0, #CopiedTracks do
-			Soundtrack.Events.Add(SoundtrackFrame.SelectedEventsTable, SoundtrackFrame.SelectedEvent, CopiedTracks[i])
+		for i = 0, #copiedTracks do
+			Soundtrack.Events.Add(SoundtrackFrame.SelectedEventsTable, SoundtrackFrame.SelectedEvent, copiedTracks[i])
 		end
 		SoundtrackFrame.UpdateEventsUI()
 	end
 end
 
-function SoundtrackFrameClearCopiedTracksButton_OnClick()
-	CopiedTracks = {}
+function SoundtrackFrame.OnClearCopiedTracksButtonClick()
+	copiedTracks = {}
 end

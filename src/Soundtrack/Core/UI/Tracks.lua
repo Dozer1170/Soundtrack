@@ -284,7 +284,7 @@ function SoundtrackFrame_RefreshAssignedTracks()
 		EVENTS_ITEM_HEIGHT
 	)
 
-	SoundtrackFrame_RefreshUpDownButtons()
+	SoundtrackFrame.RefreshUpDownButtons()
 end
 
 function SoundtrackFrame_MoveAssignedTrack(direction)
