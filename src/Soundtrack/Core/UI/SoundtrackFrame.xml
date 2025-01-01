@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="SoundtrackFrame.lua"/>
+  <Include file="Bosses.lua"
+  <Include file="EventStack.lua"
+  <Include file="Events.lua"
   <Include file="MovingTitle.lua"
+  <Include file="PetBattles.lua"
+  <Include file="PlaybackControls.lua"
+  <Include file="Playlists.lua"
+  <Include file="Tracks.lua"
+  <Include file="Zones.lua"
   <Include file="EventsList.xml"/>
   <Include file="Tabs/CustomTab.lua"/>
   <Include file="Tabs/MiscTab.lua"/>
