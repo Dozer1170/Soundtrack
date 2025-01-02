@@ -21,6 +21,6 @@ function GetEventDepth(eventPath)
 	end
 end
 
-function GetFlatEventsTable()
+function GetFlatEventsTableForCurrentTab()
 	return Soundtrack_FlatEvents[SoundtrackUI.SelectedEventsTable]
 end

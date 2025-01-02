@@ -5,8 +5,8 @@
   <Script file="Localization\Localization.fr.lua"/>
   <Script file="Localization\Localization.es.lua"/>
   <Script file="Localization\Localization.en.lua"/>
-  <Script file="Globals.lua"/>
   <Script file="Constants.lua"/>
+  <Script file="Globals.lua"/>
   <Script file="Timers.lua"/>
   <Script file="Library.lua"/>
   <Script file="Events.lua"/>

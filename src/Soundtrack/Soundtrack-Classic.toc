@@ -10,6 +10,7 @@
 Embeds.xml
 Core/Soundtrack.xml
 Core/Utils/OldSaveMigrator.lua
+Core/Utils/EventUtils.lua
 Core/Utils/DebugUtils.lua
 Core/Utils/StringUtils.lua
 Core/Utils/Chat.lua

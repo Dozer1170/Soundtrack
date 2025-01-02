@@ -21,7 +21,7 @@ function SoundtrackUI.UpdateEventsUI()
 	end
 
 	Soundtrack.Chat.TraceFrame("SoundtrackUI.SelectedEventsTable: " .. SoundtrackUI.SelectedEventsTable)
-	local flatEventsTable = GetFlatEventsTable()
+	local flatEventsTable = GetFlatEventsTableForCurrentTab()
 
 	-- The selected event was deleted, activate another one if possible
 	if SoundtrackUI.SelectedEventsTable and SoundtrackUI.SelectedEvent then
@@ -177,7 +177,7 @@ function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 
 	Soundtrack.Events.Pause(false)
 
-	local flatEventsTable = GetFlatEventsTable()
+	local flatEventsTable = GetFlatEventsTableForCurrentTab()
 	local button = _G["SoundtrackFrameEventButton" .. self:GetID() .. "ButtonTextName"]
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameEventScrollFrame)
 	SoundtrackUI.SelectedEvent = flatEventsTable[self:GetID() + listOffset].tag -- The event name.

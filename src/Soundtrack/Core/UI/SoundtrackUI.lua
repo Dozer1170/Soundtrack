@@ -2,15 +2,6 @@ SoundtrackUI.SelectedEvent = nil
 SoundtrackUI.SelectedTrack = nil
 SoundtrackUI.SelectedEventsTable = nil
 
-local EVENTS_TO_DISPLAY = 21
-
-local EVENT_TYPES = {
-	ST_EVENT_SCRIPT,
-	ST_UPDATE_SCRIPT,
-	ST_BUFF_SCRIPT,
-	ST_DEBUFF_SCRIPT,
-}
-
 SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST = {
 	{ name = "File Path", type = "filePath" },
 	{ name = "File Name", type = "fileName" },
@@ -29,80 +20,96 @@ local nextUpdateTime = 0
 local suspendRenameEvent = false
 local copiedTracks = {}
 
+local function ShowSubFrame(frameName)
+	for _, value in ipairs(EVENT_SUB_FRAMES) do
+		if value == frameName then
+			_G[value]:Show()
+		else
+			_G[value]:Hide()
+		end
+	end
+end
+
+local function RefreshEventSubFrame()
+	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
+
+	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
+		SoundtrackUI.RefreshAssignedTracks()
+	end
+end
+
 local function TabChanged()
 	if SoundtrackUI.SelectedEventsTable == nil then
-		Soundtrack.Chat.Error("Selected events table is nil")
+		return
+	end
+	Soundtrack.StopEvent(ST_MISC, "Preview") -- Stop preview track
+
+	-- Select first event if possible
+	SoundtrackUI.SelectedEvent = nil
+
+	local flatEvents = GetFlatEventsTableForCurrentTab()
+	if flatEvents and #flatEvents >= 1 then
+		SoundtrackUI.SelectedEvent = flatEvents[1].tag
+	end
+
+	SoundtrackUI.UpdateEventsUI()
+
+	if SoundtrackUI.SelectedEventsTable == ST_ZONE then
+		SoundtrackFrameAddZoneButton:Show()
+		SoundtrackFrameRemoveZoneButton:Show()
+		SoundtrackFrameCollapseAllZoneButton:Show()
+		SoundtrackFrameExpandAllZoneButton:Show()
 	else
-		Soundtrack.StopEvent(ST_MISC, "Preview") -- Stop preview track
+		SoundtrackFrameAddZoneButton:Hide()
+		SoundtrackFrameRemoveZoneButton:Hide()
+		SoundtrackFrameCollapseAllZoneButton:Hide()
+		SoundtrackFrameExpandAllZoneButton:Hide()
+	end
 
-		-- Select first event if possible
-		SoundtrackUI.SelectedEvent = nil
+	if SoundtrackUI.SelectedEventsTable == ST_PETBATTLES then
+		SoundtrackFrameAddPetBattlesTargetButton:Show()
+		SoundtrackFrameDeletePetBattlesTargetButton:Show()
+	else
+		SoundtrackFrameAddPetBattlesTargetButton:Hide()
+		SoundtrackFrameDeletePetBattlesTargetButton:Hide()
+	end
 
-		local table = GetFlatEventsTable()
+	if SoundtrackUI.SelectedEventsTable == ST_BOSS then
+		SoundtrackFrameAddBossTargetButton:Show()
+		SoundtrackFrameAddWorldBossTargetButton:Show()
+		SoundtrackFrameDeleteTargetButton:Show()
+	else
+		SoundtrackFrameAddBossTargetButton:Hide()
+		SoundtrackFrameAddWorldBossTargetButton:Hide()
+		SoundtrackFrameDeleteTargetButton:Hide()
+	end
 
-		if table and #(GetFlatEventsTable()) >= 1 then
-			SoundtrackUI.SelectedEvent = table[1].tag
-		end
+	if SoundtrackUI.SelectedEventsTable == ST_CUSTOM then
+		SoundtrackFrameAddCustomEventButton:Show()
+		SoundtrackFrameEditCustomEventButton:Show()
+		SoundtrackFrameDeleteCustomEventButton:Show()
+	else
+		SoundtrackFrameAddCustomEventButton:Hide()
+		SoundtrackFrameEditCustomEventButton:Hide()
+		SoundtrackFrameDeleteCustomEventButton:Hide()
+		_G["SoundtrackFrameRightPanelTracks"]:Show()
+		_G["SoundtrackFrameRightPanelEditEvent"]:Hide()
+	end
 
-		SoundtrackUI.UpdateEventsUI()
+	if SoundtrackUI.SelectedEventsTable == ST_PLAYLISTS then
+		SoundtrackFrameAddPlaylistButton:Show()
+		SoundtrackFrameDeletePlaylistButton:Show()
+	else
+		SoundtrackFrameAddPlaylistButton:Hide()
+		SoundtrackFrameDeletePlaylistButton:Hide()
+	end
 
-		if SoundtrackUI.SelectedEventsTable == ST_ZONE then
-			SoundtrackFrameAddZoneButton:Show()
-			SoundtrackFrameRemoveZoneButton:Show()
-			SoundtrackFrameCollapseAllZoneButton:Show()
-			SoundtrackFrameExpandAllZoneButton:Show()
-		else
-			SoundtrackFrameAddZoneButton:Hide()
-			SoundtrackFrameRemoveZoneButton:Hide()
-			SoundtrackFrameCollapseAllZoneButton:Hide()
-			SoundtrackFrameExpandAllZoneButton:Hide()
-		end
+	if SoundtrackUI.SelectedEventsTable ~= ST_OPTIONS then
+		RefreshEventSubFrame()
+	end
 
-		if SoundtrackUI.SelectedEventsTable == ST_PETBATTLES then
-			SoundtrackFrameAddPetBattlesTargetButton:Show()
-			SoundtrackFrameDeletePetBattlesTargetButton:Show()
-		else
-			SoundtrackFrameAddPetBattlesTargetButton:Hide()
-			SoundtrackFrameDeletePetBattlesTargetButton:Hide()
-		end
-
-		if SoundtrackUI.SelectedEventsTable == ST_BOSS then
-			SoundtrackFrameAddBossTargetButton:Show()
-			SoundtrackFrameAddWorldBossTargetButton:Show()
-			SoundtrackFrameDeleteTargetButton:Show()
-		else
-			SoundtrackFrameAddBossTargetButton:Hide()
-			SoundtrackFrameAddWorldBossTargetButton:Hide()
-			SoundtrackFrameDeleteTargetButton:Hide()
-		end
-
-		if SoundtrackUI.SelectedEventsTable == ST_CUSTOM then
-			SoundtrackFrameAddCustomEventButton:Show()
-			SoundtrackFrameEditCustomEventButton:Show()
-			SoundtrackFrameDeleteCustomEventButton:Show()
-		else
-			SoundtrackFrameAddCustomEventButton:Hide()
-			SoundtrackFrameEditCustomEventButton:Hide()
-			SoundtrackFrameDeleteCustomEventButton:Hide()
-			_G["SoundtrackFrameRightPanelTracks"]:Show()
-			_G["SoundtrackFrameRightPanelEditEvent"]:Hide()
-		end
-
-		if SoundtrackUI.SelectedEventsTable == ST_PLAYLISTS then
-			SoundtrackFrameAddPlaylistButton:Show()
-			SoundtrackFrameDeletePlaylistButton:Show()
-		else
-			SoundtrackFrameAddPlaylistButton:Hide()
-			SoundtrackFrameDeletePlaylistButton:Hide()
-		end
-
-		if SoundtrackUI.SelectedEventsTable ~= ST_OPTIONS then
-			RefreshEventSubFrame()
-		end
-
-		if SoundtrackUI.SelectedEventsTable ~= ST_PLAYLISTS then
-			Soundtrack.StopEventAtLevel(ST_PLAYLIST_LVL) -- Stop playlists when we go out of the playlist panel
-		end
+	if SoundtrackUI.SelectedEventsTable ~= ST_PLAYLISTS then
+		Soundtrack.StopEventAtLevel(ST_PLAYLIST_LVL) -- Stop playlists when we go out of the playlist panel
 	end
 end
 
@@ -273,24 +280,6 @@ local function DeleteTarget(eventName)
 	SoundtrackUI.UpdateEventsUI()
 end
 
-local function ShowSubFrame(frameName)
-	for _, value in ipairs(EVENT_SUB_FRAMES) do
-		if value == frameName then
-			_G[value]:Show()
-		else
-			_G[value]:Hide()
-		end
-	end
-end
-
-local function RefreshEventSubFrame()
-	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
-
-	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
-		SoundtrackUI.RefreshAssignedTracks()
-	end
-end
-
 function SoundtrackUI.Initialize()
 	Soundtrack.OptionsTab.Initialize()
 end
@@ -443,35 +432,35 @@ function SoundtrackUI.RefreshShowingTab()
 	SoundtrackFrameOptionsTab:Hide()
 	SoundtrackFrameProfilesFrame:Hide()
 	SoundtrackFrameAboutFrame:Hide()
-	if SoundtrackUI.selectedTab == 1 then
+	if SoundtrackFrame.selectedTab == 1 then
 		SoundtrackUI.SelectedEventsTable = "Battle"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 2 then
+	elseif SoundtrackFrame.selectedTab == 2 then
 		SoundtrackUI.SelectedEventsTable = "Boss"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 3 then
+	elseif SoundtrackFrame.selectedTab == 3 then
 		SoundtrackUI.SelectedEventsTable = "Zone"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 4 then
+	elseif SoundtrackFrame.selectedTab == 4 then
 		SoundtrackUI.SelectedEventsTable = "Pet Battles"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 5 then
+	elseif SoundtrackFrame.selectedTab == 5 then
 		SoundtrackUI.SelectedEventsTable = "Dance"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 6 then
+	elseif SoundtrackFrame.selectedTab == 6 then
 		SoundtrackUI.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 7 then
+	elseif SoundtrackFrame.selectedTab == 7 then
 		SoundtrackUI.SelectedEventsTable = "Custom"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 8 then
+	elseif SoundtrackFrame.selectedTab == 8 then
 		SoundtrackUI.SelectedEventsTable = "Playlists"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackUI.selectedTab == 9 then
+	elseif SoundtrackFrame.selectedTab == 9 then
 		SoundtrackFrameOptionsTab:Show()
-	elseif SoundtrackUI.selectedTab == 10 then
+	elseif SoundtrackFrame.selectedTab == 10 then
 		SoundtrackFrameProfilesFrame:Show()
-	elseif SoundtrackUI.selectedTab == 11 then
+	elseif SoundtrackFrame.selectedTab == 11 then
 		SoundtrackFrameAboutFrame:Show()
 	end
 

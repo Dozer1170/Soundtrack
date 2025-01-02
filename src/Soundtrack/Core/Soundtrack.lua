@@ -109,6 +109,7 @@ function SoundtrackAddon:OnInitialize()
 end
 
 function SoundtrackAddon:VARIABLES_LOADED()
+	Soundtrack.Chat.InitDebugChatFrame()
 	SoundtrackMinimap_Initialize()
 	Soundtrack.MigrateFromOldSavedVariables()
 	Soundtrack.LoadTracks()
@@ -126,11 +127,6 @@ function SoundtrackAddon:VARIABLES_LOADED()
 end
 
 function Soundtrack.LoadTracks()
-	Soundtrack.Chat.InitDebugChatFrame()
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 1, Soundtrack.Chat.InitDebugChatFrame)
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 2, Soundtrack.Chat.InitDebugChatFrame)
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Chat.InitDebugChatFrame)
-
 	Soundtrack_Tracks = {}
 
 	-- Load tracks in generated script if available
@@ -173,8 +169,8 @@ function Soundtrack.AddEvent(tableName, eventName, _priority, _continuous, _soun
 		Soundtrack.Chat.Error("AddEvent: Nil table")
 		return
 	end
+
 	if IsNullOrEmpty(eventName) then
-		Soundtrack.Chat.Error("AddEvent: Nil event")
 		return
 	end
 
