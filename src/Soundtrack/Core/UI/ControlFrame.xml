@@ -215,22 +215,6 @@
             </OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackControlFrame_ReportButton" inherits="Soundtrack_ReportButton" alpha="0.6">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackControlFrame_TrueStopButton"/>
-        </Anchors>
-        <Scripts>
-          <OnClick>
-            SoundtrackUI.ControlFrame.OnReportButtonClick()
-            </OnClick>
-          <OnEnter>
-            SoundtrackUI.ControlFrame.OnReportButtonEnter(self)
-            </OnEnter>
-          <OnLeave>
-            SoundtrackUI.ControlFrame.OnReportButtonLeave()
-            </OnLeave>
-        </Scripts>
-      </Button>
       <Button name="SoundtrackControlFrame_InfoButton" inherits="Soundtrack_InfoButton" alpha="0.6">
         <Anchors>
           <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="SoundtrackControlFrame_TrueStopButton"/>

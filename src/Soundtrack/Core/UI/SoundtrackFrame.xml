@@ -282,7 +282,6 @@
                 self:RegisterForDrag("LeftButton")
                 SoundtrackUI.OnLoad()
             </OnLoad>
-      <OnUpdate>SoundtrackUI.OnUpdate()</OnUpdate>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
       <OnShow>SoundtrackUI.OnShow()</OnShow>

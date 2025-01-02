@@ -16,7 +16,6 @@ local EVENT_SUB_FRAMES = {
 }
 
 local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
-local nextUpdateTime = 0
 local suspendRenameEvent = false
 local copiedTracks = {}
 
@@ -302,12 +301,7 @@ function SoundtrackUI.OnLoad()
 end
 
 function SoundtrackUI.OnUpdate()
-	local currentTime = GetTime()
-	if currentTime >= nextUpdateTime then
-		nextUpdateTime = currentTime + UI_UPDATE_INTERVAL
-		SoundtrackUI.MovingTitle.Update()
-		SoundtrackUI.RefreshTrackProgress()
-	end
+	SoundtrackUI.RefreshTrackProgress()
 end
 
 function SoundtrackUI.RefreshTrackProgress()

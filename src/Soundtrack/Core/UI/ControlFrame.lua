@@ -80,23 +80,6 @@ function SoundtrackUI.ControlFrame.OnTrueStopButtonLeave()
 end
 --#endregion
 
---#region Report button handlers
-function SoundtrackUI.ControlFrame.OnReportButtonClick()
-	SoundtrackReportFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-	SoundtrackReportFrame:Show()
-end
-
-function SoundtrackUI.ControlFrame.OnReportButtonEnter(self)
-	Soundtrack.ShowTip(self, SOUNDTRACK_REPORT, SOUNDTRACK_REPORT_TIP)
-	SoundtrackControlFrame_ReportButton:SetAlpha(1.0)
-end
-
-function SoundtrackUI.ControlFrame.OnReportButtonLeave()
-	Soundtrack.HideTip()
-	SoundtrackControlFrame_ReportButton:SetAlpha(0.6)
-end
---#endregion
-
 --#region Info button handlers
 function SoundtrackUI.ControlFrame.OnInfoButtonClick()
 	local currentTrackName = Soundtrack.Library.CurrentlyPlayingTrack

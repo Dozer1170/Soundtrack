@@ -86,13 +86,12 @@ local function CreateNext(title, oldTitle)
 	end
 end
 
-function SoundtrackUI.MovingTitle.Update()
-	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
-
+function SoundtrackUI.MovingTitle.OnUpdate()
 	if not Soundtrack_Tracks then
 		return
 	end
 
+	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
 	local track = Soundtrack_Tracks[currentTrack]
 	if not track then
 		SoundtrackFrame_StatusBarTrackText1:SetText(SOUNDTRACK_NO_TRACKS_PLAYING)

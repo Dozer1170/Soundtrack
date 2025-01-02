@@ -439,6 +439,8 @@ function Soundtrack.OnUpdate(_, deltaT)
 	if currentTime >= nextUpdateTime then
 		nextUpdateTime = currentTime + UI_UPDATE_INTERVAL
 		Soundtrack.Timers.OnUpdate(deltaT)
+		SoundtrackUI.OnUpdate()
+		SoundtrackUI.MovingTitle.OnUpdate()
 	end
 end
 
@@ -451,9 +453,6 @@ function Soundtrack.OnLoad(self)
 		elseif msg == "reset" then
 			SoundtrackFrame:ClearAllPoints()
 			SoundtrackFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-		elseif msg == "report" then
-			SoundtrackReportFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-			SoundtrackReportFrame:Show()
 		else
 			SoundtrackFrame:Show()
 		end
