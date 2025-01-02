@@ -109,7 +109,8 @@ function SoundtrackAddon:OnInitialize()
 end
 
 function SoundtrackAddon:VARIABLES_LOADED()
-	Soundtrack.Chat.InitDebugChatFrame()
+	-- Have to delay this because it takes a second for chat windows to load
+	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Chat.InitDebugChatFrame)
 	SoundtrackMinimap_Initialize()
 	Soundtrack.MigrateFromOldSavedVariables()
 	Soundtrack.LoadTracks()
