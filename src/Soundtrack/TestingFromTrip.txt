@@ -1,9 +1,7 @@
 Moving title.lua
-Sub frames - assigned tracks and event settings
-Check if you can even delete a misc event
+Sub frames - assigned tracks and event settings DOES NOT WORK
+Check if you can even delete a misc event - Cannot remove this code
 SOUNDTRACK_REMOVETRACK - is this even possible?
 Entire SoundtrackFrame
-ControlFrame
-Now playing frame
-
-Add event: nil event in classic
+ControlFrame - Remove report button, EventName didnt update (2nd bar)?
+Resting event

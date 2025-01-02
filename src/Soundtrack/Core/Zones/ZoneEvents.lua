@@ -4,10 +4,6 @@ local nextUpdateTime = 0
 local updateInterval = 1
 local zoneType = nil
 
-local function debug(msg)
-	Soundtrack.Chat.TraceZones(msg)
-end
-
 local function FindContinentByZone()
 	local inInstance, instanceType = IsInInstance()
 	if inInstance then
@@ -81,33 +77,29 @@ function Soundtrack_ZoneEvents_AddZones()
 
 	if not IsNullOrEmpty(continentName) then
 		zoneText1 = continentName
-		debug("AddZone Continent: " .. zoneText1)
+		Soundtrack.Chat.TraceZones("AddZone Continent: " .. zoneText1)
 		zonePath = continentName
 	end
 
 	if not IsNullOrEmpty(zoneText) then
 		zoneText2 = continentName .. "/" .. zoneText
-		debug("AddZone ZoneText: " .. zoneText2)
+		Soundtrack.Chat.TraceZones("AddZone ZoneText: " .. zoneText2)
 		zonePath = zoneText2
 	end
 
 	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
 		zoneText3 = zonePath .. "/" .. zoneSubText
-		debug("AddZone SubZoneText: " .. zoneText3)
+		Soundtrack.Chat.TraceZones("AddZone SubZoneText: " .. zoneText3)
 		zonePath = zoneText3
 	end
 
-	if
-		zoneText ~= minimapZoneText
-		and zoneSubText ~= minimapZoneText
-		and not IsNullOrEmpty(minimapZoneText)
-	then
+	if zoneText ~= minimapZoneText and zoneSubText ~= minimapZoneText and not IsNullOrEmpty(minimapZoneText) then
 		zoneText4 = zonePath .. "/" .. minimapZoneText
-		debug("AddZone MinimapZoneText: " .. zoneText4)
+		Soundtrack.Chat.TraceZones("AddZone MinimapZoneText: " .. zoneText4)
 		zonePath = zoneText4
 	end
 
-	debug("AddZone Zone: " .. zonePath)
+	Soundtrack.Chat.TraceZones("AddZone Zone: " .. zonePath)
 
 	if zoneText4 then
 		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
@@ -168,31 +160,25 @@ local function OnZoneChanged()
 
 	if not IsNullOrEmpty(continentName) then
 		zoneText1 = continentName
-		debug("OnZoneChanged Continent: " .. zoneText1)
 		zonePath = continentName
 	end
 
 	if not IsNullOrEmpty(zoneText) then
 		zoneText2 = continentName .. "/" .. zoneText
-		debug("OnZoneChanged ZoneText: " .. zoneText2)
 		zonePath = zoneText2
 	end
 
 	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
 		zoneText3 = zonePath .. "/" .. zoneSubText
-		debug("OnZoneChanged SubZoneText: " .. zoneText3)
 		zonePath = zoneText3
 	end
 
-	if
-		zoneText ~= minimapZoneText
-		and zoneSubText ~= minimapZoneText
-		and not IsNullOrEmpty(minimapZoneText)
-	then
+	if zoneText ~= minimapZoneText and zoneSubText ~= minimapZoneText and not IsNullOrEmpty(minimapZoneText) then
 		zoneText4 = zonePath .. "/" .. minimapZoneText
-		debug("OnZoneChanged MinimapZoneText: " .. zoneText4)
 		zonePath = zoneText4
 	end
+
+	Soundtrack.Chat.TraceZones("OnZoneChanged: " .. zonePath)
 
 	if zoneText4 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
@@ -276,7 +262,7 @@ function Soundtrack.ZoneEvents.OnEvent(_, event, _)
 		return
 	end
 
-	debug(event)
+	Soundtrack.Chat.TraceZones(event)
 
 	if
 		event == "ZONE_CHANGED"
@@ -284,7 +270,7 @@ function Soundtrack.ZoneEvents.OnEvent(_, event, _)
 		or event == "ZONE_CHANGED_NEW_AREA"
 		or event == "VARIABLES_LOADED"
 	then
-		debug("Event: " .. event)
+		Soundtrack.Chat.TraceZones("Event: " .. event)
 		OnZoneChanged()
 	end
 end
