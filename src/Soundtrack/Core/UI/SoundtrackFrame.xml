@@ -25,7 +25,6 @@
   <Texture name="Soundtrack_NextDisabledTexture" file="Interface\AddOns\Soundtrack\Images\NextDisabled" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <Texture name="Soundtrack_StopTexture" file="Interface\AddOns\Soundtrack\Images\Stop" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <Texture name="Soundtrack_InfoTexture" file="Interface\AddOns\Soundtrack\Images\Info" inherits="Soundtrack_TextureTemplate" virtual="true"/>
-  <Texture name="Soundtrack_ReportTexture" file="Interface\AddOns\Soundtrack\Images\Report" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <!--Main frame-->
   <Frame name="SoundtrackFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
     <Size>

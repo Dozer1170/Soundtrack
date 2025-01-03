@@ -402,10 +402,6 @@
     <NormalTexture inherits="Soundtrack_InfoTexture"/>
     <DisabledTexture inherits="Soundtrack_InfoTexture"/>
   </Button>
-  <Button name="Soundtrack_ReportButton" inherits="Soundtrack_PlaybackButtonTemplate" virtual="true">
-    <NormalTexture inherits="Soundtrack_ReportTexture"/>
-    <DisabledTexture inherits="Soundtrack_ReportTexture"/>
-  </Button>
   <!-- Texture -->
   <Texture name="Soundtrack_TextureTemplate" virtual="true">
     <TexCoords left="0" right=".5" top="0" bottom="1"/>
