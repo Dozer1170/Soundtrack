@@ -30,7 +30,7 @@ local function ShowSubFrame(frameName)
 end
 
 local function RefreshEventSubFrame()
-	ShowSubFrame(SUB_FRAME_ASSIGNED_TRACKS)
+	ShowSubFrame(currentSubFrame)
 
 	if currentSubFrame == SUB_FRAME_ASSIGNED_TRACKS then
 		SoundtrackUI.RefreshAssignedTracks()

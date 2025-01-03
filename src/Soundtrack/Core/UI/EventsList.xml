@@ -797,7 +797,7 @@
                   </Anchor>
                 </Anchors>
                 <Scripts>
-                  <OnClick>SoundtrackUI.ShowEventSettingsSubFrame()</OnClick>
+                  <OnClick>SoundtrackUI.ShowAssignedTracksSubFrame()</OnClick>
                 </Scripts>
               </Button>
               <!-- EVENT SETTINGS HEADER -->
@@ -809,7 +809,7 @@
                   <Anchor point="LEFT" relativeTo="SoundtrackFrameColumnHeaderAssignedTracks" relativePoint="RIGHT"/>
                 </Anchors>
                 <Scripts>
-                  <OnClick>SoundtrackUI.ShowAssignedTracksSubFrame()</OnClick>
+                  <OnClick>SoundtrackUI.ShowEventSettingsSubFrame()</OnClick>
                   <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EVENT_SETTINGS, SOUNDTRACK_EVENT_SETTINGS_TIP)</OnEnter>
                   <OnLeave>Soundtrack.HideTip()</OnLeave>
                 </Scripts>
