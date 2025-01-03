@@ -76,8 +76,7 @@
               </Layer>
             </Layers>
             <Scripts>
-              <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackUI.RefreshEvents)
-                            </OnVerticalScroll>
+              <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackUI.UpdateEventsUI)</OnVerticalScroll>
             </Scripts>
           </ScrollFrame>
           <Button name="SoundtrackFrameEventButton1" inherits="SoundtrackFrameEventButtonTemplate">
