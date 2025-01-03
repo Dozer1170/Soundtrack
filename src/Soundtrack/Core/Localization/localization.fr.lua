@@ -253,9 +253,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_INFO = "Info"
 	SOUNDTRACK_INFO_TIP = "Donne des informations sur la piste en cours de lecture."
 
-	SOUNDTRACK_REPORT = "Reporter"
-	SOUNDTRACK_REPORT_TIP = "Reporter la piste actuelle sur le canal desire."
-
 	-- Options Tab
 	SOUNDTRACK_SHOW_MINIMAP_BUTTON = "Montr. boutton de Minimap"
 	SOUNDTRACK_SHOW_MINIMAP_BUTTON_TIP =

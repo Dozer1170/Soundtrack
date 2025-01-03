@@ -254,9 +254,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_INFO = "Info"
 	SOUNDTRACK_INFO_TIP = "Gives information on the currently playing track."
 
-	SOUNDTRACK_REPORT = "Report"
-	SOUNDTRACK_REPORT_TIP = "Report currently playing track to say, party/raid, or guild."
-
 	-- Options Tab
 	SOUNDTRACK_SHOW_MINIMAP_BUTTON = "Show Minimap Button"
 	SOUNDTRACK_SHOW_MINIMAP_BUTTON_TIP =

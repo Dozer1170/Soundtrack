@@ -8,24 +8,15 @@ function SetControlsButtonsPosition()
 	local stopButton = _G["SoundtrackControlFrame_StopButton"]
 	local previousButton = _G["SoundtrackControlFrame_PreviousButton"]
 	local trueStopButton = _G["SoundtrackControlFrame_TrueStopButton"]
-	local reportButton = _G["SoundtrackControlFrame_ReportButton"]
 	local infoButton = _G["SoundtrackControlFrame_InfoButton"]
-	if
-		nextButton
-		and playButton
-		and stopButton
-		and previousButton
-		and trueStopButton
-		and reportButton
-		and infoButton
-	then
+	if nextButton and playButton and stopButton and previousButton and trueStopButton and infoButton then
+		Soundtrack.Chat.TraceFrame("SetControlsButtonsPosition actually")
 		local position = SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition
 		SoundtrackControlFrame_NextButton:ClearAllPoints()
 		SoundtrackControlFrame_PlayButton:ClearAllPoints()
 		SoundtrackControlFrame_StopButton:ClearAllPoints()
 		SoundtrackControlFrame_PreviousButton:ClearAllPoints()
 		SoundtrackControlFrame_TrueStopButton:ClearAllPoints()
-		SoundtrackControlFrame_ReportButton:ClearAllPoints()
 		SoundtrackControlFrame_InfoButton:ClearAllPoints()
 		if position == "LEFT" then
 			SoundtrackControlFrame_NextButton:SetPoint(
@@ -39,7 +30,6 @@ function SetControlsButtonsPosition()
 			SoundtrackControlFrame_StopButton:SetPoint("RIGHT", "SoundtrackControlFrame_NextButton", "LEFT")
 			SoundtrackControlFrame_PreviousButton:SetPoint("RIGHT", "SoundtrackControlFrame_PlayButton", "LEFT")
 			SoundtrackControlFrame_TrueStopButton:SetPoint("TOP", "SoundtrackControlFrame_PlayButton", "BOTTOM")
-			SoundtrackControlFrame_ReportButton:SetPoint("LEFT", "SoundtrackControlFrame_TrueStopButton", "RIGHT")
 			SoundtrackControlFrame_InfoButton:SetPoint("RIGHT", "SoundtrackControlFrame_TrueStopButton", "LEFT")
 		elseif position == "TOPLEFT" then
 			SoundtrackControlFrame_PreviousButton:SetPoint(
@@ -54,16 +44,14 @@ function SetControlsButtonsPosition()
 			SoundtrackControlFrame_NextButton:SetPoint("LEFT", "SoundtrackControlFrame_PlayButton", "RIGHT")
 			SoundtrackControlFrame_InfoButton:SetPoint("LEFT", "SoundtrackControlFrame_NextButton", "RIGHT")
 			SoundtrackControlFrame_TrueStopButton:SetPoint("LEFT", "SoundtrackControlFrame_InfoButton", "RIGHT")
-			SoundtrackControlFrame_ReportButton:SetPoint("LEFT", "SoundtrackControlFrame_TrueStopButton", "RIGHT")
 		elseif position == "TOPRIGHT" then
-			SoundtrackControlFrame_ReportButton:SetPoint(
+			SoundtrackControlFrame_TrueStopButton:SetPoint(
 				"BOTTOMRIGHT",
 				"SoundtrackControlFrame_StatusBarEvent",
 				"TOPRIGHT",
 				3,
 				7
 			)
-			SoundtrackControlFrame_TrueStopButton:SetPoint("RIGHT", "SoundtrackControlFrame_ReportButton", "LEFT")
 			SoundtrackControlFrame_InfoButton:SetPoint("RIGHT", "SoundtrackControlFrame_TrueStopButton", "LEFT")
 			SoundtrackControlFrame_NextButton:SetPoint("RIGHT", "SoundtrackControlFrame_InfoButton", "LEFT")
 			SoundtrackControlFrame_PlayButton:SetPoint("RIGHT", "SoundtrackControlFrame_NextButton", "LEFT")
@@ -81,7 +69,6 @@ function SetControlsButtonsPosition()
 			SoundtrackControlFrame_StopButton:SetPoint("LEFT", "SoundtrackControlFrame_PreviousButton", "RIGHT")
 			SoundtrackControlFrame_NextButton:SetPoint("LEFT", "SoundtrackControlFrame_StopButton", "RIGHT")
 			SoundtrackControlFrame_TrueStopButton:SetPoint("TOP", "SoundtrackControlFrame_PlayButton", "BOTTOM")
-			SoundtrackControlFrame_ReportButton:SetPoint("LEFT", "SoundtrackControlFrame_TrueStopButton", "RIGHT")
 			SoundtrackControlFrame_InfoButton:SetPoint("RIGHT", "SoundtrackControlFrame_TrueStopButton", "LEFT")
 		elseif position == "BOTTOMRIGHT" then
 			SoundtrackControlFrame_NextButton:SetPoint(
@@ -95,8 +82,7 @@ function SetControlsButtonsPosition()
 			SoundtrackControlFrame_StopButton:SetPoint("RIGHT", "SoundtrackControlFrame_NextButton", "LEFT")
 			SoundtrackControlFrame_PreviousButton:SetPoint("RIGHT", "SoundtrackControlFrame_PlayButton", "LEFT")
 			SoundtrackControlFrame_TrueStopButton:SetPoint("RIGHT", "SoundtrackControlFrame_PreviousButton", "LEFT")
-			SoundtrackControlFrame_ReportButton:SetPoint("RIGHT", "SoundtrackControlFrame_TrueStopButton", "LEFT")
-			SoundtrackControlFrame_InfoButton:SetPoint("RIGHT", "SoundtrackControlFrame_ReportButton", "LEFT")
+			SoundtrackControlFrame_InfoButton:SetPoint("RIGHT", "SoundtrackControlFrame_TrueStopButton", "LEFT")
 		elseif position == "BOTTOMLEFT" then
 			SoundtrackControlFrame_PreviousButton:SetPoint(
 				"TOPLEFT",
@@ -110,7 +96,6 @@ function SetControlsButtonsPosition()
 			SoundtrackControlFrame_NextButton:SetPoint("LEFT", "SoundtrackControlFrame_PlayButton", "RIGHT")
 			SoundtrackControlFrame_InfoButton:SetPoint("LEFT", "SoundtrackControlFrame_NextButton", "RIGHT")
 			SoundtrackControlFrame_TrueStopButton:SetPoint("LEFT", "SoundtrackControlFrame_InfoButton", "RIGHT")
-			SoundtrackControlFrame_ReportButton:SetPoint("LEFT", "SoundtrackControlFrame_TrueStopButton", "RIGHT")
 		end
 	end
 end
@@ -160,24 +145,14 @@ function SoundtrackFrame_HideControlButtons()
 	local stopButton = _G["SoundtrackControlFrame_StopButton"]
 	local previousButton = _G["SoundtrackControlFrame_PreviousButton"]
 	local trueStopButton = _G["SoundtrackControlFrame_TrueStopButton"]
-	local reportButton = _G["SoundtrackControlFrame_ReportButton"]
 	local infoButton = _G["SoundtrackControlFrame_InfoButton"]
-	if
-		nextButton
-		and playButton
-		and stopButton
-		and previousButton
-		and trueStopButton
-		and reportButton
-		and infoButton
-	then
+	if nextButton and playButton and stopButton and previousButton and trueStopButton and infoButton then
 		if SoundtrackAddon.db.profile.settings.HideControlButtons then
 			SoundtrackControlFrame_NextButton:Hide()
 			SoundtrackControlFrame_PlayButton:Hide()
 			SoundtrackControlFrame_StopButton:Hide()
 			SoundtrackControlFrame_PreviousButton:Hide()
 			SoundtrackControlFrame_TrueStopButton:Hide()
-			SoundtrackControlFrame_ReportButton:Hide()
 			SoundtrackControlFrame_InfoButton:Hide()
 		else
 			SoundtrackControlFrame_NextButton:Show()
@@ -185,7 +160,6 @@ function SoundtrackFrame_HideControlButtons()
 			SoundtrackControlFrame_StopButton:Show()
 			SoundtrackControlFrame_PreviousButton:Show()
 			SoundtrackControlFrame_TrueStopButton:Show()
-			SoundtrackControlFrame_ReportButton:Show()
 			SoundtrackControlFrame_InfoButton:Show()
 		end
 		SoundtrackControlFrame_NextButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
@@ -193,7 +167,6 @@ function SoundtrackFrame_HideControlButtons()
 		SoundtrackControlFrame_StopButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
 		SoundtrackControlFrame_PreviousButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
 		SoundtrackControlFrame_TrueStopButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
-		SoundtrackControlFrame_ReportButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
 		SoundtrackControlFrame_InfoButton:EnableMouse(not SoundtrackAddon.db.profile.settings.HideControlButtons)
 	end
 end
