@@ -433,12 +433,12 @@ function Soundtrack.OnEventTreeChanged(eventTableName)
 	end
 end
 
-function Soundtrack.OnUpdate(_, deltaT)
+function Soundtrack.OnUpdate(_, _)
 	local currentTime = GetTime()
-	Soundtrack.Library.OnUpdate(deltaT)
 	if currentTime >= nextUpdateTime then
 		nextUpdateTime = currentTime + UI_UPDATE_INTERVAL
-		Soundtrack.Timers.OnUpdate(deltaT)
+		Soundtrack.Library.OnUpdate()
+		Soundtrack.Timers.OnUpdate()
 		SoundtrackUI.OnUpdate()
 		SoundtrackUI.MovingTitle.OnUpdate()
 	end

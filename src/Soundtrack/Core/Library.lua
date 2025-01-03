@@ -20,6 +20,58 @@ StaticPopupDialogs["SOUNDTRACK_REMOVETRACK"] = {
 	hideOnEscape = 1,
 }
 
+local function PlayOnceTrackFinished()
+	Soundtrack.StopEventAtLevel(Soundtrack.Events.GetCurrentStackLevel())
+end
+
+local function RemoveContinuityTimers()
+	Soundtrack.Timers.Remove("FadeOut")
+	Soundtrack.Timers.Remove("TrackFinished")
+end
+
+local fadeOutTime = 1
+local function StartContinuityTimers()
+	local track = Soundtrack_Tracks[nextTrackName]
+	local event = Soundtrack.Events.GetCurrentEvent()
+	if track == nil or event == nil then
+		return
+	end
+
+	if track then
+		local length = track.length
+		if length then
+			if not event.continuous then
+				if track.length > 20 then
+					Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, PlayOnceTrackFinished)
+				else
+					Soundtrack.Timers.AddTimer("FadeOut", length, PlayOnceTrackFinished)
+				end
+			else
+				local randomSilence = 0
+				if SoundtrackAddon.db.profile.settings.Silence > 0 then
+					randomSilence = random(5, SoundtrackAddon.db.profile.settings.Silence)
+					Soundtrack.Chat.TraceLibrary("Adding " .. randomSilence .. " seconds of silence after track")
+				end
+				Soundtrack.Timers.AddTimer("TrackFinished", length + randomSilence, Soundtrack.Events.RestartLastEvent)
+				if track.length > 20 then
+					Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, Soundtrack.Library.PauseMusic)
+				else
+					Soundtrack.Timers.AddTimer("FadeOut", length, Soundtrack.Library.PauseMusic)
+				end
+			end
+		end
+	end
+end
+
+local function DelayedPlayMusic()
+	RemoveContinuityTimers()
+	Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
+	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
+	PlayMusic(nextFileName)
+	StartContinuityTimers()
+	SoundtrackUI.NowPlayingFrame.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
+end
+
 function Soundtrack.Library.AddTrack(trackName, _length, _title, _artist, _album, _extension)
 	if _extension == nil then
 		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album }
@@ -62,8 +114,7 @@ end
 function Soundtrack.Library.StopMusic()
 	-- Remove the playback continuity timers
 	-- because we're stopping!
-	Soundtrack.Timers.Remove("FadeOut")
-	Soundtrack.Timers.Remove("TrackFinished")
+	RemoveContinuityTimers()
 
 	-- Play EmptyTrack
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
@@ -86,20 +137,9 @@ function Soundtrack.Library.StopTrack()
 	nextTrackInfo = nil
 end
 
-local function DelayedPlayMusic()
-	Soundtrack.Library.CurrentlyPlayingTrack = nextTrackName
-	Soundtrack.Chat.TraceLibrary("PlayMusic(" .. nextFileName .. ")")
-	PlayMusic(nextFileName)
-	SoundtrackUI.NowPlayingFrame.SetNowPlayingText(nextTrackInfo.title, nextTrackInfo.artist, nextTrackInfo.album)
-	SoundtrackUI.UpdateTracksUI()
-end
-
-function Soundtrack.Library.OnUpdate(_, _)
+function Soundtrack.Library.OnUpdate()
 	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
-	local currentTrack = Soundtrack.Library.CurrentlyPlayingTrack
-	local frameText = SoundtrackFrame_StatusBarEventText1:GetText()
-
-	if fadeOut == true or (stackLevel == 0 and frameText == SOUNDTRACK_NO_EVENT_PLAYING and currentTrack ~= nil) then
+	if fadeOut == true or (stackLevel == 0 and Soundtrack.Library.CurrentlyPlayingTrack ~= nil) then
 		Soundtrack.Library.StopMusic()
 		Soundtrack.Library.CurrentlyPlayingTrack = nil
 

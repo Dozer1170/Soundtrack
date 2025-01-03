@@ -8,6 +8,7 @@ Soundtrack.Timers.CurrentTime = GetTime()
 -- Will trigger the callback in a specified amount of time (in seconds)
 -- The timer gets removed from the list when it is triggered
 function Soundtrack.Timers.AddTimer(name, duration, callback)
+	Soundtrack.Chat.Trace("Adding timer: " .. name .. " for " .. duration .. " seconds")
 	table.insert(timerList, {
 		Name = name,
 		Start = GetTime(),
@@ -26,6 +27,7 @@ function Soundtrack.Timers.Get(name)
 end
 
 function Soundtrack.Timers.Remove(name)
+	Soundtrack.Chat.Trace("Removing timer: " .. name)
 	for i = 1, #timerList, 1 do
 		if timerList[i].Name == name then
 			table.remove(timerList, i)
@@ -34,7 +36,7 @@ function Soundtrack.Timers.Remove(name)
 	end
 end
 
-function Soundtrack.Timers.OnUpdate(_, _)
+function Soundtrack.Timers.OnUpdate()
 	local now = GetTime()
 	-- Check the timers in reverse order as some timers
 	-- can be removed during the traversal

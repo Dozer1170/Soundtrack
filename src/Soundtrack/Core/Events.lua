@@ -21,7 +21,6 @@ Soundtrack.Events.Stack = {
 	{ eventName = nil, tableName = nil }, -- Level 16: Preview
 }
 
-local fadeOutTime = 1
 local currentTableName = nil
 local currentEventName = nil
 
@@ -119,18 +118,6 @@ function Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 	return false
 end
 
-local function TrackFinished()
-	Soundtrack.Events.RestartLastEvent()
-end
-
-local function StartEmptyTrack()
-	Soundtrack.Library.PauseMusic()
-end
-
-local function PlayOnceTrackFinished()
-	Soundtrack.StopEventAtLevel(Soundtrack.Events.GetCurrentStackLevel()) -- TODO Anthony : by name?
-end
-
 local function GetTrackCount(event)
 	if not event then
 		return 0
@@ -142,32 +129,6 @@ local function GetTrackCount(event)
 	else
 		return 0
 	end
-end
-
--- Returns the current stack level on which a valid event is found.
-local function GetValidStackLevel()
-	local validStackLevel = 0
-
-	for i = table.getn(Soundtrack.Events.Stack), 1, -1 do
-		local event = Soundtrack.GetEvent(Soundtrack.Events.Stack[i].tableName, Soundtrack.Events.Stack[i].eventName)
-		if event then
-			local trackCount = GetTrackCount(event)
-			if validStackLevel == 0 and trackCount > 0 then
-				validStackLevel = i
-			elseif not event.continuous then
-				Soundtrack.Chat.TraceEvents("Removing obsolete event: " .. Soundtrack.Events.Stack[i].eventName)
-				Soundtrack.Events.Stack[i].eventName = nil
-				Soundtrack.Events.Stack[i].tableName = nil
-				Soundtrack.Events.Stack[i].offset = 0
-			end
-		else
-			Soundtrack.Events.Stack[i].eventName = nil
-			Soundtrack.Events.Stack[i].tableName = nil
-			Soundtrack.Events.Stack[i].offset = 0
-		end
-	end
-
-	return validStackLevel
 end
 
 function Soundtrack.Events.GetEventAtStackLevel(level)
@@ -182,13 +143,11 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 	-- Remove any playOnce events that do not have any valid tracks or they will never be removed
 	SoundtrackUI.OnEventStackChanged()
 
-	local validStackLevel = GetValidStackLevel()
+	local validStackLevel = Soundtrack.Events.GetCurrentStackLevel()
 	if validStackLevel == 0 then
 		-- Nothing to play.
 		-- Stop events if something was already active
 		if currentTableName then
-			Soundtrack.Timers.Remove("FadeOut")
-			Soundtrack.Timers.Remove("TrackFinished")
 			Soundtrack.Library.StopTrack()
 		end
 		currentTableName = nil
@@ -216,11 +175,6 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 				end
 			end
 			if not sameTrack or forceRestart then
-				-- We are starting a new track!
-				-- Remove the playback continuity timers
-				Soundtrack.Timers.Remove("FadeOut")
-				Soundtrack.Timers.Remove("TrackFinished")
-
 				nextTrack = nil
 				local res = Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 				if not res then
@@ -232,33 +186,6 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 
 				-- A track is now playing, register continuity timers
 				if nextTrack and Soundtrack_Tracks then
-					local track = Soundtrack_Tracks[nextTrack]
-					if track then
-						local length = track.length
-						if length then
-							if not event.continuous then
-								if track.length > 20 then
-									Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, PlayOnceTrackFinished)
-								else
-									Soundtrack.Timers.AddTimer("FadeOut", length, PlayOnceTrackFinished)
-								end
-							else
-								local randomSilence = 0
-								if SoundtrackAddon.db.profile.settings.Silence > 0 then
-									randomSilence = random(5, SoundtrackAddon.db.profile.settings.Silence)
-									Soundtrack.Chat.TraceEvents(
-										"Adding " .. randomSilence .. " seconds of silence after track"
-									)
-								end
-								Soundtrack.Timers.AddTimer("TrackFinished", length + randomSilence, TrackFinished)
-								if track.length > 20 then
-									Soundtrack.Timers.AddTimer("FadeOut", length - fadeOutTime, StartEmptyTrack)
-								else
-									Soundtrack.Timers.AddTimer("FadeOut", length, StartEmptyTrack)
-								end
-							end
-						end
-					end
 				end
 			end
 		end
@@ -453,7 +380,7 @@ function Soundtrack.Events.PlayEvent(tableName, eventName, stackLevel, forceRest
 end
 
 function Soundtrack.Events.RestartLastEvent(offset)
-	local stackLevel = GetValidStackLevel()
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
 	if stackLevel > 0 then
 		Soundtrack.Events.PlayEvent(
 			Soundtrack.Events.Stack[stackLevel].tableName,
@@ -466,8 +393,37 @@ function Soundtrack.Events.RestartLastEvent(offset)
 	end
 end
 
+-- Returns the current stack level on which a valid event is found.
 function Soundtrack.Events.GetCurrentStackLevel()
-	return GetValidStackLevel()
+	local validStackLevel = 0
+	for i = table.getn(Soundtrack.Events.Stack), 1, -1 do
+		local event = Soundtrack.GetEvent(Soundtrack.Events.Stack[i].tableName, Soundtrack.Events.Stack[i].eventName)
+		if event then
+			local trackCount = GetTrackCount(event)
+			if validStackLevel == 0 and trackCount > 0 then
+				validStackLevel = i
+			elseif not event.continuous then
+				Soundtrack.Chat.TraceEvents("Removing obsolete event: " .. Soundtrack.Events.Stack[i].eventName)
+				Soundtrack.Events.Stack[i].eventName = nil
+				Soundtrack.Events.Stack[i].tableName = nil
+				Soundtrack.Events.Stack[i].offset = 0
+			end
+		else
+			Soundtrack.Events.Stack[i].eventName = nil
+			Soundtrack.Events.Stack[i].tableName = nil
+			Soundtrack.Events.Stack[i].offset = 0
+		end
+	end
+
+	return validStackLevel
+end
+
+-- Returns the highest stack level event or nil if no event is happening
+function Soundtrack.Events.GetCurrentEvent()
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	local tableName = Soundtrack.Events.Stack[stackLevel].tableName
+	local eventName = Soundtrack.Events.Stack[stackLevel].eventName
+	return Soundtrack.GetEvent(tableName, eventName)
 end
 
 function Soundtrack.Events.PlaybackNext()

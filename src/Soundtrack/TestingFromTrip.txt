@@ -3,5 +3,5 @@ Sub frames - assigned tracks and event settings DOES NOT WORK
 Check if you can even delete a misc event - Cannot remove this code
 SOUNDTRACK_REMOVETRACK - is this even possible?
 Entire SoundtrackFrame
-ControlFrame - (2nd bar not updating)?
+  Cant scroll
 Resting event
