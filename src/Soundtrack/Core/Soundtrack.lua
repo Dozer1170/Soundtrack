@@ -105,12 +105,11 @@ function SoundtrackAddon:OnInitialize()
 			},
 		},
 	}, true)
-	self:RegisterEvent("VARIABLES_LOADED")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
-function SoundtrackAddon:VARIABLES_LOADED()
-	-- Have to delay this because it takes a second for chat windows to load
-	Soundtrack.Timers.AddTimer("InitDebugChatFrame", 3, Soundtrack.Chat.InitDebugChatFrame)
+function SoundtrackAddon:PLAYER_ENTERING_WORLD()
+	Soundtrack.Chat.InitDebugChatFrame()
 	SoundtrackMinimap_Initialize()
 	Soundtrack.MigrateFromOldSavedVariables()
 	Soundtrack.LoadTracks()

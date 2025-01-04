@@ -126,7 +126,7 @@ end
 
 function Soundtrack.ProfilesTab.ReloadProfile()
 	Soundtrack.TracksLoaded = false
-	SoundtrackAddon:VARIABLES_LOADED()
+	SoundtrackAddon:PLAYER_ENTERING_WORLD()
 	Soundtrack.ProfilesTab.RefreshProfilesFrame()
 end
 

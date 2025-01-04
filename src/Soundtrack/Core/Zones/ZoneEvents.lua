@@ -240,7 +240,7 @@ function Soundtrack.ZoneEvents.OnLoad(self)
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	self:RegisterEvent("ZONE_CHANGED")
 	self:RegisterEvent("ZONE_CHANGED_INDOORS")
-	self:RegisterEvent("VARIABLES_LOADED")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function Soundtrack.ZoneEvents.OnUpdate(_)
@@ -268,7 +268,7 @@ function Soundtrack.ZoneEvents.OnEvent(_, event, _)
 		event == "ZONE_CHANGED"
 		or event == "ZONE_CHANGED_INDOORS"
 		or event == "ZONE_CHANGED_NEW_AREA"
-		or event == "VARIABLES_LOADED"
+		or event == "PLAYER_ENTERING_WORLD"
 	then
 		Soundtrack.Chat.TraceZones("Event: " .. event)
 		OnZoneChanged()
