@@ -7,19 +7,6 @@ local fadeOut = false
 
 Soundtrack.Library.CurrentlyPlayingTrack = nil
 
-StaticPopupDialogs["SOUNDTRACK_REMOVETRACK"] = {
-	preferredIndex = 3,
-	text = [[Do you want to remove this track from your library?]],
-	button1 = "OK",
-	button2 = "Cancel",
-	OnAccept = function()
-		Soundtrack.Library.RemoveTrack(SoundtrackUI.SelectedTrack)
-	end,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = 1,
-}
-
 local function PlayOnceTrackFinished()
 	Soundtrack.StopEventAtLevel(Soundtrack.Events.GetCurrentStackLevel())
 end
@@ -217,33 +204,4 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 
 	-- Update the UI if its opened
 	SoundtrackUI.UpdateTracksUI()
-end
-
--- Removes a track from the library.
-function Soundtrack.Library.RemoveTrackWithConfirmation()
-	-- Confirmation
-	StaticPopup_Show("SOUNDTRACK_REMOVETRACK")
-end
-
-function Soundtrack.Library.RemoveTrack(trackName)
-	if trackName then
-		Soundtrack_Tracks[trackName] = nil
-		Soundtrack.SortTracks()
-
-		-- Remove the track from any event that assigns it
-		for _, eventTab in ipairs(Soundtrack_EventTabs) do
-			for _, v in SoundtrackAddon.db.profile.events[eventTab] do
-				for i, tn in ipairs(v.tracks) do
-					if tn == trackName then
-						Soundtrack.Chat.TraceLibrary("Removed assigned track " .. trackName)
-						table.remove(v.tracks, i)
-						break
-					end
-				end
-			end
-		end
-
-		-- Refresh assigned counts
-		SoundtrackUI.UpdateEventsUI()
-	end
 end

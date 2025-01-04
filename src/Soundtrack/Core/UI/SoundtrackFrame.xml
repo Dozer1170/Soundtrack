@@ -10,7 +10,6 @@
   <Script file="Tracks.lua" />
   <Script file="Zones.lua" />
   <Script file="Tabs/CustomTab.lua"/>
-  <Script file="Tabs/MiscTab.lua"/>
   <Include file="EventsList.xml"/>
   <Include file="Tabs/OptionsTab.xml"/>
   <Include file="Tabs/ProfilesTab.xml"/>
@@ -255,7 +254,7 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <!-- EVENTS TAB -->
+      <!-- EVENTS Frame, used for all event assignment tabs -->
       <Frame name="SoundtrackFrameEventFrame" inherits="SoundtrackFrameEventFrameTemplate"/>
       <!-- OPTIONS TAB -->
       <Frame name="SoundtrackFrameOptionsTab" inherits="SoundtrackFrameOptionsTabTemplate"/>

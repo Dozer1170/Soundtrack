@@ -178,7 +178,6 @@ function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 	Soundtrack.Events.Pause(false)
 
 	local flatEventsTable = GetFlatEventsTableForCurrentTab()
-	local button = _G["SoundtrackFrameEventButton" .. self:GetID() .. "ButtonTextName"]
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameEventScrollFrame)
 	SoundtrackUI.SelectedEvent = flatEventsTable[self:GetID() + listOffset].tag -- The event name.
 
@@ -197,13 +196,7 @@ function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 
 	SoundtrackUI.UpdateEventsUI()
 
-	if mouseButton == "RightButton" and SoundtrackUI.SelectedEventsTable == "Zone" then
-		-- Toggle menu
-		local menu = _G["SoundtrackFrameEventMenu"]
-		menu.point = "TOPRIGHT"
-		menu.relativePoint = "CENTER"
-		ToggleDropDownMenu(1, nil, menu, button, 0, 0)
-	elseif SoundtrackUI.SelectedEventsTable == "Playlists" then
+	if mouseButton == "RightButton" and SoundtrackUI.SelectedEventsTable == "Playlists" then
 		Soundtrack.PlayEvent(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent)
 	end
 
@@ -211,5 +204,3 @@ function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 		SoundtrackUI.UpdateCustomEventUI()
 	end
 end
-
-function SoundtrackUI.EventMenuInitialize() end

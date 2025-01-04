@@ -24,18 +24,6 @@ local function DisableAllAssignedTrackButtons()
 	end
 end
 
-function SoundtrackUI.TrackMenuInitialize()
-	-- Remove track
-	local info = {}
-	info.text = SOUNDTRACK_REMOVE_TRACK
-	info.value = "RemoveTrack"
-	info.func = function(_)
-		Soundtrack.Library.RemoveTrackWithConfirmation()
-	end
-	info.notCheckable = 1
-	UIDropDownMenu_AddButton(info, 1)
-end
-
 function SoundtrackUI.OnTrackCheckBoxClick(self, _, _)
 	local listOffset = FauxScrollFrame_GetOffset(SoundtrackFrameTrackScrollFrame)
 	SoundtrackUI.SelectedTrack = Soundtrack_SortedTracks[self:GetID() + listOffset] -- track file name

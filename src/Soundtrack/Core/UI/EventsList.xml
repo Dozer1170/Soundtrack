@@ -209,19 +209,6 @@
                     </OnLoad>
         </Scripts>
       </Frame>
-      <Frame name="SoundtrackFrameEventMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="false">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameEventFrame" relativePoint="CENTER">
-            <Offset>
-              <AbsDimension x="300" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-        <Scripts>
-          <OnLoad>self:SetFrameLevel(0); UIDropDownMenu_SetWidth(self, 180)</OnLoad>
-          <OnShow>UIDropDownMenu_Initialize(self, SoundtrackUI.EventMenuInitialize, "MENU")</OnShow>
-        </Scripts>
-      </Frame>
       <Button name="SoundtrackFrameCopyCopiedTracksButton" inherits="UIPanelButtonTemplate" text="Copy">
         <Size>
           <AbsDimension x="65" y="22"/>
@@ -760,22 +747,6 @@
             </Scripts>
           </Frame>
           <!-- Context menus -->
-          <Frame name="SoundtrackFrameTrackMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="false">
-            <Size>
-              <AbsDimension x="0" y="0"/>
-            </Size>
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameEventFrame" relativePoint="CENTER">
-                <Offset>
-                  <AbsDimension x="300" y="0"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-            <Scripts>
-              <OnLoad>self:SetFrameLevel(0); UIDropDownMenu_SetWidth(self, 180)</OnLoad>
-              <OnShow>UIDropDownMenu_Initialize(self, SoundtrackUI.TrackMenuInitialize, "MENU")</OnShow>
-            </Scripts>
-          </Frame>
           <Frame name="SoundtrackFrame_AssignedFrame">
             <Size>
               <AbsDimension x="630" y="155"/>

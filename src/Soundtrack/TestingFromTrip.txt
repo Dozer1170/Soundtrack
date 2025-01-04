@@ -1,5 +1,2 @@
-Moving title.lua
-Check if you can even delete a misc event - Cannot - remove this code
-SOUNDTRACK_REMOVETRACK - is this even possible?
 Entire SoundtrackFrame
 Resting event
