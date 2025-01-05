@@ -337,6 +337,7 @@ function SoundtrackUI.InitializeColumnHeaderNameDropDown()
 	local info = UIDropDownMenu_CreateInfo()
 	for i = 1, #SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST, 1 do
 		info.text = SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[i].name
+		info.checked = SoundtrackAddon.db.profile.settings.TrackSortingCriteria == info.text
 		info.func = OnColumnHeaderNameDropDownClick
 		UIDropDownMenu_AddButton(info)
 	end

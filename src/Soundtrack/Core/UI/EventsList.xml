@@ -561,23 +561,22 @@
                     </Layers>
                     <Scripts>
                       <OnLoad>
-                                                UIDropDownMenu_Initialize(self, SoundtrackUI.InitializeColumnHeaderNameDropDown);
-                                                UIDropDownMenu_SetWidth(self, 80);
-                                                UIDropDownMenu_SetButtonWidth(self, 24);
-                                                UIDropDownMenu_JustifyText(self, "LEFT")
-                                            </OnLoad>
+                          UIDropDownMenu_SetWidth(self, 80);
+                          UIDropDownMenu_SetButtonWidth(self, 24);
+                          UIDropDownMenu_JustifyText(self, "LEFT")
+                      </OnLoad>
                       <OnShow>
-                                                UIDropDownMenu_Initialize(self, SoundtrackUI.InitializeColumnHeaderNameDropDown);
-                                                UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, 1);
-                                            </OnShow>
+                          UIDropDownMenu_Initialize(self, SoundtrackUI.InitializeColumnHeaderNameDropDown);
+                          UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, 1);
+                      </OnShow>
                       <OnEnter>SoundtrackFrame_ColumnHeaderNameHighlightTexture:Show();</OnEnter>
                       <OnLeave>SoundtrackFrame_ColumnHeaderNameHighlightTexture:Hide();</OnLeave>
                       <OnMouseUp>
-                                                Soundtrack.Chat.Debug("Column header clicked!")
-                                                SoundtrackUI.nameHeaderType =
-                                                SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[UIDropDownMenu_GetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown)].type
-                                                Soundtrack.SortTracks(SoundtrackUI.nameHeaderType);
-                                            </OnMouseUp>
+                          Soundtrack.Chat.Debug("Column header clicked!")
+                          SoundtrackUI.nameHeaderType =
+                          SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST[UIDropDownMenu_GetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown)].type
+                          Soundtrack.SortTracks(SoundtrackUI.nameHeaderType);
+                      </OnMouseUp>
                     </Scripts>
                   </Frame>
                 </Frames>
