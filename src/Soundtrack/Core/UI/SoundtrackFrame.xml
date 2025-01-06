@@ -3,7 +3,7 @@
   <Script file="SoundtrackUI.lua"/>
   <Script file="Bosses.lua" />
   <Script file="EventStack.lua" />
-  <Script file="Events.lua" />
+  <Script file="EventsUI.lua" />
   <Script file="MovingTitle.lua" />
   <Script file="PetBattles.lua" />
   <Script file="Playlists.lua" />

@@ -56,7 +56,7 @@ function SoundtrackUI.UpdateEventsUI()
 				local fo = button:CreateFontString()
 				fo:SetJustifyH("LEFT")
 				fo:SetFont("Fonts/FRIZQT__.TTF", 10)
-				fo:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
+				fo:SetPoint("TOPLEFT", 20, 0)
 				fo:SetText(GetLeafText(eventName))
 				fo:SetWidth(180)
 				fo:SetHeight(16)
@@ -68,27 +68,27 @@ function SoundtrackUI.UpdateEventsUI()
 				button:SetID(buttonIndex)
 				button:Show()
 
-				local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][eventName]
-
 				-- Add expandable (+ or -) texture
 				local collapserTexture = _G["SoundtrackFrameEventButton" .. buttonIndex .. "CollapserTexture"]
 				local expanderTexture = _G["SoundtrackFrameEventButton" .. buttonIndex .. "ExpanderTexture"]
 				collapserTexture:Hide()
 				expanderTexture:Hide()
 
+				-- Set expandable (+ or -) indent
 				local eventDepth = GetEventDepth(eventName)
-				local expandTextureIndent = 16 * eventDepth
+				local expandTextureIndent = 12 * eventDepth + 2
 				collapserTexture:SetPoint("TOPLEFT", expandTextureIndent, 0)
 				expanderTexture:SetPoint("TOPLEFT", expandTextureIndent, 0)
 
+				local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][eventName]
 				local expandable = eventNode.nodes and #eventNode.nodes >= 1
 				if expandable then
 					if event.expanded then
 						collapserTexture:Show()
-						fo:SetText("    " .. GetLeafText(eventName))
+						fo:SetText(GetLeafText(eventName))
 					else
 						expanderTexture:Show()
-						fo:SetText("    " .. GetLeafText(eventName))
+						fo:SetText(GetLeafText(eventName))
 					end
 					button:UnlockHighlight()
 				else
