@@ -121,11 +121,16 @@ end
 function Soundtrack.Misc.OnEvent(_, event, ...)
 	local st_arg1, _, _, _, st_arg5, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
 
+	for _, miscEvent in pairs(Soundtrack_MiscEvents) do
+		if miscEvent.trigger == event and miscEvent.script ~= nil then
+			miscEvent.script()
+		end
+	end
+
 	Soundtrack.PlayerStatusEvents.OnEvent(event)
 	Soundtrack.LootEvents.OnEvent(event, st_arg1, st_arg5)
 end
 
--- TODO: Make sure shapeshift events works this way
 function Soundtrack.Misc.OnPlayerAurasUpdated()
 	if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
 		for k, v in pairs(Soundtrack_MiscEvents) do
