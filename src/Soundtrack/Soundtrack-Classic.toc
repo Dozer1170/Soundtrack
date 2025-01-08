@@ -9,6 +9,7 @@
 ## IconTexture: Interface\Icons\INV_Misc_Flute_01
 Embeds.xml
 Core/Soundtrack.xml
+Core/Utils/Classic.lua
 Core/Utils/OldSaveMigrator.lua
 Core/Utils/EventUtils.lua
 Core/Utils/DebugUtils.lua
