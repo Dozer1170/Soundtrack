@@ -762,7 +762,7 @@
                 <Anchors>
                   <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_AssignedFrame" relativePoint="TOPLEFT">
                     <Offset>
-                      <AbsDimension x="0" y="-5"/>
+                      <AbsDimension x="5" y="-5"/>
                     </Offset>
                   </Anchor>
                 </Anchors>
