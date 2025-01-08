@@ -170,6 +170,28 @@ function Soundtrack.PlayerStatusEvents.Register()
 	SoundtrackMiscDUMMY:RegisterEvent("TRAINER_SHOW")
 	SoundtrackMiscDUMMY:RegisterEvent("TRAINER_CLOSED")
 
+	if IsRetail then
+		Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, 369968, ST_BUFF_LVL, true, false)
+
+		Soundtrack.Misc.RegisterUpdateScript( -- Barbershop
+			SoundtrackMiscDUMMY,
+			SOUNDTRACK_BARBERSHOP,
+			ST_NPC_LVL,
+			true,
+			OnBarbershopEvent,
+			false
+		)
+	else
+		Soundtrack.Misc.RegisterUpdateScript( -- Trainer
+			SoundtrackMiscDUMMY,
+			SOUNDTRACK_TRAINER,
+			ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
+			true,
+			OnTrainerEvent,
+			false
+		)
+	end
+
 	Soundtrack.Misc.RegisterUpdateScript( -- Swimming
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_SWIMMING,
@@ -212,24 +234,6 @@ function Soundtrack.PlayerStatusEvents.Register()
 		ST_NPC_LVL,
 		true,
 		OnFlightMasterEvent,
-		false
-	)
-
-	Soundtrack.Misc.RegisterUpdateScript( -- Trainer
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_TRAINER,
-		ST_NPC_LVL, -- TODO Anthony: This conflicts with battle level, was 6
-		true,
-		OnTrainerEvent,
-		false
-	)
-
-	Soundtrack.Misc.RegisterUpdateScript( -- Barbershop
-		SoundtrackMiscDUMMY,
-		SOUNDTRACK_BARBERSHOP,
-		ST_NPC_LVL,
-		true,
-		OnBarbershopEvent,
 		false
 	)
 
@@ -335,8 +339,6 @@ function Soundtrack.PlayerStatusEvents.Register()
 	)
 
 	hooksecurefunc("JumpOrAscendStart", OnJump)
-
-	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_DRAGONRIDING_RACE, 369968, ST_BUFF_LVL, true, false)
 end
 
 function Soundtrack.PlayerStatusEvents.OnEvent(event)

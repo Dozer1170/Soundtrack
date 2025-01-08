@@ -83,5 +83,8 @@ end
 function Soundtrack.MountEvents.Initialize()
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_MOUNT_GROUND, ST_MOUNT_LVL, true)
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_FLIGHT, ST_MOUNT_LVL, true)
-	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_MOUNT_FLYING, ST_MOUNT_LVL, true)
+
+	if IsRetail then
+		Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_MOUNT_FLYING, ST_MOUNT_LVL, true)
+	end
 end
