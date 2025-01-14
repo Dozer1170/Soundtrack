@@ -1,4 +1,4 @@
-## Interface: 110005
+## Interface: 110007
 ## Title: Soundtrack
 ## Version: 4.0.2
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
