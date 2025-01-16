@@ -1,3 +1,6 @@
+4.0.3
+- Make sure game background music resumes after sound track events stop
+
 4.0.2
 - Major refactor to enable reliability, ease of change
 - Resting event thanks to appakanna

@@ -28,12 +28,12 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontNormal" text="Maintained by: Dozer1170/Gartetasa">
+        <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontNormal" text="Maintained by: Gartetasa (Dozer1170)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout2" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 4.0.2">
+        <FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 4.0.3">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout3" relativePoint="BOTTOMLEFT"/>
           </Anchors>
@@ -102,7 +102,7 @@
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits9" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits11" inherits="GameFontNormal" text="Dozer1170/Gart - Dragonflight updates">
+        <FontString name="SoundtrackFrame_FontStringCredits11" inherits="GameFontNormal" text="Gart - Dragonflight and TWW">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits10" relativePoint="BOTTOMLEFT"/>
           </Anchors>
@@ -147,7 +147,7 @@
       <OnLoad>
         <!--ABOUT Backdrop-->
       </OnLoad>
-      <OnShow>OptionsTab.Refresh()</OnShow>
+      <OnShow>Soundtrack.OptionsTab.Refresh()</OnShow>
     </Scripts>
   </Frame>
 </Ui>

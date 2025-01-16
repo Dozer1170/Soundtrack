@@ -103,10 +103,9 @@ function Soundtrack.Library.StopMusic()
 	-- because we're stopping!
 	RemoveContinuityTimers()
 
-	-- Play EmptyTrack
 	Soundtrack.Library.CurrentlyPlayingTrack = "None"
-	Soundtrack.Chat.TraceLibrary("PlayMusic('Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3')")
-	PlayMusic("Interface\\AddOns\\Soundtrack\\EmptyTrack.mp3")
+	Soundtrack.Chat.TraceLibrary("StopMusic()")
+	StopMusic()
 	SoundtrackUI.UpdateTracksUI()
 end
 
