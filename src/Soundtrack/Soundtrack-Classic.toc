@@ -1,6 +1,6 @@
 ## Interface: 11505
 ## Title: Soundtrack
-## Version: 4.0.3
+## Version: 4.0.4
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: myAddOns

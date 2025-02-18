@@ -1,3 +1,6 @@
+4.0.4
+- Add dances for other races
+
 4.0.3
 - Make sure game background music resumes after sound track events stop
 
