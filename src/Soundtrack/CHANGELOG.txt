@@ -1,3 +1,6 @@
+4.0.5
+- Bump version for 11.1
+
 4.0.4
 - Add dances for other races
 
