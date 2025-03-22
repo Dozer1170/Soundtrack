@@ -137,6 +137,7 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP = "Removes the currently selected event from the list."
 
 	-- Misc Tab
+	SOUNDTRACK_MYTHIC_PLUS_START = "Mythic Plus Start"
 	SOUNDTRACK_STATUS_EVENTS = "Estatus"
 	SOUNDTRACK_DEATH = "Estatus/Muerte"
 	SOUNDTRACK_DRAGONRIDING_RACE = "Estatus/Carrera de equitación del dragón"

@@ -338,6 +338,18 @@ function Soundtrack.PlayerStatusEvents.Register()
 		true
 	)
 
+	Soundtrack.Misc.RegisterEventScript( -- M+ Start
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_MYTHIC_PLUS_START,
+		"CHALLENGE_MODE_START",
+		ST_ONCE_LVL,
+		false,
+		function()
+			Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_START)
+		end,
+		true
+	)
+
 	hooksecurefunc("JumpOrAscendStart", OnJump)
 end
 
