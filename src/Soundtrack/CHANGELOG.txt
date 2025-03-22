@@ -1,3 +1,6 @@
+4.1.0
+- Add mythic plus start
+
 4.0.5
 - Bump version for 11.1
 
