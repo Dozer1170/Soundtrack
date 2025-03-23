@@ -1,5 +1,5 @@
 4.1.0
-- Add mythic plus start
+- Add mythic plus start, timed, and over time events
 
 4.0.5
 - Bump version for 11.1

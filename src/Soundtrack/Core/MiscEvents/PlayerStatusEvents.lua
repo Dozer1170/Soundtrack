@@ -350,6 +350,36 @@ function Soundtrack.PlayerStatusEvents.Register()
 		true
 	)
 
+	Soundtrack.Misc.RegisterEventScript( -- M+ Complete Timed
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_MYTHIC_PLUS_COMPLETE_TIMED,
+		"CHALLENGE_MODE_COMPLETED",
+		ST_ONCE_LVL,
+		false,
+		function()
+			local _, _, _, onTime, _ = C_ChallengeMode.GetCompletionInfo()
+			if onTime then
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_COMPLETE_TIMED)
+			end
+		end,
+		true
+	)
+
+	Soundtrack.Misc.RegisterEventScript( -- M+ Complete Timed
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_MYTHIC_PLUS_COMPLETE_OVER_TIME,
+		"CHALLENGE_MODE_COMPLETED",
+		ST_ONCE_LVL,
+		false,
+		function()
+			local _, _, _, onTime, _ = C_ChallengeMode.GetCompletionInfo()
+			if not onTime then
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_COMPLETE_OVER_TIME)
+			end
+		end,
+		true
+	)
+
 	hooksecurefunc("JumpOrAscendStart", OnJump)
 end
 
