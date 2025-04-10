@@ -3,7 +3,7 @@
 ## Version: 4.1.0
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
-## OptionalDeps: myAddOns
+## OptionalDeps: WoWUnit
 ## RequiredDeps: 
 ## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
 ## IconTexture: Interface\Icons\INV_Misc_Flute_01

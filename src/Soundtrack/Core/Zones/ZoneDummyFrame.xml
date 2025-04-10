@@ -3,7 +3,7 @@
   <Script file="ZoneEvents.lua"/>
   <Frame name="SoundtrackZoneDUMMY" parent="UIParent" hidden="false">
     <Scripts>
-      <OnUpdate>Soundtrack.ZoneEvents.OnUpdate(self)</OnUpdate>
+      <OnUpdate>Soundtrack.ZoneEvents.OnUpdate()</OnUpdate>
       <OnLoad>Soundtrack.ZoneEvents.OnLoad(self)</OnLoad>
       <OnEvent>Soundtrack.ZoneEvents.OnEvent(self, event, ...)</OnEvent>
     </Scripts>

@@ -243,7 +243,7 @@ function Soundtrack.ZoneEvents.OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
-function Soundtrack.ZoneEvents.OnUpdate(_)
+function Soundtrack.ZoneEvents.OnUpdate()
 	local currentTime = GetTime()
 
 	if currentTime >= nextUpdateTime then
