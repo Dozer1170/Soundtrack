@@ -32,3 +32,4 @@ Core/Zones/ZoneDummyFrame.xml
 Core/UI/Minimap.lua
 Core/UI/NowPlayingFrame.xml
 Core/UI/ControlFrame.xml
+Tests/ZoneEventTests.lua

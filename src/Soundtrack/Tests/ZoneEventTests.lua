@@ -2,16 +2,22 @@ if not WoWUnit then
 	return
 end
 
-local AreEqual, Exists, Replace = WoWUnit.AreEqual, WoWUnit.Exists, WoWUnit.Replace
+--local AreEqual = WoWUnit.AreEqual
+local Exists = WoWUnit.Exists
+local IsFalse = WoWUnit.IsFalse
+local Replace = WoWUnit.Replace
 local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 local function MockZone(continentName, zoneName, subZoneName, minimapZoneName)
-	Replace("C_Map.GetBestMapForUnit", function()
+	Replace("IsInInstance", function()
+		return false, "none"
+	end)
+	Replace(C_Map, "GetBestMapForUnit", function()
 		return 946
 	end)
-	Replace("MapUtil.GetMapParentInfo", function()
+	Replace(MapUtil, "GetMapParentInfo", function(_, zoneLevel)
 		return {
-			c = continentName,
+			name = zoneLevel == 3 and zoneName or continentName,
 		}
 	end)
 	Replace("GetRealZoneText", function()
@@ -25,34 +31,34 @@ local function MockZone(continentName, zoneName, subZoneName, minimapZoneName)
 	end)
 end
 
-function Tests:OnEvent_AddsFullyQualifiedOutdoorZone_WhenPlayerEntersWorld()
+function Tests:OnEvent_FullyQualifiedOutdoorZone_Adds()
 	MockZone("Eastern Kingdoms", "Elwynn Forest", "Dabrie Farm", "House")
 
-	Soundtrack.Events.OnEvent(self, "PLAYER_ENTERING_WORLD")
+	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
 	Exists(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm/House"])
 end
 
-function Tests:OnEvent_AddsThreePartOutdoorZone_WhenPlayerEntersWorld()
+function Tests:OnEvent_ThreePartOutdoorZone_Adds()
 	MockZone("Eastern Kingdoms", "Elwynn Forest", "Dabrie Farm")
 
-	Soundtrack.Events.OnEvent(self, "PLAYER_ENTERING_WORLD")
+	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
 	Exists(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm"])
 end
 
-function Tests:OnEvent_AddsTwoPartOutdoorZone_WhenPlayerEntersWorld()
+function Tests:OnEvent_TwoPartOutdoorZone_Adds()
 	MockZone("Eastern Kingdoms", "Elwynn Forest New")
 
-	Soundtrack.Events.OnEvent(self, "PLAYER_ENTERING_WORLD")
+	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
 	Exists(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest New"])
 end
 
-function Tests:OnEvent_AddsContinentZone_WhenPlayerEntersWorld()
-	MockZone("BrandNewContinent")
+function Tests:OnEvent_OnlyContinent_DoesNotAdd()
+	MockZone("BrandNewContinent", nil, nil, nil)
 
-	Soundtrack.Events.OnEvent(self, "PLAYER_ENTERING_WORLD")
+	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
-	Exists(Soundtrack.Events.GetTable(ST_ZONE)["BrandNewContinent"])
+	IsFalse(Soundtrack.Events.GetTable(ST_ZONE)["BrandNewContinent"])
 end

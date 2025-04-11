@@ -2,10 +2,15 @@
 
 ZIP_FILE=$1
 GAME_FOLDER=$2
+WOW_ROOT_PATH=$3
 
 if [ -z "$GAME_FOLDER" ]; then
   echo "Provide game folder as second arg"
   exit 1
 fi
 
-unzip -o $ZIP_FILE -d "/mnt/c/World of Warcraft/$GAME_FOLDER/Interface/Addons/"
+if [ -z "$WOW_ROOT_PATH" ]; then
+  WOW_ROOT_PATH="/mnt/c/World of Warcraft"
+fi
+
+unzip -o $ZIP_FILE -d "$WOW_ROOT_PATH/$GAME_FOLDER/Interface/Addons/"

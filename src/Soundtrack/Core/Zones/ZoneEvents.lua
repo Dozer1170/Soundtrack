@@ -143,7 +143,6 @@ local function OnZoneChanged()
 	local continentName, zoneName = FindContinentByZone()
 	local zoneSubText = GetSubZoneText()
 	local minimapZoneText = GetMinimapZoneText()
-
 	if zoneName ~= nil and zoneName ~= zoneText then
 		if zoneSubText ~= nil and zoneSubText ~= "" then
 			minimapZoneText = zoneSubText
