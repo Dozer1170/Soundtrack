@@ -2,10 +2,6 @@ if not WoWUnit then
 	return
 end
 
---local AreEqual = WoWUnit.AreEqual
-local Exists = WoWUnit.Exists
-local IsFalse = WoWUnit.IsFalse
-local Replace = WoWUnit.Replace
 local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 local function MockZone(continentName, zoneName, subZoneName, minimapZoneName)
