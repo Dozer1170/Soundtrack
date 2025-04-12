@@ -338,46 +338,50 @@ function Soundtrack.PlayerStatusEvents.Register()
 		true
 	)
 
-	Soundtrack.Misc.RegisterEventScript( -- M+ Start
+	Soundtrack.Misc.RegisterEventScript( -- Mythic Plus Start
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_MYTHIC_PLUS_START,
 		"CHALLENGE_MODE_START",
-		ST_ONCE_LVL,
+		ST_SFX_LVL,
 		false,
 		function()
 			Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_START)
 		end,
-		true
+		false
 	)
 
-	Soundtrack.Misc.RegisterEventScript( -- M+ Complete Timed
+	Soundtrack.Misc.RegisterEventScript( -- Mythic Plus Complete Timed
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_MYTHIC_PLUS_COMPLETE_TIMED,
 		"CHALLENGE_MODE_COMPLETED",
-		ST_ONCE_LVL,
+		ST_SFX_LVL,
 		false,
 		function()
-			local _, _, _, onTime, _ = C_ChallengeMode.GetCompletionInfo()
-			if onTime then
+			Soundtrack.Chat.Message("Mythic Plus Complete Timed")
+			local info = C_ChallengeMode.GetChallengeCompletionInfo()
+			if info.onTime then
+				Soundtrack.Chat.Message("Mythic Plus Complete Timed triggering music")
 				Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_COMPLETE_TIMED)
 			end
 		end,
-		true
+		false
 	)
 
-	Soundtrack.Misc.RegisterEventScript( -- M+ Complete Timed
+	Soundtrack.Misc.RegisterEventScript( -- Mythic Plus Complete Timed
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_MYTHIC_PLUS_COMPLETE_OVER_TIME,
 		"CHALLENGE_MODE_COMPLETED",
-		ST_ONCE_LVL,
+		ST_SFX_LVL,
 		false,
 		function()
-			local _, _, _, onTime, _ = C_ChallengeMode.GetCompletionInfo()
-			if not onTime then
+			Soundtrack.Chat.Message("Mythic Plus Complete Over Time")
+			local info = C_ChallengeMode.GetChallengeCompletionInfo()
+			if not info.onTime then
+				Soundtrack.Chat.Message("Mythic Plus Complete Over Time triggering music")
 				Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_COMPLETE_OVER_TIME)
 			end
 		end,
-		true
+		false
 	)
 
 	hooksecurefunc("JumpOrAscendStart", OnJump)

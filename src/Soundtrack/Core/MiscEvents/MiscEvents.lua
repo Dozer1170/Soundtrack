@@ -94,6 +94,7 @@ function Soundtrack.Misc.Initialize()
 	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_GROUP_EVENTS, 0, 1, false, false)
 	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_NPC_EVENTS, 0, 1, false, false)
 	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_STATUS_EVENTS, 0, 1, false, false)
+	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_MYTHIC_PLUS_EVENTS, 0, 1, false, false)
 
 	Soundtrack.LootEvents.Register()
 	Soundtrack.ClassEvents.Register()
