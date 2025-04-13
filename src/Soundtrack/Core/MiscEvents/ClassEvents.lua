@@ -8,7 +8,7 @@ function Soundtrack.ClassEvents.OnChangeShapeshiftEvent()
 		Soundtrack.Misc.PlayEvent(SOUNDTRACK_DK_CHANGE)
 		Soundtrack.ClassEvents.CurrentStance = stance
 	elseif class == "Druid" and stance ~= 0 and stance ~= Soundtrack.ClassEvents.CurrentStance then
-		Soundtrack.Misc.PlayEvent("Misc", SOUNDTRACK_DRUID_CHANGE)
+		Soundtrack.Misc.PlayEvent(SOUNDTRACK_DRUID_CHANGE)
 		Soundtrack.ClassEvents.CurrentStance = stance
 	elseif class == "Druid" and stance == 0 and stance ~= Soundtrack.ClassEvents.CurrentStance then
 		Soundtrack.ClassEvents.CurrentStance = stance
