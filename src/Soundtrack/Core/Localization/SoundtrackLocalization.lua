@@ -145,11 +145,6 @@ function SoundtrackLocalization.RegisterShamanStrings(localizedClassName, locali
 	local shamanPath = localizedClassName .. "/"
 	SOUNDTRACK_SHAMAN = localizedClassName
 	SOUNDTRACK_SHAMAN_CHANGE = shamanPath .. localizedChangeStanceText
-
-	local ghostWolfPath = SoundtrackLocalization.CreateSpellNamePath(2645, shamanPath)
-	if ghostWolfPath ~= nil then
-		SOUNDTRACK_SHAMAN_GHOST_WOLF = ghostWolfPath
-	end
 end
 
 function SoundtrackLocalization.RegisterWarriorStrings(localizedClassName, localizedChangeStanceText)

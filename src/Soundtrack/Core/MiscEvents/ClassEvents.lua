@@ -40,13 +40,22 @@ function Soundtrack.ClassEvents.Register()
 	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_WARRIOR, 0, 1, false, false)
 	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_HUNTER, 0, 1, false, false)
 	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_ROGUE_SPRINT, 2983, ST_BUFF_LVL, true, false)
-	Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_SHAMAN_GHOST_WOLF, 2645, ST_AURA_LVL, true, false)
 
 	if IsRetail then
 		Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_EVOKER, 0, 1, false, false)
 		Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_HUNTER_CAMO, 90954, ST_BUFF_LVL, true, false)
 		Soundtrack.Misc.RegisterBuffEvent(SOUNDTRACK_EVOKER_SOAR, 369536, ST_BUFF_LVL, true, false)
 	end
+
+	Soundtrack.Misc.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_DK_CHANGE,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
 
 	Soundtrack.Misc.RegisterEventScript( -- Update shapeshift form
 		SoundtrackMiscDUMMY,
@@ -61,6 +70,26 @@ function Soundtrack.ClassEvents.Register()
 	Soundtrack.Misc.RegisterEventScript( -- Update shapeshift form
 		SoundtrackMiscDUMMY,
 		SOUNDTRACK_PRIEST_CHANGE,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.Misc.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_ROGUE_CHANGE,
+		"UPDATE_SHAPESHIFT_FORM",
+		ST_SFX_LVL,
+		false,
+		OnChangeShapeshiftEvent,
+		true
+	)
+
+	Soundtrack.Misc.RegisterEventScript( -- Update shapeshift form
+		SoundtrackMiscDUMMY,
+		SOUNDTRACK_SHAMAN_CHANGE,
 		"UPDATE_SHAPESHIFT_FORM",
 		ST_SFX_LVL,
 		false,
