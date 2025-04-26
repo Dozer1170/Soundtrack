@@ -7,7 +7,7 @@ before.
 While the new GenerateMyLibrary.ps1 and GenerateMyLibrary.command scripts don't require dependencies (Python or Java) they are slower,
 so if you have a very large music library, you may want to use the Legacy Library Generation method instead.
 
-1. Locate the folder named SoundtrackMusic in the Addons folder.
+1. Create a folder named SoundtrackMusic in the Addons folder.
    (World of Warcraft\_retail\Interface\AddOns\SoundtrackMusic)
 
 2. Copy your mp3s to that folder, and close WoW if it's already open. 

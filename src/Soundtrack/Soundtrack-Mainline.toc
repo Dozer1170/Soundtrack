@@ -35,3 +35,4 @@ Core/UI/NowPlayingFrame.xml
 Core/UI/ControlFrame.xml
 Tests/TestCommon.lua
 Tests/ZoneEventTests.lua
+../SoundtrackMusic/MyTracks.lua
