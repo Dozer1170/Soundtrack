@@ -18,41 +18,45 @@ Write-Output "      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = tr
 Write-Output "   end" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
 
 Get-ChildItem . -Filter *.mp3 -name -Recurse | Foreach-Object {
+  try {
     $relativeFolderPath = Split-Path $_
-    $escapedRelativeFolderPath = $relativeFolderPath.Replace("\", "\\")
-    $fileName = Split-Path -Leaf $_
-    $folderPath = "$workingDir\$relativeFolderPath"
-    $fullFilePath = "$workingDir\$_".Replace("``", "````")
+      $escapedRelativeFolderPath = $relativeFolderPath.Replace("\", "\\")
+      $fileName = Split-Path -Leaf $_
+      $folderPath = "$workingDir\$relativeFolderPath"
+      $fullFilePath = "$workingDir\$_".Replace("``", "````")
 
-    $shell = New-Object -COMObject Shell.Application
-    $shellFolder = $shell.Namespace($folderPath)
-    $shellFile = $shellFolder.ParseName($fileName)
-    $basename = (Get-Item Microsoft.PowerShell.Core\FileSystem::$fullFilePath).Basename.Replace("\", "\\")
-    $pathWithoutExtension = "$escapedRelativeFolderPath\\$basename"
-    if ($pathWithoutExtension.StartsWith("\\")) {
+      $shell = New-Object -COMObject Shell.Application
+      $shellFolder = $shell.Namespace($folderPath)
+      $shellFile = $shellFolder.ParseName($fileName)
+      $basename = (Get-Item Microsoft.PowerShell.Core\FileSystem::$fullFilePath).Basename.Replace("\", "\\")
+      $pathWithoutExtension = "$escapedRelativeFolderPath\\$basename"
+      if ($pathWithoutExtension.StartsWith("\\")) {
         $pathWithoutExtension = $pathWithoutExtension.Substring(2)
-    }
+      }
 
     $lengthHMS = $shellFolder.GetDetailsOf($shellFile, 27)
-    $length = ([timespan]$lengthHMS).TotalSeconds
-    $author = $shellFolder.GetDetailsOf($shellFile, 20).Replace("\", "\\")
-    if (!$author) {
+      $length = ([timespan]$lengthHMS).TotalSeconds
+      $author = $shellFolder.GetDetailsOf($shellFile, 20).Replace("\", "\\")
+      if (!$author) {
         $author = "None"
-    }
+      }
 
     $album = $shellFolder.GetDetailsOf($shellFile, 14).Replace("\", "\\")
-    if (!$album) {
+      if (!$album) {
         $album = "None"
-    }
+      }
 
     $trackTitle = $shellFolder.GetDetailsOf($shellFile, 21).Replace("\", "\\")
-    $trackTitle = $trackTitle.Replace("`"", "\`"")
-    if (!$trackTitle) {
+      $trackTitle = $trackTitle.Replace("`"", "\`"")
+      if (!$trackTitle) {
         $trackTitle = $fileName.Replace(".mp3", "")
-    }
+      }
 
     Write-Host "$pathWithoutExtension, Length ($length), Author ($author)"
     Write-Output "    Soundtrack.Library.AddTrack(`"$pathWithoutExtension`", $length, `"$trackTitle`", `"$author`", `"$album`")" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
+  } catch {
+    Write-Warning "Error processing file $($fileName): $($_.Exception.Message)"
+  }
 }
 
 Write-Output "end" | Out-File -Encoding ASCII -Append -FilePath .\MyTracks.lua
