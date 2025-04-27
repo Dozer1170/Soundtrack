@@ -1,6 +1,6 @@
 ## Interface: 110105
 ## Title: Soundtrack
-## Version: 4.2.0
+## Version: 5.0.0
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: WoWUnit
