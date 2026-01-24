@@ -84,7 +84,8 @@ foreach ($match in $matches) {
             Old = "`"$oldPath`""
             New = "`"$newPath`""
         }
-    } else {
+    }
+    else {
         $unmatchedPaths += $pathForLookup
     }
 }
@@ -116,7 +117,8 @@ if ($replacements.Count -gt 0) {
     # Write updated content
     Set-Content $defaultTracksFile $updatedContent -Encoding UTF8
     Write-Host "DefaultTracks.lua updated successfully!"
-} else {
+}
+else {
     Write-Host "No matching paths found. Please check the format of TrackPaths.txt and DefaultTracks.lua"
 }
 
