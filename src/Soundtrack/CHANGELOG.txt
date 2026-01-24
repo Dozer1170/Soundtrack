@@ -1,3 +1,5 @@
+
+
 5.0.0
 - Improve error handling in ps1 script
 - Attempt to remove SoundtrackMusic folder from addon to prevent addon managers from deleting the folder
