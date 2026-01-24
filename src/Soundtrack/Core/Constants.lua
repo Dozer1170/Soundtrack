@@ -22,7 +22,6 @@ ST_ZONE = "Zone"
 ST_PETBATTLES = "Pet Battles"
 ST_DANCE = "Dance"
 ST_MISC = "Misc"
-ST_CUSTOM = "Custom"
 ST_PLAYLISTS = "Playlists"
 ST_OPTIONS = "Options"
 

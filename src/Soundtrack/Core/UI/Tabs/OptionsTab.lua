@@ -3,7 +3,6 @@ Soundtrack.OptionsTab = {}
 function Soundtrack.OptionsTab.Initialize()
 	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnLoad()
 	Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
-	Soundtrack.OptionsTab.LowHealthPercentDropDown_OnLoad()
 	Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
 end
 
@@ -25,7 +24,6 @@ function Soundtrack.OptionsTab.Refresh()
 	OptionsTab_EnableZoneMusic:SetChecked(s.EnableZoneMusic)
 	OptionsTab_EnableBattleMusic:SetChecked(s.EnableBattleMusic)
 	OptionsTab_EnableMiscMusic:SetChecked(s.EnableMiscMusic)
-	OptionsTab_EnableCustomMusic:SetChecked(s.EnableCustomMusic)
 
 	OptionsTab_HidePlaybackButtons:SetChecked(s.HideControlButtons)
 
@@ -223,80 +221,6 @@ function Soundtrack.OptionsTab.BattleCooldownDropDown_OnClick(self)
 	SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackUI.selectedCooldown]
 end
 
--- Low health percent dropdown
-
-local lowhealthpercents = { 0, 0.05, 0.1, 0.15, 0.20, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5 }
-
-local function GetLowHealthPercents()
-	return {
-		"0%",
-		"5%",
-		"10%",
-		"15%",
-		"20%",
-		"25%",
-		"30%",
-		"35%",
-		"40%",
-		"45%",
-		"50%",
-	}
-end
-
-local function GetCurrentLowHealthPercent()
-	if SoundtrackAddon == nil or SoundtrackAddon.db == nil then
-		return 1
-	end
-
-	local i
-	for i = 1, #lowhealthpercents, 1 do
-		if SoundtrackAddon.db.profile.settings.LowHealthPercent == lowhealthpercents[i] then
-			return i
-		end
-	end
-
-	return 0
-end
-
-function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnLoad()
-	SoundtrackUI.selectedLowHealthPercent = GetCurrentLowHealthPercent()
-	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, SoundtrackUI.selectedLowHealthPercent)
-	UIDropDownMenu_Initialize(
-		OptionsTab_LowHealthPercentDropDown,
-		Soundtrack.OptionsTab.LowHealthPercentDropDown_Initialize
-	)
-	UIDropDownMenu_SetWidth(OptionsTab_LowHealthPercentDropDown, 130)
-end
-
-function Soundtrack.OptionsTab.LowHealthPercentDropDown_LoadPercents(lowHealthTexts)
-	local currentLowHealthPercent = SoundtrackUI.selectedLowHealthPercent
-	local info
-
-	for i = 1, #lowHealthTexts, 1 do
-		local checked = nil
-		if currentLowHealthPercent == i then
-			checked = 1
-			UIDropDownMenu_SetText(OptionsTab_LowHealthPercentDropDown, lowHealthTexts[i])
-		end
-
-		info = {}
-		info.text = lowHealthTexts[i]
-		info.func = Soundtrack.OptionsTab.LowHealthPercentDropDown_OnClick
-		info.checked = checked
-		UIDropDownMenu_AddButton(info)
-	end
-end
-
-function Soundtrack.OptionsTab.LowHealthPercentDropDown_Initialize()
-	Soundtrack.OptionsTab.LowHealthPercentDropDown_LoadPercents(GetLowHealthPercents())
-end
-
-function Soundtrack.OptionsTab.LowHealthPercentDropDown_OnClick(self)
-	UIDropDownMenu_SetSelectedID(OptionsTab_LowHealthPercentDropDown, self:GetID())
-	SoundtrackUI.selectedLowHealthPercent = self:GetID()
-	-- Save settings.
-	SoundtrackAddon.db.profile.settings.LowHealthPercent = lowhealthpercents[SoundtrackUI.selectedLowHealthPercent]
-end
 
 -- Silence dropdown
 

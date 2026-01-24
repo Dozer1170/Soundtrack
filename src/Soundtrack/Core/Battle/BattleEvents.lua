@@ -19,19 +19,8 @@ local classifications = {
 	"worldboss",
 }
 
--- Difficulties for mobs
-local difficulties = {
-	"Unknown", -- Attacked
-	"1 Trivial", -- gray
-	"2 Easy", -- green
-	"3 Normal", -- yellow
-	"4 Tough", -- orange
-	"5 Impossible", -- red
-}
-
 -- Initialize difficulties only once. Prevents de-escalations during combat. -Gotest
 local highestlevel = 1
-local highestDifficulty = 1
 local highestClassification = 1
 
 -- Battle event priority for mob types
@@ -40,32 +29,11 @@ local battleEvents = {
 	SOUNDTRACK_CRITTER,
 	SOUNDTRACK_NORMAL_MOB,
 	SOUNDTRACK_ELITE_MOB,
-	SOUNDTRACK_NORMAL_MOB .. "/1 Trivial", -- Gray
-	SOUNDTRACK_ELITE_MOB .. "/1 Trivial", -- Gray
-	SOUNDTRACK_NORMAL_MOB .. "/2 Easy", -- Green
-	SOUNDTRACK_ELITE_MOB .. "/2 Easy", -- Green
-	SOUNDTRACK_NORMAL_MOB .. "/3 Normal", -- Yellow
-	SOUNDTRACK_ELITE_MOB .. "/3 Normal", -- Yellow
-	SOUNDTRACK_NORMAL_MOB .. "/4 Tough", -- Orange
-	SOUNDTRACK_ELITE_MOB .. "/4 Tough", -- Orange
-	SOUNDTRACK_NORMAL_MOB .. "/5 Impossible", -- Red
-	SOUNDTRACK_ELITE_MOB .. "/5 Impossible", -- Red
 	SOUNDTRACK_RARE,
 	SOUNDTRACK_BOSS_BATTLE,
 	SOUNDTRACK_WORLD_BOSS_BATTLE,
 	SOUNDTRACK_PVP_BATTLE,
 }
-
--- Figures out mob difficulty from text
-local function GetDifficultyFromText(difficultyText)
-	for i, d in ipairs(difficulties) do
-		if d == difficultyText then
-			return i
-		end
-	end
-	Soundtrack.Chat.TraceBattle("Cannot find difficulty : " .. difficultyText)
-	return 0
-end
 
 -- Returns a classification number. Used to compare classifications
 local function GetClassificationLevel(classificationText)
@@ -78,57 +46,14 @@ local function GetClassificationLevel(classificationText)
 	return 0
 end
 
--- Gets difficulty text from difficulty level
-local function GetDifficultyText(difficultyLevel)
-	return difficulties[difficultyLevel]
-end
-
 -- Gets classification text from clasification level
 local function GetClassificationText(classificationLevel)
 	return classifications[classificationLevel]
 end
 
--- Returns the difficulty of a target based on the level of the mob,
--- compared to the players level. (also known as the color of the mob).
-local function GetDifficulty(target, targetLevel)
-	local playerLevel = UnitLevel("player")
-	local levelDiff = targetLevel - playerLevel
-	if UnitIsTrivial(target) then
-		return GetDifficultyFromText("1 Trivial")
-	elseif
-		(
-			GetQuestDifficultyColor(targetLevel).r == 1
-			and GetQuestDifficultyColor(targetLevel).g == 0.1
-			and GetQuestDifficultyColor(targetLevel).b == 0.1
-		)
-		or targetLevel == -1
-		or targetLevel >= playerLevel + 10
-	then
-		return GetDifficultyFromText("5 Impossible")
-	elseif
-		(
-			GetQuestDifficultyColor(targetLevel).r == 1
-			and GetQuestDifficultyColor(targetLevel).g == 0.5
-			and GetQuestDifficultyColor(targetLevel).b == 0.25
-		) or (levelDiff >= 5 and levelDiff <= 10)
-	then
-		return GetDifficultyFromText("4 Tough")
-	elseif
-		(
-			GetQuestDifficultyColor(targetLevel).r == 1
-			and GetQuestDifficultyColor(targetLevel).g == 0.82
-			and GetQuestDifficultyColor(targetLevel).b == 0
-		) or (levelDiff >= -3 and levelDiff <= 4)
-	then
-		return GetDifficultyFromText("3 Normal")
-	else
-		return GetDifficultyFromText("2 Easy")
-	end
-end
-
 -- Calculates the highest enemy level amongs all the party members and pet
 -- targets. Thanks to Athame!
--- Returns classification, difficulty, pvpEnabled
+-- Returns classification, pvpEnabled
 function GetGroupEnemyLevel()
 	local prefix
 	local total
@@ -175,7 +100,6 @@ function GetGroupEnemyLevel()
 	local pvpEnabled = false
 	local isBoss = false
 	local bossName = nil
-	local hasLowHealth = false
 
 	local bossTable = Soundtrack.Events.GetTable(ST_BOSS)
 
@@ -187,7 +111,6 @@ function GetGroupEnemyLevel()
 
 		if unitExists and unitIsEnemy and unitIsAlive then
 			local unitName = UnitName(target)
-			local unitHealthPercent = UnitHealth(target) / UnitHealthMax(target)
 			local unitIsPlayer = UnitIsPlayer(target)
 			local unitCanAttack = UnitCanAttack("player", target)
 			local targetlevel = UnitLevel(target)
@@ -209,22 +132,9 @@ function GetGroupEnemyLevel()
 				end
 			end
 
-			-- Get target difficulty from level
-			local difficultyLevel = GetDifficulty(target, targetlevel)
-			if difficultyLevel > highestDifficulty then
-				highestDifficulty = difficultyLevel
-			end
-
 			-- Get the target classification
 			if unitCreatureType == "Critter" then
 				unitClass = unitCreatureType
-			else
-				if
-					unitClass == "worldboss"
-					and unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent
-				then
-					hasLowHealth = true
-				end
 			end
 
 			local classificationLevel = GetClassificationLevel(unitClass)
@@ -241,9 +151,6 @@ function GetGroupEnemyLevel()
 					if Soundtrack.Events.EventHasTracks(ST_BOSS, unitName) then
 						bossName = unitName
 					end
-					if unitHealthPercent < SoundtrackAddon.db.profile.settings.LowHealthPercent then
-						hasLowHealth = true
-					end
 					if bossEvent.worldboss then
 						unitClass = "worldboss"
 					end
@@ -253,26 +160,21 @@ function GetGroupEnemyLevel()
 	end
 
 	local classificationText = GetClassificationText(highestClassification)
-	local difficultyText = GetDifficultyText(highestDifficulty)
-	return classificationText, difficultyText, pvpEnabled, isBoss, bossName, hasLowHealth
+	return classificationText, pvpEnabled, isBoss, bossName
 end
 
 -- When the player is engaged in battle, this determines
 -- the type of battle.
 local function GetBattleType()
-	local classification, difficulty, pvpEnabled, isBoss, bossName, hasLowHealth = GetGroupEnemyLevel()
+	local classification, pvpEnabled, isBoss, bossName = GetGroupEnemyLevel()
 	if pvpEnabled then
 		return SOUNDTRACK_PVP_BATTLE
 	else
-		if difficulty == "Unknown" then
-			return SOUNDTRACK_UNKNOWN_BATTLE
-		end
-
 		if isBoss then -- Boss or World Boss
 			if classification == "worldboss" then
-				return SOUNDTRACK_WORLD_BOSS_BATTLE, bossName, hasLowHealth -- World Boss( raid)
+				return SOUNDTRACK_WORLD_BOSS_BATTLE, bossName -- World Boss( raid)
 			else
-				return SOUNDTRACK_BOSS_BATTLE, bossName, hasLowHealth -- Boss (party)
+				return SOUNDTRACK_BOSS_BATTLE, bossName -- Boss (party)
 			end
 		end
 
@@ -281,23 +183,11 @@ local function GetBattleType()
 		end
 
 		if classification == "elite" then -- Elite mob
-			local EliteMobDifficulty = SOUNDTRACK_ELITE_MOB .. "/" .. difficulty
-			local eventTable = Soundtrack.Events.GetTable(ST_BATTLE)
-			if #eventTable[EliteMobDifficulty].tracks ~= 0 then
-				return EliteMobDifficulty -- Elite mob difficulty
-			else
-				return SOUNDTRACK_ELITE_MOB -- default to Elite mob w/o difficulty
-			end
+			return SOUNDTRACK_ELITE_MOB
 		end
 
 		if classification == "normal" then -- Normal mob
-			local NormalMobDifficulty = SOUNDTRACK_NORMAL_MOB .. "/" .. difficulty
-			local eventTable = Soundtrack.Events.GetTable(ST_BATTLE)
-			if #eventTable[NormalMobDifficulty].tracks ~= 0 then
-				return NormalMobDifficulty -- Normal mob difficulty
-			else
-				return SOUNDTRACK_NORMAL_MOB -- default to Normal mob w/o difficulty
-			end
+			return SOUNDTRACK_NORMAL_MOB
 		end
 
 		if classification == "Critter" then -- Critter
@@ -360,7 +250,7 @@ local function StopCombatMusic()
 end
 
 local function AnalyzeBattleSituation()
-	local battleType, bossName, hasLowHealth = GetBattleType()
+	local battleType, bossName = GetBattleType()
 	local battleTypeIndex = IndexOf(battleEvents, battleType)
 
 	-- If we're in cooldown, but a higher battle is already playing, keep that one,
@@ -375,43 +265,23 @@ local function AnalyzeBattleSituation()
 	then
 		if battleType == SOUNDTRACK_BOSS_BATTLE then
 			if bossName ~= nil then
-				local bossLowHealth = bossName .. " " .. SOUNDTRACK_LOW_HEALTH
-				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BOSS, bossLowHealth) then
-					Soundtrack.PlayEvent(ST_BOSS, bossLowHealth)
-				elseif hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH) then
-					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH)
-				elseif Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
+				if Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
 					Soundtrack.PlayEvent(ST_BOSS, bossName)
 				else
 					Soundtrack.PlayEvent(ST_BATTLE, battleType)
 				end
 			else
-				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH) then
-					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH)
-				else
-					Soundtrack.PlayEvent(ST_BATTLE, battleType)
-				end
+				Soundtrack.PlayEvent(ST_BATTLE, battleType)
 			end
 		elseif battleType == SOUNDTRACK_WORLD_BOSS_BATTLE then
 			if bossName ~= nil then
-				local bossLowHealth = bossName .. " " .. SOUNDTRACK_LOW_HEALTH
-				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BOSS, bossLowHealth) then
-					Soundtrack.PlayEvent(ST_BOSS, bossLowHealth)
-				elseif
-					hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
-				then
-					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
-				elseif Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
+				if Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
 					Soundtrack.PlayEvent(ST_BOSS, bossName)
 				else
 					Soundtrack.PlayEvent(ST_BATTLE, battleType)
 				end
 			else
-				if hasLowHealth and Soundtrack.Events.EventHasTracks(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH) then
-					Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH)
-				else
-					Soundtrack.PlayEvent(ST_BATTLE, battleType)
-				end
+				Soundtrack.PlayEvent(ST_BATTLE, battleType)
 			end
 		else
 			Soundtrack.PlayEvent(ST_BATTLE, battleType)
@@ -429,7 +299,6 @@ function Soundtrack.BattleEvents.OnLoad(self)
 	self:RegisterEvent("PLAYER_UNGHOST")
 	self:RegisterEvent("PLAYER_ALIVE")
 	self:RegisterEvent("PLAYER_DEAD")
-	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 end
 
@@ -450,8 +319,6 @@ end
 function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 	_, arg2, _, _, arg5, _, _, _, _, _, _, _, _, _, _, _, _, arg18, _, _, arg21, _, _ = select(1, ...)
 
-	local _, eventType, _, _, _, _, _, _ = CombatLogGetCurrentEventInfo() --CSCIGUY 8-10-18
-
 	if event == "PLAYER_REGEN_DISABLED" then
 		if not SoundtrackAddon.db.profile.settings.EnableBattleMusic then
 			return
@@ -470,19 +337,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		else
 			StopCombatMusic()
 		end
-	elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-		if eventType == "PARTY_KILL" then --CSCIGUY added 8-10-18
-			hostileDeathCount = hostileDeathCount + 1
-			Soundtrack.Chat.TraceBattle("Death count: " .. hostileDeathCount)
-		else
-			if SoundtrackAddon.db.profile.settings.EnableMiscMusic then
-				for _, v in pairs(Soundtrack_BattleEvents) do
-					if Soundtrack.Events.EventHasTracks(ST_MISC, v) then
-						v.script()
-					end
-				end
-			end
-		end
+
 	elseif event == "PLAYER_UNGHOST" then
 		Soundtrack.StopEvent(ST_MISC, SOUNDTRACK_GHOST)
 	elseif event == "PLAYER_ALIVE" then
@@ -502,7 +357,6 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 			--Reset difficulties outside of combat. -Gotest
 			currentBattleTypeIndex = 0 -- we are out of battle
 			highestlevel = 1
-			highestDifficulty = 1
 			highestClassification = 1
 		end
 		currentBattleTypeIndex = 0 -- out of combat
@@ -513,282 +367,28 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 			local _, _, encountersTotal, _ = GetInstanceLockTimeRemaining()
 			for i = 1, encountersTotal, 1 do
 				local bossName, _, _ = GetInstanceLockTimeRemainingEncounter(i)
-				local lowhealthbossname = bossName .. " " .. SOUNDTRACK_LOW_HEALTH
 				Soundtrack.AddEvent(ST_BOSS, bossName, ST_BOSS_LVL, true)
-				Soundtrack.AddEvent(ST_BOSS, lowhealthbossname, ST_BOSS_LVL, true)
 				local bossTable = Soundtrack.Events.GetTable(ST_BOSS)
 				local bossEvent = bossTable[bossName]
-				local bossEventLowHealth = bossTable[lowhealthbossname]
-				if instanceType == "raid" then
-					bossEvent.worldboss = true
-					bossEventLowHealth.worldboss = true
+			if instanceType == "raid" then
+				bossEvent.worldboss = true
 				end
 			end
 		end
 	end
 end
 
-function Soundtrack.BattleEvents.RegisterEventScript(
-	self,
-	name,
-	tableName,
-	_trigger,
-	_priority,
-	_continuous,
-	_script,
-	_soundEffect
-)
-	Soundtrack_MiscEvents[name] = {
-		trigger = _trigger,
-		script = _script,
-		eventtype = ST_EVENT_SCRIPT,
-		priority = _priority,
-		continuous = _continuous,
-		soundEffect = _soundEffect,
-	}
-	Soundtrack_BattleEvents[name] = { script = _script }
-
-	self:RegisterEvent(_trigger)
-
-	Soundtrack.AddEvent(tableName, name, _priority, _continuous, _soundEffect)
-end
-
 function Soundtrack.BattleEvents.Initialize()
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_UNKNOWN_BATTLE, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_CRITTER, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB, ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB .. "/1 Trivial", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB .. "/2 Easy", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB .. "/3 Normal", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB .. "/4 Tough", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB .. "/5 Impossible", ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB, ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB .. "/1 Trivial", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB .. "/2 Easy", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB .. "/3 Normal", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB .. "/4 Tough", ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB .. "/5 Impossible", ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE, ST_BOSS_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_BOSS_LOW_HEALTH, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_BATTLE, ST_BOSS_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_LOW_HEALTH, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_PVP_BATTLE, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_RARE, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_VICTORY, ST_BATTLE_LVL, false, true)
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_VICTORY_BOSS, ST_BOSS_LVL, false, true)
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_DEATH, ST_DEATH_LVL, true, false)
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_GHOST, ST_DEATH_LVL, true, false)
-
-	--[[
-  ==========================================================
-    MISC EVENTS with COMBAT_LOG_EVENT_UNFILTERED event
-
-    This allows them to register with the same frame
-      so that only one frame handles all
-      COMBAT_LOG_EVENT_UNFILTERED events
-  ==========================================================
-  --]]
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Swing Crit
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_SWING_CRIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SWING_DAMAGE" and arg5 == UnitName("player") and arg18 == 1 then
-				Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_CRIT)
-			end
-		end,
-		true
-	)
-	Soundtrack.BattleEvents.RegisterEventScript( -- Swing
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_SWING_HIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SWING_DAMAGE" and arg5 == UnitName("player") then
-				if arg18 == nil then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_HIT)
-				elseif arg18 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_SWING_CRIT) == false then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SWING_HIT)
-				end
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Damage Spells Crit
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_SPELL_CRIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_DAMAGE" and arg5 == UnitName("player") and arg21 == 1 then
-				Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_CRIT)
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Damage Spells
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_SPELL_HIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_DAMAGE" and arg5 == UnitName("player") then
-				if arg21 == nil then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_HIT)
-				elseif arg21 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_SPELL_CRIT) == false then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_SPELL_HIT)
-				end
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- DoTs Crit
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_DOT_CRIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_PERIODIC_DAMAGE" and arg5 == UnitName("player") and arg21 == 1 then
-				Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_CRIT)
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- DoTs
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_DOT_HIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_PERIODIC_DAMAGE" and arg5 == UnitName("player") then
-				if arg21 == nil then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_HIT)
-				elseif arg21 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_DOT_CRIT) == false then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_DOT_HIT)
-				end
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Healing Spells Crit
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_HEAL_CRIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_HEAL" and arg5 == UnitName("player") and arg18 == 1 then
-				Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_CRIT)
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Healing Spells
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_HEAL_HIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_HEAL" and arg5 == UnitName("player") then
-				if arg18 == nil then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_HIT)
-				elseif arg18 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_HEAL_CRIT) == false then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HEAL_HIT)
-				end
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- HoTs Crit
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_HOT_CRIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_PERIODIC_HEAL" and arg5 == UnitName("player") and arg18 == 1 then
-				Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_CRIT)
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- HoTs
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_HOT_HIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "SPELL_PERIODIC_HEAL" and arg5 == UnitName("player") then
-				if arg18 == nil then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_HIT)
-				elseif arg18 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_HOT_CRIT) == false then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_HOT_HIT)
-				end
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Range Crit
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_RANGE_CRIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "RANGE_DAMAGE" and arg5 == UnitName("player") and arg21 == 1 then
-				Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_CRIT)
-			end
-		end,
-		true
-	)
-
-	Soundtrack.BattleEvents.RegisterEventScript( -- Range
-		SoundtrackBattleDUMMY,
-		SOUNDTRACK_RANGE_HIT,
-		ST_MISC,
-		"COMBAT_LOG_EVENT_UNFILTERED",
-		ST_SFX_LVL,
-		false,
-		function()
-			if arg2 == "RANGE_DAMAGE" and arg5 == UnitName("player") then
-				if arg21 == nil then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_HIT)
-				elseif arg21 == 1 and Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_RANGE_CRIT) == false then
-					Soundtrack.Misc.PlayEvent(SOUNDTRACK_RANGE_HIT)
-				end
-			end
-		end,
-		true
-	)
 end

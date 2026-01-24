@@ -285,13 +285,6 @@ function Soundtrack.Events.RenameEvent(tableName, oldName, newName)
 		Soundtrack.SortEvents(tableName)
 	end
 
-	-- Also rename event in CustomEvents
-	if SoundtrackAddon.db.profile.customEvents[oldName] then
-		local event = SoundtrackAddon.db.profile.customEvents[oldName]
-		SoundtrackAddon.db.profile.customEvents[newName] = event
-		SoundtrackAddon.db.profile.customEvents[oldName] = nil
-	end
-
 	if Soundtrack_MiscEvents[oldName] then
 		local event = Soundtrack_MiscEvents[oldName]
 		Soundtrack_MiscEvents[newName] = event

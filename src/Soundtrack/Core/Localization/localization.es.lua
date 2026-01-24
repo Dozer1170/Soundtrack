@@ -85,10 +85,7 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Batalla Repujado"
-	SOUNDTRACK_BOSS_LOW_HEALTH = "Batalla Repujado Low Health"
-	SOUNDTRACK_LOW_HEALTH = "Low Health"
 	SOUNDTRACK_WORLD_BOSS_BATTLE = "Batalla Repujado del Mundo"
-	SOUNDTRACK_WORLD_BOSS_LOW_HEALTH = "Batalla Repujado del Mundo Low Health"
 	SOUNDTRACK_PVP_BATTLE = "Batalla JcJ"
 
 	SOUNDTRACK_REMOVE_BATTLE = "Remove Battle Event"
@@ -206,29 +203,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_REMOVE_MISC = "Remove Misc. Event"
 	SOUNDTRACK_REMOVE_MISC_TIP = "Removes the selected misc. event."
 
-	-- Custom Event Tab
-	SOUNDTRACK_ADD_CUSTOM = "Add Custom Event"
-	SOUNDTRACK_ADD_CUSTOM_TIP =
-		"Creates a new custom event. Custom events are events that you can define yourself through a variety of methods including scripting."
-
-	SOUNDTRACK_EDIT_CUSTOM = "Edit Custom Event"
-	SOUNDTRACK_EDIT_CUSTOM_TIP =
-		"Switches to the custom event editing interface so you can adjust the selected custom event."
-
-	SOUNDTRACK_REMOVE_CUSTOM = "Remove Custom Event"
-	SOUNDTRACK_REMOVE_CUSTOM_TIP = "Removes the selected custom event."
-
-	SOUNDTRACK_RANDOM = "Shuffle"
-	SOUNDTRACK_SOUND_EFFECT = "Sound Effect"
-	SOUNDTRACK_CUSTOM_CONTINUOUS = "Continuous"
-	SOUNDTRACK_CUSTOM_CONTINUOUS_TIP =
-		"Determines if this event will loop or play once. When an event plays continuously, it can be stopped by its own script, or through another event replacing it."
-
-	SOUNDTRACK_EVENT_TYPE = "Event Type"
-	SOUNDTRACK_EVENT_TYPE_TIP = "The type of event affects how the custom event is edited."
-
-	SOUNDTRACK_ENTER_CUSTOM_NAME = "Enter Custom Event Name:"
-
 	-- Playlists Tab
 	SOUNDTRACK_ADD_PLAYLIST = "Add Playlist"
 	SOUNDTRACK_ADD_PLAYLIST_TIP =
@@ -315,10 +289,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_BATTLE_CD_TIP =
 		"El tiempo que toma para la musica de batalla para detener cuando se separan de la batalla."
 
-	SOUNDTRACK_LOW_HEALTH_PERCENT = "Boss Low Health %"
-	SOUNDTRACK_LOW_HEALTH_PERCENT_TIP =
-		"The amount of health when Boss and World Boss events switch to Boss Low Health."
-
 	SOUNDTRACK_LOOP_MUSIC = "Musica continua"
 	SOUNDTRACK_LOOP_MUSIC_TIP = "Activar reproduccion de musica continua"
 
@@ -337,9 +307,6 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_ENABLE_MISC_MUSIC = "Activar la musica de Misc"
 	SOUNDTRACK_ENABLE_MISC_MUSIC_TIP = "Activar o desactivar la musica de Misc."
-
-	SOUNDTRACK_ENABLE_CUSTOM_MUSIC = "Activar la musica de Custom"
-	SOUNDTRACK_ENABLE_CUSTOM_MUSIC_TIP = "Activar o desactivar la musica de Custom."
 
 	-- Other
 	SOUNDTRACK_NO_TRACKS_PLAYING = "No hay cancion que suena"

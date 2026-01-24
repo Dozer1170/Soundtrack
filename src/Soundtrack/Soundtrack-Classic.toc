@@ -5,7 +5,7 @@
 ## Notes: Music customization system.
 ## OptionalDeps: WoWUnit
 ## RequiredDeps: 
-## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
+## SavedVariables: Soundtrack_Settings, Soundtrack_Events, SoundtrackDB
 ## IconTexture: Interface\Icons\INV_Misc_Flute_01
 Embeds.xml
 Core/Soundtrack.xml
@@ -24,7 +24,6 @@ Core/UI/Tabs/TabTemplateClassic.xml
 Core/Auras/AurasDummyFrame.xml
 Core/UI/SoundtrackFrame.xml
 Core/Battle/BattleDummyFrame.xml
-Core/Custom/CustomDummyFrame.xml
 Core/MiscEvents/MiscDummyFrame.xml
 Core/PetBattle/PetBattleDummyFrame.xml
 Core/Dance/DanceDummyFrame.xml

@@ -1,11 +1,11 @@
-## Interface: 110105
+## Interface: 120000
 ## Title: Soundtrack
 ## Version: 5.0.0
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## OptionalDeps: WoWUnit
 ## RequiredDeps: 
-## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
+## SavedVariables: Soundtrack_Settings Soundtrack_Events, SoundtrackDB
 ## IconTexture: Interface\Icons\INV_Misc_Flute_01
 ## Category: Music
 Embeds.xml
@@ -25,7 +25,6 @@ Core/UI/Tabs/TabTemplateRetail.xml
 Core/Auras/AurasDummyFrame.xml
 Core/UI/SoundtrackFrame.xml
 Core/Battle/BattleDummyFrame.xml
-Core/Custom/CustomDummyFrame.xml
 Core/MiscEvents/MiscDummyFrame.xml
 Core/PetBattle/PetBattleDummyFrame.xml
 Core/Dance/DanceDummyFrame.xml

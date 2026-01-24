@@ -12,7 +12,6 @@ Soundtrack_EventTabs = {
 	ST_PETBATTLES,
 	ST_DANCE,
 	ST_MISC,
-	ST_CUSTOM,
 	ST_PLAYLISTS,
 }
 

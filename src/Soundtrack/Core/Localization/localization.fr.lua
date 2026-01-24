@@ -81,10 +81,7 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Combat Boss"
-	SOUNDTRACK_BOSS_LOW_HEALTH = "Combat Boss Low Health"
-	SOUNDTRACK_LOW_HEALTH = "Low Health"
 	SOUNDTRACK_WORLD_BOSS_BATTLE = "Combat World Boss"
-	SOUNDTRACK_WORLD_BOSS_LOW_HEALTH = "Combat World Boss Low Health"
 	SOUNDTRACK_PVP_BATTLE = "Combat PvP"
 
 	SOUNDTRACK_REMOVE_BATTLE = "Supprimer l'evenement de bataille"
@@ -200,29 +197,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_REMOVE_MISC = "Supprimer misc. Evenement"
 	SOUNDTRACK_REMOVE_MISC_TIP = "Supprime l'evenement selectionne misc."
 
-	-- Custom Event Tab
-	SOUNDTRACK_ADD_CUSTOM = "Ajouter un evenement personalise"
-	SOUNDTRACK_ADD_CUSTOM_TIP =
-		"Cree un nouvel evenement personalise. Les evenements personalises sont des evenements que vous pouvez definir vous-meme a travers une variete de methodes de  scripts."
-
-	SOUNDTRACK_EDIT_CUSTOM = "Editer l'evenement personalise"
-	SOUNDTRACK_EDIT_CUSTOM_TIP =
-		"Passe a l'interface d'edition d'evenements personnalise de sorte que vous pouvez regler l'evenement selectionne comme bon vous semble."
-
-	SOUNDTRACK_REMOVE_CUSTOM = "Supprimer evenement personnalise"
-	SOUNDTRACK_REMOVE_CUSTOM_TIP = "Supprime l'evenement selectionne personnalise."
-
-	SOUNDTRACK_RANDOM = "Aleatoire"
-	SOUNDTRACK_SOUND_EFFECT = "Effet Sonore"
-	SOUNDTRACK_CUSTOM_CONTINUOUS = "Continu"
-	SOUNDTRACK_CUSTOM_CONTINUOUS_TIP =
-		"Determine si cet evenement sera une boucle ou joue une fois. Quand un evenement se lit en permanence, il peut etre arrete par son propre script, ou par un autre evenement remplace."
-
-	SOUNDTRACK_EVENT_TYPE = "Type d'evenement"
-	SOUNDTRACK_EVENT_TYPE_TIP = "Le type d'evenement affecte la fa�on dont l'evenement personnalise est modifie."
-
-	SOUNDTRACK_ENTER_CUSTOM_NAME = "Entrez le nom de l'evenement personnalise:"
-
 	-- Playlists Tab
 	SOUNDTRACK_ADD_PLAYLIST = "Ajouter liste de lecture"
 	SOUNDTRACK_ADD_PLAYLIST_TIP =
@@ -310,10 +284,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_BATTLE_CD_TIP =
 		"Le temps qu'il faut pour la musique de combat pour arreter au desengagement de la bataille."
 
-	SOUNDTRACK_LOW_HEALTH_PERCENT = "Boss Low Health %"
-	SOUNDTRACK_LOW_HEALTH_PERCENT_TIP =
-		"The amount of health when Boss and World Boss events switch to Boss Low Health."
-
 	SOUNDTRACK_LOOP_MUSIC = "Musique en boucle"
 	SOUNDTRACK_LOOP_MUSIC_TIP =
 		"Activer la lecture en boucle pour les pistes en arr. plan. C'est le meme parametre expose dans les options de son par defaut."
@@ -337,10 +307,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_ENABLE_MISC_MUSIC = "Activer Musique Divers"
 	SOUNDTRACK_ENABLE_MISC_MUSIC_TIP =
 		"Activer la musique diverse. Utilisez cette option pour desactiver temporairement toutes les musiques diverses."
-
-	SOUNDTRACK_ENABLE_CUSTOM_MUSIC = "Activer Musique Perso"
-	SOUNDTRACK_ENABLE_CUSTOM_MUSIC_TIP =
-		"Activer la musique personnalisee. Utilisez cette option pour desactiver temporairement toutes les musiques personnalisees."
 
 	-- Other
 	SOUNDTRACK_NO_TRACKS_PLAYING = "Aucune piste en lecture"

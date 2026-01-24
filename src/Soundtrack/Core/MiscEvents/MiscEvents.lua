@@ -2,11 +2,11 @@
     Soundtrack addon for World of Warcraft
 
     Misc events functions.
-    Functions that manage misc. and custom events.
+    Functions that manage misc events.
 ]]
 
 local function debug(msg)
-	Soundtrack.Chat.TraceCustom(msg)
+	Soundtrack.Chat.TraceMisc(msg)
 end
 
 Soundtrack.Misc = {}

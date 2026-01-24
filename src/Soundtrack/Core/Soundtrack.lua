@@ -72,7 +72,6 @@ function SoundtrackAddon:OnInitialize()
 		profile = {
 			minimap = { hide = false },
 			events = {},
-			customEvents = {},
 			settings = {
 				MinimapIconPos = 45,
 				EnableMinimapButton = true,
@@ -83,7 +82,6 @@ function SoundtrackAddon:OnInitialize()
 				EnableBattleMusic = true,
 				EnableZoneMusic = true,
 				EnableMiscMusic = true,
-				EnableCustomMusic = true,
 				Debug = false,
 				BattleCooldown = 0,
 				Silence = 5,
@@ -99,7 +97,7 @@ function SoundtrackAddon:OnInitialize()
 				LockPlaybackControls = false,
 				HideControlButtons = false,
 				PlaybackButtonsPosition = "LEFT",
-				LowHealthPercent = 0.25,
+
 				YourEnemyLevelOnly = false,
 				k = true,
 			},
@@ -121,7 +119,6 @@ function SoundtrackAddon:PLAYER_ENTERING_WORLD()
 		Soundtrack.BattleEvents.Initialize()
 		Soundtrack.Auras.Initialize()
 		Soundtrack.Misc.Initialize()
-		Soundtrack.CustomEvents.CustomInitialize()
 		SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.Initialize()
 		Soundtrack.Cleanup.CleanupOldEvents()

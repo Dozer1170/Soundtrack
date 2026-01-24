@@ -136,42 +136,6 @@ function SoundtrackUI.UpdateEventsUI()
 	RefreshEventSettings()
 end
 
-function SoundtrackUI.UpdateCustomEventUI()
-	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackUI.SelectedEvent]
-
-	if customEvent == nil then
-		return
-	end
-
-	if customEvent then
-		_G["SoundtrackFrame_Priority"]:SetText(tostring(customEvent.priority))
-		if customEvent.type == ST_EVENT_SCRIPT then
-			_G["SoundtrackFrame_FontStringTrigger"]:SetText("Trigger")
-			_G["SoundtrackFrame_EventTrigger"]:SetText(customEvent.trigger)
-			_G["SoundtrackFrame_EventScript"]:SetText(customEvent.script)
-		elseif customEvent.type == ST_BUFF_SCRIPT then
-			_G["SoundtrackFrame_FontStringTrigger"]:SetText("Spell ID")
-			_G["SoundtrackFrame_EventTrigger"]:SetText(customEvent.spellId)
-			_G["SoundtrackFrame_EventScript"]:SetText(
-				"Buff events do not need a script.\nThey remain active while the specified buff is active."
-			)
-		elseif customEvent.type == ST_UPDATE_SCRIPT then
-			_G["SoundtrackFrame_FontStringTrigger"]:SetText("Trigger")
-			_G["SoundtrackFrame_EventTrigger"]:SetText("OnUpdate")
-			_G["SoundtrackFrame_EventScript"]:SetText(customEvent.script)
-		end
-	end
-
-	if customEvent.type == nil then
-		Soundtrack.Chat.TraceFrame("Nil type on " .. SoundtrackUI.SelectedEvent)
-		customEvent.type = ST_UPDATE_SCRIPT
-	end
-
-	local eventTypeIndex = IndexOf(EVENT_TYPES, customEvent.type)
-	UIDropDownMenu_SetSelectedID(SoundtrackFrame_EventTypeDropDown, eventTypeIndex)
-	UIDropDownMenu_SetText(SoundtrackFrame_EventTypeDropDown, customEvent.type)
-end
-
 function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 	Soundtrack.Chat.TraceFrame("EventButton_OnClick")
 
@@ -198,9 +162,5 @@ function SoundtrackUI.OnEventButtonClick(self, mouseButton, _)
 
 	if mouseButton == "RightButton" and SoundtrackUI.SelectedEventsTable == "Playlists" then
 		Soundtrack.PlayEvent(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent)
-	end
-
-	if SoundtrackUI.SelectedEventsTable == "Custom" then
-		SoundtrackUI.UpdateCustomEventUI()
 	end
 end

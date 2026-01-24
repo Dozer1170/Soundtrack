@@ -283,40 +283,12 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Frame>
-      <Frame name="OptionsTab_LowHealthPercentDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+
+      <CheckButton name="OptionsTab_LoopMusic" inherits="UICheckButtonTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_BattleCooldownDropDown" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-15"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-        <Layers>
-          <Layer level="BACKGROUND">
-            <FontString name="$parentLabel" inherits="GameFontHighlightSmall" text="Boss Low Health Percent">
-              <Anchors>
-                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
-                  <Offset>
-                    <AbsDimension x="0" y="0"/>
-                  </Offset>
-                </Anchor>
-              </Anchors>
-            </FontString>
-          </Layer>
-        </Layers>
-        <Scripts>
-          <OnLoad> OptionsTab_LowHealthPercentDropDown.Text:SetText(SOUNDTRACK_LOW_HEALTH_PERCENT); </OnLoad>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOW_HEALTH_PERCENT,
-                        SOUNDTRACK_LOW_HEALTH_PERCENT_TIP)
-                    </OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </Frame>
-      <CheckButton name="OptionsTab_LoopMusic" inherits="UICheckButtonTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="OptionsTab_LowHealthPercentDropDown" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="-10"/>
+              <AbsDimension x="0" y="-25"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -437,22 +409,6 @@
                     </OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENABLE_MISC_MUSIC,
                         SOUNDTRACK_ENABLE_MISC_MUSIC_TIP)
-                    </OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </CheckButton>
-      <CheckButton name="OptionsTab_EnableCustomMusic" inherits="UICheckButtonTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="OptionsTab_EnableMiscMusic" relativePoint="BOTTOMLEFT"/>
-        </Anchors>
-        <Scripts>
-          <OnLoad>OptionsTab_EnableCustomMusic.Text:SetText(SOUNDTRACK_ENABLE_CUSTOM_MUSIC);
-                    </OnLoad>
-          <OnClick>SoundtrackAddon.db.profile.settings.EnableCustomMusic = not
-                        SoundtrackAddon.db.profile.settings.EnableCustomMusic
-                    </OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENABLE_CUSTOM_MUSIC,
-                        SOUNDTRACK_ENABLE_CUSTOM_MUSIC_TIP);
                     </OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>

@@ -79,8 +79,8 @@ function Soundtrack.Chat.TraceEvents(text)
 	Soundtrack.Chat.Debug("[Events]: " .. text, 0.0, 1.0, 1.0)
 end
 
-function Soundtrack.Chat.TraceCustom(text)
-	Soundtrack.Chat.Debug("[Custom]: " .. text, 1.0, 0.0, 0.5)
+function Soundtrack.Chat.TraceMisc(text)
+	Soundtrack.Chat.Debug("[Misc]: " .. text, 1.0, 0.0, 0.5)
 end
 
 function Soundtrack.Chat.TraceProfiles(text)

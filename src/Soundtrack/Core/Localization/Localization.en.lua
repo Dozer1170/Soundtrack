@@ -83,10 +83,7 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Boss Battle"
-	SOUNDTRACK_BOSS_LOW_HEALTH = "Boss Low Health"
-	SOUNDTRACK_LOW_HEALTH = "Low Health"
 	SOUNDTRACK_WORLD_BOSS_BATTLE = "World Boss Battle"
-	SOUNDTRACK_WORLD_BOSS_LOW_HEALTH = "World Boss Low Health"
 	SOUNDTRACK_PVP_BATTLE = "PvP Battle"
 
 	SOUNDTRACK_REMOVE_BATTLE = "Remove Battle Event"
@@ -203,29 +200,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_REMOVE_MISC = "Remove Misc. Event"
 	SOUNDTRACK_REMOVE_MISC_TIP = "Removes the selected misc. event."
 
-	-- Custom Event Tab
-	SOUNDTRACK_ADD_CUSTOM = "Add Custom Event"
-	SOUNDTRACK_ADD_CUSTOM_TIP =
-		"Creates a new custom event. Custom events are events that you can define yourself through a variety of methods including scripting."
-
-	SOUNDTRACK_EDIT_CUSTOM = "Edit Custom Event"
-	SOUNDTRACK_EDIT_CUSTOM_TIP =
-		"Switches to the custom event editing interface so you can adjust the selected custom event."
-
-	SOUNDTRACK_REMOVE_CUSTOM = "Remove Custom Event"
-	SOUNDTRACK_REMOVE_CUSTOM_TIP = "Removes the selected custom event."
-
-	SOUNDTRACK_RANDOM = "Shuffle"
-	SOUNDTRACK_SOUND_EFFECT = "Sound Effect"
-	SOUNDTRACK_CUSTOM_CONTINUOUS = "Continuous"
-	SOUNDTRACK_CUSTOM_CONTINUOUS_TIP =
-		"Determines if this event will loop or play once. When an event plays continuously, it can be stopped by its own script, or through another event replacing it."
-
-	SOUNDTRACK_EVENT_TYPE = "Event Type"
-	SOUNDTRACK_EVENT_TYPE_TIP = "The type of event affects how the custom event is edited."
-
-	SOUNDTRACK_ENTER_CUSTOM_NAME = "Enter Custom Event Name:"
-
 	-- Playlists Tab
 	SOUNDTRACK_ADD_PLAYLIST = "Add Playlist"
 	SOUNDTRACK_ADD_PLAYLIST_TIP =
@@ -310,10 +284,6 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_BATTLE_CD = "Battle Cooldown"
 	SOUNDTRACK_BATTLE_CD_TIP = "The time it takes for battle music to stop when disengaged from battle."
 
-	SOUNDTRACK_LOW_HEALTH_PERCENT = "Boss Low Health %"
-	SOUNDTRACK_LOW_HEALTH_PERCENT_TIP =
-		"The amount of health when Boss and World Boss events switch to Boss Low Health."
-
 	SOUNDTRACK_LOOP_MUSIC = "Loop Music"
 	SOUNDTRACK_LOOP_MUSIC_TIP =
 		"Enable to continuously play background music. This is the same setting exposed in the default Sound options."
@@ -334,9 +304,6 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_ENABLE_MISC_MUSIC = "Enable Misc Music"
 	SOUNDTRACK_ENABLE_MISC_MUSIC_TIP = "Enable misc music. Use this to temporarily turn off all misc music."
-
-	SOUNDTRACK_ENABLE_CUSTOM_MUSIC = "Enable Custom Music"
-	SOUNDTRACK_ENABLE_CUSTOM_MUSIC_TIP = "Enable custom music. Use this to temporarily turn off all custom music."
 
 	-- Other
 	SOUNDTRACK_NO_TRACKS_PLAYING = "No tracks playing"
@@ -376,7 +343,6 @@ function LoadEnglish()
 		RegisterGeneralStrings()
 		SoundtrackLocalization.RegisterDruidStrings("Druid", "Change Form")
 		SoundtrackLocalization.RegisterHunterStrings("Hunter")
-		SoundtrackLocalization.RegisterDeathKnightStrings("Death Knight", "Change Presence")
 		SoundtrackLocalization.RegisterEvokerStrings("Evoker")
 		SoundtrackLocalization.RegisterPaladinStrings("Paladin", "Change Aura")
 		SoundtrackLocalization.RegisterPriestStrings("Priest", "Change Form")

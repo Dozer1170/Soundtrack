@@ -83,18 +83,6 @@ local function TabChanged()
 		SoundtrackFrameDeleteTargetButton:Hide()
 	end
 
-	if SoundtrackUI.SelectedEventsTable == ST_CUSTOM then
-		SoundtrackFrameAddCustomEventButton:Show()
-		SoundtrackFrameEditCustomEventButton:Show()
-		SoundtrackFrameDeleteCustomEventButton:Show()
-	else
-		SoundtrackFrameAddCustomEventButton:Hide()
-		SoundtrackFrameEditCustomEventButton:Hide()
-		SoundtrackFrameDeleteCustomEventButton:Hide()
-		_G["SoundtrackFrameRightPanelTracks"]:Show()
-		_G["SoundtrackFrameRightPanelEditEvent"]:Hide()
-	end
-
 	if SoundtrackUI.SelectedEventsTable == ST_PLAYLISTS then
 		SoundtrackFrameAddPlaylistButton:Show()
 		SoundtrackFrameDeletePlaylistButton:Show()
@@ -221,58 +209,6 @@ local function ClearEvent(eventToClear)
 	SoundtrackUI.UpdateEventsUI()
 end
 
-local function SoundtrackFrame_EventTypeDropDown_OnClick(self)
-	local oldSelectedId = UIDropDownMenu_GetSelectedID(SoundtrackFrame_EventTypeDropDown)
-	local selectedId = self:GetID()
-
-	if selectedId == oldSelectedId then
-		return
-	end
-
-	local customEvent = SoundtrackAddon.db.profile.customEvents[SoundtrackUI.SelectedEvent]
-
-	customEvent.type = EVENT_TYPES[selectedId]
-
-	if EVENT_TYPES[selectedId] == ST_UPDATE_SCRIPT then
-		if customEvent.script == nil then
-			customEvent.swcript = "type your update script here"
-		end
-	elseif EVENT_TYPES[selectedId] == ST_BUFF_SCRIPT then
-		if customEvent.spellId == nil then
-			customEvent.spellId = "0"
-		end
-	elseif EVENT_TYPES[selectedId] == ST_EVENT_SCRIPT then
-		if customEvent.trigger == nil then
-			customEvent.trigger = "UNIT_AURA"
-		end
-		if customEvent.script == nil then
-			customEvent.script = "type in your event script here"
-		end
-	end
-
-	SoundtrackUI.UpdateCustomEventUI()
-end
-
-local function SoundtrackFrame_EventTypeDropDown_AddInfo(id, caption)
-	local info = UIDropDownMenu_CreateInfo()
-	info.value = id
-	info.text = caption
-	info.func = SoundtrackFrame_EventTypeDropDown_OnClick
-	local checked = nil
-	local selectedId = UIDropDownMenu_GetSelectedID(SoundtrackFrame_EventTypeDropDown)
-	if selectedId ~= nil and selectedId == id then
-		checked = 1
-	end
-	info.checked = checked
-	UIDropDownMenu_AddButton(info)
-end
-
-local function SoundtrackFrame_EventTypeDropDown_Initialize()
-	for i = 1, #EVENT_TYPES do
-		SoundtrackFrame_EventTypeDropDown_AddInfo(i, EVENT_TYPES[i])
-	end
-end
-
 local function DeleteTarget(eventName)
 	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackUI.SelectedEvent)
 	Soundtrack.Events.DeleteEvent("Boss", eventName)
@@ -296,7 +232,7 @@ end
 function SoundtrackUI.OnLoad()
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
-	PanelTemplates_SetNumTabs(SoundtrackFrame, 11)
+	PanelTemplates_SetNumTabs(SoundtrackFrame, 10)
 	PanelTemplates_SetTab(SoundtrackFrame, 1)
 end
 
@@ -446,16 +382,13 @@ function SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 7 then
-		SoundtrackUI.SelectedEventsTable = "Custom"
-		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 8 then
 		SoundtrackUI.SelectedEventsTable = "Playlists"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 9 then
+	elseif SoundtrackFrame.selectedTab == 8 then
 		SoundtrackFrameOptionsTab:Show()
-	elseif SoundtrackFrame.selectedTab == 10 then
+	elseif SoundtrackFrame.selectedTab == 9 then
 		SoundtrackFrameProfilesFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 11 then
+	elseif SoundtrackFrame.selectedTab == 10 then
 		SoundtrackFrameAboutFrame:Show()
 	end
 
