@@ -1,7 +1,7 @@
 # Package Soundtrack addon into a zip file
 
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$OutFile
 )
 
