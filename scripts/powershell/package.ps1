@@ -11,22 +11,17 @@ if (Test-Path $OutFile) {
 }
 
 # Create zip file from src/Soundtrack
-$srcPath = Join-Path $PSScriptRoot "..\..\src\Soundtrack"
-$zipPath = Join-Path (Split-Path $PSScriptRoot -Parent) $OutFile
+$srcPath = Join-Path $PSScriptRoot "..\..\src"
+$soundtrackPath = Join-Path $srcPath "Soundtrack"
+$rootPath = Split-Path $PSScriptRoot -Parent
+$rootPath = Split-Path $rootPath -Parent
+$zipPath = Join-Path $rootPath $OutFile
 
 # Use native compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $compression = [System.IO.Compression.CompressionLevel]::Optimal
 
-# Get all files and filter out excluded ones
-$excludedPatterns = @("*.iml", "*.hexdumptmp*", "*MyTracks.lua*", "*.pyc*", "LegacyLibraryGeneration")
-
-$filesToZip = Get-ChildItem -Path $srcPath -Recurse -File | Where-Object {
-    $relativePath = $_.FullName.Substring($srcPath.Length + 1)
-    -not ($excludedPatterns | Where-Object { $relativePath -like $_ })
-}
-
-# Create the zip file
+# Create the zip file from src directory so that Soundtrack folder is included in the zip
 [System.IO.Compression.ZipFile]::CreateFromDirectory($srcPath, $zipPath, $compression, $false)
 
 Write-Host "Created zip file: $zipPath"

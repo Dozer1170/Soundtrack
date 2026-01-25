@@ -16,9 +16,12 @@ Write-Host "Game folder: $GameFolder"
 Write-Host "WoW root path: $WoWRootPath"
 
 # Paths
-$addonPath = Join-Path $WoWRootPath $GameFolder "Interface\Addons"
-$soundtrackPath = Join-Path $addonPath "Soundtrack"
-$legacyGenPath = Join-Path $addonPath "SoundtrackMusic\LegacyLibraryGeneration"
+$addonPath = Join-Path -Path $WoWRootPath -ChildPath $GameFolder
+$addonPath = Join-Path -Path $addonPath -ChildPath "Interface"
+$addonPath = Join-Path -Path $addonPath -ChildPath "Addons"
+$soundtrackPath = Join-Path -Path $addonPath -ChildPath "Soundtrack"
+$legacyGenPath = Join-Path -Path $addonPath -ChildPath "SoundtrackMusic"
+$legacyGenPath = Join-Path -Path $legacyGenPath -ChildPath "LegacyLibraryGeneration"
 $zipFile = "SoundtrackTest.0.4.zip"
 
 # Remove existing addon installation

@@ -10,7 +10,9 @@ param(
     [string]$WoWRootPath = "C:\World of Warcraft"
 )
 
-$addonPath = Join-Path $WoWRootPath $GameFolder "Interface\Addons"
+$addonPath = Join-Path -Path $WoWRootPath -ChildPath $GameFolder
+$addonPath = Join-Path -Path $addonPath -ChildPath "Interface"
+$addonPath = Join-Path -Path $addonPath -ChildPath "Addons"
 
 if (-not (Test-Path $addonPath)) {
     Write-Host "Creating addon path: $addonPath"
@@ -20,6 +22,6 @@ if (-not (Test-Path $addonPath)) {
 Write-Host "Extracting addon from $ZipFile to $addonPath"
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-[System.IO.Compression.ZipFile]::ExtractToDirectory($ZipFile, $addonPath, $true)
+[System.IO.Compression.ZipFile]::ExtractToDirectory($ZipFile, $addonPath)
 
 Write-Host "Addon installed successfully!"
