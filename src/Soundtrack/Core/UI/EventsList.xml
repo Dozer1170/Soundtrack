@@ -339,56 +339,6 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameAddBossTargetButton" inherits="UIPanelButtonTemplate" text="Add Party Boss">
-        <Size>
-          <AbsDimension x="110" y="22"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameEventList"/>
-        </Anchors>
-        <Scripts>
-          <OnLoad>SoundtrackFrameAddBossTargetButton.Text:SetText(SOUNDTRACK_ADD_TARGET_PARTY_BUTTON)</OnLoad>
-          <OnClick>SoundtrackUI.OnAddBossTargetButtonClick()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_TARGET_PARTY, SOUNDTRACK_ADD_TARGET_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </Button>
-      <Button name="SoundtrackFrameAddWorldBossTargetButton" inherits="UIPanelButtonTemplate" text="Add Raid Boss">
-        <Size>
-          <AbsDimension x="110" y="22"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameAddBossTargetButton">
-            <Offset>
-              <AbsDimension x="0" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-        <Scripts>
-          <OnLoad>SoundtrackFrameAddWorldBossTargetButton.Text:SetText(SOUNDTRACK_ADD_TARGET_RAID_BUTTON)</OnLoad>
-          <OnClick>SoundtrackUI.OnAddWorldBossTargetButtonClick()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_TARGET_RAID, SOUNDTRACK_ADD_TARGET_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </Button>
-      <Button name="SoundtrackFrameDeleteTargetButton" inherits="UIPanelButtonTemplate" text="Delete">
-        <Size>
-          <AbsDimension x="90" y="22"/>
-        </Size>
-        <Anchors>
-          <Anchor point="RIGHT" relativeTo="SoundtrackFrameAddBossTargetButton" relativePoint="LEFT">
-            <Offset>
-              <AbsDimension x="0" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-        <Scripts>
-          <OnLoad>SoundtrackFrameDeleteTargetButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackUI.OnDeleteTargetButtonClick()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_TARGET, SOUNDTRACK_REMOVE_TARGET_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </Button>
       <Button name="SoundtrackFrameAddPetBattlesTargetButton" inherits="UIPanelButtonTemplate" text="Add Target">
         <Size>
           <AbsDimension x="100" y="22"/>

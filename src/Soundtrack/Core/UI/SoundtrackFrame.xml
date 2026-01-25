@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="SoundtrackUI.lua"/>
-  <Script file="Bosses.lua" />
   <Script file="EventStack.lua" />
   <Script file="EventsUI.lua" />
   <Script file="MovingTitle.lua" />
@@ -76,7 +75,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab2" inherits="SoundtrackFrameTabTemplate" id="2" text="Bosses">
+      <Button name="SoundtrackFrameTab2" inherits="SoundtrackFrameTabTemplate" id="2" text="Zones">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1" relativePoint="TOPRIGHT">
             <Offset>
@@ -85,7 +84,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab3" inherits="SoundtrackFrameTabTemplate" id="3" text="Zones">
+      <Button name="SoundtrackFrameTab3" inherits="SoundtrackFrameTabTemplate" id="3" text="Pet Battles">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab2" relativePoint="TOPRIGHT">
             <Offset>
@@ -94,7 +93,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab4" inherits="SoundtrackFrameTabTemplate" id="4" text="Pet Battles">
+      <Button name="SoundtrackFrameTab4" inherits="SoundtrackFrameTabTemplate" id="4" text="Dances">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab3" relativePoint="TOPRIGHT">
             <Offset>
@@ -103,7 +102,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab5" inherits="SoundtrackFrameTabTemplate" id="5" text="Dances">
+      <Button name="SoundtrackFrameTab5" inherits="SoundtrackFrameTabTemplate" id="5" text="Misc">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab4" relativePoint="TOPRIGHT">
             <Offset>
@@ -112,7 +111,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab6" inherits="SoundtrackFrameTabTemplate" id="6" text="Misc">
+      <Button name="SoundtrackFrameTab6" inherits="SoundtrackFrameTabTemplate" id="6" text="Playlists">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab5" relativePoint="TOPRIGHT">
             <Offset>
@@ -121,7 +120,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab7" inherits="SoundtrackFrameTabTemplate" id="7" text="Playlists">
+      <Button name="SoundtrackFrameTab7" inherits="SoundtrackFrameTabTemplate" id="7" text="Options">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab6" relativePoint="TOPRIGHT">
             <Offset>
@@ -130,7 +129,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab8" inherits="SoundtrackFrameTabTemplate" id="8" text="Options">
+      <Button name="SoundtrackFrameTab8" inherits="SoundtrackFrameTabTemplate" id="8" text="Profiles">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab7" relativePoint="TOPRIGHT">
             <Offset>
@@ -139,18 +138,9 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab9" inherits="SoundtrackFrameTabTemplate" id="9" text="Profiles">
+      <Button name="SoundtrackFrameTab9" inherits="SoundtrackFrameTabTemplate" id="9" text="About">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab8" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab10" inherits="SoundtrackFrameTabTemplate" id="10" text="About">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab9" relativePoint="TOPRIGHT">
             <Offset>
               <AbsDimension x="-8" y="0"/>
             </Offset>
@@ -255,21 +245,21 @@
     </Frames>
     <Scripts>
       <OnLoad>
-                Mixin(self, BackdropTemplateMixin or {});
-                self:SetBackdrop({
-                bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-                edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-                tile = true,
-                tileEdge = true,
-                tileSize = 32,
-                edgeSize = 32,
-                insets = { left = 11, right = 12, top = 12, bottom = 11 },
-                });
+        Mixin(self, BackdropTemplateMixin or {});
+        self:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tile = true,
+        tileEdge = true,
+        tileSize = 32,
+        edgeSize = 32,
+        insets = { left = 11, right = 12, top = 12, bottom = 11 },
+        });
 
-                self:SetBackdropColor(.1,.1,.1,.9)
-                self:RegisterForDrag("LeftButton")
-                SoundtrackUI.OnLoad()
-            </OnLoad>
+        self:SetBackdropColor(.1,.1,.1,.9)
+        self:RegisterForDrag("LeftButton")
+        SoundtrackUI.OnLoad()
+      </OnLoad>
       <OnDragStart>self:StartMoving();</OnDragStart>
       <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
       <OnShow>SoundtrackUI.OnShow()</OnShow>

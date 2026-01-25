@@ -52,20 +52,6 @@ local function DoesEventHaveOldTracks(eventTableName)
 	return false
 end
 
-local function CleanupDuplicateBossEvents()
-	local bossEventTable = SoundtrackAddon.db.profile.events[ST_BOSS]
-	if not bossEventTable then
-		return
-	end
-
-	-- Remove boss events that contain "Low Health" since they're obsolete
-	for key, _ in pairs(bossEventTable) do
-		if string.find(key, "Low Health") then
-			bossEventTable[key] = nil
-			Soundtrack.Chat.Message("Found obsolete boss event " .. key .. " removing from saved data.")
-		end
-	end
-end
 
 local function OnConfirmPurgeOldTracks()
 	for _, event in ipairs(Soundtrack_EventTabs) do
@@ -103,7 +89,6 @@ StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 function Soundtrack.Cleanup.CleanupOldEvents()
 	CleanupTableEvents(SoundtrackAddon.db.profile.events[ST_BATTLE], Soundtrack.RegisteredEvents[ST_BATTLE])
 	CleanupTableEvents(SoundtrackAddon.db.profile.events[ST_MISC], Soundtrack.RegisteredEvents[ST_MISC])
-	CleanupDuplicateBossEvents()
 
 	SoundtrackUI.UpdateEventsUI()
 end

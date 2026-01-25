@@ -102,7 +102,7 @@
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits9" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits11" inherits="GameFontNormal" text="Gart - Dragonflight and TWW">
+        <FontString name="SoundtrackFrame_FontStringCredits11" inherits="GameFontNormal" text="Gart - Dragonflight onward">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits10" relativePoint="BOTTOMLEFT"/>
           </Anchors>

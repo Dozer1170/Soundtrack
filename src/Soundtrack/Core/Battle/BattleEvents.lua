@@ -9,6 +9,7 @@ Soundtrack.BattleEvents = {}
 
 local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23
 
+-- TODO(Eric): Is there a way to check for boss?
 -- Classifications for mobs
 local classifications = {
 	"Critter",
@@ -98,10 +99,6 @@ function GetGroupEnemyLevel()
 	-- local highestDifficulty = 1
 	-- local highestClassification = 1
 	local pvpEnabled = false
-	local isBoss = false
-	local bossName = nil
-
-	local bossTable = Soundtrack.Events.GetTable(ST_BOSS)
 
 	for _, unit in ipairs(units) do
 		local target = unit .. "target"
@@ -110,7 +107,6 @@ function GetGroupEnemyLevel()
 		local unitIsAlive = not UnitIsDeadOrGhost(target)
 
 		if unitExists and unitIsEnemy and unitIsAlive then
-			local unitName = UnitName(target)
 			local unitIsPlayer = UnitIsPlayer(target)
 			local unitCanAttack = UnitCanAttack("player", target)
 			local targetlevel = UnitLevel(target)
@@ -138,24 +134,8 @@ function GetGroupEnemyLevel()
 			end
 
 			local classificationLevel = GetClassificationLevel(unitClass)
-			print(classificationLevel)
 			if classificationLevel > highestClassification then
 				highestClassification = classificationLevel
-			end
-
-			-- Check if in the boss table
-			if bossTable then
-				local bossEvent = bossTable[unitName]
-				if bossEvent then
-					Soundtrack.Chat.TraceBattle(unitName .. " is a boss.")
-					isBoss = true
-					if Soundtrack.Events.EventHasTracks(ST_BOSS, unitName) then
-						bossName = unitName
-					end
-					if bossEvent.worldboss then
-						unitClass = "worldboss"
-					end
-				end
 			end
 		end
 	end
@@ -264,26 +244,8 @@ local function AnalyzeBattleSituation()
 		or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE
 		or (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex)
 	then
-		if battleType == SOUNDTRACK_BOSS_BATTLE then
-			if bossName ~= nil then
-				if Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
-					Soundtrack.PlayEvent(ST_BOSS, bossName)
-				else
-					Soundtrack.PlayEvent(ST_BATTLE, battleType)
-				end
-			else
-				Soundtrack.PlayEvent(ST_BATTLE, battleType)
-			end
-		elseif battleType == SOUNDTRACK_WORLD_BOSS_BATTLE then
-			if bossName ~= nil then
-				if Soundtrack.Events.EventHasTracks(ST_BOSS, bossName) then
-					Soundtrack.PlayEvent(ST_BOSS, bossName)
-				else
-					Soundtrack.PlayEvent(ST_BATTLE, battleType)
-				end
-			else
-				Soundtrack.PlayEvent(ST_BATTLE, battleType)
-			end
+		if battleType == SOUNDTRACK_BOSS_BATTLE or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE then
+			Soundtrack.PlayEvent(ST_BATTLE, battleType)
 		else
 			Soundtrack.PlayEvent(ST_BATTLE, battleType)
 		end
@@ -353,7 +315,6 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		Soundtrack.Chat.TraceBattle("PLAYER_DEAD")
 		if UnitIsDeadOrGhost("player") then
 			Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
-			Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
 			Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_DEATH)
 			--Reset difficulties outside of combat. -Gotest
 			currentBattleTypeIndex = 0 -- we are out of battle
@@ -363,19 +324,6 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		currentBattleTypeIndex = 0 -- out of combat
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		Soundtrack.Chat.TraceBattle("ZONE_CHANGED_NEW_AREA")
-		local inInstance, instanceType = IsInInstance()
-		if inInstance and (instanceType == "party" or instanceType == "raid") then
-			local _, _, encountersTotal, _ = GetInstanceLockTimeRemaining()
-			for i = 1, encountersTotal, 1 do
-				local bossName, _, _ = GetInstanceLockTimeRemainingEncounter(i)
-				Soundtrack.AddEvent(ST_BOSS, bossName, ST_BOSS_LVL, true)
-				local bossTable = Soundtrack.Events.GetTable(ST_BOSS)
-				local bossEvent = bossTable[bossName]
-			if instanceType == "raid" then
-				bossEvent.worldboss = true
-				end
-			end
-		end
 	end
 end
 

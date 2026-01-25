@@ -73,16 +73,6 @@ local function TabChanged()
 		SoundtrackFrameDeletePetBattlesTargetButton:Hide()
 	end
 
-	if SoundtrackUI.SelectedEventsTable == ST_BOSS then
-		SoundtrackFrameAddBossTargetButton:Show()
-		SoundtrackFrameAddWorldBossTargetButton:Show()
-		SoundtrackFrameDeleteTargetButton:Show()
-	else
-		SoundtrackFrameAddBossTargetButton:Hide()
-		SoundtrackFrameAddWorldBossTargetButton:Hide()
-		SoundtrackFrameDeleteTargetButton:Hide()
-	end
-
 	if SoundtrackUI.SelectedEventsTable == ST_PLAYLISTS then
 		SoundtrackFrameAddPlaylistButton:Show()
 		SoundtrackFrameDeletePlaylistButton:Show()
@@ -209,12 +199,6 @@ local function ClearEvent(eventToClear)
 	SoundtrackUI.UpdateEventsUI()
 end
 
-local function DeleteTarget(eventName)
-	Soundtrack.Chat.TraceFrame("Deleting " .. SoundtrackUI.SelectedEvent)
-	Soundtrack.Events.DeleteEvent("Boss", eventName)
-	SoundtrackUI.UpdateEventsUI()
-end
-
 function SoundtrackUI.Initialize()
 	Soundtrack.OptionsTab.Initialize()
 end
@@ -232,7 +216,7 @@ end
 function SoundtrackUI.OnLoad()
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
-	PanelTemplates_SetNumTabs(SoundtrackFrame, 10)
+	PanelTemplates_SetNumTabs(SoundtrackFrame, 9)
 	PanelTemplates_SetTab(SoundtrackFrame, 1)
 end
 
@@ -367,28 +351,25 @@ function SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.SelectedEventsTable = "Battle"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 2 then
-		SoundtrackUI.SelectedEventsTable = "Boss"
-		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 3 then
 		SoundtrackUI.SelectedEventsTable = "Zone"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 4 then
+	elseif SoundtrackFrame.selectedTab == 3 then
 		SoundtrackUI.SelectedEventsTable = "Pet Battles"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 5 then
+	elseif SoundtrackFrame.selectedTab == 4 then
 		SoundtrackUI.SelectedEventsTable = "Dance"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 6 then
+	elseif SoundtrackFrame.selectedTab == 5 then
 		SoundtrackUI.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 7 then
+	elseif SoundtrackFrame.selectedTab == 6 then
 		SoundtrackUI.SelectedEventsTable = "Playlists"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 8 then
+	elseif SoundtrackFrame.selectedTab == 7 then
 		SoundtrackFrameOptionsTab:Show()
-	elseif SoundtrackFrame.selectedTab == 9 then
+	elseif SoundtrackFrame.selectedTab == 8 then
 		SoundtrackFrameProfilesFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 10 then
+	elseif SoundtrackFrame.selectedTab == 9 then
 		SoundtrackFrameAboutFrame:Show()
 	end
 
@@ -453,27 +434,6 @@ function SoundtrackUI.RefreshUpDownButtons()
 		else
 			_G["SoundtrackFrameMoveDown"]:Disable()
 		end
-	end
-end
-
--- DELETE TARGET BUTTON
-function SoundtrackUI.OnDeleteTargetButtonClick()
-	if SoundtrackUI.SelectedEvent then
-		StaticPopupDialogs["SOUNDTRACK_DELETE_TARGET_POPUP"] = {
-			preferredIndex = 3,
-			text = SOUNDTRACK_REMOVE_QUESTION,
-			button1 = ACCEPT,
-			button2 = CANCEL,
-			OnAccept = function()
-				DeleteTarget(SoundtrackUI.SelectedEvent)
-			end,
-			enterClicksFirstButton = 1,
-			timeout = 0,
-			whileDead = 1,
-			hideOnEscape = 1,
-		}
-
-		StaticPopup_Show("SOUNDTRACK_DELETE_TARGET_POPUP")
 	end
 end
 

@@ -20,16 +20,7 @@ local offset = 0
 local nextUpdateTime = 0
 
 local function SetUserEventsToCorrectLevel()
-	local tableName = Soundtrack.Events.GetTable("Boss")
-	if not tableName then
-		return
-	end
-
-	for _, v in pairs(tableName) do
-		v.priority = ST_BOSS_LVL
-	end
-
-	tableName = Soundtrack.Events.GetTable("Playlists")
+	local tableName = Soundtrack.Events.GetTable("Playlists")
 	if not tableName then
 		return
 	end
