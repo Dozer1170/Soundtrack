@@ -17,11 +17,10 @@ local classifications = {
 	"rare",
 	"elite",
 	"rareelite",
-	"worldboss",
+	"worldboss"
 }
 
 -- Initialize difficulties only once. Prevents de-escalations during combat. -Gotest
-local highestlevel = 1
 local highestClassification = 1
 
 -- Battle event priority for mob types
@@ -32,7 +31,6 @@ local battleEvents = {
 	SOUNDTRACK_ELITE_MOB,
 	SOUNDTRACK_RARE,
 	SOUNDTRACK_BOSS_BATTLE,
-	SOUNDTRACK_WORLD_BOSS_BATTLE,
 	SOUNDTRACK_PVP_BATTLE,
 }
 
@@ -52,10 +50,9 @@ local function GetClassificationText(classificationLevel)
 	return classifications[classificationLevel]
 end
 
--- Calculates the highest enemy level amongs all the party members and pet
 -- targets. Thanks to Athame!
 -- Returns classification, pvpEnabled
-function GetGroupEnemyLevel()
+function GetGroupEnemyClassification()
 	local prefix
 	local total
 	if GetNumGroupMembers() > 0 then
@@ -95,9 +92,7 @@ function GetGroupEnemyLevel()
 		end
 	end
 
-	-- local highestlevel = 1
-	-- local highestDifficulty = 1
-	-- local highestClassification = 1
+	local isBoss = false
 	local pvpEnabled = false
 
 	for _, unit in ipairs(units) do
@@ -109,23 +104,13 @@ function GetGroupEnemyLevel()
 		if unitExists and unitIsEnemy and unitIsAlive then
 			local unitIsPlayer = UnitIsPlayer(target)
 			local unitCanAttack = UnitCanAttack("player", target)
-			local targetlevel = UnitLevel(target)
 			local unitCreatureType = UnitCreatureType(target)
 			local unitClass = UnitClassification(target)
+			isBoss = isBoss or UnitIsBossMob(target)
 
 			-- Check for pvp
 			if not pvpEnabled then
 				pvpEnabled = unitIsPlayer and unitCanAttack
-			end
-
-			-- Get the target level
-			if targetlevel then
-				if targetlevel == -1 then
-					targetlevel = UnitLevel("player") + 10 -- at least 10 levels higher
-				end
-				if targetlevel > highestlevel then
-					highestlevel = targetlevel -- this unit has the highest living hostile target so far
-				end
 			end
 
 			-- Get the target classification
@@ -141,22 +126,18 @@ function GetGroupEnemyLevel()
 	end
 
 	local classificationText = GetClassificationText(highestClassification)
-	return classificationText, pvpEnabled, isBoss, bossName
+	return classificationText, pvpEnabled, isBoss
 end
 
 -- When the player is engaged in battle, this determines
 -- the type of battle.
 local function GetBattleType()
-	local classification, pvpEnabled, isBoss, bossName = GetGroupEnemyLevel()
+	local classification, pvpEnabled, isBoss = GetGroupEnemyClassification()
 	if pvpEnabled then
 		return SOUNDTRACK_PVP_BATTLE
 	else
 		if isBoss then -- Boss or World Boss
-			if classification == "worldboss" then
-				return SOUNDTRACK_WORLD_BOSS_BATTLE, bossName -- World Boss( raid)
-			else
-				return SOUNDTRACK_BOSS_BATTLE, bossName -- Boss (party)
-			end
+			return SOUNDTRACK_BOSS_BATTLE -- Boss (party)
 		end
 
 		if classification == "rareelite" or classification == "rare" then
@@ -225,13 +206,11 @@ local function StopCombatMusic()
 	StartVictoryMusic()
 	currentBattleTypeIndex = 0 -- we are out of battle
 	--Reset difficulties outside of combat. -Gotest
-	highestlevel = 1
-	highestDifficulty = 1
 	highestClassification = 1
 end
 
 local function AnalyzeBattleSituation()
-	local battleType, bossName = GetBattleType()
+	local battleType = GetBattleType()
 	local battleTypeIndex = IndexOf(battleEvents, battleType)
 
 	-- If we're in cooldown, but a higher battle is already playing, keep that one,
@@ -241,10 +220,9 @@ local function AnalyzeBattleSituation()
 	if
 		currentBattleTypeIndex == 0
 		or battleType == SOUNDTRACK_BOSS_BATTLE
-		or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE
 		or (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex)
 	then
-		if battleType == SOUNDTRACK_BOSS_BATTLE or battleType == SOUNDTRACK_WORLD_BOSS_BATTLE then
+		if battleType == SOUNDTRACK_BOSS_BATTLE then
 			Soundtrack.PlayEvent(ST_BATTLE, battleType)
 		else
 			Soundtrack.PlayEvent(ST_BATTLE, battleType)
@@ -318,7 +296,6 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 			Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_DEATH)
 			--Reset difficulties outside of combat. -Gotest
 			currentBattleTypeIndex = 0 -- we are out of battle
-			highestlevel = 1
 			highestClassification = 1
 		end
 		currentBattleTypeIndex = 0 -- out of combat
@@ -333,7 +310,6 @@ function Soundtrack.BattleEvents.Initialize()
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE, ST_BOSS_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_WORLD_BOSS_BATTLE, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_PVP_BATTLE, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_RARE, ST_BOSS_LVL, true)
 	Soundtrack.AddEvent(ST_MISC, SOUNDTRACK_VICTORY, ST_BATTLE_LVL, false, true)
