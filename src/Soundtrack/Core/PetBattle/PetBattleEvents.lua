@@ -111,6 +111,13 @@ function Soundtrack.PetBattleEvents.GetPlayerTargetInfo()
 end
 
 function Soundtrack.PetBattleEvents.CheckPlayerTarget()
+	if issecretvalue(targetName) then
+		isPlayer = false
+		hasTracks = false
+		targetName = nil
+		return
+	end
+
 	if isPlayer then
 		if Soundtrack.Events.EventExists(ST_PETBATTLES, SOUNDTRACK_PETBATTLES_PLAYERS .. "/" .. targetName) then
 			Soundtrack.Chat.TracePetBattles("Target player has known named event")

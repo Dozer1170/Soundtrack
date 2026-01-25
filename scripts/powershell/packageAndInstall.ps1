@@ -1,7 +1,7 @@
 # Package addon and install it to World of Warcraft
 
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$GameFolder,
     
     [string]$WoWRootPath = "C:\World of Warcraft"
@@ -22,7 +22,26 @@ $addonPath = Join-Path -Path $addonPath -ChildPath "Addons"
 $soundtrackPath = Join-Path -Path $addonPath -ChildPath "Soundtrack"
 $legacyGenPath = Join-Path -Path $addonPath -ChildPath "SoundtrackMusic"
 $legacyGenPath = Join-Path -Path $legacyGenPath -ChildPath "LegacyLibraryGeneration"
-$zipFile = "SoundtrackTest.0.4.zip"
+
+# Extract version from TOC file
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$rootPath = Split-Path -Parent (Split-Path -Parent $scriptPath)
+$tocPath = Join-Path $rootPath "src\Soundtrack\Soundtrack-Mainline.toc"
+
+if (-not (Test-Path $tocPath)) {
+    Write-Host "Error: Could not find TOC file at $tocPath"
+    exit 1
+}
+
+$tocContent = Get-Content $tocPath
+$versionLine = $tocContent | Where-Object { $_ -match "^## Version:" }
+if (-not $versionLine) {
+    Write-Host "Error: Could not find Version in TOC file"
+    exit 1
+}
+
+$version = $versionLine -replace "^## Version:\s*", ""
+$zipFile = "Soundtrack.$version.zip"
 
 # Remove existing addon installation
 if (Test-Path $soundtrackPath) {
@@ -36,11 +55,8 @@ if (Test-Path $legacyGenPath) {
 }
 
 # Package and install
-$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-$rootPath = Split-Path -Parent (Split-Path -Parent $scriptPath)
-
 Write-Host "Packaging addon..."
-& (Join-Path $scriptPath "package.ps1") -OutFile $zipFile
+& (Join-Path $scriptPath "package.ps1")
 
 Write-Host "Installing addon..."
 & (Join-Path $scriptPath "installFromZip.ps1") -ZipFile $zipFile -GameFolder $GameFolder -WoWRootPath $WoWRootPath

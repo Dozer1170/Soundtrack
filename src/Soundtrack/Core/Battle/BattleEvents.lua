@@ -133,11 +133,12 @@ function GetGroupEnemyLevel()
 			end
 
 			-- Get the target classification
-			if unitCreatureType == "Critter" then
+			if not issecretvalue(unitCreatureType) and unitCreatureType == "Critter" then
 				unitClass = unitCreatureType
 			end
 
 			local classificationLevel = GetClassificationLevel(unitClass)
+			print(classificationLevel)
 			if classificationLevel > highestClassification then
 				highestClassification = classificationLevel
 			end

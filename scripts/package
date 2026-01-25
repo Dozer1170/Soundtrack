@@ -1,8 +1,16 @@
 #!/bin/bash
 
-OUT_FILE=$1
+# Extract version from TOC file
+VERSION=$(grep "^## Version:" src/Soundtrack/Soundtrack-Mainline.toc | sed 's/^## Version: *//')
 
-rm $OUT_FILE
+if [ -z "$VERSION" ]; then
+  echo "Error: Could not find version in TOC file"
+  exit 1
+fi
+
+OUT_FILE="Soundtrack.$VERSION.zip"
+
+rm -f $OUT_FILE
 cd src
-zip -r ../$OUT_FILE Soundtrack -x "*.iml" -x "*.hexdumptmp*" -x "*MyTracks.lua*" -x "*.pyc*" -x "*LegacyLibraryGeneration/META-INF/*" -x "*LegacyLibraryGeneration/src/*" -x "*.DS_Store"
+zip -r ../$OUT_FILE Soundtrack -x "*.iml" -x "*.hexdumptmp*" -x "*MyTracks.lua*" -x "*.pyc*" -x "*LegacyLibraryGeneration/META-INF/*" -x "*LegacyLibraryGeneration/src/*" -x "*.DS_Store" -x "*/.git" -x "*/.git/*" -x "*.gitignore" -x "*.gitattributes"
 cd ..

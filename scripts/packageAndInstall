@@ -15,7 +15,17 @@ fi
 echo "Game folder: $GAME_FOLDER"
 echo "WoW root path: $WOW_ROOT_PATH"
 
+# Extract version from TOC file
+VERSION=$(grep "^## Version:" src/Soundtrack/Soundtrack-Mainline.toc | sed 's/^## Version: *//')
+
+if [ -z "$VERSION" ]; then
+  echo "Error: Could not find version in TOC file"
+  exit 1
+fi
+
+ZIP_FILE="Soundtrack.$VERSION.zip"
+
 rm -rf "$WOW_ROOT_PATH/$GAME_FOLDER/Interface/Addons/Soundtrack"
 rm -rf "$WOW_ROOT_PATH/$GAME_FOLDER/Interface/Addons/SoundtrackMusic/LegacyLibraryGeneration"
-./scripts/package SoundtrackTest.0.4.zip
-./scripts/installFromZip SoundtrackTest.0.4.zip "$GAME_FOLDER" "$WOW_ROOT_PATH"
+./scripts/package
+./scripts/installFromZip "$ZIP_FILE" "$GAME_FOLDER" "$WOW_ROOT_PATH"

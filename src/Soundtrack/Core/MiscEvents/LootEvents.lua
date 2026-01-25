@@ -50,6 +50,10 @@ function Soundtrack.LootEvents.OnEvent(eventName, lootString, player)
 			.. playerName
 	)
 
+	if issecretvalue(lootString) then
+		return
+	end
+
 	local itemLink = string.match(lootString, "|%x+|Hitem:.-|h.-|h|r")
 	if not itemLink then
 		return
