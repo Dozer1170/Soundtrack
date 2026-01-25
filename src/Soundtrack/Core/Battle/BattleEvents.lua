@@ -9,7 +9,6 @@ Soundtrack.BattleEvents = {}
 
 local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23
 
--- TODO(Eric): Is there a way to check for boss?
 -- Classifications for mobs
 local classifications = {
 	"Critter",
@@ -136,7 +135,7 @@ local function GetBattleType()
 	if pvpEnabled then
 		return SOUNDTRACK_PVP_BATTLE
 	else
-		if isBoss then -- Boss or World Boss
+		if isBoss then -- Boss
 			return SOUNDTRACK_BOSS_BATTLE -- Boss (party)
 		end
 

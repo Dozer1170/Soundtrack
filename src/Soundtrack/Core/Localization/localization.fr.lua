@@ -81,7 +81,6 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Combat Boss"
-	SOUNDTRACK_WORLD_BOSS_BATTLE = "Combat World Boss"
 	SOUNDTRACK_PVP_BATTLE = "Combat PvP"
 
 	SOUNDTRACK_REMOVE_BATTLE = "Supprimer l'evenement de bataille"
