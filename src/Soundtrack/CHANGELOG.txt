@@ -1,4 +1,9 @@
-
+6.0.0
+- Midnight compatibility
+  - Removed custom events
+  - Removed some battle events (low health & difficulty based tracks)
+- Update default tracks with game file IDs
+- Update version to 6.0.0
 
 5.0.0
 - Improve error handling in ps1 script
