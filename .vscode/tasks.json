@@ -1,0 +1,85 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Unit Tests",
+            "type": "shell",
+            "command": "Push-Location src\\Tests; & \"$env:LOCALAPPDATA\\Programs\\Lua\\bin\\lua.exe\" TestRunner.lua; Pop-Location",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Retail)",
+            "type": "shell",
+            "command": ".\\scripts\\powershell\\packageAndInstallRetail.ps1",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test and Install (Retail)",
+            "dependsOn": [
+                "Run Unit Tests",
+                "Package and Install (Retail)"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Classic)",
+            "type": "shell",
+            "command": ".\\scripts\\powershell\\packageAndInstallClassic.ps1",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Classic Era)",
+            "type": "shell",
+            "command": ".\\scripts\\powershell\\packageAndInstallClassicEra.ps1",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package Only",
+            "type": "shell",
+            "command": ".\\scripts\\powershell\\package.ps1",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

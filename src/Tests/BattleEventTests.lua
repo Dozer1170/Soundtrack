@@ -81,11 +81,10 @@ function Tests:GetGroupEnemyClassification_WithNormalEnemy_ReturnsNormal()
 		return unit == "player" or unit == "playertarget"
 	end)
 	
-	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	
 	AreEqual("normal", classification)
 	IsFalse(pvpEnabled)
-	IsFalse(isBoss)
 end
 
 function Tests:GetGroupEnemyClassification_WithEliteEnemy_ReturnsElite()
@@ -100,15 +99,13 @@ function Tests:GetGroupEnemyClassification_WithEliteEnemy_ReturnsElite()
 		return unit == "player" or unit == "playertarget"
 	end)
 	
-	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	
 	AreEqual("elite", classification)
 	IsFalse(pvpEnabled)
-	IsFalse(isBoss)
 end
 
 function Tests:GetGroupEnemyClassification_WithBoss_ReturnsBossFlag()
-	MockUnit("playertarget", "elite", false, true, true, true)
 	Replace("GetNumGroupMembers", function()
 		return 0
 	end)
@@ -116,12 +113,30 @@ function Tests:GetGroupEnemyClassification_WithBoss_ReturnsBossFlag()
 		return 0
 	end)
 	Replace("UnitExists", function(unit)
-		return unit == "player" or unit == "playertarget"
+		return unit == "player" or unit == "boss1"
+	end)
+	Replace("UnitClassification", function(unit)
+		if unit == "boss1" then
+			return "elite"
+		end
+		return "normal"
+	end)
+	Replace("UnitIsFriend", function(_, unit)
+		return unit ~= "boss1"
+	end)
+	Replace("UnitIsDeadOrGhost", function(unit)
+		return false
+	end)
+	Replace("UnitIsPlayer", function(unit)
+		return false
+	end)
+	Replace("UnitCanAttack", function(_, unit)
+		return unit == "boss1"
 	end)
 	
-	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	
-	AreEqual(true, isBoss)
+	AreEqual("boss", classification)
 	IsFalse(pvpEnabled)
 end
 
@@ -137,10 +152,9 @@ function Tests:GetGroupEnemyClassification_WithPlayerEnemy_ReturnsPvPFlag()
 		return unit == "player" or unit == "playertarget"
 	end)
 	
-	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	
 	AreEqual(true, pvpEnabled)
-	IsFalse(isBoss)
 end
 
 function Tests:GetGroupEnemyClassification_WithNoEnemies_ReturnsNone()
@@ -154,9 +168,8 @@ function Tests:GetGroupEnemyClassification_WithNoEnemies_ReturnsNone()
 		return unit == "player"
 	end)
 	
-	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	
 	AreEqual("minus", classification)
 	IsFalse(pvpEnabled)
-	IsFalse(isBoss)
 end

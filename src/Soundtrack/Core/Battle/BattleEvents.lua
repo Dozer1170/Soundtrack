@@ -16,7 +16,8 @@ local classifications = {
 	"rare",
 	"elite",
 	"rareelite",
-	"worldboss"
+	"worldboss",
+	"boss"
 }
 
 -- Initialize difficulties only once. Prevents de-escalations during combat. -Gotest
@@ -88,12 +89,23 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 			end
 		end
 	end
+	
+	-- add boss units (boss1 through boss5)
+	for index = 1, 5 do
+		if UnitExists("boss" .. index) then
+			table.insert(units, "boss" .. index)
+		end
+	end
 
-	local isBoss = false
 	local pvpEnabled = false
 
 	for _, unit in ipairs(units) do
+		local unitIsBoss = string.match(unit, "^boss%d") ~= nil
 		local target = unit .. "target"
+		-- Boss units don't need "target" suffix
+		if unitIsBoss then
+			target = unit
+		end
 		local unitExists = UnitExists(target)
 		local unitIsEnemy = not UnitIsFriend("player", target)
 		local unitIsAlive = not UnitIsDeadOrGhost(target)
@@ -102,7 +114,6 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 			local unitIsPlayer = UnitIsPlayer(target)
 			local unitCanAttack = UnitCanAttack("player", target)
 			local unitClass = UnitClassification(target)
-			isBoss = isBoss or UnitIsBossMob(target)
 
 			-- Check for pvp
 			if not pvpEnabled then
@@ -110,6 +121,10 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 			end
 
 			local classificationLevel = Soundtrack.BattleEvents.GetClassificationLevel(unitClass)
+			-- Boss overrides all other classifications
+			if unitIsBoss then
+				classificationLevel = Soundtrack.BattleEvents.GetClassificationLevel("boss")
+			end
 			if classificationLevel > highestClassification then
 				highestClassification = classificationLevel
 			end
@@ -117,17 +132,18 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	end
 
 	local classificationText = GetClassificationText(highestClassification)
-	return classificationText, pvpEnabled, isBoss
+	Soundtrack.Chat.TraceBattle("GetGroupEnemyClassification: classification=" .. tostring(classificationText) .. ", pvpEnabled=" .. tostring(pvpEnabled))
+	return classificationText, pvpEnabled
 end
 
 -- When the player is engaged in battle, this determines
 -- the type of battle.
 local function GetBattleType()
-	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	if pvpEnabled then
 		return SOUNDTRACK_PVP_BATTLE
 	else
-		if isBoss then -- Boss
+		if classification == "boss" then -- Boss
 			return SOUNDTRACK_BOSS_BATTLE -- Boss (party)
 		end
 
@@ -220,7 +236,7 @@ function Soundtrack.BattleEvents.OnLoad(self)
 end
 
 local nextUpdateTime = 0
-local updateInterval = 0.2
+local updateInterval = 1.0
 
 function Soundtrack.BattleEvents.OnUpdate(_, _)
 	local currentTime = GetTime()

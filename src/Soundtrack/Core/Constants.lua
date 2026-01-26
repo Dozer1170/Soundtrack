@@ -10,8 +10,9 @@ ST_NPC_LVL = 8 -- Level 8: NPCs: Merchant, Auction House
 ST_ONCE_LVL = 9 -- Level 9: Once: Dance, Cinematics
 ST_BATTLE_LVL = 10 -- Level 10: Battle
 ST_BUFF_LVL = 11 -- Level 11: Temp. Buffs: Dash, Class Stealth
-ST_DEATH_LVL = 12 -- Level 12: Death, Ghost
-ST_SFX_LVL = 13 -- Level 13: SFX: Victory, Level up
+ST_BOSS_LVL = 12 -- Level 12: Boss
+ST_DEATH_LVL = 13 -- Level 13: Death, Ghost
+ST_SFX_LVL = 14 -- Level 14: SFX: Victory, Level up
 ST_PLAYLIST_LVL = 15 -- Level 15: Playlists
 ST_PREVIEW_LVL = 16 -- Level 16: Preview
 
