@@ -455,42 +455,8 @@ local function resetState()
     end
   end
   
-  -- Add test-only helper functions that don't exist in the real source
-  Soundtrack.GetEventTracks = function(tableName, eventName)
-    local eventTable = Soundtrack.Events.GetTable(tableName)
-    if eventTable and eventTable[eventName] then
-      return eventTable[eventName].tracks or {}
-    end
-    return {}
-  end
-  
-  Soundtrack.StopMusic = function()
-    Soundtrack.Library.StopMusic()
-  end
-  
   loadSourceFile("src/Soundtrack/Core/Auras/Auras.lua")
   loadSourceFile("src/Soundtrack/Core/Battle/BattleEvents.lua")
-  
-  -- BattleEvents has local functions that tests expect to be exported
-  if Soundtrack.BattleEvents then
-    if not Soundtrack.BattleEvents.GetClassificationLevel then
-      local classifications = { "Critter", "normal", "rare", "elite", "rareelite", "worldboss" }
-      Soundtrack.BattleEvents.GetClassificationLevel = function(classificationText)
-        for i, c in ipairs(classifications) do
-          if c == classificationText then
-            return i
-          end
-        end
-        Soundtrack.Chat.TraceBattle("Cannot find classification : " .. classificationText)
-        return 0
-      end
-    end
-    
-    if not Soundtrack.BattleEvents.GetGroupEnemyClassification then
-      Soundtrack.BattleEvents.GetGroupEnemyClassification = GetGroupEnemyClassification
-    end
-  end
-  
   loadSourceFile("src/Soundtrack/Core/Dance/DanceEvents.lua")
   loadSourceFile("src/Soundtrack/Core/MiscEvents/MiscEvents.lua")
   
@@ -548,28 +514,6 @@ local function resetState()
         if not success then
           -- Event not registered, that's okay for tests
         end
-      end
-    end
-    
-    -- Legacy function for tests
-    if not Soundtrack.Misc.RegisterDebuffEvent then
-      Soundtrack.Misc.RegisterDebuffEvent = function(eventName, spellId, priority, continuous, soundEffect)
-        if not eventName then
-          return false
-        end
-        
-        Soundtrack_MiscEvents[eventName] = {
-          spellId = spellId or 0,
-          stackLevel = priority or 1,
-          active = false,
-          eventtype = ST_DEBUFF_SCRIPT,
-          priority = priority or 1,
-          continuous = continuous or false,
-          soundEffect = soundEffect or false,
-        }
-        
-        Soundtrack.AddEvent(ST_MISC, eventName, priority, continuous, soundEffect)
-        return true
       end
     end
   end

@@ -69,19 +69,6 @@ function Tests:RegisterBuffEvent_ValidName_RegistersBuffEvent()
 	AreEqual(true, registered)
 end
 
-function Tests:RegisterDebuffEvent_ValidName_RegistersDebuffEvent()
-	Soundtrack_MiscEvents = {}
-	local registered = false
-	Replace(Soundtrack, "AddEvent", function()
-		registered = true
-	end)
-	
-	Soundtrack.Misc.RegisterDebuffEvent("TestDebuff", 1234, ST_ONCE_LVL, false, false)
-	
-	AreEqual(true, Soundtrack_MiscEvents["TestDebuff"] ~= nil)
-	AreEqual(true, registered)
-end
-
 function Tests:Initialize_AddsAllMiscEventsToDatabase()
 	local eventCount = 0
 	Replace(Soundtrack, "AddEvent", function()

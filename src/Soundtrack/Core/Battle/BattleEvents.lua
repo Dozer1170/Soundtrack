@@ -34,7 +34,7 @@ local battleEvents = {
 }
 
 -- Returns a classification number. Used to compare classifications
-local function GetClassificationLevel(classificationText)
+function Soundtrack.BattleEvents.GetClassificationLevel(classificationText)
 	for i, c in ipairs(classifications) do
 		if c == classificationText then
 			return i
@@ -51,7 +51,7 @@ end
 
 -- targets. Thanks to Athame!
 -- Returns classification, pvpEnabled
-function GetGroupEnemyClassification()
+function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	local prefix
 	local total
 	if GetNumGroupMembers() > 0 then
@@ -117,7 +117,7 @@ function GetGroupEnemyClassification()
 				unitClass = unitCreatureType
 			end
 
-			local classificationLevel = GetClassificationLevel(unitClass)
+			local classificationLevel = Soundtrack.BattleEvents.GetClassificationLevel(unitClass)
 			if classificationLevel > highestClassification then
 				highestClassification = classificationLevel
 			end
@@ -131,7 +131,7 @@ end
 -- When the player is engaged in battle, this determines
 -- the type of battle.
 local function GetBattleType()
-	local classification, pvpEnabled, isBoss = GetGroupEnemyClassification()
+	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	if pvpEnabled then
 		return SOUNDTRACK_PVP_BATTLE
 	else
