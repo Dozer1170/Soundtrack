@@ -37,6 +37,11 @@ local function MockUnit(unitId, classification, isPlayer, isAlive, isEnemy, isBo
 	end)
 end
 
+function Tests:GetClassificationLevel_Minus_ReturnsIndex()
+	-- Minus should be at index 1
+	AreEqual(1, Soundtrack.BattleEvents.GetClassificationLevel("minus"))
+end
+
 function Tests:GetClassificationLevel_Normal_ReturnsIndex()
 	-- Normal should be at index 2
 	AreEqual(2, Soundtrack.BattleEvents.GetClassificationLevel("normal"))
@@ -50,6 +55,11 @@ end
 function Tests:GetClassificationLevel_RareElite_ReturnsIndex()
 	-- RareElite should be at index 5
 	AreEqual(5, Soundtrack.BattleEvents.GetClassificationLevel("rareelite"))
+end
+
+function Tests:GetClassificationLevel_Boss_ReturnsIndex()
+	-- Boss should be at index 7
+	AreEqual(7, Soundtrack.BattleEvents.GetClassificationLevel("boss"))
 end
 
 function Tests:GetClassificationLevel_InvalidClassification_ReturnsZero()
@@ -67,6 +77,24 @@ function Tests:GetClassificationLevel_InvalidClassification_LogsTrace()
 	Soundtrack.BattleEvents.GetClassificationLevel("unknowntype")
 	
 	Exists(traceLogged and "Trace logged" or nil)
+end
+
+function Tests:GetGroupEnemyClassification_WithMinusEnemy_ReturnsMinus()
+	MockUnit("playertarget", "minus", false, true, true, false)
+	Replace("GetNumGroupMembers", function()
+		return 0
+	end)
+	Replace("GetNumSubgroupMembers", function()
+		return 0
+	end)
+	Replace("UnitExists", function(unit)
+		return unit == "player" or unit == "playertarget"
+	end)
+	
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+	
+	AreEqual("minus", classification)
+	IsFalse(pvpEnabled)
 end
 
 function Tests:GetGroupEnemyClassification_WithNormalEnemy_ReturnsNormal()

@@ -155,7 +155,7 @@ local function GetBattleType()
 			return SOUNDTRACK_ELITE_MOB
 		end
 
-		if classification == "normal" then -- Normal mob
+		if classification == "normal" or classification == "minus" then -- Normal mob
 			return SOUNDTRACK_NORMAL_MOB
 		end
 	end
