@@ -53,7 +53,7 @@ function Tests:GetClassificationLevel_RareElite_ReturnsIndex()
 end
 
 function Tests:GetClassificationLevel_InvalidClassification_ReturnsZero()
-	AreEqual(0, Soundtrack.BattleEvents.GetClassificationLevel("worldboss"))
+	AreEqual(0, Soundtrack.BattleEvents.GetClassificationLevel("unknowntype"))
 end
 
 function Tests:GetClassificationLevel_InvalidClassification_LogsTrace()

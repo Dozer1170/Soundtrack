@@ -41,6 +41,7 @@ end
 -- Removes string.find offenders from a string
 function CleanString(str)
 	local cleanstr = string.gsub(str, "{", "")
+	cleanstr = string.gsub(cleanstr, "}", "")
 	cleanstr = string.gsub(cleanstr, '"', "")
 	cleanstr = string.gsub(cleanstr, "'", "")
 	cleanstr = string.gsub(cleanstr, "\\", "")
