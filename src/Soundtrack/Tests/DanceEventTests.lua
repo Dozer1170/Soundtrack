@@ -21,16 +21,16 @@ function Tests:OnLoad_RegistersChatEmoteEvent()
 end
 
 function Tests:OnEvent_DanceEmoteByPlayer_PlaysCorrectGender()
-	Replace(_G, "UnitName", function(unit)
+	Replace("UnitName", function(unit)
 		if unit == "player" then
 			return "TestPlayer"
 		end
 		return nil
 	end)
-	Replace(_G, "UnitRace", function()
+	Replace("UnitRace", function()
 		return "Human"
 	end)
-	Replace(_G, "UnitSex", function()
+	Replace("UnitSex", function()
 		return 2 -- Male
 	end)
 	Replace(Soundtrack, "PlayEvent", function(eventType, eventName)
@@ -118,3 +118,5 @@ function Tests:Initialize_AddsAllRaceGenderCombinations()
 	
 	-- Should add 24 races * 2 genders = 48 events
 	Exists(eventCount > 40 and "Multiple race/gender events added" or nil)
+end
+

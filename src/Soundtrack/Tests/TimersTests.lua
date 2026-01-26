@@ -221,7 +221,8 @@ function Tests:OnUpdate_MultipleTimers_CallsAllExpiredCallbacks()
 	end)
 	
 	Soundtrack.Timers.OnUpdate()
-	
+
+	table.sort(callbacks)
 	AreEqual(2, #callbacks)
 	AreEqual(1, callbacks[1])
 	AreEqual(2, callbacks[2])
