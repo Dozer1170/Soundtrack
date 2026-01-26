@@ -270,6 +270,7 @@ local function SetupSoundtrack()
     UpdateTracksUI = function() end,
     UpdateEventsUI = function() end,
     RefreshShowingTab = function() end,
+    RefreshTracks = function() end,
     Initialize = function() end,
     OnEventStackChanged = function() end,
     NowPlayingFrame = {

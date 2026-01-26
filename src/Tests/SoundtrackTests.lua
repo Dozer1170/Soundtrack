@@ -41,3 +41,88 @@ function Tests:StopMusic_StopsPlayback()
 	-- Music should be stopped (Library.StopMusic stops playback)
 	Exists(levelBefore > 0 and "Music stopped" or nil)
 end
+
+function Tests:LoadTracks_WithMyTracksFile_LoadsCustomTracks()
+	-- Load the example MyTracks file
+	dofile("ExampleMyTracks.lua")
+	
+	-- Clear existing tracks
+	Soundtrack_Tracks = {}
+	Soundtrack.TracksLoaded = false
+	
+	-- Mock the default tracks loader
+	_G.Soundtrack_LoadDefaultTracks = function() end
+	
+	-- Load tracks
+	Soundtrack.LoadTracks()
+	
+	-- Verify tracks were loaded
+	local trackCount = 0
+	for _ in pairs(Soundtrack_Tracks) do
+		trackCount = trackCount + 1
+	end
+	
+	-- Should have loaded tracks from ExampleMyTracks
+	Exists(trackCount > 0 and "Custom tracks loaded" or nil)
+	Exists(Soundtrack_Tracks["CityOfHeroes\\AtlasPark"] ~= nil and "Specific track exists" or nil)
+	Exists(Soundtrack.TracksLoaded == true and "TracksLoaded flag set" or nil)
+end
+
+function Tests:LoadTracks_WithoutMyTracksFile_ShowsError()
+	-- Clear MyTracks function
+	local originalLoadMyTracks = _G.Soundtrack_LoadMyTracks
+	_G.Soundtrack_LoadMyTracks = nil
+	
+	-- Clear existing tracks
+	Soundtrack_Tracks = {}
+	Soundtrack.TracksLoaded = false
+	
+	-- Mock the default tracks loader
+	_G.Soundtrack_LoadDefaultTracks = function() end
+	
+	-- Set UseDefaultLoadMyTracks to false to trigger error
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = false
+	
+	-- Mock StaticPopup_Show to track if it was called
+	local popupShown = false
+	Replace(_G, "StaticPopup_Show", function(name)
+		if name == "ST_NO_LOADMYTRACKS_POPUP" then
+			popupShown = true
+		end
+	end)
+	
+	-- Try to load tracks (should error)
+	local success = pcall(Soundtrack.LoadTracks)
+	
+	-- Should have shown popup and errored
+	Exists(popupShown == true and "Error popup shown" or nil)
+	Exists(success == false and "LoadTracks errored" or nil)
+	
+	-- Restore
+	_G.Soundtrack_LoadMyTracks = originalLoadMyTracks
+end
+
+function Tests:LoadTracks_WithUseDefaultFlag_DoesNotError()
+	-- Clear MyTracks function
+	local originalLoadMyTracks = _G.Soundtrack_LoadMyTracks
+	_G.Soundtrack_LoadMyTracks = nil
+	
+	-- Clear existing tracks
+	Soundtrack_Tracks = {}
+	Soundtrack.TracksLoaded = false
+	
+	-- Mock the default tracks loader
+	_G.Soundtrack_LoadDefaultTracks = function() end
+	
+	-- Set UseDefaultLoadMyTracks to true (user intentionally has no custom tracks)
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true
+	
+	-- Load tracks (should not error)
+	local success = pcall(Soundtrack.LoadTracks)
+	
+	-- Should succeed without custom tracks
+	Exists(success == true and "LoadTracks succeeded" or nil)
+	
+	-- Restore
+	_G.Soundtrack_LoadMyTracks = originalLoadMyTracks
+end
