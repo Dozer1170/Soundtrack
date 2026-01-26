@@ -6,7 +6,7 @@
 local allTests = {}
 local passed, failed = 0, 0
 
-local function ensureRegisterEvent(self)
+local function EnsureRegisterEvent(self)
   if self and type(self.RegisterEvent) ~= "function" then
     function self:RegisterEvent(evt)
       self._events = self._events or {}
@@ -68,7 +68,7 @@ function WoWUnit.Replace(target, name, replacement)
 
   if type(target) == "table" and name == "OnLoad" and type(replacement) == "function" then
     target[name] = function(self, ...)
-      ensureRegisterEvent(self)
+      EnsureRegisterEvent(self)
       return replacement(self, ...)
     end
     return
@@ -87,7 +87,7 @@ _G.Replace = WoWUnit.Replace
 
 -- ---------------------------------------------------------------------
 -- Global mocks
-local function setWoWGlobals()
+local function SetWoWGlobals()
   _G.UnitExists = function() return false end
   _G.UnitClassification = function() return "normal" end
   _G.UnitIsPlayer = function() return false end
@@ -191,18 +191,18 @@ local defaultSettings = {
   AutoAddZones = true,
 }
 
-local function cloneDefaults()
+local function CloneDefaults()
   local copy = {}
   for k, v in pairs(defaultSettings) do copy[k] = v end
   return copy
 end
 
-local function setupSoundtrack()
+local function SetupSoundtrack()
   -- Load actual Constants, Globals, and Localization from source files
-  dofile("src/Soundtrack/Core/Constants.lua")
-  dofile("src/Soundtrack/Core/Globals.lua")
-  dofile("src/Soundtrack/Core/Localization/SoundtrackLocalization.lua")
-  dofile("src/Soundtrack/Core/Localization/Localization.en.lua")
+  dofile("../Soundtrack/Core/Constants.lua")
+  dofile("../Soundtrack/Core/Globals.lua")
+  dofile("../Soundtrack/Core/Localization/SoundtrackLocalization.lua")
+  dofile("../Soundtrack/Core/Localization/Localization.en.lua")
   
   _G.IsRetail = true
   
@@ -215,7 +215,7 @@ local function setupSoundtrack()
     db = {
       profile = {
         events = {},  -- Event configuration storage
-        settings = cloneDefaults(),
+        settings = CloneDefaults(),
       },
     },
   }
@@ -239,7 +239,7 @@ local function setupSoundtrack()
       return {
         profile = defaults and defaults.profile or {
           events = {},
-          settings = cloneDefaults()
+          settings = CloneDefaults()
         }
       }
     end
@@ -368,7 +368,7 @@ local function setupSoundtrack()
 end
 
 -- Helper to load source files
-local function loadSourceFile(filepath)
+local function LoadSourceFile(filepath)
   local file = io.open(filepath, "r")
   if not file then
     print("Error: could not open source file " .. filepath)
@@ -403,13 +403,13 @@ local function loadSourceFile(filepath)
   fn()
 end
 
-local function resetState()
-  setWoWGlobals()
-  setupSoundtrack()
+local function ResetState()
+  SetWoWGlobals()
+  SetupSoundtrack()
   
-  loadSourceFile("src/Soundtrack/Core/Utils/StringUtils.lua")
-  loadSourceFile("src/Soundtrack/Core/Utils/Sorting.lua")
-  loadSourceFile("src/Soundtrack/Core/Events.lua")
+  LoadSourceFile("../Soundtrack/Core/Utils/StringUtils.lua")
+  LoadSourceFile("../Soundtrack/Core/Utils/Sorting.lua")
+  LoadSourceFile("../Soundtrack/Core/Events.lua")
   -- Patch GetTable to auto-create missing tables (for test compatibility)
   local originalGetTable = Soundtrack.Events.GetTable
   Soundtrack.Events.GetTable = function(eventTableName)
@@ -419,7 +419,7 @@ local function resetState()
     
     -- Ensure profile and events structure exists (for tests that replace profile)
     if not SoundtrackAddon.db.profile then
-      SoundtrackAddon.db.profile = { events = {}, settings = cloneDefaults() }
+      SoundtrackAddon.db.profile = { events = {}, settings = CloneDefaults() }
     end
     if not SoundtrackAddon.db.profile.events then
       SoundtrackAddon.db.profile.events = {}
@@ -433,11 +433,11 @@ local function resetState()
     return SoundtrackAddon.db.profile.events[eventTableName]
   end
   
-  loadSourceFile("src/Soundtrack/Core/Timers.lua")
-  loadSourceFile("src/Soundtrack/Core/Library.lua")
+  LoadSourceFile("../Soundtrack/Core/Timers.lua")
+  LoadSourceFile("../Soundtrack/Core/Library.lua")
   
   -- Load real Soundtrack.lua for actual implementations
-  loadSourceFile("src/Soundtrack/Core/Soundtrack.lua")
+  LoadSourceFile("../Soundtrack/Core/Soundtrack.lua")
   
   -- Initialize SoundtrackAddon to set up db (simulate OnInitialize)
   if SoundtrackAddon and SoundtrackAddon.OnInitialize then
@@ -455,10 +455,10 @@ local function resetState()
     end
   end
   
-  loadSourceFile("src/Soundtrack/Core/Auras/Auras.lua")
-  loadSourceFile("src/Soundtrack/Core/Battle/BattleEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/Dance/DanceEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/MiscEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/Auras/Auras.lua")
+  LoadSourceFile("../Soundtrack/Core/Battle/BattleEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/Dance/DanceEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/MiscEvents.lua")
   
   -- Add test mocks and legacy functions for Misc module
   if Soundtrack.Misc then
@@ -518,23 +518,23 @@ local function resetState()
     end
   end
   
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/ClassEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/DruidEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/LootEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/MountEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/NpcEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/PlayerStatusEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/MiscEvents/StealthEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/PetBattle/PetBattleEvents.lua")
-  loadSourceFile("src/Soundtrack/Core/Zones/ZoneEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/ClassEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/DruidEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/LootEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/MountEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/NpcEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/PlayerStatusEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/MiscEvents/StealthEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/PetBattle/PetBattleEvents.lua")
+  LoadSourceFile("../Soundtrack/Core/Zones/ZoneEvents.lua")
 end
 
 -- Initial bootstrap before loading tests
-resetState()
+ResetState()
 
 -- ---------------------------------------------------------------------
 -- General helpers for test loading
-local function loadTestFile(filepath)
+local function LoadTestFile(filepath)
   local file = io.open(filepath, "r")
   if not file then
     print("Error: could not open " .. filepath)
@@ -553,22 +553,22 @@ end
 
 -- Discover and load tests ---------------------------------------------
 local testFiles = {
-  "src/Soundtrack/Tests/BattleEventTests.lua",
-  "src/Soundtrack/Tests/DanceEventTests.lua",
-  "src/Soundtrack/Tests/EventsTests.lua",
-  "src/Soundtrack/Tests/AurasTests.lua",
-  "src/Soundtrack/Tests/LibraryTests.lua",
-  "src/Soundtrack/Tests/MiscEventTests.lua",
-  "src/Soundtrack/Tests/MountEventsTests.lua",
-  "src/Soundtrack/Tests/PetBattleEventTests.lua",
-  "src/Soundtrack/Tests/SoundtrackTests.lua",
-  "src/Soundtrack/Tests/StringUtilsTests.lua",
-  "src/Soundtrack/Tests/TimersTests.lua",
-  "src/Soundtrack/Tests/ZoneEventTests.lua",
+  "BattleEventTests.lua",
+  "DanceEventTests.lua",
+  "EventsTests.lua",
+  "AurasTests.lua",
+  "LibraryTests.lua",
+  "MiscEventTests.lua",
+  "MountEventsTests.lua",
+  "PetBattleEventTests.lua",
+  "SoundtrackTests.lua",
+  "StringUtilsTests.lua",
+  "TimersTests.lua",
+  "ZoneEventTests.lua",
 }
 
 for _, path in ipairs(testFiles) do
-  loadTestFile(path)
+  LoadTestFile(path)
 end
 
 -- ---------------------------------------------------------------------
@@ -583,7 +583,7 @@ for _, entry in ipairs(allTests) do
     if type(fn) == "function" and name:match("^[A-Z]") then
       local label = string.format("[%s] %s", entry.name or "", name)
       print(label)
-      resetState()
+      ResetState()
       local ok, err = pcall(fn, entry.tests)
       if not ok then
         failed = failed + 1
