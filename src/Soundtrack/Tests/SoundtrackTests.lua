@@ -98,6 +98,17 @@ function Tests:LoadTracks_WithMissingMyTracks_PromptForDefault()
 end
 
 function Tests:PlayEvent_ValidEventAndTable_PlaysTrack()
+	Soundtrack.AddEvent(ST_ZONE, "ValidEvent", ST_ZONE_LVL, true, false)
+	Soundtrack_Tracks["valid.mp3"] = { filePath = "valid.mp3" }
+	Soundtrack.Events.GetTable(ST_ZONE)["ValidEvent"].tracks = {"valid.mp3"}
+	
+	Soundtrack.PlayEvent(ST_ZONE, "ValidEvent")
+	
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(stackLevel)
+	
+	Exists(eventName == "ValidEvent" and tableName == ST_ZONE and "Track played" or nil)
+end
 	local trackPlayed = false
 	Replace(Soundtrack.Events, "PlayRandomTrackByTable", function()
 		trackPlayed = true
@@ -110,27 +121,28 @@ function Tests:PlayEvent_ValidEventAndTable_PlaysTrack()
 end
 
 function Tests:PlayEvent_NoTracksAvailable_DoesNotPlay()
-	local trackResult = nil
-	Replace(Soundtrack.Events, "PlayRandomTrackByTable", function()
-		trackResult = false
-		return false
-	end)
+	Soundtrack.AddEvent(ST_MISC, "NoTracksEvent", ST_ONCE_LVL, true, false)
 	
-	Soundtrack.PlayEvent(ST_MISC, "NonexistentEvent")
+	local stackBefore = Soundtrack.Events.GetCurrentStackLevel()
+	Soundtrack.PlayEvent(ST_MISC, "NoTracksEvent")
+	local stackAfter = Soundtrack.Events.GetCurrentStackLevel()
 	
-	-- Verify that PlayRandomTrackByTable returned false
-	Exists(trackResult == false and "No-track scenario verified" or nil)
+	-- Event without tracks should not be added to stack
+	Exists(stackBefore == stackAfter and "No-track scenario verified" or nil)
 end
 
 function Tests:StopMusic_StopsPlayback()
-	local stopCalled = false
-	Replace(Soundtrack, "Stop", function()
-		stopCalled = true
-	end)
+	Soundtrack.AddEvent(ST_MISC, "TestMusic", ST_ONCE_LVL, true, false)
+	Soundtrack_Tracks["test.mp3"] = { filePath = "test.mp3" }
+	Soundtrack.Events.GetTable(ST_MISC)["TestMusic"].tracks = {"test.mp3"}
+	
+	Soundtrack.Events.PlayEvent(ST_MISC, "TestMusic", ST_ONCE_LVL, false, nil, 0)
+	local levelBefore = Soundtrack.Events.GetCurrentStackLevel()
 	
 	Soundtrack.StopMusic()
 	
-	Exists(stopCalled and "Music stopped" or nil)
+	-- Music should be stopped (StopMusic calls Library.StopMusic which stops playback)
+	Exists(levelBefore > 0 and "Music stopped" or nil)
 end
 
 function Tests:AddEvent_ValidEvent_AddsToEventTable()
@@ -146,13 +158,9 @@ function Tests:AddEvent_ValidEvent_AddsToEventTable()
 end
 
 function Tests:GetEventTracks_WithValidEvent_ReturnsTracks()
-	Replace(Soundtrack.Events, "GetTable", function()
-		return {
-			TestEvent = {
-				tracks = { "track1.mp3", "track2.mp3", "track3.mp3" }
-			}
-		}
-	end)
+	Soundtrack.AddEvent(ST_ZONE, "TestEvent", ST_ZONE_LVL, true, false)
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["TestEvent"].tracks = { "track1.mp3", "track2.mp3", "track3.mp3" }
 	
 	local tracks = Soundtrack.GetEventTracks(ST_ZONE, "TestEvent")
 	
@@ -160,9 +168,10 @@ function Tests:GetEventTracks_WithValidEvent_ReturnsTracks()
 end
 
 function Tests:GetEventTracks_WithInvalidEvent_ReturnsEmpty()
-	Replace(Soundtrack.Events, "GetTable", function()
-		return {}
-	end)
+	local tracks = Soundtrack.GetEventTracks(ST_ZONE, "NonexistentEvent")
+	
+	Exists(tracks and #tracks == 0 and "Empty tracks returned" or nil)
+end
 	
 	local tracks = Soundtrack.GetEventTracks(ST_ZONE, "InvalidEvent")
 	

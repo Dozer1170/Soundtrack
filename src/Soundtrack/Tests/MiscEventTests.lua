@@ -194,7 +194,6 @@ end
 
 function Tests:LootEvents_OnEvent_QueuesPlayEvent()
   resetMisc()
-  setMiscConstants()
 
   Replace("UnitName", function()
     return "Player"
@@ -219,7 +218,6 @@ end
 
 function Tests:NpcEvents_Register_AddsAllNpcEvents()
   resetMisc()
-  setMiscConstants()
 
   Soundtrack_MiscEvents = {}
   Soundtrack.NpcEvents.Register()
@@ -232,12 +230,21 @@ end
 
 function Tests:PlayerStatusEvents_OnEvent_TogglesMerchant()
   resetMisc()
-  setMiscConstants()
+  
+  -- Enable misc music and register player status events
+  SoundtrackAddon.db.profile.settings.EnableMiscMusic = true
+  Soundtrack.PlayerStatusEvents.Register()
+  
+  -- Add a track so the update script runs
+  local eventTable = Soundtrack.Events.GetTable(ST_MISC)
+  eventTable[SOUNDTRACK_MERCHANT].tracks = {"dummy_track.mp3"}
 
   Soundtrack.PlayerStatusEvents.OnEvent("MERCHANT_SHOW")
+  Soundtrack.Misc.OnUpdate()
   AreEqual(SOUNDTRACK_MERCHANT, Soundtrack.Misc.PlayedEvents[#Soundtrack.Misc.PlayedEvents])
 
   Soundtrack.PlayerStatusEvents.OnEvent("MERCHANT_CLOSED")
+  Soundtrack.Misc.OnUpdate()
   AreEqual(SOUNDTRACK_MERCHANT, Soundtrack.Misc.StoppedEvents[#Soundtrack.Misc.StoppedEvents])
 end
 

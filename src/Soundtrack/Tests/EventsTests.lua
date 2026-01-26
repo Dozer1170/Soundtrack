@@ -62,7 +62,11 @@ function Tests:PushEvent_ValidStackLevel_PushesEvent()
 		table.insert(Soundtrack.Events.Stack, { eventName = nil, tableName = nil })
 	end
 	
-	Soundtrack.Events.PushEvent(ST_ZONE, "TestZone", 1)
+	Soundtrack.AddEvent(ST_ZONE, "TestZone", 1, true, false)
+	Soundtrack_Tracks["testtrack.mp3"] = { filePath = "testtrack.mp3" }
+	Soundtrack.Events.GetTable(ST_ZONE)["TestZone"].tracks = {"testtrack.mp3"}
+	
+	Soundtrack.Events.PlayEvent(ST_ZONE, "TestZone", 1, false, nil, 0)
 	
 	Exists(Soundtrack.Events.Stack[1].eventName == "TestZone" and "Event pushed" or nil)
 end
@@ -74,7 +78,7 @@ function Tests:PopEvent_ValidStackLevel_PopsEvent()
 	end
 	Soundtrack.Events.Stack[1] = { eventName = "TestZone", tableName = ST_ZONE }
 	
-	Soundtrack.Events.PopEvent(1)
+	Soundtrack.StopEventAtLevel(1)
 	
 	Exists(Soundtrack.Events.Stack[1].eventName == nil and "Event popped" or nil)
 end
@@ -82,7 +86,7 @@ end
 function Tests:GetStack_ReturnsCurrentStack()
 	Soundtrack.Events.Stack = { {eventName = "Test"} }
 	
-	local stack = Soundtrack.Events.GetStack()
+	local stack = Soundtrack.Events.Stack
 	
 	Exists(stack[1].eventName == "Test" and "Stack returned" or nil)
 end
@@ -94,7 +98,7 @@ function Tests:GetEventName_WithEventAtLevel_ReturnsEventName()
 	end
 	Soundtrack.Events.Stack[5] = { eventName = "MountEvent", tableName = ST_MOUNT }
 	
-	local eventName = Soundtrack.Events.GetEventName(5)
+	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(5)
 	
 	AreEqual("MountEvent", eventName)
 end
@@ -106,7 +110,7 @@ function Tests:GetTableName_WithTableAtLevel_ReturnsTableName()
 	end
 	Soundtrack.Events.Stack[5] = { eventName = "MountEvent", tableName = ST_MOUNT }
 	
-	local tableName = Soundtrack.Events.GetTableName(5)
+	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(5)
 	
 	AreEqual(ST_MOUNT, tableName)
 end
@@ -114,15 +118,16 @@ end
 function Tests:PauseEvents_SetsEventsPaused()
 	Soundtrack.Events.Paused = false
 	
-	Soundtrack.Events.PauseEvents()
+	Soundtrack.Events.PlaybackPlayStop()
 	
 	Exists(Soundtrack.Events.Paused and "Events paused" or nil)
 end
 
 function Tests:ResumeEvents_ResumesPlayback()
 	Soundtrack.Events.Paused = true
+	Soundtrack.Events.Stack[1] = { eventName = "TestEvent", tableName = ST_ZONE }
 	
-	Soundtrack.Events.ResumeEvents()
+	Soundtrack.Events.PlaybackPlayStop()
 	
 	IsFalse(Soundtrack.Events.Paused)
 end

@@ -46,35 +46,56 @@ function Tests:OnEvent_PetBattleOver_TriggersVictory()
 end
 
 function Tests:BattleEngaged_PlaysCorrectEvent()
-	local eventPlayed = false
-	local eventType = nil
-	Replace(Soundtrack, "PlayEvent", function(eType, eventName)
-		if eType == ST_PET_BATTLE then
-			eventPlayed = true
-			eventType = eType
-		end
-	end)
 	Replace(SoundtrackAddon.db, "profile", {
 		settings = {
 			EnablePetBattleMusic = true
-		}
+		},
+		events = SoundtrackAddon.db.profile.events
 	})
+	
+	Replace("C_PetBattles", {
+		IsWildBattle = function() return true end,
+		IsInBattle = function() return true end,
+		GetPVPMatchmakingInfo = function() return false end
+	})
+	
+	Replace(C_Map, "GetBestMapForUnit", function() return 946 end)
+	Replace(C_Map, "GetMapInfo", function(mapID)
+		if mapID == 946 then
+			return { parentMapID = 12 }
+		elseif mapID == 12 then
+			return { name = "Kalimdor" }
+		end
+		return { name = "TestZone" }
+	end)
+	
+	Soundtrack.AddEvent(ST_PETBATTLES, "Kalimdor Wild Battle", ST_NPC_LVL, true, false)
+	local eventTable = Soundtrack.Events.GetTable(ST_PETBATTLES)
+	eventTable["Kalimdor Wild Battle"].tracks = {"test.mp3"}
+	Soundtrack_Tracks["test.mp3"] = { filePath = "test.mp3" }
 	
 	Soundtrack.PetBattleEvents.BattleEngaged()
 	
-	AreEqual(true, eventPlayed)
-	AreEqual(ST_PET_BATTLE, eventType)
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(stackLevel)
+	
+	AreEqual(true, tableName == ST_PETBATTLES)
 end
 
 function Tests:Initialize_AddsPetBattleWildEvents()
-	local eventCount = 0
-	Replace(Soundtrack, "AddEvent", function(eventType)
-		if eventType == ST_PET_BATTLE then
-			eventCount = eventCount + 1
-		end
-	end)
+	Soundtrack_MiscEvents = {}
+	local eventTable = Soundtrack.Events.GetTable(ST_PETBATTLES)
+	local initialCount = 0
+	for _ in pairs(eventTable) do
+		initialCount = initialCount + 1
+	end
 	
 	Soundtrack.PetBattleEvents.Initialize()
 	
-	Exists(eventCount > 0 and "Pet battle events initialized" or nil)
+	local finalCount = 0
+	for _ in pairs(eventTable) do
+		finalCount = finalCount + 1
+	end
+	
+	Exists(finalCount > initialCount and "Pet battle events initialized" or nil)
 end
