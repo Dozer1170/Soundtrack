@@ -77,12 +77,8 @@ local function RegisterGeneralStrings()
 		"Assign your own music to various events in the game or play your own playlists. You can drag this icon around the minimap."
 
 	-- Battle Tab
-	SOUNDTRACK_UNKNOWN_BATTLE = "Batalla Desconocido"
 	SOUNDTRACK_NORMAL_MOB = "Mob Normal"
 	SOUNDTRACK_ELITE_MOB = "Mob Elite"
-	-- Added 1/22/2010
-	SOUNDTRACK_CRITTER = "Critter"
-
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Batalla Repujado"
 	SOUNDTRACK_PVP_BATTLE = "Batalla JcJ"

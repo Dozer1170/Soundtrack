@@ -156,7 +156,7 @@ function Tests:GetGroupEnemyClassification_WithNoEnemies_ReturnsNone()
 	
 	local classification, pvpEnabled, isBoss = Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	
-	AreEqual("Critter", classification)
+	AreEqual("minus", classification)
 	IsFalse(pvpEnabled)
 	IsFalse(isBoss)
 end

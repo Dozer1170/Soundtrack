@@ -410,6 +410,7 @@ local function ResetState()
   
   LoadSourceFile("../Soundtrack/Core/Utils/StringUtils.lua")
   LoadSourceFile("../Soundtrack/Core/Utils/Sorting.lua")
+  LoadSourceFile("../Soundtrack/Core/Utils/Cleanup.lua")
   LoadSourceFile("../Soundtrack/Core/Events.lua")
   -- Patch GetTable to auto-create missing tables (for test compatibility)
   local originalGetTable = Soundtrack.Events.GetTable
@@ -444,6 +445,10 @@ local function ResetState()
   if SoundtrackAddon and SoundtrackAddon.OnInitialize then
     SoundtrackAddon:OnInitialize()
   end
+  
+  -- Clear filters
+  Soundtrack.eventFilter = nil
+  Soundtrack.trackFilter = nil
   
   -- Wrap Soundtrack.PlayEvent to track calls for tests (used by loot events)
   local original_SoundtrackPlayEvent = Soundtrack.PlayEvent
@@ -555,6 +560,7 @@ end
 -- Discover and load tests ---------------------------------------------
 local testFiles = {
   "BattleEventTests.lua",
+  "CleanupTests.lua",
   "DanceEventTests.lua",
   "EventsTests.lua",
   "AurasTests.lua",
@@ -562,6 +568,7 @@ local testFiles = {
   "MiscEventTests.lua",
   "MountEventsTests.lua",
   "PetBattleEventTests.lua",
+  "SortingTests.lua",
   "SoundtrackTests.lua",
   "StringUtilsTests.lua",
   "TimersTests.lua",

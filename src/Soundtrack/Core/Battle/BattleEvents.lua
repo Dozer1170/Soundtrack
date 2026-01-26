@@ -11,7 +11,7 @@ local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
 
 -- Classifications for mobs
 local classifications = {
-	"Critter",
+	"minus",
 	"normal",
 	"rare",
 	"elite",
@@ -24,8 +24,6 @@ local highestClassification = 1
 
 -- Battle event priority for mob types
 local battleEvents = {
-	SOUNDTRACK_UNKNOWN_BATTLE,
-	SOUNDTRACK_CRITTER,
 	SOUNDTRACK_NORMAL_MOB,
 	SOUNDTRACK_ELITE_MOB,
 	SOUNDTRACK_RARE,
@@ -103,18 +101,12 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 		if unitExists and unitIsEnemy and unitIsAlive then
 			local unitIsPlayer = UnitIsPlayer(target)
 			local unitCanAttack = UnitCanAttack("player", target)
-			local unitCreatureType = UnitCreatureType(target)
 			local unitClass = UnitClassification(target)
 			isBoss = isBoss or UnitIsBossMob(target)
 
 			-- Check for pvp
 			if not pvpEnabled then
 				pvpEnabled = unitIsPlayer and unitCanAttack
-			end
-
-			-- Get the target classification
-			if not issecretvalue(unitCreatureType) and unitCreatureType == "Critter" then
-				unitClass = unitCreatureType
 			end
 
 			local classificationLevel = Soundtrack.BattleEvents.GetClassificationLevel(unitClass)
@@ -150,10 +142,6 @@ local function GetBattleType()
 		if classification == "normal" then -- Normal mob
 			return SOUNDTRACK_NORMAL_MOB
 		end
-
-		if classification == "Critter" then -- Critter
-			return SOUNDTRACK_CRITTER
-		end
 	end
 
 	return "InvalidBattle"
@@ -176,17 +164,6 @@ local function StartVictoryMusic()
 					Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
 					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
 					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY_BOSS)
-				end
-			elseif battleEventName ~= SOUNDTRACK_CRITTER and battleEventName ~= SOUNDTRACK_UNKNOWN_BATTLE then
-				local victoryEvent = Soundtrack.GetEvent(ST_MISC, SOUNDTRACK_VICTORY)
-				if victoryEvent.soundEffect == true then
-					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY)
-					Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
-					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
-				else
-					Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
-					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
-					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY)
 				end
 			else
 				Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
@@ -304,8 +281,6 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 end
 
 function Soundtrack.BattleEvents.Initialize()
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_UNKNOWN_BATTLE, ST_BATTLE_LVL, true)
-	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_CRITTER, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_NORMAL_MOB, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_ELITE_MOB, ST_BATTLE_LVL, true)
 	Soundtrack.AddEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE, ST_BOSS_LVL, true)

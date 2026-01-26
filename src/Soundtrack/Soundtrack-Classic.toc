@@ -31,6 +31,4 @@ Core/Zones/ZoneDummyFrame.xml
 Core/UI/Minimap.lua
 Core/UI/NowPlayingFrame.xml
 Core/UI/ControlFrame.xml
-Tests/TestCommon.lua
-Tests/ZoneEventTests.lua
 ../SoundtrackMusic/MyTracks.lua

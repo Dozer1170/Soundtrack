@@ -73,12 +73,8 @@ local function RegisterGeneralStrings()
 		"Attribuez votre propre musique a divers evenements dans le jeu ou jouer vos propres playlists. Vous pouvez faire glisser cette icone autour de la minicarte."
 
 	-- Battle Tab
-	SOUNDTRACK_UNKNOWN_BATTLE = "Combat Aggro"
 	SOUNDTRACK_NORMAL_MOB = "Mob Normal"
 	SOUNDTRACK_ELITE_MOB = "Mob Elite"
-	-- Added 1/22/2010
-	SOUNDTRACK_CRITTER = "Bestiole"
-
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Combat Boss"
 	SOUNDTRACK_PVP_BATTLE = "Combat PvP"
