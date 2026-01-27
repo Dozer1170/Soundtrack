@@ -58,3 +58,101 @@ function Tests:OnEvent_OnlyContinent_DoesNotAdd()
 
 	IsFalse(Soundtrack.Events.GetTable(ST_ZONE)["BrandNewContinent"])
 end
+
+-- Zone Initialization Tests
+function Tests:AddZones_FullHierarchy_CreatesAllLevels()
+	MockZone("Kalimdor", "Mulgore", "Thunder Bluff", "Elder Rise")
+	
+	Soundtrack_ZoneEvents_AddZones()
+	
+	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
+	Exists(zoneTable["Kalimdor"])
+	Exists(zoneTable["Kalimdor/Mulgore"])
+	Exists(zoneTable["Kalimdor/Mulgore/Thunder Bluff"])
+	Exists(zoneTable["Kalimdor/Mulgore/Thunder Bluff/Elder Rise"])
+end
+
+function Tests:AddZones_AssignsPriorities_CorrectLevels()
+	MockZone("Northrend", "Dragonblight", "Wyrmrest Temple", "Library")
+	
+	Soundtrack_ZoneEvents_AddZones()
+	
+	local continent = Soundtrack.GetEvent(ST_ZONE, "Northrend")
+	local zone = Soundtrack.GetEvent(ST_ZONE, "Northrend/Dragonblight")
+	local subzone = Soundtrack.GetEvent(ST_ZONE, "Northrend/Dragonblight/Wyrmrest Temple")
+	local minimap = Soundtrack.GetEvent(ST_ZONE, "Northrend/Dragonblight/Wyrmrest Temple/Library")
+	
+	AreEqual(ST_CONTINENT_LVL, continent.priority)
+	AreEqual(ST_ZONE_LVL, zone.priority)
+	AreEqual(ST_SUBZONE_LVL, subzone.priority)
+	AreEqual(ST_MINIMAP_LVL, minimap.priority)
+end
+
+function Tests:AddZones_Instance_CreatesInstanceEvent()
+	Replace("IsInInstance", function()
+		return true, "party"
+	end)
+	Replace("GetRealZoneText", function()
+		return "Deadmines"
+	end)
+	
+	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
+	
+	Exists(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_INSTANCES])
+end
+
+function Tests:AddZones_Arena_CreatesPvPEvent()
+	Replace("IsInInstance", function()
+		return true, "arena"
+	end)
+	Replace("GetRealZoneText", function()
+		return "Dalaran Arena"
+	end)
+	
+	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
+	
+	Exists(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_PVP])
+end
+
+function Tests:AddZones_NilZoneName_DoesNotCrash()
+	Replace("GetRealZoneText", function()
+		return nil
+	end)
+	
+	Soundtrack_ZoneEvents_AddZones()
+	
+	Exists(true and "Handled nil zone gracefully" or nil)
+end
+
+function Tests:OnUpdate_ZoneMusicEnabled_PlaysZone()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	MockZone("Outland", "Hellfire Peninsula", "", "")
+	
+	Soundtrack_ZoneEvents_AddZones()
+	Soundtrack_Tracks["hellfire.mp3"] = { filePath = "hellfire.mp3" }
+	Soundtrack.Events.GetTable(ST_ZONE)["Outland/Hellfire Peninsula"].tracks = {"hellfire.mp3"}
+	
+	Soundtrack.ZoneEvents.OnUpdate()
+	
+	local eventName = Soundtrack.Events.GetEventAtStackLevel(ST_ZONE_LVL)
+	AreEqual("Outland/Hellfire Peninsula", eventName)
+end
+
+function Tests:OnUpdate_ZoneMusicDisabled_DoesNotPlay()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = false
+	MockZone("Draenor", "Frostfire Ridge", "", "")
+	
+	Soundtrack_ZoneEvents_AddZones()
+	Soundtrack_Tracks["frostfire.mp3"] = { filePath = "frostfire.mp3" }
+	Soundtrack.Events.GetTable(ST_ZONE)["Draenor/Frostfire Ridge"].tracks = {"frostfire.mp3"}
+	
+	local playEventCalled = false
+	Replace(Soundtrack.Events, "PlayEvent", function()
+		playEventCalled = true
+	end)
+	
+	Soundtrack.ZoneEvents.OnUpdate()
+	
+	-- Zone music is disabled, so no event should be played
+	IsFalse(playEventCalled)
+end
