@@ -409,6 +409,7 @@ local function ResetState()
   SetupSoundtrack()
   
   LoadSourceFile("../Soundtrack/Core/Utils/StringUtils.lua")
+  LoadSourceFile("../Soundtrack/Core/Utils/TableUtils.lua")
   LoadSourceFile("../Soundtrack/Core/Utils/Sorting.lua")
   LoadSourceFile("../Soundtrack/Core/Utils/Cleanup.lua")
   LoadSourceFile("../Soundtrack/Core/Events.lua")
@@ -559,20 +560,20 @@ end
 
 -- Discover and load tests ---------------------------------------------
 local testFiles = {
-  "BattleEventTests.lua",
-  "CleanupTests.lua",
-  "DanceEventTests.lua",
+  "Battle/BattleEventsTests.lua",
+  "Utils/CleanupTests.lua",
+  "Dance/DanceEventsTests.lua",
   "EventsTests.lua",
-  "AurasTests.lua",
+  "Auras/AurasTests.lua",
   "LibraryTests.lua",
-  "MiscEventTests.lua",
-  "MountEventsTests.lua",
-  "PetBattleEventTests.lua",
-  "SortingTests.lua",
+  "MiscEvents/MiscEventsTests.lua",
+  "MiscEvents/MountEventsTests.lua",
+  "PetBattle/PetBattleEventsTests.lua",
+  "Utils/SortingTests.lua",
   "SoundtrackTests.lua",
-  "StringUtilsTests.lua",
+  "Utils/StringUtilsTests.lua",
   "TimersTests.lua",
-  "ZoneEventTests.lua",
+  "Zones/ZoneEventsTests.lua",
 }
 
 for _, path in ipairs(testFiles) do

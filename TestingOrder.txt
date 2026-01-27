@@ -1,0 +1,126 @@
+Test Coverage Analysis - Uncovered Code Areas (Priority Ordered)
+🔴 CRITICAL PRIORITY - Core Event Management (✅ COMPLETED - Phase 1)
+Soundtrack.lua - Event Management Functions:
+
+RemoveEvent(tableName, eventName) - Removes event from database ✅ 4 tests (valid, nil table, nil event, nonexistent)
+RenameEvent(tableName, oldEventName, newEventName, priority, continuous, soundEffect) - Renames events ✅ 2 tests (rename + preserve tracks/settings)
+AssignTrack(eventName, trackName) - Assigns track to event ✅ 1 test
+GetTableFromEvent(eventName) - Finds which table contains an event ✅ 2 tests (existing, nonexistent)
+GetEvent(tableName, eventName) - Retrieves specific event ✅ 3 tests (valid, nonexistent, nil params)
+GetEventByName(eventName) - Searches all tables for event ✅ 2 tests (existing, nonexistent)
+StopEvent(tableName, eventName) - Stops specific event ✅ 3 tests (valid, nonexistent, nil params)
+OnEventTreeChanged(eventTableName) - Handles event tree updates ❌ No tests (Low priority - UI only)
+
+🔴 CRITICAL PRIORITY - Track Management (✅ COMPLETED - Phase 1)
+Events.lua - Track Assignment:
+
+Events.Add(eventTableName, eventName, trackName) - Adds track to event ✅ 4 tests (new event, with track, duplicate prevention, multiple tracks)
+Events.Remove(eventTableName, eventName, trackName) - Removes track from event ✅ 1 test
+Events.DeleteEvent(tableName, eventName) - Deletes entire event ✅ 1 test
+Events.RenameEvent(tableName, oldName, newName) - Renames event in Events system ✅ 1 test
+Events.ClearEvent(eventTableName, eventName) - Clears all tracks from event ✅ 1 test
+
+Summary: Phase 1 Complete - Added 31 new tests covering all critical CRUD operations. Total: 192 methods, 299 assertions.
+
+🟠 HIGH PRIORITY - Playback Control (✅ COMPLETED - Phase 2)
+Events.lua - Playback Functions:
+
+Events.PlayRandomTrackByTable(tableName, eventName, offset) - Random track selection ✅ 8 tests (single/multiple tracks, empty, sequential mode, negative offset, paused state)
+Events.RestartLastEvent(offset) - Restarts current event ✅ 2 tests (with event, empty stack)
+Events.GetCurrentEvent() - Gets currently playing event ✅ 2 tests (with event, no event)
+Events.PlaybackNext() - Skip to next track ✅ 1 test
+Events.PlaybackPrevious() - Go to previous track ✅ 1 test
+Events.PlaybackPlayStop() - Toggle pause ✅ 2 tests (pause when playing, unpause when paused)
+Events.PlaybackTrueStop() - Complete stop (vs pause) ✅ 1 test
+Events.Pause(enable) - Pause/resume playback ✅ 2 tests (enable true, enable false)
+
+🟠 HIGH PRIORITY - Battle System (✅ COMPLETED - Phase 2)
+BattleEvents.lua - Battle Logic:
+
+OnEvent() - Combat event handling ✅ 7 tests (PLAYER_REGEN_DISABLED/ENABLED, PLAYER_DEAD, PLAYER_ALIVE, PLAYER_UNGHOST, battle music disabled, initialization)
+Battle cooldown system ⚠️ Partially tested (event handlers tested, cooldown timing not directly tested)
+GetBattleType() - Determines battle type (tested via event handlers)
+AnalyzeBattleSituation() - Main battle analysis logic (tested via event handlers)
+OnUpdate() - Battle state updates (called by event handlers, not directly tested)
+Battle escalation logic (tested via settings)
+
+Summary: Phase 2 Complete - Added 30 new tests for playback controls and battle system. Total: 342 tests (all passing).
+Coverage increased from ~55% to ~65%.
+
+🟡 MEDIUM PRIORITY - Zone System (Minimal Testing)
+ZoneEvents.lua:
+
+Soundtrack_ZoneEvents_AddZones() - Zone initialization ❌ No tests
+OnUpdate() - Zone change detection ❌ No tests
+Zone name parsing logic ⚠️ Partially tested (only string parsing in ZoneEventTests, not actual detection)
+Continent/zone hierarchy ❌ No tests
+Priority: Zone music changes are frequent. Parser bugs could cause wrong music or no music.
+
+🟡 MEDIUM PRIORITY - Library Management
+Library.lua - Track Database:
+
+AddDefaultTrack() - Adds default (non-custom) track ❌ No tests
+OnUpdate() - Library update tick (fade-in/fade-out, track progression) ❌ No tests
+Track file path resolution (mp3/ogg/wav) ⚠️ Partially tested (format flags, not actual path logic)
+Fade-out logic ❌ No tests
+Continuity system (seamless track transitions) ❌ No tests
+Priority: Track loading bugs could cause silent failures or wrong files playing.
+
+🟡 MEDIUM PRIORITY - Addon Initialization
+Soundtrack.lua:
+
+LoadTracks() - Main track loading ❌ No tests (except popup mock)
+OnUpdate() - Main addon update loop ❌ No tests
+OnLoad() - Addon initialization ❌ No tests
+Default settings initialization ⚠️ Framework test only (not real code)
+Migration from old saved variables ❌ No tests
+Priority: Init bugs affect every user session. Migration bugs could lose user data.
+
+🟢 LOW PRIORITY - Utility Functions
+Events.lua - Stack Management:
+
+OnStackChanged() - Stack change handler ⚠️ Called internally, not directly tested
+GetCurrentStackLevel() - Returns active stack level ✅ Tested
+Utils/StringUtils.lua:
+✅ Well tested (9 tests covering CleanString, StringSplit, FormatDuration, GetPathFileName, IsNullOrEmpty)
+
+🟢 LOW PRIORITY - Already Well Covered
+✅ Timers - 7 tests covering AddTimer, Remove, Get, OnUpdate
+✅ Auras - 5 tests covering buff/debuff tracking
+✅ Library basic operations - AddTrack, PlayTrack, StopMusic, IsTrackActive
+✅ Battle classification - GetClassificationLevel, GetGroupEnemyClassification
+✅ Misc events - Loot, NPC, Player status, Class events, Stealth
+✅ Pet Battles - 4 tests covering initialization and events
+✅ Dance Events - 6 tests
+✅ Mount Events - Tests for ground/flying/taxi detection
+✅ Playback Controls - 19 tests for all playback functions
+✅ Battle Events - 11 tests for combat state and death handling
+
+Recommended Test Implementation Order:
+✅ Phase 1 (Critical - COMPLETED):
+✅ Event CRUD operations - RemoveEvent, RenameEvent, GetEvent tests (31 tests added)
+✅ Track assignment - Add/Remove/Clear track tests
+✅ Event deletion - DeleteEvent, verify cleanup
+
+✅ Phase 2 (High Priority - COMPLETED):
+✅ Playback controls - Next/Previous/Pause/Stop tests (19 tests added)
+✅ Battle system core - Combat state, death handling, event triggering (11 tests added)
+✅ PlayRandomTrackByTable - Random vs sequential, offset handling, edge cases (8 tests)
+
+Phase 2 (High Priority - NEXT):
+Playback controls - Next/Previous/Pause/Stop tests
+Battle system core - AnalyzeBattleSituation, battle type detection, escalation
+Track selection - PlayRandomTrackByTable with various scenarios
+StopEvent - Stop specific event by table/name
+
+Phase 3 (Medium Priority):
+Zone system - Zone detection, OnUpdate, zone hierarchy
+Library OnUpdate - Fade logic, continuity system
+Initialization - LoadTracks, migration logic
+
+Phase 4 (Polish):
+Edge cases - Null handling, error conditions, cleanup
+Integration tests - End-to-end scenarios combining multiple systems
+
+Current Coverage: ~55% (192 test methods, 299 assertions passing - up from 188 methods)
+Target Coverage: 80%+ (estimated ~250 more tests needed)
