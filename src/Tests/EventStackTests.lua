@@ -284,9 +284,9 @@ function Tests:OnEventTreeChanged_HandlesExpandedEvents()
 	local hasSubZone = false
 	
 	for _, node in ipairs(Soundtrack_FlatEvents[ST_ZONE] or {}) do
-		if node == "Continent" then hasContinent = true end
-		if node == "Continent/Zone" then hasZone = true end
-		if node == "Continent/Zone/SubZone" then hasSubZone = true end
+		if node.tag == "Continent" then hasContinent = true end
+		if node.tag == "Continent/Zone" then hasZone = true end
+		if node.tag == "Continent/Zone/SubZone" then hasSubZone = true end
 	end
 	
 	Exists(hasContinent and "Expanded parent in list" or nil)

@@ -238,9 +238,9 @@ function Tests:SortEvents_BasicSort_SortsAlphabetically()
 	Soundtrack.SortEvents(ST_BATTLE)
 	
 	-- Check sorted order
-	AreEqual("Apple", Soundtrack_FlatEvents[ST_BATTLE][1])
-	AreEqual("Middle", Soundtrack_FlatEvents[ST_BATTLE][2])
-	AreEqual("Zebra", Soundtrack_FlatEvents[ST_BATTLE][3])
+	AreEqual("Apple", Soundtrack_FlatEvents[ST_BATTLE][1].tag)
+	AreEqual("Middle", Soundtrack_FlatEvents[ST_BATTLE][2].tag)
+	AreEqual("Zebra", Soundtrack_FlatEvents[ST_BATTLE][3].tag)
 end
 
 function Tests:SortEvents_HidesPreview_ExcludesPreviewEvent()
@@ -392,7 +392,7 @@ function Tests:SortEvents_CaseInsensitiveFilter_MatchesRegardlessOfCase()
 	
 	-- Should match despite case difference
 	AreEqual(1, #Soundtrack_FlatEvents[ST_BATTLE])
-	AreEqual("BOSS_FIGHT", Soundtrack_FlatEvents[ST_BATTLE][1])
+	AreEqual("BOSS_FIGHT", Soundtrack_FlatEvents[ST_BATTLE][1].tag)
 	
 	Soundtrack.eventFilter = nil
 end

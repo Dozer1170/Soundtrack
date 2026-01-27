@@ -32,7 +32,7 @@ end
 
 -- Returns a flat list of tree nodes, based on whether each level is expanded or not
 local function GetFlattenedEventNodes(eventTableName, rootNode, list)
-	table.insert(list, rootNode.tag)
+	table.insert(list, rootNode)
 
 	-- if expandable
 	if table.getn(rootNode.nodes) >= 1 then
