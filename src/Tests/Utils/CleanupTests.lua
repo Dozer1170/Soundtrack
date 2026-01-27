@@ -8,22 +8,35 @@ function Tests:CleanupOldEvents_RemovesObsoleteEvents()
 	-- Setup: Initialize RegisteredEvents and profile.events structures
 	Soundtrack.RegisteredEvents[ST_BATTLE] = Soundtrack.RegisteredEvents[ST_BATTLE] or {}
 	Soundtrack.RegisteredEvents[ST_MISC] = Soundtrack.RegisteredEvents[ST_MISC] or {}
+	Soundtrack.RegisteredEvents[ST_ZONE] = Soundtrack.RegisteredEvents[ST_ZONE] or {}
+	Soundtrack.RegisteredEvents[ST_PETBATTLES] = Soundtrack.RegisteredEvents[ST_PETBATTLES] or {}
 	
 	if not SoundtrackAddon.db.profile.events then
 		SoundtrackAddon.db.profile.events = {}
 	end
 	
-	-- Create an event in saved data that's not in registered events
+	-- Create events in saved data that are not in registered events across multiple tables
 	SoundtrackAddon.db.profile.events[ST_BATTLE] = {
 		ValidEvent = { tracks = {} },
 		ObsoleteEvent = { tracks = {} },
 	}
 	
+	SoundtrackAddon.db.profile.events[ST_ZONE] = {
+		ValidZone = { tracks = {} },
+		ObsoleteZone = { tracks = {} },
+	}
+	
 	SoundtrackAddon.db.profile.events[ST_MISC] = SoundtrackAddon.db.profile.events[ST_MISC] or {}
+	SoundtrackAddon.db.profile.events[ST_PETBATTLES] = SoundtrackAddon.db.profile.events[ST_PETBATTLES] or {}
 	
 	Soundtrack.RegisteredEvents[ST_BATTLE] = {
 		ValidEvent = { tracks = {} },
 		-- ObsoleteEvent is not registered, should be removed
+	}
+	
+	Soundtrack.RegisteredEvents[ST_ZONE] = {
+		ValidZone = { tracks = {} },
+		-- ObsoleteZone is not registered, should be removed
 	}
 	
 	-- Mock UpdateEventsUI
@@ -35,9 +48,11 @@ function Tests:CleanupOldEvents_RemovesObsoleteEvents()
 	-- Run cleanup
 	Soundtrack.Cleanup.CleanupOldEvents()
 	
-	-- ObsoleteEvent should be removed
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].ObsoleteEvent == nil and "Obsolete event removed" or nil)
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].ValidEvent ~= nil and "Valid event kept" or nil)
+	-- Obsolete events should be removed from all tables
+	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].ObsoleteEvent == nil and "Obsolete battle event removed" or nil)
+	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].ValidEvent ~= nil and "Valid battle event kept" or nil)
+	Exists(SoundtrackAddon.db.profile.events[ST_ZONE].ObsoleteZone == nil and "Obsolete zone event removed" or nil)
+	Exists(SoundtrackAddon.db.profile.events[ST_ZONE].ValidZone ~= nil and "Valid zone event kept" or nil)
 	Exists(updateCalled and "UI updated" or nil)
 end
 
@@ -259,23 +274,37 @@ function Tests:CleanupOldEvents_HandlesEmptyRegisteredEvents()
 	-- Setup: Initialize RegisteredEvents and profile.events structures
 	Soundtrack.RegisteredEvents[ST_BATTLE] = Soundtrack.RegisteredEvents[ST_BATTLE] or {}
 	Soundtrack.RegisteredEvents[ST_MISC] = Soundtrack.RegisteredEvents[ST_MISC] or {}
+	Soundtrack.RegisteredEvents[ST_ZONE] = Soundtrack.RegisteredEvents[ST_ZONE] or {}
+	Soundtrack.RegisteredEvents[ST_DANCE] = Soundtrack.RegisteredEvents[ST_DANCE] or {}
 	
 	if not SoundtrackAddon.db.profile.events then
 		SoundtrackAddon.db.profile.events = {}
 	end
 	
-	-- Empty registered events
+	-- Empty registered events - events in profile should be removed
 	SoundtrackAddon.db.profile.events[ST_BATTLE] = {
-		SomeEvent = { tracks = {} },
+		SomeBattleEvent = { tracks = {} },
+	}
+	
+	SoundtrackAddon.db.profile.events[ST_ZONE] = {
+		SomeZoneEvent = { tracks = {} },
+	}
+	
+	SoundtrackAddon.db.profile.events[ST_DANCE] = {
+		SomeDanceEvent = { tracks = {} },
 	}
 	
 	SoundtrackAddon.db.profile.events[ST_MISC] = SoundtrackAddon.db.profile.events[ST_MISC] or {}
 	
 	Soundtrack.RegisteredEvents[ST_BATTLE] = {}
+	Soundtrack.RegisteredEvents[ST_ZONE] = {}
+	Soundtrack.RegisteredEvents[ST_DANCE] = {}
 	
 	-- Run cleanup
 	Soundtrack.Cleanup.CleanupOldEvents()
 	
-	-- All events should be removed except Preview
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].SomeEvent == nil and "Event removed when no registered events" or nil)
+	-- All events should be removed except Preview from all tables
+	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].SomeBattleEvent == nil and "Battle event removed when no registered events" or nil)
+	Exists(SoundtrackAddon.db.profile.events[ST_ZONE].SomeZoneEvent == nil and "Zone event removed when no registered events" or nil)
+	Exists(SoundtrackAddon.db.profile.events[ST_DANCE].SomeDanceEvent == nil and "Dance event removed when no registered events" or nil)
 end

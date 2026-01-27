@@ -13,7 +13,7 @@ function Soundtrack.DanceEvents.OnEvent(_, event, ...)
 	end
 	if event == "CHAT_MSG_TEXT_EMOTE" then
 		for _, emote in ipairs(SOUNDTRACK_DANCE_EMOTES) do
-			if string.find(arg1, emote) then
+			if not issecretvalue(arg1) and not issecretvalue(emote) and string.find(arg1, emote) then
 				-- Check if the dance is initated by the player
 				if UnitName("player") == arg2 then
 					local raceName = UnitRace("player")

@@ -87,8 +87,13 @@ StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 }
 
 function Soundtrack.Cleanup.CleanupOldEvents()
-	CleanupTableEvents(SoundtrackAddon.db.profile.events[ST_BATTLE], Soundtrack.RegisteredEvents[ST_BATTLE])
-	CleanupTableEvents(SoundtrackAddon.db.profile.events[ST_MISC], Soundtrack.RegisteredEvents[ST_MISC])
+	-- Iterate through all event tables in the profile
+	for tableName, savedEventTable in pairs(SoundtrackAddon.db.profile.events) do
+		local liveEventTable = Soundtrack.RegisteredEvents[tableName]
+		if liveEventTable then
+			CleanupTableEvents(savedEventTable, liveEventTable)
+		end
+	end
 
 	SoundtrackUI.UpdateEventsUI()
 end

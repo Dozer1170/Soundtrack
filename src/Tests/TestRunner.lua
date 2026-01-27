@@ -564,6 +564,7 @@ local testFiles = {
   "Utils/CleanupTests.lua",
   "Dance/DanceEventsTests.lua",
   "EventsTests.lua",
+  "EventStackTests.lua",
   "Auras/AurasTests.lua",
   "LibraryTests.lua",
   "MiscEvents/MiscEventsTests.lua",
