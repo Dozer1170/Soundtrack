@@ -58,7 +58,7 @@ function WoWUnit.IsFalse(value, description)
   return true
 end
 
-function WoWUnit.IsTrue(value, description) 
+function WoWUnit.IsTrue(value, description)
   if not value then
     local msg = string.format("    ✗ FAIL: expected true, got %s", tostring(value))
     if description then
@@ -118,7 +118,7 @@ end
 _G.WoWUnit = WoWUnit
 _G.AreEqual = WoWUnit.AreEqual
 _G.IsFalse = WoWUnit.IsFalse
-_G.IsTrue =  WoWUnit.IsTrue
+_G.IsTrue = WoWUnit.IsTrue
 _G.Exists = WoWUnit.Exists
 _G.Replace = WoWUnit.Replace
 
@@ -129,6 +129,9 @@ local function SetWoWGlobals()
   _G.UnitClassification = function() return "normal" end
   _G.UnitIsPlayer = function() return false end
   _G.UnitIsDeadOrGhost = function() return _G.MockIsDead or _G.MockIsCorpse or false end
+  _G.UnitIsDead = function() return _G.MockIsDead or false end
+  _G.UnitIsCorpse = function() return _G.MockIsCorpse or false end
+  _G.UnitAffectingCombat = function() return _G.MockInCombat or false end
   _G.UnitIsFriend = function() return true end
   _G.UnitCanAttack = function() return false end
   _G.UnitIsBossMob = function() return false end

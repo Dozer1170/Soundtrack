@@ -204,22 +204,7 @@ function Tests:GetGroupEnemyClassification_WithNoEnemies_ReturnsNone()
 end
 
 -- Combat State Tests (testing through the OnEvent API)
--- Mock combat state for tests
-_G.UnitAffectingCombat = function(unit)
-	return _G.MockInCombat == true
-end
-
-_G.UnitIsDeadOrGhost = function(unit)
-	return _G.MockIsDead == true
-end
-
-_G.UnitIsCorpse = function(unit)
-	return _G.MockIsCorpse == true
-end
-
-_G.UnitIsDead = function(unit)
-	return _G.MockIsDead == true
-end
+-- Tests set _G.MockInCombat, _G.MockIsDead, and _G.MockIsCorpse to control behavior
 
 function Tests:OnEvent_PLAYER_REGEN_DISABLED_EntersCombat()
 	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
@@ -472,12 +457,11 @@ function Tests:OnEvent_PLAYER_REGEN_ENABLED_PlayerDead_StopsLevelsWithoutVictory
 	local bossLevelStopped = false
 	local unitIsDeadOrGhostCalled = false
 
-	-- Mock UnitIsDeadOrGhost to track if it's called
-	local originalUnitIsDeadOrGhost = _G.UnitIsDeadOrGhost
-	_G.UnitIsDeadOrGhost = function(unit)
+	-- Track if UnitIsDeadOrGhost is called
+	Replace(_G, "UnitIsDeadOrGhost", function(unit)
 		unitIsDeadOrGhostCalled = true
-		return _G.MockIsDead == true
-	end
+		return _G.MockIsDead or _G.MockIsCorpse or false
+	end)
 
 	Replace(Soundtrack, "PlayEvent", function(eventTable, eventName, stackLevel, continuous, offset, fadeTime)
 		if eventName == SOUNDTRACK_VICTORY or eventName == SOUNDTRACK_VICTORY_BOSS then
@@ -523,9 +507,6 @@ function Tests:OnEvent_PLAYER_REGEN_ENABLED_PlayerDead_StopsLevelsWithoutVictory
 	IsTrue(battleLevelStopped, "battle level should be stopped")
 	IsTrue(bossLevelStopped, "boss level should be stopped")
 	IsFalse(victoryEventPlayed, "victory should not play when player is dead")
-
-	-- Restore original
-	_G.UnitIsDeadOrGhost = originalUnitIsDeadOrGhost
 end
 
 function Tests:Initialize_AddsAllBattleEvents()
