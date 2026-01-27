@@ -5,6 +5,8 @@
 -- Minimal test harness
 local allTests = {}
 local passed, failed = 0, 0
+local currentTestFailed = false
+local failureMessages = {}
 
 local function EnsureRegisterEvent(self)
   if self and type(self.RegisterEvent) ~= "function" then
@@ -24,30 +26,64 @@ setmetatable(WoWUnit, {
   end,
 })
 
-function WoWUnit.AreEqual(expected, actual)
+function WoWUnit.AreEqual(expected, actual, description)
   if expected ~= actual then
-    print(string.format("    ✗ FAIL: expected %s, got %s", tostring(expected), tostring(actual)))
+    local msg = string.format("    ✗ FAIL: expected %s, got %s", tostring(expected), tostring(actual))
+    if description then
+      msg = msg .. " (" .. description .. ")"
+    end
+    local trace = debug.traceback("", 2)
+    table.insert(failureMessages, { msg = msg, trace = trace })
     failed = failed + 1
+    currentTestFailed = true
     return false
   end
   passed = passed + 1
   return true
 end
 
-function WoWUnit.IsFalse(value)
+function WoWUnit.IsFalse(value, description)
   if value then
-    print(string.format("    ✗ FAIL: expected false, got %s", tostring(value)))
+    local msg = string.format("    ✗ FAIL: expected false, got %s", tostring(value))
+    if description then
+      msg = msg .. " (" .. description .. ")"
+    end
+    local trace = debug.traceback("", 2)
+    table.insert(failureMessages, { msg = msg, trace = trace })
     failed = failed + 1
+    currentTestFailed = true
     return false
   end
   passed = passed + 1
   return true
 end
 
-function WoWUnit.Exists(value)
+function WoWUnit.IsTrue(value, description) 
   if not value then
-    print("    ✗ FAIL: expected truthy value")
+    local msg = string.format("    ✗ FAIL: expected true, got %s", tostring(value))
+    if description then
+      msg = msg .. " (" .. description .. ")"
+    end
+    local trace = debug.traceback("", 2)
+    table.insert(failureMessages, { msg = msg, trace = trace })
     failed = failed + 1
+    currentTestFailed = true
+    return false
+  end
+  passed = passed + 1
+  return true
+end
+
+function WoWUnit.Exists(value, description)
+  if not value then
+    local msg = "    ✗ FAIL: expected truthy value"
+    if description then
+      msg = msg .. " (" .. description .. ")"
+    end
+    local trace = debug.traceback("", 2)
+    table.insert(failureMessages, { msg = msg, trace = trace })
+    failed = failed + 1
+    currentTestFailed = true
     return false
   end
   passed = passed + 1
@@ -82,6 +118,7 @@ end
 _G.WoWUnit = WoWUnit
 _G.AreEqual = WoWUnit.AreEqual
 _G.IsFalse = WoWUnit.IsFalse
+_G.IsTrue =  WoWUnit.IsTrue
 _G.Exists = WoWUnit.Exists
 _G.Replace = WoWUnit.Replace
 
@@ -91,7 +128,7 @@ local function SetWoWGlobals()
   _G.UnitExists = function() return false end
   _G.UnitClassification = function() return "normal" end
   _G.UnitIsPlayer = function() return false end
-  _G.UnitIsDeadOrGhost = function() return false end
+  _G.UnitIsDeadOrGhost = function() return _G.MockIsDead or _G.MockIsCorpse or false end
   _G.UnitIsFriend = function() return true end
   _G.UnitCanAttack = function() return false end
   _G.UnitIsBossMob = function() return false end
@@ -122,7 +159,7 @@ local function SetWoWGlobals()
     GetBestMapForUnit = function() return 946 end,
     GetMapInfo = function() return { mapID = 1, name = "TestZone" } end,
     GetMapChildrenInfo = function(mapID, mapType, allDescendants)
-      return {}  -- Return empty table for tests
+      return {} -- Return empty table for tests
     end
   }
 
@@ -203,9 +240,9 @@ local function SetupSoundtrack()
   dofile("../Soundtrack/Core/Globals.lua")
   dofile("../Soundtrack/Core/Localization/SoundtrackLocalization.lua")
   dofile("../Soundtrack/Core/Localization/Localization.en.lua")
-  
+
   _G.IsRetail = true
-  
+
   _G.Soundtrack_Tracks = {}
   _G.PlayMusic = function(fileName) end
   _G.StopMusic = function() end
@@ -214,7 +251,7 @@ local function SetupSoundtrack()
   _G.SoundtrackAddon = {
     db = {
       profile = {
-        events = {},  -- Event configuration storage
+        events = {}, -- Event configuration storage
         settings = CloneDefaults(),
       },
     },
@@ -222,7 +259,7 @@ local function SetupSoundtrack()
 
   _G.StaticPopupDialogs = {}
   _G.StaticPopup_Show = function() end
-  
+
   -- Mock Ace libraries
   local AceAddon = {
     NewAddon = function(self, name, ...)
@@ -233,7 +270,7 @@ local function SetupSoundtrack()
       return addon
     end
   }
-  
+
   local AceDB = {
     New = function(self, dbName, defaults, defaultProfile)
       return {
@@ -244,7 +281,7 @@ local function SetupSoundtrack()
       }
     end
   }
-  
+
   _G.LibStub = function(libName)
     if libName == "AceAddon-3.0" then
       return AceAddon
@@ -265,7 +302,7 @@ local function SetupSoundtrack()
   function _G.SoundtrackMiscDUMMY:RegisterEvent(evt)
     self._events[evt] = true
   end
-  
+
   _G.SoundtrackUI = {
     UpdateTracksUI = function() end,
     UpdateEventsUI = function() end,
@@ -289,12 +326,12 @@ local function SetupSoundtrack()
       return nil
     end
   }
-  
+
   -- Stubs for functions that Soundtrack.lua needs
   _G.SoundtrackMinimap_Initialize = function() end
   _G.SoundtrackFrame_RefreshPlaybackControls = function() end
   _G.Soundtrack_LoadDefaultTracks = function() end
-  _G.Soundtrack_LoadMyTracks = nil  -- Intentionally nil to test default behavior
+  _G.Soundtrack_LoadMyTracks = nil -- Intentionally nil to test default behavior
 
   _G.Soundtrack = {
     Chat = {
@@ -319,12 +356,12 @@ local function SetupSoundtrack()
     SortAllEvents = function() end,
     SortTracks = function() end,
   }
-  
+
   -- Lua 5.1 compatibility for table.getn
   if not table.getn then
     table.getn = function(t) return t and #t or 0 end
   end
-  
+
   -- Global functions that source files expect
   _G.getn = function(t) return t and #t or 0 end
   _G.strfind = string.find
@@ -339,7 +376,7 @@ local function SetupSoundtrack()
   _G.C_Map = _G.C_Map or {
     GetMapInfo = function() return { mapType = Enum.UIMapType.Zone } end,
     GetMapChildrenInfo = function(mapID, mapType, allDescendants)
-      return {}  -- Return empty table for tests
+      return {} -- Return empty table for tests
     end
   }
   _G.C_PetBattles = {
@@ -347,13 +384,13 @@ local function SetupSoundtrack()
     GetPVPMatchmakingInfo = function() return false end,
     IsWildBattle = function() return false end
   }
-  
+
   -- Global battle functions that tests expect
   _G.GetGroupEnemyClassification = function()
     local classification = "normal"
     local pvpEnabled = false
     local isBoss = false
-    
+
     if UnitExists("playertarget") then
       classification = UnitClassification("playertarget") or "normal"
       if UnitIsBossMob("playertarget") then
@@ -363,7 +400,7 @@ local function SetupSoundtrack()
         pvpEnabled = true
       end
     end
-    
+
     return classification, pvpEnabled, isBoss
   end
 end
@@ -407,7 +444,7 @@ end
 local function ResetState()
   SetWoWGlobals()
   SetupSoundtrack()
-  
+
   LoadSourceFile("../Soundtrack/Core/Utils/StringUtils.lua")
   LoadSourceFile("../Soundtrack/Core/Utils/TableUtils.lua")
   LoadSourceFile("../Soundtrack/Core/Utils/Sorting.lua")
@@ -419,7 +456,7 @@ local function ResetState()
     if not eventTableName then
       return nil
     end
-    
+
     -- Ensure profile and events structure exists (for tests that replace profile)
     if not SoundtrackAddon.db.profile then
       SoundtrackAddon.db.profile = { events = {}, settings = CloneDefaults() }
@@ -427,30 +464,30 @@ local function ResetState()
     if not SoundtrackAddon.db.profile.events then
       SoundtrackAddon.db.profile.events = {}
     end
-    
+
     -- Auto-create table if it doesn't exist (for tests)
     if not SoundtrackAddon.db.profile.events[eventTableName] then
       SoundtrackAddon.db.profile.events[eventTableName] = {}
     end
-    
+
     return SoundtrackAddon.db.profile.events[eventTableName]
   end
-  
+
   LoadSourceFile("../Soundtrack/Core/Timers.lua")
   LoadSourceFile("../Soundtrack/Core/Library.lua")
-  
+
   -- Load real Soundtrack.lua for actual implementations
   LoadSourceFile("../Soundtrack/Core/Soundtrack.lua")
-  
+
   -- Initialize SoundtrackAddon to set up db (simulate OnInitialize)
   if SoundtrackAddon and SoundtrackAddon.OnInitialize then
     SoundtrackAddon:OnInitialize()
   end
-  
+
   -- Clear filters
   Soundtrack.eventFilter = nil
   Soundtrack.trackFilter = nil
-  
+
   -- Wrap Soundtrack.PlayEvent to track calls for tests (used by loot events)
   local original_SoundtrackPlayEvent = Soundtrack.PlayEvent
   Soundtrack.PlayEvent = function(tableName, eventName, forceRestart)
@@ -461,20 +498,20 @@ local function ResetState()
       return original_SoundtrackPlayEvent(tableName, eventName, forceRestart)
     end
   end
-  
+
   LoadSourceFile("../Soundtrack/Core/Auras/Auras.lua")
   LoadSourceFile("../Soundtrack/Core/Battle/BattleEvents.lua")
   LoadSourceFile("../Soundtrack/Core/Dance/DanceEvents.lua")
   LoadSourceFile("../Soundtrack/Core/MiscEvents/MiscEvents.lua")
-  
+
   -- Add test mocks and legacy functions for Misc module
   if Soundtrack.Misc then
     -- Mock for tracking test state
     Soundtrack.Misc.AurasUpdated = false
     Soundtrack.Misc.PlayedEvents = {}
     Soundtrack.Misc.StoppedEvents = {}
-    Soundtrack.Misc.UpdateScripts = {}  -- Track registered update scripts for tests
-    
+    Soundtrack.Misc.UpdateScripts = {} -- Track registered update scripts for tests
+
     -- Wrap RegisterUpdateScript to track for tests
     local original_RegisterUpdateScript = Soundtrack.Misc.RegisterUpdateScript
     Soundtrack.Misc.RegisterUpdateScript = function(self, name, priority, continuous, script, soundEffect)
@@ -490,7 +527,7 @@ local function ResetState()
         return original_RegisterUpdateScript(self, name, priority, continuous, script, soundEffect)
       end
     end
-    
+
     -- Wrap OnPlayerAurasUpdated to set test flag
     local original_OnPlayerAurasUpdated = Soundtrack.Misc.OnPlayerAurasUpdated
     Soundtrack.Misc.OnPlayerAurasUpdated = function()
@@ -499,7 +536,7 @@ local function ResetState()
         original_OnPlayerAurasUpdated()
       end
     end
-    
+
     -- Wrap PlayEvent and StopEvent to track for tests
     local original_PlayEvent = Soundtrack.Misc.PlayEvent
     Soundtrack.Misc.PlayEvent = function(eventName)
@@ -512,7 +549,7 @@ local function ResetState()
         end
       end
     end
-    
+
     local original_StopEvent = Soundtrack.Misc.StopEvent
     Soundtrack.Misc.StopEvent = function(eventName)
       table.insert(Soundtrack.Misc.StoppedEvents, eventName)
@@ -524,7 +561,7 @@ local function ResetState()
       end
     end
   end
-  
+
   LoadSourceFile("../Soundtrack/Core/MiscEvents/ClassEvents.lua")
   LoadSourceFile("../Soundtrack/Core/MiscEvents/DruidEvents.lua")
   LoadSourceFile("../Soundtrack/Core/MiscEvents/LootEvents.lua")
@@ -592,12 +629,29 @@ for _, entry in ipairs(allTests) do
   for name, fn in pairs(entry.tests) do
     if type(fn) == "function" and name:match("^[A-Z]") then
       local label = string.format("[%s] %s", entry.name or "", name)
-      print(label)
+      currentTestFailed = false
+      failureMessages = {}
       ResetState()
       local ok, err = pcall(fn, entry.tests)
       if not ok then
+        print(label)
         failed = failed + 1
         print("    ✗ ERROR: " .. tostring(err))
+      elseif currentTestFailed then
+        print(label)
+        for _, failure in ipairs(failureMessages) do
+          print(failure.msg)
+          -- Print stack trace with indentation
+          local lines = {}
+          for line in failure.trace:gmatch("[^\r\n]+") do
+            table.insert(lines, line)
+          end
+          for i, line in ipairs(lines) do
+            if i > 1 then -- Skip the first line (it's just the traceback header)
+              print("      " .. line)
+            end
+          end
+        end
       end
     end
   end

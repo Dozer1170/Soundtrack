@@ -7,8 +7,6 @@
 
 Soundtrack.BattleEvents = {}
 
-local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23
-
 -- Classifications for mobs
 local classifications = {
 	"minus",
@@ -163,16 +161,16 @@ local function GetBattleType()
 	return "InvalidBattle"
 end
 
-local hostileDeathCount = 0
 local currentBattleTypeIndex = 0 -- Used to determine battle priorities and escalations
+
 local function StartVictoryMusic()
 	if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
-		if hostileDeathCount > 0 then
+		if not UnitIsDeadOrGhost("player") then
 			local battleEventName = Soundtrack.Events.Stack[ST_BATTLE_LVL].eventName
 			local bossEventName = Soundtrack.Events.Stack[ST_BOSS_LVL].eventName
 			if bossEventName ~= nil then
 				local victoryEvent = Soundtrack.GetEvent(ST_MISC, SOUNDTRACK_VICTORY_BOSS)
-				if victoryEvent.soundEffect == true then
+				if victoryEvent ~= nil and victoryEvent.soundEffect == true then
 					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY_BOSS)
 					Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
 					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
@@ -181,6 +179,18 @@ local function StartVictoryMusic()
 					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
 					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY_BOSS)
 				end
+			elseif battleEventName ~= nil then
+				local victoryEvent = Soundtrack.GetEvent(ST_MISC, SOUNDTRACK_VICTORY)
+				if victoryEvent ~= nil and victoryEvent.soundEffect == true then
+					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY)
+					Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
+					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
+				else
+					Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
+					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
+					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY)
+				end
+
 			else
 				Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
 				Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
@@ -190,7 +200,6 @@ local function StartVictoryMusic()
 			Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
 		end
 	end
-	hostileDeathCount = 0
 end
 
 local function StopCombatMusic()
@@ -260,7 +269,7 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		-- If we re-enter combat after cooldown, clear timers.
 		Soundtrack.Timers.Remove("BattleCooldown")
 		AnalyzeBattleSituation()
-	elseif event == "PLAYER_REGEN_ENABLED" and not UnitIsCorpse("player") and not UnitIsDead("player") then
+	elseif event == "PLAYER_REGEN_ENABLED" then
 		if SoundtrackAddon.db.profile.settings.BattleCooldown > 0 then
 			Soundtrack.Timers.AddTimer(
 				"BattleCooldown",
