@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
+local Tests = Tests("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 function Tests:CleanupOldEvents_RemovesObsoleteEvents()
 	-- Setup: Initialize RegisteredEvents and profile.events structures
@@ -307,7 +307,7 @@ function Tests:CleanupOldEvents_HandlesEmptyRegisteredEvents()
 	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].SomeBattleEvent == nil,
 		"Battle event removed when no registered events")
 	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].SomeZoneEvent == nil,
-	"Zone event removed when no registered events")
+		"Zone event removed when no registered events")
 	IsTrue(SoundtrackAddon.db.profile.events[ST_DANCE].SomeDanceEvent == nil,
 		"Dance event removed when no registered events")
 end

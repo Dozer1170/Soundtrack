@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
+local Tests = Tests("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 function Tests:EventHasTracks_EventWithTracks_ReturnsTrue()
 	Replace(Soundtrack.Events, "GetTable", function()

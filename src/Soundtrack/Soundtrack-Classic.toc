@@ -3,7 +3,6 @@
 ## Version: 6.0.1
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
-## OptionalDeps: WoWUnit
 ## RequiredDeps: 
 ## SavedVariables: Soundtrack_Settings, Soundtrack_Events, SoundtrackDB
 ## IconTexture: Interface\Icons\INV_Misc_Flute_01

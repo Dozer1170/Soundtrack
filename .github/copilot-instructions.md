@@ -15,12 +15,12 @@ When making code changes to the Soundtrack addon, always follow this workflow:
 ## Project Structure
 
 - **Production Code**: `src/Soundtrack/` contains the addon implementation
-- **Tests**: `src/Tests/` contains WoWUnit test files
+- **Tests**: `src/Tests/` contains unit test files
 - **Scripts**: `scripts/powershell/` contains packaging and installation scripts
 
 ## Testing Notes
 
-- The test framework is a custom WoWUnit implementation
+- The test framework is a custom unit test implementation
 - Test files follow the pattern `*Tests.lua`
 - All tests run via `TestRunner.lua` in the project root
 - Tests mock WoW API functions as needed

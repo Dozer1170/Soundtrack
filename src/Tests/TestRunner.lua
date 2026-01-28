@@ -1,5 +1,5 @@
 #!/usr/bin/env lua
--- Standalone test runner with custom harness (no WoWUnit dependency)
+-- Standalone test runner with custom harness (no external dependency)
 
 -- ---------------------------------------------------------------------
 -- Minimal test harness
@@ -17,8 +17,8 @@ local function EnsureRegisterEvent(self)
   end
 end
 
-local WoWUnit = {}
-setmetatable(WoWUnit, {
+local Tests = {}
+setmetatable(Tests, {
   __call = function(_, addonName, event)
     local testClass = {}
     table.insert(allTests, { name = addonName, event = event, tests = testClass })
@@ -26,7 +26,7 @@ setmetatable(WoWUnit, {
   end,
 })
 
-function WoWUnit.AreEqual(expected, actual, description)
+function Tests.AreEqual(expected, actual, description)
   if expected ~= actual then
     local msg = string.format("    ✗ FAIL: expected %s, got %s", tostring(expected), tostring(actual))
     if description then
@@ -42,7 +42,7 @@ function WoWUnit.AreEqual(expected, actual, description)
   return true
 end
 
-function WoWUnit.IsFalse(value, description)
+function Tests.IsFalse(value, description)
   if value then
     local msg = string.format("    ✗ FAIL: expected false, got %s", tostring(value))
     if description then
@@ -58,7 +58,7 @@ function WoWUnit.IsFalse(value, description)
   return true
 end
 
-function WoWUnit.IsTrue(value, description)
+function Tests.IsTrue(value, description)
   if not value then
     local msg = string.format("    ✗ FAIL: expected true, got %s", tostring(value))
     if description then
@@ -74,7 +74,7 @@ function WoWUnit.IsTrue(value, description)
   return true
 end
 
-function WoWUnit.Exists(value, description)
+function Tests.Exists(value, description)
   if not value then
     local msg = "    ✗ FAIL: expected truthy value"
     if description then
@@ -90,7 +90,7 @@ function WoWUnit.Exists(value, description)
   return true
 end
 
-function WoWUnit.Replace(target, name, replacement)
+function Tests.Replace(target, name, replacement)
   if replacement == nil then
     _G[target] = name
     return
@@ -115,12 +115,12 @@ function WoWUnit.Replace(target, name, replacement)
   end
 end
 
-_G.WoWUnit = WoWUnit
-_G.AreEqual = WoWUnit.AreEqual
-_G.IsFalse = WoWUnit.IsFalse
-_G.IsTrue = WoWUnit.IsTrue
-_G.Exists = WoWUnit.Exists
-_G.Replace = WoWUnit.Replace
+_G.Tests = Tests
+_G.AreEqual = Tests.AreEqual
+_G.IsFalse = Tests.IsFalse
+_G.IsTrue = Tests.IsTrue
+_G.Exists = Tests.Exists
+_G.Replace = Tests.Replace
 
 -- ---------------------------------------------------------------------
 -- Global mocks

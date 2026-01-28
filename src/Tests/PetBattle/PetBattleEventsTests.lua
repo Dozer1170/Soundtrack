@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "PET_BATTLE_OPENING_START")
+local Tests = Tests("Soundtrack", "PET_BATTLE_OPENING_START")
 
 function Tests:OnLoad_RegistersPetBattleEvents()
 	local events = {}

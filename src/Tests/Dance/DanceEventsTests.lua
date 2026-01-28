@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "CHAT_MSG_TEXT_EMOTE")
+local Tests = Tests("Soundtrack", "CHAT_MSG_TEXT_EMOTE")
 
 function Tests:OnLoad_RegistersChatEmoteEvent()
 	local eventRegistered = false

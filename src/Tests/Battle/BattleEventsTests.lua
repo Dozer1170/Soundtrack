@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "PLAYER_REGEN_DISABLED")
+local Tests = Tests("Soundtrack", "PLAYER_REGEN_DISABLED")
 
 local function MockUnit(unitId, classification, isPlayer, isAlive, isEnemy, isBoss)
 	Replace("UnitExists", function(unit)

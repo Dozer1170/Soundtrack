@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
+local Tests = Tests("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 function Tests:PlayEvent_ValidEventAndTable_PlaysTrack()
 	Soundtrack.AddEvent(ST_ZONE, "ValidEvent", ST_ZONE_LVL, true, false)

@@ -1,8 +1,8 @@
-if not WoWUnit then
+if not Tests then
 	return
 end
 
-local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
+local Tests = Tests("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 local function CountKeys(tbl)
 	local count = 0
@@ -41,7 +41,7 @@ function Tests:OnEvent_FullyQualifiedOutdoorZone_Adds()
 	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
 	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm/House"],
-	"Fully qualified zone added")
+		"Fully qualified zone added")
 end
 
 function Tests:OnEvent_ThreePartOutdoorZone_Adds()
