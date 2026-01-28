@@ -176,9 +176,9 @@ function Tests:DruidEvents_Register_AddsBuffEvents()
 
   Soundtrack.DruidEvents.Register()
 
-  Exists(Soundtrack_MiscEvents[SOUNDTRACK_DRUID], "druid event should be added")
-  Exists(Soundtrack_MiscEvents[SOUNDTRACK_DRUID_DASH], "druid dash event should be added")
-  Exists(Soundtrack.Misc.UpdateScripts[SOUNDTRACK_DRUID_PROWL], "druid prowl update script should be added")
+  IsTrue(Soundtrack_MiscEvents[SOUNDTRACK_DRUID], "druid event should be added")
+  IsTrue(Soundtrack_MiscEvents[SOUNDTRACK_DRUID_DASH], "druid dash event should be added")
+  IsTrue(Soundtrack.Misc.UpdateScripts[SOUNDTRACK_DRUID_PROWL], "druid prowl update script should be added")
 end
 
 function Tests:LootEvents_OnEvent_QueuesPlayEvent()
@@ -211,10 +211,10 @@ function Tests:NpcEvents_Register_AddsAllNpcEvents()
   Soundtrack_MiscEvents = {}
   Soundtrack.NpcEvents.Register()
 
-  Exists(Soundtrack_MiscEvents[SOUNDTRACK_NPC_EMOTE], "NPC emote event should be added")
-  Exists(Soundtrack_MiscEvents[SOUNDTRACK_NPC_SAY], "NPC say event should be added")
-  Exists(Soundtrack_MiscEvents[SOUNDTRACK_NPC_WHISPER], "NPC whisper event should be added")
-  Exists(Soundtrack_MiscEvents[SOUNDTRACK_NPC_YELL], "NPC yell event should be added")
+  IsTrue(Soundtrack_MiscEvents[SOUNDTRACK_NPC_EMOTE], "NPC emote event should be added")
+  IsTrue(Soundtrack_MiscEvents[SOUNDTRACK_NPC_SAY], "NPC say event should be added")
+  IsTrue(Soundtrack_MiscEvents[SOUNDTRACK_NPC_WHISPER], "NPC whisper event should be added")
+  IsTrue(Soundtrack_MiscEvents[SOUNDTRACK_NPC_YELL], "NPC yell event should be added")
 end
 
 function Tests:PlayerStatusEvents_OnEvent_TogglesMerchant()
@@ -244,6 +244,6 @@ function Tests:StealthEvents_Register_SetsUpdateScripts()
   Soundtrack.Misc.UpdateScripts = {}
   Soundtrack.StealthEvents.Register()
 
-  Exists(Soundtrack.Misc.UpdateScripts[SOUNDTRACK_ROGUE_STEALTH], "rogue stealth update script should be added")
-  Exists(Soundtrack.Misc.UpdateScripts[SOUNDTRACK_STEALTHED], "stealthed update script should be added")
+  IsTrue(Soundtrack.Misc.UpdateScripts[SOUNDTRACK_ROGUE_STEALTH], "rogue stealth update script should be added")
+  IsTrue(Soundtrack.Misc.UpdateScripts[SOUNDTRACK_STEALTHED], "stealthed update script should be added")
 end

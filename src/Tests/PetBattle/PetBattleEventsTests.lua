@@ -14,13 +14,13 @@ function Tests:OnLoad_RegistersPetBattleEvents()
 		self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSAL_ACCEPTED")
 		self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSAL_DECLINED")
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
-		events = {1, 2, 3, 4, 5, 6, 7}
+		events = { 1, 2, 3, 4, 5, 6, 7 }
 	end)
-	
+
 	local frame = {}
 	Soundtrack.PetBattleEvents.OnLoad(frame)
-	
-	Exists(#events == 7, "All pet battle events registered")
+
+	AreEqual(7, #events)
 end
 
 function Tests:OnEvent_PetBattleOpeningStart_TriggersBattleEngaged()
@@ -28,10 +28,10 @@ function Tests:OnEvent_PetBattleOpeningStart_TriggersBattleEngaged()
 	Replace(Soundtrack.PetBattleEvents, "BattleEngaged", function()
 		battleEngagedCalled = true
 	end)
-	
+
 	Soundtrack.PetBattleEvents.OnEvent(nil, "PET_BATTLE_OPENING_START")
-	
-	Exists(battleEngagedCalled, "BattleEngaged called")
+
+	IsTrue(battleEngagedCalled, "BattleEngaged called")
 end
 
 function Tests:OnEvent_PetBattleOver_TriggersVictory()
@@ -39,10 +39,10 @@ function Tests:OnEvent_PetBattleOver_TriggersVictory()
 	Replace(Soundtrack.PetBattleEvents, "Victory", function()
 		victoryCalled = true
 	end)
-	
+
 	Soundtrack.PetBattleEvents.OnEvent(nil, "PET_BATTLE_OVER")
-	
-	Exists(victoryCalled, "Victory called")
+
+	IsTrue(victoryCalled, "Victory called")
 end
 
 function Tests:BattleEngaged_PlaysCorrectEvent()
@@ -52,13 +52,13 @@ function Tests:BattleEngaged_PlaysCorrectEvent()
 		},
 		events = SoundtrackAddon.db.profile.events
 	})
-	
+
 	Replace("C_PetBattles", {
 		IsWildBattle = function() return true end,
 		IsInBattle = function() return true end,
 		GetPVPMatchmakingInfo = function() return false end
 	})
-	
+
 	Replace(C_Map, "GetBestMapForUnit", function() return 946 end)
 	Replace(C_Map, "GetMapInfo", function(mapID)
 		if mapID == 946 then
@@ -68,17 +68,17 @@ function Tests:BattleEngaged_PlaysCorrectEvent()
 		end
 		return { name = "TestZone" }
 	end)
-	
+
 	Soundtrack.AddEvent(ST_PETBATTLES, "Kalimdor Wild Battle", ST_NPC_LVL, true, false)
 	local eventTable = Soundtrack.Events.GetTable(ST_PETBATTLES)
-	eventTable["Kalimdor Wild Battle"].tracks = {"test.mp3"}
+	eventTable["Kalimdor Wild Battle"].tracks = { "test.mp3" }
 	Soundtrack_Tracks["test.mp3"] = { filePath = "test.mp3" }
-	
+
 	Soundtrack.PetBattleEvents.BattleEngaged()
-	
+
 	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
 	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(stackLevel)
-	
+
 	AreEqual(true, tableName == ST_PETBATTLES)
 end
 
@@ -89,13 +89,13 @@ function Tests:Initialize_AddsPetBattleWildEvents()
 	for _ in pairs(eventTable) do
 		initialCount = initialCount + 1
 	end
-	
+
 	Soundtrack.PetBattleEvents.Initialize()
-	
+
 	local finalCount = 0
 	for _ in pairs(eventTable) do
 		finalCount = finalCount + 1
 	end
-	
-	Exists(finalCount > initialCount, "Pet battle events initialized")
+
+	IsTrue(finalCount > initialCount, "Pet battle events initialized")
 end

@@ -4,6 +4,14 @@ end
 
 local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
 
+local function CountKeys(tbl)
+	local count = 0
+	for _ in pairs(tbl) do
+		count = count + 1
+	end
+	return count
+end
+
 local function MockZone(continentName, zoneName, subZoneName, minimapZoneName)
 	Replace("IsInInstance", function()
 		return false, "none"
@@ -32,7 +40,8 @@ function Tests:OnEvent_FullyQualifiedOutdoorZone_Adds()
 
 	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
-	Exists(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm/House"])
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm/House"],
+	"Fully qualified zone added")
 end
 
 function Tests:OnEvent_ThreePartOutdoorZone_Adds()
@@ -40,7 +49,7 @@ function Tests:OnEvent_ThreePartOutdoorZone_Adds()
 
 	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
-	Exists(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm"])
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest/Dabrie Farm"], "Three part zone added")
 end
 
 function Tests:OnEvent_TwoPartOutdoorZone_Adds()
@@ -48,7 +57,7 @@ function Tests:OnEvent_TwoPartOutdoorZone_Adds()
 
 	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
-	Exists(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest New"])
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Elwynn Forest New"], "Two part zone added")
 end
 
 function Tests:OnEvent_OnlyContinent_DoesNotAdd()
@@ -66,10 +75,10 @@ function Tests:AddZones_FullHierarchy_CreatesAllLevels()
 	Soundtrack_ZoneEvents_AddZones()
 
 	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
-	Exists(zoneTable["Kalimdor"])
-	Exists(zoneTable["Kalimdor/Mulgore"])
-	Exists(zoneTable["Kalimdor/Mulgore/Thunder Bluff"])
-	Exists(zoneTable["Kalimdor/Mulgore/Thunder Bluff/Elder Rise"])
+	IsTrue(zoneTable["Kalimdor"], "Continent created")
+	IsTrue(zoneTable["Kalimdor/Mulgore"], "Zone created")
+	IsTrue(zoneTable["Kalimdor/Mulgore/Thunder Bluff"], "Subzone created")
+	IsTrue(zoneTable["Kalimdor/Mulgore/Thunder Bluff/Elder Rise"], "Minimap created")
 end
 
 function Tests:AddZones_AssignsPriorities_CorrectLevels()
@@ -98,7 +107,7 @@ function Tests:AddZones_Instance_CreatesInstanceEvent()
 
 	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
-	Exists(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_INSTANCES])
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_INSTANCES], "Instance event created")
 end
 
 function Tests:AddZones_Arena_CreatesPvPEvent()
@@ -111,7 +120,7 @@ function Tests:AddZones_Arena_CreatesPvPEvent()
 
 	Soundtrack.ZoneEvents.OnEvent(self, "PLAYER_ENTERING_WORLD")
 
-	Exists(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_PVP])
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_PVP], "PvP event created")
 end
 
 function Tests:AddZones_NilZoneName_DoesNotCrash()
@@ -119,9 +128,12 @@ function Tests:AddZones_NilZoneName_DoesNotCrash()
 		return nil
 	end)
 
+	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
+	local beforeCount = CountKeys(zoneTable)
+
 	Soundtrack_ZoneEvents_AddZones()
 
-	Exists(true, "should handle nil zone gracefully without crashing")
+	AreEqual(beforeCount, CountKeys(zoneTable))
 end
 
 function Tests:OnUpdate_ZoneMusicEnabled_PlaysZone()

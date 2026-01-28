@@ -5,29 +5,17 @@ end
 local Tests = WoWUnit("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 function Tests:AddTimer_ValidDuration_AddsToTimerList()
-	Soundtrack.Timers = {
-		CooldownTime = 0,
-		CooldownLimit = 1,
-		CurrentTime = 0,
-		AddTimer = function(name, duration, callback)
-			table.insert({}, {
-				Name = name,
-				Start = 0,
-				When = duration,
-				Callback = callback,
-			})
-		end,
-		Get = function() end,
-		Remove = function() end,
-		OnUpdate = function() end
-	}
-
-	local callbackCalled = false
-	Soundtrack.Timers.AddTimer("TestTimer", 5, function()
-		callbackCalled = true
+	local fakeTime = 100
+	Replace("GetTime", function()
+		return fakeTime
 	end)
 
-	Exists(true, "timer should be added without error")
+	Soundtrack.Timers.AddTimer("TestTimer", 5, function() end)
+	local timer = Soundtrack.Timers.Get("TestTimer")
+	IsTrue(timer ~= nil, "timer should be added to the internal list")
+	AreEqual(fakeTime, timer.Start, "timer start timestamp should match GetTime()")
+	AreEqual(fakeTime + 5, timer.When, "timer expiration should equal start plus duration")
+	Soundtrack.Timers.Remove("TestTimer")
 end
 
 function Tests:Get_ExistingTimer_ReturnsTimer()

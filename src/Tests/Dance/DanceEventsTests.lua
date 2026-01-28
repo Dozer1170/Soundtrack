@@ -34,7 +34,7 @@ function Tests:OnEvent_DanceEmoteByPlayer_PlaysCorrectGender()
 		return 2 -- Male
 	end)
 	Replace(Soundtrack, "PlayEvent", function(eventType, eventName)
-		Exists(eventName == "Human male", "correct male dance event should play")
+		AreEqual("Human male", eventName)
 	end)
 	Replace(SoundtrackAddon.db, "profile", {
 		settings = {
@@ -97,7 +97,7 @@ function Tests:OnEvent_FemalePlayerDance_PlaysFemaleMusic()
 		return 3 -- Female
 	end)
 	Replace(Soundtrack, "PlayEvent", function(eventType, eventName)
-		Exists(eventName == "Night Elf female", "correct female dance event should play")
+		AreEqual("Night Elf female", eventName)
 	end)
 	Replace(SoundtrackAddon.db, "profile", {
 		settings = {
@@ -117,5 +117,5 @@ function Tests:Initialize_AddsAllRaceGenderCombinations()
 	Soundtrack.DanceEvents.Initialize()
 
 	-- Should add 24 races * 2 genders = 48 events
-	Exists(eventCount > 40, "multiple race/gender dance events should be added")
+	IsTrue(eventCount > 40, "multiple race/gender dance events should be added")
 end

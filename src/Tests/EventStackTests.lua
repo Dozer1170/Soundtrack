@@ -66,7 +66,7 @@ function Tests:OnStackChanged_WithValidEvent_PlaysTrack()
     Soundtrack.Events.OnStackChanged(false)
 
     -- Verify track played
-    Exists(playRandomCalled, "PlayRandomTrackByTable called")
+    IsTrue(playRandomCalled, "PlayRandomTrackByTable called")
 end
 
 function Tests:OnStackChanged_SameEventPlaying_DoesNotRestart()
@@ -142,7 +142,7 @@ function Tests:OnStackChanged_ForceRestart_RestartsTrack()
     Soundtrack.Events.OnStackChanged(true)
 
     -- Should play even though same event is already playing
-    Exists(playCount > 0, "Track restarted with forceRestart")
+    IsTrue(playCount > 0, "Track restarted with forceRestart")
 end
 
 function Tests:OnStackChanged_DifferentEvent_SwitchesToNewEvent()
@@ -199,7 +199,7 @@ function Tests:OnStackChanged_CallsUIUpdate()
     Soundtrack.Events.OnStackChanged(false)
 
     -- Verify UI was notified
-    Exists(uiUpdateCalled, "UI OnEventStackChanged called")
+    IsTrue(uiUpdateCalled, "UI OnEventStackChanged called")
 end
 
 -- OnEventTreeChanged Tests
@@ -236,7 +236,7 @@ function Tests:OnEventTreeChanged_UpdatesFlatEventsList()
     Soundtrack.OnEventTreeChanged(ST_BATTLE)
 
     -- Verify flat events table was initialized
-    Exists(Soundtrack_FlatEvents[ST_BATTLE] ~= nil)
+    IsTrue(Soundtrack_FlatEvents[ST_BATTLE] ~= nil)
     -- Verify UI was NOT updated (OnEventTreeChanged doesn't call UI directly)
     AreEqual(false, updateCalled)
 end
@@ -289,10 +289,10 @@ function Tests:OnEventTreeChanged_HandlesExpandedEvents()
         if node.tag == "Continent/Zone/SubZone" then hasSubZone = true end
     end
 
-    Exists(hasContinent, "Expanded parent in list")
-    Exists(hasZone, "Zone in list")
+    IsTrue(hasContinent, "Expanded parent in list")
+    IsTrue(hasZone, "Zone in list")
     -- SubZone should NOT be in list because Zone is collapsed
-    Exists(not hasSubZone, "Collapsed children not in list")
+    IsFalse(hasSubZone, "Collapsed children not in list")
 end
 
 function Tests:OnEventTreeChanged_DoesNotCallUI()

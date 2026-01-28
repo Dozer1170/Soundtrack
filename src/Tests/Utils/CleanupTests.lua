@@ -49,11 +49,11 @@ function Tests:CleanupOldEvents_RemovesObsoleteEvents()
 	Soundtrack.Cleanup.CleanupOldEvents()
 
 	-- Obsolete events should be removed from all tables
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].ObsoleteEvent == nil, "Obsolete battle event removed")
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].ValidEvent ~= nil, "Valid battle event kept")
-	Exists(SoundtrackAddon.db.profile.events[ST_ZONE].ObsoleteZone == nil, "Obsolete zone event removed")
-	Exists(SoundtrackAddon.db.profile.events[ST_ZONE].ValidZone ~= nil, "Valid zone event kept")
-	Exists(updateCalled, "UI updated")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].ObsoleteEvent == nil, "Obsolete battle event removed")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].ValidEvent ~= nil, "Valid battle event kept")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ObsoleteZone == nil, "Obsolete zone event removed")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ValidZone ~= nil, "Valid zone event kept")
+	IsTrue(updateCalled, "UI updated")
 end
 
 function Tests:CleanupOldEvents_PreservesPreviewEvent()
@@ -80,7 +80,7 @@ function Tests:CleanupOldEvents_PreservesPreviewEvent()
 	Soundtrack.Cleanup.CleanupOldEvents()
 
 	-- Preview should be preserved
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].Preview ~= nil, "Preview event preserved")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].Preview ~= nil, "Preview event preserved")
 end
 
 function Tests:CleanupOldEvents_HandlesMiscEvents()
@@ -108,8 +108,8 @@ function Tests:CleanupOldEvents_HandlesMiscEvents()
 	Soundtrack.Cleanup.CleanupOldEvents()
 
 	-- ObsoleteMiscEvent should be removed
-	Exists(SoundtrackAddon.db.profile.events[ST_MISC].ObsoleteMiscEvent == nil, "Obsolete misc event removed")
-	Exists(SoundtrackAddon.db.profile.events[ST_MISC].ValidMiscEvent ~= nil, "Valid misc event kept")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_MISC].ObsoleteMiscEvent == nil, "Obsolete misc event removed")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_MISC].ValidMiscEvent ~= nil, "Valid misc event kept")
 end
 
 function Tests:PurgeOldTracksFromEvents_ShowsPopupWhenOldTracksFound()
@@ -135,7 +135,7 @@ function Tests:PurgeOldTracksFromEvents_ShowsPopupWhenOldTracksFound()
 	Soundtrack.Cleanup.PurgeOldTracksFromEvents()
 
 	-- Popup should be shown
-	Exists(popupShown, "Purge popup shown")
+	IsTrue(popupShown, "Purge popup shown")
 end
 
 function Tests:PurgeOldTracksFromEvents_DoesNotShowPopupWhenNoOldTracks()
@@ -161,7 +161,7 @@ function Tests:PurgeOldTracksFromEvents_DoesNotShowPopupWhenNoOldTracks()
 	Soundtrack.Cleanup.PurgeOldTracksFromEvents()
 
 	-- Popup should NOT be shown
-	Exists(not popupShown, "Purge popup not shown")
+	IsFalse(popupShown, "Purge popup not shown")
 end
 
 function Tests:PurgeOldTracksFromEvents_ChecksAllEventTables()
@@ -192,7 +192,7 @@ function Tests:PurgeOldTracksFromEvents_ChecksAllEventTables()
 	Soundtrack.Cleanup.PurgeOldTracksFromEvents()
 
 	-- Popup should be shown because at least one table has obsolete tracks
-	Exists(popupShown, "Purge popup shown for any table with old tracks")
+	IsTrue(popupShown, "Purge popup shown for any table with old tracks")
 end
 
 function Tests:PurgePopup_OnAcceptRemovesOldTracks()
@@ -216,7 +216,7 @@ function Tests:PurgePopup_OnAcceptRemovesOldTracks()
 	end
 
 	-- Check that obsolete track was removed
-	Exists(#removedTracks > 0, "Tracks were removed")
+	IsTrue(#removedTracks > 0, "Tracks were removed")
 
 	-- Verify the obsolete track was in the removal list
 	local foundObsolete = false
@@ -225,7 +225,7 @@ function Tests:PurgePopup_OnAcceptRemovesOldTracks()
 			foundObsolete = true
 		end
 	end
-	Exists(foundObsolete, "Obsolete track was removed")
+	IsTrue(foundObsolete, "Obsolete track was removed")
 end
 
 function Tests:PurgePopup_OnCancelShowsNoPurgePopup()
@@ -243,7 +243,7 @@ function Tests:PurgePopup_OnCancelShowsNoPurgePopup()
 	end
 
 	-- Check that no-purge popup was shown
-	Exists(noPurgeShown, "No purge popup shown")
+	IsTrue(noPurgeShown, "No purge popup shown")
 end
 
 function Tests:PurgeOldTracks_HandlesEmptyEventTable()
@@ -267,7 +267,7 @@ function Tests:PurgeOldTracks_HandlesEmptyEventTable()
 	Soundtrack.Cleanup.PurgeOldTracksFromEvents()
 
 	-- Popup should NOT be shown for empty tables
-	Exists(not popupShown, "No popup for empty tables")
+	IsFalse(popupShown, "No popup for empty tables")
 end
 
 function Tests:CleanupOldEvents_HandlesEmptyRegisteredEvents()
@@ -304,7 +304,10 @@ function Tests:CleanupOldEvents_HandlesEmptyRegisteredEvents()
 	Soundtrack.Cleanup.CleanupOldEvents()
 
 	-- All events should be removed except Preview from all tables
-	Exists(SoundtrackAddon.db.profile.events[ST_BATTLE].SomeBattleEvent == nil, "Battle event removed when no registered events")
-	Exists(SoundtrackAddon.db.profile.events[ST_ZONE].SomeZoneEvent == nil, "Zone event removed when no registered events")
-	Exists(SoundtrackAddon.db.profile.events[ST_DANCE].SomeDanceEvent == nil, "Dance event removed when no registered events")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].SomeBattleEvent == nil,
+		"Battle event removed when no registered events")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].SomeZoneEvent == nil,
+	"Zone event removed when no registered events")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_DANCE].SomeDanceEvent == nil,
+		"Dance event removed when no registered events")
 end

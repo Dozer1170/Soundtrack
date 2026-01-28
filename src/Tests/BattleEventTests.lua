@@ -76,7 +76,7 @@ function Tests:GetClassificationLevel_InvalidClassification_LogsTrace()
 
 	Soundtrack.BattleEvents.GetClassificationLevel("unknowntype")
 
-	Exists(traceLogged, "Trace logged")
+	IsTrue(traceLogged, "Trace logged")
 end
 
 function Tests:GetGroupEnemyClassification_WithMinusEnemy_ReturnsMinus()
@@ -220,7 +220,7 @@ function Tests:OnEvent_PLAYER_REGEN_DISABLED_EntersCombat()
 	-- Should trigger battle music (check if event is on stack)
 	local eventName = Soundtrack.Events.GetEventAtStackLevel(ST_BATTLE_LVL)
 	-- The event system should have played some battle event
-	Exists(eventName ~= nil, "battle event should start when entering combat")
+	IsTrue(eventName ~= nil, "battle event should start when entering combat")
 
 	_G.MockInCombat = false
 end
@@ -243,7 +243,8 @@ function Tests:OnEvent_PLAYER_REGEN_ENABLED_ExitsCombat()
 	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_ENABLED")
 
 	-- Battle music should stop (eventually, after cooldown)
-	Exists(true, "combat end event should execute without error")
+	local clearedEvent = Soundtrack.Events.GetEventAtStackLevel(ST_BATTLE_LVL)
+	IsFalse(clearedEvent, "battle music should be cleared after combat ends")
 end
 
 function Tests:OnEvent_PLAYER_DEAD_StopsBattleMusic()
@@ -266,8 +267,10 @@ function Tests:OnEvent_PLAYER_DEAD_StopsBattleMusic()
 	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_DEAD")
 
 	-- The PLAYER_DEAD event handler should have called StopEventAtLevel and PlayEvent
-	-- Just verify the handler ran without error
-	Exists(true, "death event handler should execute without error")
+	local stoppedBattle = Soundtrack.Events.GetEventAtStackLevel(ST_BATTLE_LVL)
+	IsFalse(stoppedBattle, "battle event should stop when the player dies")
+	local deathEventName = Soundtrack.Events.GetEventAtStackLevel(ST_DEATH_LVL)
+	AreEqual(SOUNDTRACK_DEATH, deathEventName, "death music should start on PLAYER_DEAD")
 
 	_G.MockInCombat = false
 	_G.MockIsDead = false
@@ -287,7 +290,7 @@ function Tests:OnEvent_PLAYER_ALIVE_PlaysGhostMusic()
 	-- The event should be on the stack at death level
 	local ghostEvent = Soundtrack.Events.GetEventAtStackLevel(ST_DEATH_LVL)
 	-- Test that some event was played (might be nil if event system didn't accept it)
-	Exists(ghostEvent, "ghost event should be played when player is dead")
+	IsTrue(ghostEvent ~= nil, "ghost event should be played when player is dead")
 
 	_G.MockIsDead = false
 end
@@ -329,16 +332,16 @@ function Tests:Initialize_AddsAllBattleEvents()
 
 	-- Check that all battle events were added
 	local battleTable = Soundtrack.Events.GetTable(ST_BATTLE)
-	Exists(battleTable[SOUNDTRACK_NORMAL_MOB], "normal mob battle event should exist")
-	Exists(battleTable[SOUNDTRACK_ELITE_MOB], "elite mob battle event should exist")
-	Exists(battleTable[SOUNDTRACK_BOSS_BATTLE], "boss battle event should exist")
-	Exists(battleTable[SOUNDTRACK_PVP_BATTLE], "PvP battle event should exist")
-	Exists(battleTable[SOUNDTRACK_RARE], "rare mob battle event should exist")
+	IsTrue(battleTable[SOUNDTRACK_NORMAL_MOB], "normal mob battle event should exist")
+	IsTrue(battleTable[SOUNDTRACK_ELITE_MOB], "elite mob battle event should exist")
+	IsTrue(battleTable[SOUNDTRACK_BOSS_BATTLE], "boss battle event should exist")
+	IsTrue(battleTable[SOUNDTRACK_PVP_BATTLE], "PvP battle event should exist")
+	IsTrue(battleTable[SOUNDTRACK_RARE], "rare mob battle event should exist")
 
 	-- Check misc events
 	local miscTable = Soundtrack.Events.GetTable(ST_MISC)
-	Exists(miscTable[SOUNDTRACK_VICTORY], "victory event should exist")
-	Exists(miscTable[SOUNDTRACK_VICTORY_BOSS], "boss victory event should exist")
-	Exists(miscTable[SOUNDTRACK_DEATH], "death event should exist")
-	Exists(miscTable[SOUNDTRACK_GHOST], "ghost event should exist")
+	IsTrue(miscTable[SOUNDTRACK_VICTORY], "victory event should exist")
+	IsTrue(miscTable[SOUNDTRACK_VICTORY_BOSS], "boss victory event should exist")
+	IsTrue(miscTable[SOUNDTRACK_DEATH], "death event should exist")
+	IsTrue(miscTable[SOUNDTRACK_GHOST], "ghost event should exist")
 end

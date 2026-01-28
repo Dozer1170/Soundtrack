@@ -14,7 +14,7 @@ function Tests:PlayEvent_ValidEventAndTable_PlaysTrack()
 	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
 	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(stackLevel)
 
-	Exists(eventName == "ValidEvent" and tableName == ST_ZONE, "Track played")
+	IsTrue(eventName == "ValidEvent" and tableName == ST_ZONE, "Track played")
 end
 
 function Tests:PlayEvent_NoTracksAvailable_DoesNotPlay()
@@ -25,7 +25,7 @@ function Tests:PlayEvent_NoTracksAvailable_DoesNotPlay()
 	local stackAfter = Soundtrack.Events.GetCurrentStackLevel()
 
 	-- Event without tracks should not be added to stack
-	Exists(stackBefore == stackAfter, "No-track scenario verified")
+	IsTrue(stackBefore == stackAfter, "No-track scenario verified")
 end
 
 function Tests:StopMusic_StopsPlayback()
@@ -39,14 +39,14 @@ function Tests:StopMusic_StopsPlayback()
 	Soundtrack.Library.StopMusic()
 
 	-- Music should be stopped (Library.StopMusic stops playback)
-	Exists(levelBefore > 0, "Music stopped")
+	IsTrue(levelBefore > 0, "Music stopped")
 end
 
 -- Event CRUD Operations Tests
 function Tests:RemoveEvent_ValidEvent_RemovesFromTable()
 	Soundtrack.AddEvent(ST_ZONE, "EventToRemove", ST_ZONE_LVL, true, false)
 	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-	Exists(eventTable["EventToRemove"] ~= nil, "Event exists before removal")
+	IsTrue(eventTable["EventToRemove"] ~= nil, "Event exists before removal")
 
 	Soundtrack.RemoveEvent(ST_ZONE, "EventToRemove")
 
@@ -54,24 +54,37 @@ function Tests:RemoveEvent_ValidEvent_RemovesFromTable()
 end
 
 function Tests:RemoveEvent_NilTable_DoesNotCrash()
+	local errorMessages = {}
+	Replace(Soundtrack.Chat, "Error", function(msg)
+		table.insert(errorMessages, msg)
+	end)
+
 	Soundtrack.RemoveEvent(nil, "SomeEvent")
 
-	-- Should not crash, just handle gracefully
-	Exists(true, "Handled nil table")
+	AreEqual(1, #errorMessages, "nil table should trigger a chat error")
+	IsTrue(string.find(errorMessages[1], "Nil table") ~= nil, "error message should explain the missing table")
 end
 
 function Tests:RemoveEvent_NilEvent_DoesNotCrash()
+	local errorMessages = {}
+	Replace(Soundtrack.Chat, "Error", function(msg)
+		table.insert(errorMessages, msg)
+	end)
+
 	Soundtrack.RemoveEvent(ST_ZONE, nil)
 
-	-- Should not crash, just handle gracefully
-	Exists(true, "Handled nil event")
+	AreEqual(1, #errorMessages, "nil event should trigger a chat error")
+	IsTrue(string.find(errorMessages[1], "Nil event") ~= nil, "error message should explain the missing event")
 end
 
 function Tests:RemoveEvent_NonexistentEvent_DoesNotCrash()
+	Soundtrack.AddEvent(ST_ZONE, "OtherEvent", ST_ZONE_LVL, true, false)
+	Soundtrack_Tracks["other.mp3"] = { filePath = "other.mp3" }
+	Soundtrack.Events.GetTable(ST_ZONE)["OtherEvent"].tracks = { "other.mp3" }
+
 	Soundtrack.RemoveEvent(ST_ZONE, "NonexistentEvent")
 
-	-- Should handle gracefully without crashing
-	Exists(true, "Handled nonexistent event")
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["OtherEvent"] ~= nil, "removing an unknown event should not affect others")
 end
 
 function Tests:RenameEvent_ValidEvent_RenamesSuccessfully()
@@ -83,7 +96,7 @@ function Tests:RenameEvent_ValidEvent_RenamesSuccessfully()
 	Soundtrack.RenameEvent(ST_ZONE, "OldName", "NewName", ST_ZONE_LVL, true, false)
 
 	IsFalse(eventTable["OldName"])
-	Exists(eventTable["NewName"] ~= nil, "Event renamed")
+	IsTrue(eventTable["NewName"] ~= nil, "Event renamed")
 	AreEqual(1, #eventTable["NewName"].tracks)
 end
 
@@ -106,7 +119,7 @@ function Tests:GetEvent_ValidEvent_ReturnsEvent()
 
 	local event = Soundtrack.GetEvent(ST_ZONE, "TestEvent")
 
-	Exists(event ~= nil, "Event retrieved")
+	IsTrue(event ~= nil, "Event retrieved")
 	AreEqual(ST_ZONE_LVL, event.priority)
 end
 
@@ -143,7 +156,7 @@ function Tests:GetEventByName_ExistingEvent_ReturnsEvent()
 
 	local event = Soundtrack.GetEventByName("UniqueEvent")
 
-	Exists(event ~= nil, "Event found by name")
+	IsTrue(event ~= nil, "Event found by name")
 	AreEqual(ST_ONCE_LVL, event.priority)
 	AreEqual(true, event.soundEffect)
 end
@@ -162,7 +175,7 @@ function Tests:EventsAdd_NewEvent_CreatesEvent()
 	Soundtrack.Events.Add(ST_ZONE, "NewEvent", nil)
 
 	IsFalse(beforeExists)
-	Exists(eventTable["NewEvent"] ~= nil, "Event created")
+	IsTrue(eventTable["NewEvent"] ~= nil, "Event created")
 end
 
 function Tests:EventsAdd_WithTrack_AddsTrackToEvent()
@@ -205,7 +218,7 @@ end
 function Tests:EventsDeleteEvent_ExistingEvent_RemovesCompletely()
 	Soundtrack.Events.Add(ST_ZONE, "ToDelete", "track.mp3")
 	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-	Exists(eventTable["ToDelete"] ~= nil, "Event exists")
+	IsTrue(eventTable["ToDelete"] ~= nil, "Event exists")
 
 	Soundtrack.Events.DeleteEvent(ST_ZONE, "ToDelete")
 
@@ -222,18 +235,18 @@ function Tests:EventsClearEvent_WithTracks_RemovesAllTracks()
 	Soundtrack.Events.ClearEvent(ST_ZONE, "ClearTest")
 
 	AreEqual(0, #eventTable["ClearTest"].tracks)
-	Exists(eventTable["ClearTest"] ~= nil, "Event still exists")
+	IsTrue(eventTable["ClearTest"] ~= nil, "Event still exists")
 end
 
 function Tests:EventsRenameEvent_ValidEvent_RenamesInEventsSystem()
 	Soundtrack.Events.Add(ST_MISC, "OldEventName", "track.mp3")
 	local eventTable = Soundtrack.Events.GetTable(ST_MISC)
-	Exists(eventTable["OldEventName"] ~= nil, "Old event exists")
+	IsTrue(eventTable["OldEventName"] ~= nil, "Old event exists")
 
 	Soundtrack.Events.RenameEvent(ST_MISC, "OldEventName", "NewEventName")
 
 	IsFalse(eventTable["OldEventName"])
-	Exists(eventTable["NewEventName"] ~= nil, "Event renamed")
+	IsTrue(eventTable["NewEventName"] ~= nil, "Event renamed")
 	AreEqual(1, #eventTable["NewEventName"].tracks)
 end
 
@@ -268,9 +281,9 @@ function Tests:LoadTracks_WithMyTracksFile_LoadsCustomTracks()
 	end
 
 	-- Should have loaded tracks from ExampleMyTracks
-	Exists(trackCount > 0, "Custom tracks loaded")
-	Exists(Soundtrack_Tracks["CityOfHeroes\\AtlasPark"] ~= nil, "Specific track exists")
-	Exists(Soundtrack.TracksLoaded == true, "TracksLoaded flag set")
+	IsTrue(trackCount > 0, "Custom tracks loaded")
+	IsTrue(Soundtrack_Tracks["CityOfHeroes\\AtlasPark"] ~= nil, "Specific track exists")
+	IsTrue(Soundtrack.TracksLoaded, "TracksLoaded flag set")
 end
 
 function Tests:LoadTracks_WithoutMyTracksFile_ShowsError()
@@ -300,8 +313,8 @@ function Tests:LoadTracks_WithoutMyTracksFile_ShowsError()
 	local success = pcall(Soundtrack.LoadTracks)
 
 	-- Should have shown popup and errored
-	Exists(popupShown == true, "Error popup shown")
-	Exists(success == false, "LoadTracks errored")
+	IsTrue(popupShown, "Error popup shown")
+	IsFalse(success, "LoadTracks errored")
 
 	-- Restore
 	_G.Soundtrack_LoadMyTracks = originalLoadMyTracks
@@ -326,7 +339,7 @@ function Tests:LoadTracks_WithUseDefaultFlag_DoesNotError()
 	local success = pcall(Soundtrack.LoadTracks)
 
 	-- Should succeed without custom tracks
-	Exists(success == true, "LoadTracks succeeded")
+	IsTrue(success, "LoadTracks succeeded")
 
 	-- Restore
 	_G.Soundtrack_LoadMyTracks = originalLoadMyTracks
@@ -354,7 +367,7 @@ function Tests:OnLoad_RegistersSlashCommands()
 	-- Verify slash commands registered
 	AreEqual("/soundtrack", _G.SLASH_SOUNDTRACK1)
 	AreEqual("/st", _G.SLASH_SOUNDTRACK2)
-	Exists(_G.SlashCmdList["SOUNDTRACK"] ~= nil, "SlashCmdList registered")
+	IsTrue(_G.SlashCmdList["SOUNDTRACK"] ~= nil, "SlashCmdList registered")
 end
 
 function Tests:OnLoad_CallsEventsOnLoad()
@@ -398,7 +411,7 @@ function Tests:PLAYER_ENTERING_WORLD_InitializesOnce()
 	SoundtrackAddon:PLAYER_ENTERING_WORLD()
 
 	-- Verify all systems initialized
-	Exists(#initCalls >= 10, "Multiple systems initialized")
+	IsTrue(#initCalls >= 10, "Multiple systems initialized")
 
 	-- Set TracksLoaded to simulate completion
 	Soundtrack.TracksLoaded = true
@@ -519,7 +532,7 @@ function Tests:MigrateFromOldSavedVariables_MigratesSettings()
 	}
 
 	-- Before migration, verify the old variable exists
-	Exists(Soundtrack_Settings ~= nil, "Old settings exist")
+	IsTrue(Soundtrack_Settings ~= nil, "Old settings exist")
 
 	-- Migration should not crash
 	local success = pcall(Soundtrack.MigrateFromOldSavedVariables)
@@ -542,7 +555,7 @@ function Tests:MigrateFromOldSavedVariables_MigratesEvents()
 	}
 
 	-- Before migration, verify the old variable exists
-	Exists(Soundtrack_Events ~= nil, "Old events exist")
+	IsTrue(Soundtrack_Events ~= nil, "Old events exist")
 
 	-- Migration should not crash
 	local success = pcall(Soundtrack.MigrateFromOldSavedVariables)
@@ -578,7 +591,7 @@ function Tests:LoadTracks_CreatesEventTables()
 
 	-- Verify all event tables created
 	for _, eventTabName in ipairs(Soundtrack_EventTabs) do
-		Exists(SoundtrackAddon.db.profile.events[eventTabName] ~= nil, eventTabName .. " table created")
+		IsTrue(SoundtrackAddon.db.profile.events[eventTabName] ~= nil, eventTabName .. " table created")
 	end
 end
 

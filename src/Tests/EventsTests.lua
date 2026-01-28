@@ -13,7 +13,7 @@ function Tests:EventHasTracks_EventWithTracks_ReturnsTrue()
 		}
 	end)
 
-	Exists(Soundtrack.Events.EventHasTracks("TestTable", "TestEvent"), "Event has tracks")
+	IsTrue(Soundtrack.Events.EventHasTracks("TestTable", "TestEvent"), "Event has tracks")
 end
 
 function Tests:EventHasTracks_EventWithoutTracks_ReturnsFalse()
@@ -45,7 +45,7 @@ function Tests:EventExists_ExistingEvent_ReturnsTrue()
 		}
 	end)
 
-	Exists(Soundtrack.Events.EventExists("TestTable", "TestEvent"), "Event exists")
+	IsTrue(Soundtrack.Events.EventExists("TestTable", "TestEvent"), "Event exists")
 end
 
 function Tests:EventExists_NonexistentEvent_ReturnsFalse()
@@ -68,7 +68,7 @@ function Tests:PushEvent_ValidStackLevel_PushesEvent()
 
 	Soundtrack.Events.PlayEvent(ST_ZONE, "TestZone", 1, false, nil, 0)
 
-	Exists(Soundtrack.Events.Stack[1].eventName == "TestZone", "event should be pushed to stack")
+	AreEqual("TestZone", Soundtrack.Events.Stack[1].eventName, "event should be pushed to stack")
 end
 
 function Tests:PopEvent_ValidStackLevel_PopsEvent()
@@ -80,7 +80,7 @@ function Tests:PopEvent_ValidStackLevel_PopsEvent()
 
 	Soundtrack.StopEventAtLevel(1)
 
-	Exists(Soundtrack.Events.Stack[1].eventName == nil, "event should be popped from stack")
+	IsFalse(Soundtrack.Events.Stack[1].eventName, "event should be popped from stack")
 end
 
 function Tests:GetStack_ReturnsCurrentStack()
@@ -88,7 +88,7 @@ function Tests:GetStack_ReturnsCurrentStack()
 
 	local stack = Soundtrack.Events.Stack
 
-	Exists(stack[1].eventName == "Test", "stack should contain test event")
+	AreEqual("Test", stack[1].eventName, "stack should contain test event")
 end
 
 function Tests:GetEventName_WithEventAtLevel_ReturnsEventName()
@@ -120,7 +120,7 @@ function Tests:PauseEvents_SetsEventsPaused()
 
 	Soundtrack.Events.PlaybackPlayStop()
 
-	Exists(Soundtrack.Events.Paused, "events should be paused")
+	IsTrue(Soundtrack.Events.Paused, "events should be paused")
 end
 
 function Tests:ResumeEvents_ResumesPlayback()
@@ -149,18 +149,27 @@ function Tests:StopEvent_ValidEvent_StopsAtCorrectLevel()
 end
 
 function Tests:StopEvent_NonexistentEvent_DoesNotCrash()
+	Soundtrack.AddEvent(ST_BATTLE, "ExistingEvent", ST_BATTLE_LVL, true, false)
+	Soundtrack_Tracks["existing.mp3"] = { filePath = "existing.mp3" }
+	Soundtrack.Events.GetTable(ST_BATTLE)["ExistingEvent"].tracks = { "existing.mp3" }
+	Soundtrack.Events.PlayEvent(ST_BATTLE, "ExistingEvent", ST_BATTLE_LVL, false, nil, 0)
+
 	Soundtrack.StopEvent(ST_MISC, "NonExistent")
 
-	-- Should handle gracefully
-	Exists(true, "should handle nonexistent event gracefully")
+	local eventName = Soundtrack.Events.GetEventAtStackLevel(ST_BATTLE_LVL)
+	AreEqual("ExistingEvent", eventName, "stopping a nonexistent event should not affect active events")
 end
 
 function Tests:StopEvent_NilParameters_DoesNotCrash()
+	local stopCalled = false
+	Replace(Soundtrack, "StopEventAtLevel", function()
+		stopCalled = true
+	end)
+
 	Soundtrack.StopEvent(nil, "Event")
 	Soundtrack.StopEvent(ST_MISC, nil)
 
-	-- Should handle gracefully
-	Exists(true, "should handle nil parameters gracefully")
+	IsFalse(stopCalled, "StopEventAtLevel should not be called when parameters are nil")
 end
 
 -- PlayRandomTrackByTable Tests
@@ -260,7 +269,7 @@ function Tests:GetCurrentEvent_WithEventPlaying_ReturnsEvent()
 
 	local event = Soundtrack.Events.GetCurrentEvent()
 
-	Exists(event ~= nil, "Current event retrieved")
+	IsTrue(event ~= nil, "Current event retrieved")
 	AreEqual(ST_ZONE_LVL, event.priority)
 end
 
@@ -296,10 +305,14 @@ function Tests:RestartLastEvent_NoEventPlaying_DoesNotCrash()
 	for i = 1, 16 do
 		Soundtrack.Events.Stack[i] = { eventName = nil, tableName = nil, offset = 0 }
 	end
+	local playCalled = false
+	Replace(Soundtrack.Events, "PlayEvent", function()
+		playCalled = true
+	end)
 
 	Soundtrack.Events.RestartLastEvent(0)
 
-	Exists(true, "Handled empty stack")
+	IsFalse(playCalled, "should not restart events when the stack is empty")
 end
 
 -- PlaybackNext Tests
