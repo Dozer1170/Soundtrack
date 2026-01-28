@@ -4,7 +4,7 @@
 -- ---------------------------------------------------------------------
 -- Minimal test harness
 local allTests = {}
-local passed, failed = 0, 0
+local testsPassed, testsFailed = 0, 0
 local currentTestFailed = false
 local failureMessages = {}
 
@@ -34,11 +34,9 @@ function Tests.AreEqual(expected, actual, description)
     end
     local trace = debug.traceback("", 2)
     table.insert(failureMessages, { msg = msg, trace = trace })
-    failed = failed + 1
     currentTestFailed = true
     return false
   end
-  passed = passed + 1
   return true
 end
 
@@ -50,11 +48,9 @@ function Tests.IsFalse(value, description)
     end
     local trace = debug.traceback("", 2)
     table.insert(failureMessages, { msg = msg, trace = trace })
-    failed = failed + 1
     currentTestFailed = true
     return false
   end
-  passed = passed + 1
   return true
 end
 
@@ -66,11 +62,9 @@ function Tests.IsTrue(value, description)
     end
     local trace = debug.traceback("", 2)
     table.insert(failureMessages, { msg = msg, trace = trace })
-    failed = failed + 1
     currentTestFailed = true
     return false
   end
-  passed = passed + 1
   return true
 end
 
@@ -82,11 +76,9 @@ function Tests.Exists(value, description)
     end
     local trace = debug.traceback("", 2)
     table.insert(failureMessages, { msg = msg, trace = trace })
-    failed = failed + 1
     currentTestFailed = true
     return false
   end
-  passed = passed + 1
   return true
 end
 
@@ -638,10 +630,11 @@ for _, entry in ipairs(allTests) do
       local ok, err = pcall(fn, entry.tests)
       if not ok then
         print(label)
-        failed = failed + 1
+        testsFailed = testsFailed + 1
         print("    ✗ ERROR: " .. tostring(err))
       elseif currentTestFailed then
         print(label)
+        testsFailed = testsFailed + 1
         for _, failure in ipairs(failureMessages) do
           print(failure.msg)
           -- Print stack trace with indentation
@@ -655,6 +648,8 @@ for _, entry in ipairs(allTests) do
             end
           end
         end
+      else
+        testsPassed = testsPassed + 1
       end
     end
   end
@@ -662,7 +657,7 @@ end
 
 print()
 print("=" .. string.rep("=", 68) .. "=")
-print(string.format("  Tests: %d passed, %d failed", passed, failed))
+print(string.format("  Tests: %d passed, %d failed", testsPassed, testsFailed))
 print("=" .. string.rep("=", 68) .. "=")
 
-os.exit(failed > 0 and 1 or 0)
+os.exit(testsFailed > 0 and 1 or 0)
