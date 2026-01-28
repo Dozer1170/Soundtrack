@@ -16,9 +16,9 @@ function Tests:SortTracks_ByFilePath_SortsAlphabetically()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Check order
-	Exists(Soundtrack_SortedTracks[1] == "apple.mp3" and "First track is apple" or nil)
-	Exists(Soundtrack_SortedTracks[2] == "middle.mp3" and "Second track is middle" or nil)
-	Exists(Soundtrack_SortedTracks[3] == "zebra.mp3" and "Third track is zebra" or nil)
+	Exists(Soundtrack_SortedTracks[1] == "apple.mp3", "First track is apple")
+	Exists(Soundtrack_SortedTracks[2] == "middle.mp3", "Second track is middle")
+	Exists(Soundtrack_SortedTracks[3] == "zebra.mp3", "Third track is zebra")
 end
 
 function Tests:SortTracks_ByTitle_SortsByTitleField()
@@ -33,9 +33,9 @@ function Tests:SortTracks_ByTitle_SortsByTitleField()
 	Soundtrack.SortTracks("title")
 	
 	-- Check order
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[1]].title == "Apple Song" and "First by title" or nil)
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[2]].title == "Middle Song" and "Second by title" or nil)
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[3]].title == "Zebra Song" and "Third by title" or nil)
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[1]].title == "Apple Song", "First by title")
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[2]].title == "Middle Song", "Second by title")
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[3]].title == "Zebra Song", "Third by title")
 end
 
 function Tests:SortTracks_ByArtist_SortsByArtistField()
@@ -50,9 +50,9 @@ function Tests:SortTracks_ByArtist_SortsByArtistField()
 	Soundtrack.SortTracks("artist")
 	
 	-- Check order
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[1]].artist == "Beatles" and "First by artist" or nil)
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[2]].artist == "Metallica" and "Second by artist" or nil)
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[3]].artist == "Zeppelin" and "Third by artist" or nil)
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[1]].artist == "Beatles", "First by artist")
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[2]].artist == "Metallica", "Second by artist")
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[3]].artist == "Zeppelin", "Third by artist")
 end
 
 function Tests:SortTracks_ByAlbum_SortsByAlbumField()
@@ -67,9 +67,9 @@ function Tests:SortTracks_ByAlbum_SortsByAlbumField()
 	Soundtrack.SortTracks("album")
 	
 	-- Check order
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[1]].album == "Alpha" and "First by album" or nil)
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[2]].album == "Bravo" and "Second by album" or nil)
-	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[3]].album == "Zulu" and "Third by album" or nil)
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[1]].album == "Alpha", "First by album")
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[2]].album == "Bravo", "Second by album")
+	Exists(Soundtrack_Tracks[Soundtrack_SortedTracks[3]].album == "Zulu", "Third by album")
 end
 
 function Tests:SortTracks_ByFileName_SortsByFileNameOnly()
@@ -86,7 +86,7 @@ function Tests:SortTracks_ByFileName_SortsByFileNameOnly()
 	local firstName = GetPathFileName(Soundtrack_SortedTracks[1])
 	local secondName = GetPathFileName(Soundtrack_SortedTracks[2])
 	
-	Exists(firstName < secondName and "Files sorted by name" or nil)
+	Exists(firstName < secondName, "Files sorted by name")
 end
 
 function Tests:SortTracks_RemembersCriteria_UsesLastSortWhenNoCriteriaProvided()
@@ -105,8 +105,8 @@ function Tests:SortTracks_RemembersCriteria_UsesLastSortWhenNoCriteriaProvided()
 	local secondOrder = Soundtrack_SortedTracks[1]
 	
 	-- Should be the same order (both using title sort)
-	Exists(firstOrder == secondOrder and "Remembered last sort criteria" or nil)
-	Exists(Soundtrack.lastSortCriteria == "title" and "Last criteria is title" or nil)
+	Exists(firstOrder == secondOrder, "Remembered last sort criteria")
+	Exists(Soundtrack.lastSortCriteria == "title", "Last criteria is title")
 end
 
 function Tests:SortTracks_WithFilter_OnlyIncludesMatchingTracks()
@@ -124,7 +124,7 @@ function Tests:SortTracks_WithFilter_OnlyIncludesMatchingTracks()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Should only include tracks matching filter
-	Exists(#Soundtrack_SortedTracks == 2 and "Only 2 tracks match filter" or nil)
+	Exists(#Soundtrack_SortedTracks == 2, "Only 2 tracks match filter")
 	
 	-- Clear filter
 	Soundtrack.trackFilter = nil
@@ -143,8 +143,8 @@ function Tests:SortTracks_FilterMatchesTitle_IncludesTrack()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Should find the battle track
-	Exists(#Soundtrack_SortedTracks == 1 and "Found track by title" or nil)
-	Exists(Soundtrack_SortedTracks[1] == "track1.mp3" and "Correct track found" or nil)
+	Exists(#Soundtrack_SortedTracks == 1, "Found track by title")
+	Exists(Soundtrack_SortedTracks[1] == "track1.mp3", "Correct track found")
 	
 	Soundtrack.trackFilter = nil
 end
@@ -162,8 +162,8 @@ function Tests:SortTracks_FilterMatchesArtist_IncludesTrack()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Should find Beethoven track
-	Exists(#Soundtrack_SortedTracks == 1 and "Found track by artist" or nil)
-	Exists(Soundtrack_SortedTracks[1] == "track1.mp3" and "Correct artist track" or nil)
+	Exists(#Soundtrack_SortedTracks == 1, "Found track by artist")
+	Exists(Soundtrack_SortedTracks[1] == "track1.mp3", "Correct artist track")
 	
 	Soundtrack.trackFilter = nil
 end
@@ -181,8 +181,8 @@ function Tests:SortTracks_FilterMatchesAlbum_IncludesTrack()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Should find track by album
-	Exists(#Soundtrack_SortedTracks == 1 and "Found track by album" or nil)
-	Exists(Soundtrack_SortedTracks[1] == "track1.mp3" and "Correct album track" or nil)
+	Exists(#Soundtrack_SortedTracks == 1, "Found track by album")
+	Exists(Soundtrack_SortedTracks[1] == "track1.mp3", "Correct album track")
 	
 	Soundtrack.trackFilter = nil
 end
@@ -200,8 +200,8 @@ function Tests:SortTracks_HidesDefaultTracks_WhenSettingDisabled()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Should only show custom track
-	Exists(#Soundtrack_SortedTracks == 1 and "Only custom track shown" or nil)
-	Exists(Soundtrack_SortedTracks[1] == "custom.mp3" and "Custom track included" or nil)
+	Exists(#Soundtrack_SortedTracks == 1, "Only custom track shown")
+	Exists(Soundtrack_SortedTracks[1] == "custom.mp3", "Custom track included")
 	
 	-- Reset setting
 	SoundtrackAddon.db.profile.settings.ShowDefaultMusic = true
@@ -220,7 +220,7 @@ function Tests:SortTracks_ShowsDefaultTracks_WhenSettingEnabled()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Should show both tracks
-	Exists(#Soundtrack_SortedTracks == 2 and "Both tracks shown" or nil)
+	Exists(#Soundtrack_SortedTracks == 2, "Both tracks shown")
 end
 
 function Tests:SortEvents_BasicSort_SortsAlphabetically()
@@ -260,8 +260,8 @@ function Tests:SortEvents_HidesPreview_ExcludesPreviewEvent()
 		end
 	end
 	
-	Exists(not foundPreview and "Preview event excluded" or nil)
-	Exists(#Soundtrack_FlatEvents[ST_BATTLE] == 1 and "Only normal event included" or nil)
+	Exists(not foundPreview, "Preview event excluded")
+	Exists(#Soundtrack_FlatEvents[ST_BATTLE] == 1, "Only normal event included")
 end
 
 function Tests:SortEvents_WithFilter_OnlyIncludesMatchingEvents()
@@ -278,7 +278,7 @@ function Tests:SortEvents_WithFilter_OnlyIncludesMatchingEvents()
 	Soundtrack.SortEvents(ST_BATTLE)
 	
 	-- Should only include events matching filter
-	Exists(#Soundtrack_FlatEvents[ST_BATTLE] == 2 and "Only boss events included" or nil)
+	Exists(#Soundtrack_FlatEvents[ST_BATTLE] == 2, "Only boss events included")
 	
 	-- Clear filter
 	Soundtrack.eventFilter = nil
@@ -297,7 +297,7 @@ function Tests:SortEvents_WithEmptyFilter_IncludesAllEvents()
 	Soundtrack.SortEvents(ST_BATTLE)
 	
 	-- Should include all events (except Preview)
-	Exists(#Soundtrack_FlatEvents[ST_BATTLE] == 2 and "All events included with empty filter" or nil)
+	Exists(#Soundtrack_FlatEvents[ST_BATTLE] == 2, "All events included with empty filter")
 	
 	Soundtrack.eventFilter = nil
 end
@@ -313,9 +313,9 @@ function Tests:SortEvents_BuildsEventTree_CreatesHierarchy()
 	Soundtrack.SortEvents(ST_ZONE)
 	
 	-- Check tree was created
-	Exists(Soundtrack_EventNodes[ST_ZONE] ~= nil and "Event tree created" or nil)
-	Exists(Soundtrack_EventNodes[ST_ZONE].name == ST_ZONE and "Root node is table name" or nil)
-	Exists(#Soundtrack_EventNodes[ST_ZONE].nodes > 0 and "Root has child nodes" or nil)
+	Exists(Soundtrack_EventNodes[ST_ZONE] ~= nil, "Event tree created")
+	Exists(Soundtrack_EventNodes[ST_ZONE].name == ST_ZONE, "Root node is table name")
+	Exists(#Soundtrack_EventNodes[ST_ZONE].nodes > 0, "Root has child nodes")
 end
 
 function Tests:SortEvents_TreeStructure_HasCorrectHierarchy()
@@ -329,13 +329,13 @@ function Tests:SortEvents_TreeStructure_HasCorrectHierarchy()
 	local rootNode = Soundtrack_EventNodes[ST_ZONE]
 	
 	-- Should have Parent node
-	Exists(#rootNode.nodes == 1 and "Has one top-level node" or nil)
-	Exists(rootNode.nodes[1].name == "Parent" and "Top node is Parent" or nil)
+	Exists(#rootNode.nodes == 1, "Has one top-level node")
+	Exists(rootNode.nodes[1].name == "Parent", "Top node is Parent")
 	
 	-- Parent should have Child node
 	local parentNode = rootNode.nodes[1]
-	Exists(#parentNode.nodes == 1 and "Parent has one child" or nil)
-	Exists(parentNode.nodes[1].name == "Child" and "Child node exists" or nil)
+	Exists(#parentNode.nodes == 1, "Parent has one child")
+	Exists(parentNode.nodes[1].name == "Child", "Child node exists")
 end
 
 function Tests:SortEvents_TreeTags_StoresFullPath()
@@ -351,7 +351,7 @@ function Tests:SortEvents_TreeTags_StoresFullPath()
 	local zoneNode = continentNode.nodes[1]
 	
 	-- Check that leaf node has full path tag
-	Exists(zoneNode.tag == "Continent/Zone" and "Tag has full event path" or nil)
+	Exists(zoneNode.tag == "Continent/Zone", "Tag has full event path")
 end
 
 function Tests:SortAllEvents_SortsAllTables_ProcessesAllEventTabs()
@@ -372,10 +372,10 @@ function Tests:SortAllEvents_SortsAllTables_ProcessesAllEventTabs()
 	Soundtrack.SortAllEvents()
 	
 	-- Check that all tables were sorted
-	Exists(Soundtrack_FlatEvents[ST_BATTLE] ~= nil and "Battle events sorted" or nil)
-	Exists(Soundtrack_FlatEvents[ST_ZONE] ~= nil and "Zone events sorted" or nil)
-	Exists(#Soundtrack_FlatEvents[ST_BATTLE] > 0 and "Battle has events" or nil)
-	Exists(#Soundtrack_FlatEvents[ST_ZONE] > 0 and "Zone has events" or nil)
+	Exists(Soundtrack_FlatEvents[ST_BATTLE] ~= nil, "Battle events sorted")
+	Exists(Soundtrack_FlatEvents[ST_ZONE] ~= nil, "Zone events sorted")
+	Exists(#Soundtrack_FlatEvents[ST_BATTLE] > 0, "Battle has events")
+	Exists(#Soundtrack_FlatEvents[ST_ZONE] > 0, "Zone has events")
 end
 
 function Tests:SortEvents_CaseInsensitiveFilter_MatchesRegardlessOfCase()
@@ -413,7 +413,7 @@ function Tests:SortTracks_CallsRefreshTracks_UpdatesUI()
 	Soundtrack.SortTracks("filePath")
 	
 	-- Check that UI refresh was called
-	Exists(refreshCalled and "RefreshTracks was called" or nil)
+	Exists(refreshCalled, "RefreshTracks was called")
 end
 
 function Tests:SortEvents_CallsUpdateEventsUI_UpdatesUI()
@@ -431,5 +431,5 @@ function Tests:SortEvents_CallsUpdateEventsUI_UpdatesUI()
 	Soundtrack.SortEvents(ST_BATTLE)
 	
 	-- Check that UI update was called
-	Exists(updateCalled and "UpdateEventsUI was called" or nil)
+	Exists(updateCalled, "UpdateEventsUI was called")
 end

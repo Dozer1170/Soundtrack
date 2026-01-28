@@ -20,7 +20,7 @@ function Tests:OnLoad_RegistersPetBattleEvents()
 	local frame = {}
 	Soundtrack.PetBattleEvents.OnLoad(frame)
 	
-	Exists(#events == 7 and "All pet battle events registered" or nil)
+	Exists(#events == 7, "All pet battle events registered")
 end
 
 function Tests:OnEvent_PetBattleOpeningStart_TriggersBattleEngaged()
@@ -31,7 +31,7 @@ function Tests:OnEvent_PetBattleOpeningStart_TriggersBattleEngaged()
 	
 	Soundtrack.PetBattleEvents.OnEvent(nil, "PET_BATTLE_OPENING_START")
 	
-	Exists(battleEngagedCalled and "BattleEngaged called" or nil)
+	Exists(battleEngagedCalled, "BattleEngaged called")
 end
 
 function Tests:OnEvent_PetBattleOver_TriggersVictory()
@@ -42,7 +42,7 @@ function Tests:OnEvent_PetBattleOver_TriggersVictory()
 	
 	Soundtrack.PetBattleEvents.OnEvent(nil, "PET_BATTLE_OVER")
 	
-	Exists(victoryCalled and "Victory called" or nil)
+	Exists(victoryCalled, "Victory called")
 end
 
 function Tests:BattleEngaged_PlaysCorrectEvent()
@@ -97,5 +97,5 @@ function Tests:Initialize_AddsPetBattleWildEvents()
 		finalCount = finalCount + 1
 	end
 	
-	Exists(finalCount > initialCount and "Pet battle events initialized" or nil)
+	Exists(finalCount > initialCount, "Pet battle events initialized")
 end

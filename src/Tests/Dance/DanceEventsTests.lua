@@ -12,10 +12,10 @@ function Tests:OnLoad_RegistersChatEmoteEvent()
 		eventRegistered = true
 		eventName = "CHAT_MSG_TEXT_EMOTE"
 	end)
-	
+
 	local frame = {}
 	Soundtrack.DanceEvents.OnLoad(frame)
-	
+
 	AreEqual(true, eventRegistered)
 	AreEqual("CHAT_MSG_TEXT_EMOTE", eventName)
 end
@@ -34,14 +34,14 @@ function Tests:OnEvent_DanceEmoteByPlayer_PlaysCorrectGender()
 		return 2 -- Male
 	end)
 	Replace(Soundtrack, "PlayEvent", function(eventType, eventName)
-		Exists(eventName == "Human male" and "Correct event played" or nil)
+		Exists(eventName == "Human male", "correct male dance event should play")
 	end)
 	Replace(SoundtrackAddon.db, "profile", {
 		settings = {
 			EnableMiscMusic = true
 		}
 	})
-	
+
 	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", "TestPlayer dances.", "TestPlayer")
 end
 
@@ -61,9 +61,9 @@ function Tests:OnEvent_DanceEmoteByOtherPlayer_DoesNotPlay()
 			EnableMiscMusic = true
 		}
 	})
-	
+
 	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", "PlayerTwo dances.", "PlayerTwo")
-	
+
 	IsFalse(eventPlayed)
 end
 
@@ -77,9 +77,9 @@ function Tests:OnEvent_MiscMusicDisabled_DoesNotPlayEvent()
 			EnableMiscMusic = false
 		}
 	})
-	
+
 	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", "TestPlayer dances.", "TestPlayer")
-	
+
 	IsFalse(eventPlayed)
 end
 
@@ -97,14 +97,14 @@ function Tests:OnEvent_FemalePlayerDance_PlaysFemaleMusic()
 		return 3 -- Female
 	end)
 	Replace(Soundtrack, "PlayEvent", function(eventType, eventName)
-		Exists(eventName == "Night Elf female" and "Correct female event played" or nil)
+		Exists(eventName == "Night Elf female", "correct female dance event should play")
 	end)
 	Replace(SoundtrackAddon.db, "profile", {
 		settings = {
 			EnableMiscMusic = true
 		}
 	})
-	
+
 	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", "TestPlayer dances.", "TestPlayer")
 end
 
@@ -113,10 +113,9 @@ function Tests:Initialize_AddsAllRaceGenderCombinations()
 	Replace(Soundtrack, "AddEvent", function()
 		eventCount = eventCount + 1
 	end)
-	
-	Soundtrack.DanceEvents.Initialize()
-	
-	-- Should add 24 races * 2 genders = 48 events
-	Exists(eventCount > 40 and "Multiple race/gender events added" or nil)
-end
 
+	Soundtrack.DanceEvents.Initialize()
+
+	-- Should add 24 races * 2 genders = 48 events
+	Exists(eventCount > 40, "multiple race/gender dance events should be added")
+end

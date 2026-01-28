@@ -21,13 +21,13 @@ function Tests:AddTimer_ValidDuration_AddsToTimerList()
 		Remove = function() end,
 		OnUpdate = function() end
 	}
-	
+
 	local callbackCalled = false
 	Soundtrack.Timers.AddTimer("TestTimer", 5, function()
 		callbackCalled = true
 	end)
-	
-	Exists(true and "Timer added" or nil)
+
+	Exists(true, "timer should be added without error")
 end
 
 function Tests:Get_ExistingTimer_ReturnsTimer()
@@ -39,7 +39,7 @@ function Tests:Get_ExistingTimer_ReturnsTimer()
 			Callback = function() end,
 		}
 	}
-	
+
 	Replace(Soundtrack.Timers, "Get", function(name)
 		for i = 1, #timerList, 1 do
 			if timerList[i].Name == name then
@@ -48,21 +48,21 @@ function Tests:Get_ExistingTimer_ReturnsTimer()
 		end
 		return nil
 	end)
-	
+
 	local timer = Soundtrack.Timers.Get("TestTimer")
-	
-	AreEqual(true, timer ~= nil)
-	AreEqual("TestTimer", timer.Name)
+
+	AreEqual(true, timer ~= nil, "timer should exist")
+	AreEqual("TestTimer", timer.Name, "timer name should match")
 end
 
 function Tests:Get_NonexistentTimer_ReturnsNil()
 	Replace(Soundtrack.Timers, "Get", function(name)
 		return nil
 	end)
-	
+
 	local timer = Soundtrack.Timers.Get("NonexistentTimer")
-	
-	AreEqual(nil, timer)
+
+	AreEqual(nil, timer, "nonexistent timer should return nil")
 end
 
 function Tests:Remove_ExistingTimer_RemovesFromList()
@@ -74,7 +74,7 @@ function Tests:Remove_ExistingTimer_RemovesFromList()
 			Callback = function() end,
 		}
 	}
-	
+
 	Replace(Soundtrack.Timers, "Remove", function(name)
 		for i = 1, #timerList, 1 do
 			if timerList[i].Name == name then
@@ -83,10 +83,10 @@ function Tests:Remove_ExistingTimer_RemovesFromList()
 			end
 		end
 	end)
-	
+
 	Soundtrack.Timers.Remove("TestTimer")
-	
-	AreEqual(0, #timerList)
+
+	AreEqual(0, #timerList, "timer should be removed from list")
 end
 
 function Tests:Remove_NonexistentTimer_DoesNothing()
@@ -98,7 +98,7 @@ function Tests:Remove_NonexistentTimer_DoesNothing()
 			Callback = function() end,
 		}
 	}
-	
+
 	Replace(Soundtrack.Timers, "Remove", function(name)
 		for i = 1, #timerList, 1 do
 			if timerList[i].Name == name then
@@ -107,10 +107,10 @@ function Tests:Remove_NonexistentTimer_DoesNothing()
 			end
 		end
 	end)
-	
+
 	Soundtrack.Timers.Remove("NonexistentTimer")
-	
-	AreEqual(1, #timerList)
+
+	AreEqual(1, #timerList, "timer list should be unchanged")
 end
 
 function Tests:OnUpdate_ExpiredTimer_CallsCallback()
@@ -125,7 +125,7 @@ function Tests:OnUpdate_ExpiredTimer_CallsCallback()
 			end,
 		}
 	}
-	
+
 	Replace(Soundtrack.Timers, "OnUpdate", function()
 		local callbacks = {}
 		for i = #timerList, 1, -1 do
@@ -134,15 +134,15 @@ function Tests:OnUpdate_ExpiredTimer_CallsCallback()
 				table.remove(timerList, i)
 			end
 		end
-		
+
 		for _, callback in ipairs(callbacks) do
 			callback.Callback()
 		end
 	end)
-	
+
 	Soundtrack.Timers.OnUpdate()
-	
-	AreEqual(true, callbackCalled)
+
+	AreEqual(true, callbackCalled, "expired timer callback should be called")
 end
 
 function Tests:OnUpdate_UnexpiredTimer_DoesNotCallCallback()
@@ -157,7 +157,7 @@ function Tests:OnUpdate_UnexpiredTimer_DoesNotCallCallback()
 			end,
 		}
 	}
-	
+
 	Replace(Soundtrack.Timers, "OnUpdate", function()
 		local callbacks = {}
 		for i = #timerList, 1, -1 do
@@ -166,15 +166,15 @@ function Tests:OnUpdate_UnexpiredTimer_DoesNotCallCallback()
 				table.remove(timerList, i)
 			end
 		end
-		
+
 		for _, callback in ipairs(callbacks) do
 			callback.Callback()
 		end
 	end)
-	
+
 	Soundtrack.Timers.OnUpdate()
-	
-	AreEqual(false, callbackCalled)
+
+	AreEqual(false, callbackCalled, "unexpired timer callback should not be called")
 end
 
 function Tests:OnUpdate_MultipleTimers_CallsAllExpiredCallbacks()
@@ -205,7 +205,7 @@ function Tests:OnUpdate_MultipleTimers_CallsAllExpiredCallbacks()
 			end,
 		}
 	}
-	
+
 	Replace(Soundtrack.Timers, "OnUpdate", function()
 		local expiredCallbacks = {}
 		for i = #timerList, 1, -1 do
@@ -214,16 +214,16 @@ function Tests:OnUpdate_MultipleTimers_CallsAllExpiredCallbacks()
 				table.remove(timerList, i)
 			end
 		end
-		
+
 		for _, callback in ipairs(expiredCallbacks) do
 			callback.Callback()
 		end
 	end)
-	
+
 	Soundtrack.Timers.OnUpdate()
 
 	table.sort(callbacks)
-	AreEqual(2, #callbacks)
-	AreEqual(1, callbacks[1])
-	AreEqual(2, callbacks[2])
+	AreEqual(2, #callbacks, "two expired timers should fire")
+	AreEqual(1, callbacks[1], "first timer callback should fire")
+	AreEqual(2, callbacks[2], "second timer callback should fire")
 end

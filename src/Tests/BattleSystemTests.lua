@@ -24,7 +24,7 @@ function Tests:OnEvent_PLAYER_REGEN_DISABLED_EntersCombat()
 	-- Should trigger battle music (check if event is on stack)
 	local eventName = Soundtrack.Events.GetEventAtStackLevel(ST_BATTLE_LVL)
 	-- The event system should have played some battle event
-	Exists(eventName ~= nil or "Battle event started")
+	Exists(eventName ~= nil, "Battle event started")
 
 	_G.MockInCombat = false
 end
@@ -47,7 +47,7 @@ function Tests:OnEvent_PLAYER_REGEN_ENABLED_ExitsCombat()
 	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_ENABLED")
 
 	-- Battle music should stop (eventually, after cooldown)
-	Exists(true and "Combat ended")
+	Exists(true, "Combat ended")
 end
 
 function Tests:OnEvent_PLAYER_DEAD_StopsBattleMusic()
@@ -71,7 +71,7 @@ function Tests:OnEvent_PLAYER_DEAD_StopsBattleMusic()
 
 	-- The PLAYER_DEAD event handler should have called StopEventAtLevel and PlayEvent
 	-- Just verify the handler ran without error
-	Exists(true and "Death event handler executed")
+	Exists(true, "Death event handler executed")
 
 	_G.MockInCombat = false
 	_G.MockIsDead = false
@@ -91,7 +91,7 @@ function Tests:OnEvent_PLAYER_ALIVE_PlaysGhostMusic()
 	-- The event should be on the stack at death level
 	local ghostEvent = Soundtrack.Events.GetEventAtStackLevel(ST_DEATH_LVL)
 	-- Test that some event was played (might be nil if event system didn't accept it)
-	Exists(ghostEvent or "Ghost event attempted to play")
+	Exists(ghostEvent, "Ghost event attempted to play")
 
 	_G.MockIsDead = false
 end
