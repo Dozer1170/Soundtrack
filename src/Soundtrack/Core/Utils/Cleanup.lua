@@ -89,9 +89,12 @@ StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 function Soundtrack.Cleanup.CleanupOldEvents()
 	-- Iterate through all event tables in the profile
 	for tableName, savedEventTable in pairs(SoundtrackAddon.db.profile.events) do
-		local liveEventTable = Soundtrack.RegisteredEvents[tableName]
-		if liveEventTable then
-			CleanupTableEvents(savedEventTable, liveEventTable)
+		-- Zone entries are player-learned and should never be purged automatically
+		if tableName ~= ST_ZONE then
+			local liveEventTable = Soundtrack.RegisteredEvents[tableName]
+			if liveEventTable then
+				CleanupTableEvents(savedEventTable, liveEventTable)
+			end
 		end
 	end
 

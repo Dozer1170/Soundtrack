@@ -48,10 +48,10 @@ function Tests:CleanupOldEvents_RemovesObsoleteEvents()
 	-- Run cleanup
 	Soundtrack.Cleanup.CleanupOldEvents()
 
-	-- Obsolete events should be removed from all tables
+	-- Obsolete events should be removed from non-zone tables only
 	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].ObsoleteEvent == nil, "Obsolete battle event removed")
 	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].ValidEvent ~= nil, "Valid battle event kept")
-	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ObsoleteZone == nil, "Obsolete zone event removed")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ObsoleteZone ~= nil, "Zone events preserved during cleanup")
 	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ValidZone ~= nil, "Valid zone event kept")
 	IsTrue(updateCalled, "UI updated")
 end
@@ -303,11 +303,25 @@ function Tests:CleanupOldEvents_HandlesEmptyRegisteredEvents()
 	-- Run cleanup
 	Soundtrack.Cleanup.CleanupOldEvents()
 
-	-- All events should be removed except Preview from all tables
+	-- All events except zones should be removed when there are no registered events
 	IsTrue(SoundtrackAddon.db.profile.events[ST_BATTLE].SomeBattleEvent == nil,
 		"Battle event removed when no registered events")
-	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].SomeZoneEvent == nil,
-		"Zone event removed when no registered events")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].SomeZoneEvent ~= nil,
+		"Zone event preserved when no registered zone events")
 	IsTrue(SoundtrackAddon.db.profile.events[ST_DANCE].SomeDanceEvent == nil,
 		"Dance event removed when no registered events")
+end
+
+function Tests:CleanupOldEvents_DoesNotTouchZoneEvents()
+	Soundtrack.RegisteredEvents[ST_ZONE] = {}
+	SoundtrackAddon.db.profile.events = SoundtrackAddon.db.profile.events or {}
+	SoundtrackAddon.db.profile.events[ST_ZONE] = {
+		ZoneOne = { tracks = { "track" } },
+		ZoneTwo = { tracks = {} },
+	}
+
+	Soundtrack.Cleanup.CleanupOldEvents()
+
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ZoneOne ~= nil, "Existing zone kept")
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ZoneTwo ~= nil, "Additional zones kept")
 end
