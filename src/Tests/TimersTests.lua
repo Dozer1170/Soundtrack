@@ -133,6 +133,24 @@ function Tests:OnUpdate_ExpiredTimer_CallsCallback()
 	AreEqual(true, callbackCalled, "expired timer callback should be called")
 end
 
+function Tests:OnUpdate_ExpiredTimer_CallsCallback_Real()
+	local fakeTime = 0
+	Replace("GetTime", function()
+		return fakeTime
+	end)
+
+	local callbackCount = 0
+	Soundtrack.Timers.AddTimer("RealExpiredTimer", 5, function()
+		callbackCount = callbackCount + 1
+	end)
+
+	fakeTime = 10
+	Soundtrack.Timers.OnUpdate()
+
+	AreEqual(1, callbackCount, "expired timer callback should be called once")
+	AreEqual(nil, Soundtrack.Timers.Get("RealExpiredTimer"), "expired timer should be removed")
+end
+
 function Tests:OnUpdate_UnexpiredTimer_DoesNotCallCallback()
 	local callbackCalled = false
 	local timerList = {
@@ -163,6 +181,25 @@ function Tests:OnUpdate_UnexpiredTimer_DoesNotCallCallback()
 	Soundtrack.Timers.OnUpdate()
 
 	AreEqual(false, callbackCalled, "unexpired timer callback should not be called")
+end
+
+function Tests:OnUpdate_UnexpiredTimer_DoesNotCallCallback_Real()
+	local fakeTime = 0
+	Replace("GetTime", function()
+		return fakeTime
+	end)
+
+	local callbackCalled = false
+	Soundtrack.Timers.AddTimer("RealPendingTimer", 5, function()
+		callbackCalled = true
+	end)
+
+	fakeTime = 4
+	Soundtrack.Timers.OnUpdate()
+
+	AreEqual(false, callbackCalled, "unexpired timer callback should not be called")
+	IsTrue(Soundtrack.Timers.Get("RealPendingTimer") ~= nil, "unexpired timer should remain")
+	Soundtrack.Timers.Remove("RealPendingTimer")
 end
 
 function Tests:OnUpdate_MultipleTimers_CallsAllExpiredCallbacks()
@@ -214,4 +251,31 @@ function Tests:OnUpdate_MultipleTimers_CallsAllExpiredCallbacks()
 	AreEqual(2, #callbacks, "two expired timers should fire")
 	AreEqual(1, callbacks[1], "first timer callback should fire")
 	AreEqual(2, callbacks[2], "second timer callback should fire")
+end
+
+function Tests:OnUpdate_CallbackAddsTimer_DoesNotRunInSamePass()
+	local fakeTime = 0
+	Replace("GetTime", function()
+		return fakeTime
+	end)
+
+	local firstCalled = false
+	local secondCalled = false
+
+	Soundtrack.Timers.AddTimer("FirstTimer", 0, function()
+		firstCalled = true
+		Soundtrack.Timers.AddTimer("SecondTimer", 0, function()
+			secondCalled = true
+		end)
+	end)
+
+	fakeTime = 1
+	Soundtrack.Timers.OnUpdate()
+
+	AreEqual(true, firstCalled, "first timer should fire")
+	AreEqual(false, secondCalled, "second timer should not fire in same pass")
+
+	Soundtrack.Timers.OnUpdate()
+
+	AreEqual(true, secondCalled, "second timer should fire on next update")
 end

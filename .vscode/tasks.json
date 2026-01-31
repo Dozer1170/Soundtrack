@@ -4,15 +4,23 @@
         {
             "label": "Run Unit Tests",
             "type": "shell",
-            "command": "lua",
+            "command": "/bin/bash",
             "args": [
-                "TestRunner.lua"
+                "-c",
+                "rm -f luacov.stats.out && SOUNDTRACK_COVERAGE=1 lua src/Tests/TestRunner.lua && luacov -c .luacov -r lcov"
             ],
             "options": {
-                "cwd": "${workspaceFolder}/src/Tests"
+                "cwd": "${workspaceFolder}"
             },
             "windows": {
-                "command": "${env:LOCALAPPDATA}\\Programs\\Lua\\bin\\lua.exe"
+                "command": "powershell.exe",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-Command",
+                    "if (Test-Path .\\luacov.stats.out) { Remove-Item .\\luacov.stats.out -Force }; $env:SOUNDTRACK_COVERAGE=1; lua .\\src\\Tests\\TestRunner.lua; if ($LASTEXITCODE -eq 0) { luacov -c .\\.luacov -r lcov } else { exit $LASTEXITCODE }"
+                ]
             },
             "group": {
                 "kind": "test",
@@ -26,12 +34,13 @@
             "problemMatcher": []
         },
         {
-            "label": "Run Unit Tests with Coverage",
+            "label": "Generate HTML Coverage Report",
             "type": "shell",
-            "command": "/bin/bash",
+            "command": "genhtml",
             "args": [
-                "-c",
-                "SOUNDTRACK_COVERAGE=1 lua src/Tests/TestRunner.lua && luacov -c .luacov -r lcov"
+                "coverage/lcov.info",
+                "-o",
+                "coverage/html"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -43,12 +52,10 @@
                     "-ExecutionPolicy",
                     "Bypass",
                     "-Command",
-                    "$env:SOUNDTRACK_COVERAGE=1; lua .\\src\\Tests\\TestRunner.lua; if ($LASTEXITCODE -eq 0) { luacov -c .\\.luacov -r lcov } else { exit $LASTEXITCODE }"
+                    "genhtml coverage\\lcov.info -o coverage\\html"
                 ]
             },
-            "group": {
-                "kind": "test"
-            },
+            "group": "build",
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated",

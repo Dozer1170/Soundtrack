@@ -4,6 +4,13 @@ end
 
 local Tests = Tests("Soundtrack", "PLAYER_REGEN_DISABLED")
 
+local function ResetBattleState()
+	Replace("UnitIsDeadOrGhost", function()
+		return true
+	end)
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_DEAD")
+end
+
 local function MockUnit(unitId, classification, isPlayer, isAlive, isEnemy, isBoss)
 	Replace("UnitExists", function(unit)
 		return unit == unitId or string.match(unitId, unit)
@@ -203,6 +210,52 @@ function Tests:GetGroupEnemyClassification_WithNoEnemies_ReturnsNone()
 	IsFalse(pvpEnabled, "PvP should not be enabled with no enemies")
 end
 
+function Tests:GetGroupEnemyClassification_WithRaidMembersAndPets_SetsPvP()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly = false
+
+	Replace("GetNumGroupMembers", function()
+		return 2
+	end)
+	Replace("GetNumSubgroupMembers", function()
+		return 0
+	end)
+	Replace("UnitExists", function(unit)
+		return unit == "player"
+			or unit == "pet"
+			or unit == "raid1"
+			or unit == "raid2"
+			or unit == "raidpet1"
+			or unit == "raid1target"
+			or unit == "raid2target"
+			or unit == "pettarget"
+			or unit == "raidpet1target"
+	end)
+	Replace("UnitIsFriend", function(_, unit)
+		return unit ~= "raid1target" and unit ~= "pettarget" and unit ~= "raidpet1target"
+	end)
+	Replace("UnitIsDeadOrGhost", function()
+		return false
+	end)
+	Replace("UnitIsPlayer", function(unit)
+		return unit == "raid1target"
+	end)
+	Replace("UnitCanAttack", function(_, unit)
+		return unit == "raid1target"
+	end)
+	Replace("UnitClassification", function(unit)
+		if unit == "raid1target" then
+			return "elite"
+		end
+		return "normal"
+	end)
+
+	local classification, pvpEnabled = Soundtrack.BattleEvents.GetGroupEnemyClassification()
+
+	AreEqual("elite", classification, "elite raid member should be detected")
+	IsTrue(pvpEnabled, "PvP should be enabled for enemy player targets")
+end
+
 -- Combat State Tests (testing through the OnEvent API)
 -- Tests set _G.MockInCombat, _G.MockIsDead, and _G.MockIsCorpse to control behavior
 
@@ -226,6 +279,104 @@ function Tests:OnEvent_PLAYER_REGEN_DISABLED_EntersCombat()
 	_G.MockInCombat = false
 end
 
+function Tests:OnEvent_PLAYER_REGEN_DISABLED_PvPBattlePlays()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly = false
+
+	Replace("GetNumGroupMembers", function()
+		return 1
+	end)
+	Replace("GetNumSubgroupMembers", function()
+		return 0
+	end)
+	Replace("UnitExists", function(unit)
+		return unit == "player" or unit == "raid1" or unit == "raid1target"
+	end)
+	Replace("UnitIsFriend", function(_, unit)
+		return unit ~= "raid1target"
+	end)
+	Replace("UnitIsDeadOrGhost", function()
+		return false
+	end)
+	Replace("UnitIsPlayer", function(unit)
+		return unit == "raid1target"
+	end)
+	Replace("UnitCanAttack", function(_, unit)
+		return unit == "raid1target"
+	end)
+	Replace("UnitClassification", function()
+		return "normal"
+	end)
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
+		played.tableName = tableName
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+
+	AreEqual(ST_BATTLE, played.tableName)
+	AreEqual(SOUNDTRACK_PVP_BATTLE, played.eventName)
+end
+
+function Tests:OnEvent_PLAYER_REGEN_DISABLED_BossBattlePlays()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	Replace(Soundtrack.BattleEvents, "GetGroupEnemyClassification", function()
+		return "boss", false
+	end)
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
+		played.tableName = tableName
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+
+	AreEqual(ST_BATTLE, played.tableName)
+	AreEqual(SOUNDTRACK_BOSS_BATTLE, played.eventName)
+end
+
+function Tests:OnEvent_PLAYER_REGEN_DISABLED_RareBattlePlays()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	Replace(Soundtrack.BattleEvents, "GetGroupEnemyClassification", function()
+		return "rare", false
+	end)
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+
+	AreEqual(SOUNDTRACK_RARE, played.eventName)
+end
+
+function Tests:OnEvent_PLAYER_REGEN_DISABLED_EliteBattlePlays()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	Replace(Soundtrack.BattleEvents, "GetGroupEnemyClassification", function()
+		return "elite", false
+	end)
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+
+	AreEqual(SOUNDTRACK_ELITE_MOB, played.eventName)
+end
+
 function Tests:OnEvent_PLAYER_REGEN_ENABLED_ExitsCombat()
 	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
 	SoundtrackAddon.db.profile.settings.BattleCooldown = 0
@@ -246,6 +397,107 @@ function Tests:OnEvent_PLAYER_REGEN_ENABLED_ExitsCombat()
 	-- Battle music should stop (eventually, after cooldown)
 	local clearedEvent = Soundtrack.Events.GetEventAtStackLevel(ST_BATTLE_LVL)
 	IsFalse(clearedEvent, "battle event should clear once combat ends")
+end
+
+function Tests:OnEvent_PLAYER_REGEN_ENABLED_SetsCooldownTimer()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 5
+
+	local timerSet = false
+	Replace(Soundtrack.Timers, "AddTimer", function(name, duration, callback)
+		if name == "BattleCooldown" and duration == 5 and type(callback) == "function" then
+			timerSet = true
+		end
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_ENABLED")
+
+	IsTrue(timerSet, "Battle cooldown timer should be set")
+end
+
+function Tests:OnEvent_PLAYER_REGEN_ENABLED_VictoryBossSoundEffect()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 0
+	Replace("UnitIsDeadOrGhost", function() return false end)
+
+	Soundtrack.Events.Stack[ST_BOSS_LVL].eventName = SOUNDTRACK_BOSS_BATTLE
+	Soundtrack.Events.Stack[ST_BATTLE_LVL].eventName = nil
+	Replace(Soundtrack, "GetEvent", function(_, eventName)
+		if eventName == SOUNDTRACK_VICTORY_BOSS then
+			return { soundEffect = true }
+		end
+		return nil
+	end)
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_ENABLED")
+
+	AreEqual(SOUNDTRACK_VICTORY_BOSS, played.eventName)
+end
+
+function Tests:OnEvent_PLAYER_REGEN_ENABLED_VictoryBossNonSfx()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 0
+	Replace("UnitIsDeadOrGhost", function() return false end)
+
+	Soundtrack.Events.Stack[ST_BOSS_LVL].eventName = SOUNDTRACK_BOSS_BATTLE
+	Soundtrack.Events.Stack[ST_BATTLE_LVL].eventName = nil
+	Replace(Soundtrack, "GetEvent", function(_, eventName)
+		if eventName == SOUNDTRACK_VICTORY_BOSS then
+			return { soundEffect = false }
+		end
+		return nil
+	end)
+
+	local playCount = 0
+	local stopBattle = false
+	local stopBoss = false
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		if eventName == SOUNDTRACK_VICTORY_BOSS then
+			playCount = playCount + 1
+		end
+	end)
+	Replace(Soundtrack, "StopEventAtLevel", function(level)
+		if level == ST_BATTLE_LVL then
+			stopBattle = true
+		elseif level == ST_BOSS_LVL then
+			stopBoss = true
+		end
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_ENABLED")
+
+	AreEqual(1, playCount)
+	IsTrue(stopBattle, "battle level stopped")
+	IsTrue(stopBoss, "boss level stopped")
+end
+
+function Tests:OnEvent_PLAYER_REGEN_ENABLED_VictoryNormalSoundEffect()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 0
+	Replace("UnitIsDeadOrGhost", function() return false end)
+
+	Soundtrack.Events.Stack[ST_BOSS_LVL].eventName = nil
+	Soundtrack.Events.Stack[ST_BATTLE_LVL].eventName = SOUNDTRACK_NORMAL_MOB
+	Replace(Soundtrack, "GetEvent", function(_, eventName)
+		if eventName == SOUNDTRACK_VICTORY then
+			return { soundEffect = true }
+		end
+		return nil
+	end)
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_ENABLED")
+
+	AreEqual(SOUNDTRACK_VICTORY, played.eventName)
 end
 
 function Tests:OnEvent_PLAYER_DEAD_StopsBattleMusic()
@@ -323,6 +575,19 @@ function Tests:OnEvent_PLAYER_UNGHOST_StopsGhostMusic()
 
 	local ghostEvent = Soundtrack.Events.GetEventAtStackLevel(ST_DEATH_LVL)
 	IsFalse(ghostEvent, "ghost event should stop on unghost")
+end
+
+function Tests:OnEvent_ZONE_CHANGED_NEW_AREA_Traces()
+	local traced = false
+	Replace(Soundtrack.Chat, "TraceBattle", function(msg)
+		if msg == "ZONE_CHANGED_NEW_AREA" then
+			traced = true
+		end
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "ZONE_CHANGED_NEW_AREA")
+
+	IsTrue(traced, "zone change should trace")
 end
 
 function Tests:BattleEvents_DisabledBattleMusic_DoesNotPlay()
@@ -529,4 +794,80 @@ function Tests:Initialize_AddsAllBattleEvents()
 	IsTrue(miscTable[SOUNDTRACK_VICTORY_BOSS], "boss victory event should exist")
 	IsTrue(miscTable[SOUNDTRACK_DEATH], "death event should exist")
 	IsTrue(miscTable[SOUNDTRACK_GHOST], "ghost event should exist")
+end
+
+function Tests:OnEvent_PLAYER_ALIVE_StopsGhostMusic()
+	Replace("UnitIsDeadOrGhost", function() return false end)
+
+	local stopped = {}
+	Replace(Soundtrack, "StopEvent", function(_, eventName)
+		stopped.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_ALIVE")
+
+	AreEqual(SOUNDTRACK_GHOST, stopped.eventName)
+end
+
+function Tests:BattleEvents_OnLoad_RegistersEvents()
+	local events = {}
+	local frame = {
+		RegisterEvent = function(_, eventName)
+			table.insert(events, eventName)
+		end,
+	}
+
+	Soundtrack.BattleEvents.OnLoad(frame)
+
+	AreEqual(6, #events)
+	IsTrue(events[1] == "PLAYER_REGEN_DISABLED")
+	IsTrue(events[2] == "PLAYER_REGEN_ENABLED")
+	IsTrue(events[3] == "PLAYER_UNGHOST")
+	IsTrue(events[4] == "PLAYER_ALIVE")
+	IsTrue(events[5] == "PLAYER_DEAD")
+	IsTrue(events[6] == "ZONE_CHANGED_NEW_AREA")
+end
+
+function Tests:BattleEvents_OnUpdate_ReanalyzesBattle()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	local classificationCalls = 0
+	Replace(Soundtrack.BattleEvents, "GetGroupEnemyClassification", function()
+		classificationCalls = classificationCalls + 1
+		return "normal", false
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+	classificationCalls = 0
+
+	for i = 1, 10 do
+		local name = debug.getupvalue(Soundtrack.BattleEvents.OnUpdate, i)
+		if name == "currentBattleTypeIndex" then
+			debug.setupvalue(Soundtrack.BattleEvents.OnUpdate, i, 1)
+		elseif name == "nextUpdateTime" then
+			debug.setupvalue(Soundtrack.BattleEvents.OnUpdate, i, 0)
+		end
+	end
+
+	Replace("GetTime", function() return 10 end)
+	Soundtrack.BattleEvents.OnUpdate()
+
+	IsTrue(classificationCalls > 0, "Battle analysis should run on update when active")
+end
+
+function Tests:BattleEvents_GetBattleType_InvalidBattle()
+	ResetBattleState()
+	Replace(Soundtrack.BattleEvents, "GetGroupEnemyClassification", function()
+		return "unknown", false
+	end)
+
+	local battleType = nil
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		battleType = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+
+	AreEqual("InvalidBattle", battleType)
 end

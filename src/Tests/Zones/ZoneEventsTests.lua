@@ -168,3 +168,215 @@ function Tests:OnUpdate_ZoneMusicDisabled_DoesNotPlay()
 	-- Zone music is disabled, so no event should be played
 	IsFalse(playEventCalled)
 end
+
+function Tests:OnEvent_ZoneMusicDisabled_ReturnsEarly()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = false
+	local traceCalled = false
+	Replace(Soundtrack.Chat, "TraceZones", function()
+		traceCalled = true
+	end)
+
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
+
+	IsFalse(traceCalled)
+end
+
+function Tests:AddZones_ZoneNameDiffers_UsesZoneName()
+	Replace("IsInInstance", function()
+		return false, "none"
+	end)
+	Replace(C_Map, "GetBestMapForUnit", function()
+		return 946
+	end)
+	Replace(MapUtil, "GetMapParentInfo", function(_, zoneLevel)
+		return { name = zoneLevel == 3 and "Stormwind City" or "Eastern Kingdoms" }
+	end)
+	Replace("GetRealZoneText", function()
+		return "Trade District"
+	end)
+	Replace("GetSubZoneText", function()
+		return "Old Town"
+	end)
+	Replace("GetMinimapZoneText", function()
+		return "Canals"
+	end)
+
+	Soundtrack_ZoneEvents_AddZones()
+
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms/Stormwind City/Trade District/Old Town"],
+		"zoneName should replace zoneText and shift subzone/minimap")
+end
+
+function Tests:OnEvent_ZoneNameDiffers_UsesZoneName()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	Replace("IsInInstance", function()
+		return false, "none"
+	end)
+	Replace(C_Map, "GetBestMapForUnit", function()
+		return 946
+	end)
+	Replace(MapUtil, "GetMapParentInfo", function(_, zoneLevel)
+		return { name = zoneLevel == 3 and "Stormwind City" or "Eastern Kingdoms" }
+	end)
+	Replace("GetRealZoneText", function()
+		return "Trade District"
+	end)
+	Replace("GetSubZoneText", function()
+		return "Old Town"
+	end)
+	Replace("GetMinimapZoneText", function()
+		return "Canals"
+	end)
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(_, eventName)
+		played[eventName] = true
+	end)
+
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
+
+	IsTrue(played["Eastern Kingdoms/Stormwind City/Trade District/Old Town"], "minimap zone should play")
+	IsTrue(played["Eastern Kingdoms/Stormwind City/Trade District"], "subzone should play")
+	IsTrue(played["Eastern Kingdoms/Stormwind City"], "zone should play")
+	IsTrue(played["Eastern Kingdoms"], "continent should play")
+end
+
+function Tests:AddZones_MapIdNil_UsesUnknownContinent()
+	Replace("IsInInstance", function()
+		return false, "none"
+	end)
+	Replace(C_Map, "GetBestMapForUnit", function()
+		return nil
+	end)
+	Replace("GetRealZoneText", function()
+		return "Nowhere"
+	end)
+	Replace("GetSubZoneText", function()
+		return ""
+	end)
+	Replace("GetMinimapZoneText", function()
+		return ""
+	end)
+
+	Soundtrack_ZoneEvents_AddZones()
+
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_UNKNOWN], "unknown continent should be added")
+end
+
+function Tests:AddZones_ContinentNil_DefaultsToUnknown()
+	Replace("IsInInstance", function()
+		return false, "none"
+	end)
+	Replace(C_Map, "GetBestMapForUnit", function()
+		return 946
+	end)
+	Replace(MapUtil, "GetMapParentInfo", function(_, zoneLevel)
+		if zoneLevel == 3 then
+			return nil
+		end
+		return nil
+	end)
+	Replace("GetRealZoneText", function()
+		return "Mystery Zone"
+	end)
+	Replace("GetSubZoneText", function()
+		return ""
+	end)
+	Replace("GetMinimapZoneText", function()
+		return ""
+	end)
+
+	Soundtrack_ZoneEvents_AddZones()
+
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)[SOUNDTRACK_UNKNOWN], "continent nil should default to unknown")
+end
+
+function Tests:AssignPriority_SetsPriority_WhenEventExists()
+	local event = { priority = nil }
+	Replace(Soundtrack, "GetEventByName", function()
+		return event
+	end)
+	MockZone("Kalimdor", "Mulgore", "", "")
+
+	Soundtrack_ZoneEvents_AddZones()
+
+	IsTrue(event.priority ~= nil, "priority should be assigned when event exists")
+end
+
+function Tests:OnZoneChanged_ZoneTextMissing_StopsZoneLevel()
+	SoundtrackAddon.db.profile.settings.AutoAddZones = true
+	Replace("IsInInstance", function()
+		return false, "none"
+	end)
+	Replace(C_Map, "GetBestMapForUnit", function()
+		return 946
+	end)
+	Replace(MapUtil, "GetMapParentInfo", function(_, zoneLevel)
+		return { name = zoneLevel == 3 and "" or "Eastern Kingdoms" }
+	end)
+	Replace("GetRealZoneText", function()
+		return ""
+	end)
+	Replace("GetSubZoneText", function()
+		return ""
+	end)
+	Replace("GetMinimapZoneText", function()
+		return ""
+	end)
+
+	local stoppedLevel = nil
+	Replace(Soundtrack, "StopEventAtLevel", function(level)
+		stoppedLevel = level
+	end)
+
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
+
+	AreEqual(ST_ZONE_LVL, stoppedLevel)
+end
+
+function Tests:OnLoad_RegistersZoneEvents()
+	local events = {}
+	local frame = {
+		RegisterEvent = function(_, eventName)
+			events[eventName] = true
+		end
+	}
+
+	Soundtrack.ZoneEvents.OnLoad(frame)
+
+	IsTrue(events["ZONE_CHANGED_NEW_AREA"], "should register ZONE_CHANGED_NEW_AREA")
+	IsTrue(events["ZONE_CHANGED"], "should register ZONE_CHANGED")
+	IsTrue(events["ZONE_CHANGED_INDOORS"], "should register ZONE_CHANGED_INDOORS")
+	IsTrue(events["PLAYER_ENTERING_WORLD"], "should register PLAYER_ENTERING_WORLD")
+end
+
+function Tests:Initialize_NoContinents_ReturnsEarly()
+	local addEventCalled = false
+	Replace(Soundtrack, "AddEvent", function()
+		addEventCalled = true
+	end)
+	Replace(C_Map, "GetMapChildrenInfo", function()
+		return nil
+	end)
+
+	Soundtrack.ZoneEvents.Initialize()
+
+	IsTrue(addEventCalled, "instances/pvp should be added before early return")
+end
+
+function Tests:Initialize_AddsContinentsAndZones()
+	local added = {}
+	Replace(Soundtrack, "AddEvent", function(_, name)
+		added[name] = true
+	end)
+	Replace(C_Map, "GetMapChildrenInfo", function(mapId, level)
+		if mapId == 946 and level == 2 then
+			return { { name = "Kalimdor", mapID = 1 } }
+		end
+		return { { name = "Mulgore" } }
+	end)
+
+	Soundtrack.ZoneEvents.Initialize()
+
+	IsTrue(added["Kalimdor"], "continent event should be added")
+	IsTrue(added["Kalimdor/Mulgore"], "zone event should be added")
+end

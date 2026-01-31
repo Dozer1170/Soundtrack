@@ -151,7 +151,7 @@ local function OnJoinRaidEvent()
 	if not PlayerStatus.WasInRaid and GetNumSubgroupMembers() > 0 then
 		Soundtrack.Misc.PlayEvent(SOUNDTRACK_JOIN_RAID)
 		PlayerStatus.WasInRaid = true
-	elseif PlayerStatus.WasInRaid and not GetNumSubgroupMembers() == 0 then
+	elseif PlayerStatus.WasInRaid and GetNumSubgroupMembers() == 0 then
 		PlayerStatus.WasInRaid = false
 	end
 end

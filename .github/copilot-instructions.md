@@ -40,4 +40,4 @@ When making code changes to the Soundtrack addon, always follow this workflow:
 
 ## After Making Changes
 
-Always conclude work sessions by running the test suite. Package/install afterward when the platform scripts and game installation are available.
+Always conclude work sessions by running the test suite and generating the HTML coverage report. Package/install afterward when the platform scripts and game installation are available.

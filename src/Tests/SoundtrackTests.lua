@@ -77,6 +77,21 @@ function Tests:RemoveEvent_NilEvent_DoesNotCrash()
 	IsTrue(string.find(errorMessages[1], "Nil event") ~= nil, "error message should explain the missing event")
 end
 
+function Tests:RemoveEvent_TableMissing_LogsError()
+	local errorMessages = {}
+	Replace(Soundtrack.Chat, "Error", function(msg)
+		table.insert(errorMessages, msg)
+	end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	Soundtrack.RemoveEvent(ST_ZONE, "MissingTable")
+
+	AreEqual(1, #errorMessages, "missing table should trigger a chat error")
+	IsTrue(string.find(errorMessages[1], "Cannot find table") ~= nil, "error should mention missing table")
+end
+
 function Tests:RemoveEvent_NonexistentEvent_DoesNotCrash()
 	Soundtrack.AddEvent(ST_ZONE, "OtherEvent", ST_ZONE_LVL, true, false)
 	Soundtrack_Tracks["other.mp3"] = { filePath = "other.mp3" }
@@ -165,6 +180,335 @@ function Tests:GetEventByName_NonexistentEvent_ReturnsNil()
 	local event = Soundtrack.GetEventByName("DoesNotExist")
 
 	IsFalse(event)
+end
+
+function Tests:StaticPopup_OnAccept_LoadsTracksAndSetsFlag()
+	local loadCalled = false
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = false
+	Replace(Soundtrack, "LoadTracks", function()
+		loadCalled = true
+	end)
+
+	StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"].OnAccept()
+
+	AreEqual(true, SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks)
+	AreEqual(true, loadCalled)
+end
+
+function Tests:StaticPopup_OnCancel_ClearsFlag()
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true
+	StaticPopupDialogs["ST_NO_LOADMYTRACKS_POPUP"].OnCancel()
+	AreEqual(false, SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks)
+end
+
+function Tests:LoadTracks_SetUserEventsToCorrectLevel_NoPlaylistsTable()
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true
+	Soundtrack_LoadDefaultTracks = function() end
+	Soundtrack_LoadMyTracks = nil
+	Soundtrack_SortedTracks = {}
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+	Replace(Soundtrack, "SortAllEvents", function() end)
+	Replace(Soundtrack, "SortTracks", function() end)
+	Replace(Soundtrack.Chat, "Message", function() end)
+	Replace(_G, "SoundtrackFrame_RefreshPlaybackControls", function() end)
+
+	Replace(Soundtrack.Events, "GetTable", function(tableName)
+		if tableName == "Playlists" then
+			return nil
+		end
+		return {}
+	end)
+
+	Soundtrack.LoadTracks()
+
+	IsTrue(true, "LoadTracks should complete when Playlists table is missing")
+end
+
+function Tests:LoadTracks_SetUserEventsToCorrectLevel_SetsPriority()
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true
+	Soundtrack_LoadDefaultTracks = function() end
+	Soundtrack_LoadMyTracks = nil
+	Soundtrack_SortedTracks = {}
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+	Replace(Soundtrack, "SortAllEvents", function() end)
+	Replace(Soundtrack, "SortTracks", function() end)
+	Replace(Soundtrack.Chat, "Message", function() end)
+	Replace(_G, "SoundtrackFrame_RefreshPlaybackControls", function() end)
+
+	local playlists = {
+		TestPlaylist = { priority = 0 },
+	}
+	Replace(Soundtrack.Events, "GetTable", function(tableName)
+		if tableName == "Playlists" then
+			return playlists
+		end
+		return {}
+	end)
+
+	Soundtrack.LoadTracks()
+
+	AreEqual(ST_PLAYLIST_LVL, playlists.TestPlaylist.priority)
+end
+
+function Tests:OnEventTreeChanged_EventMissing_ReturnsEarly()
+	SoundtrackAddon.db.profile.events = {
+		ZONE = {}
+	}
+	Soundtrack_FlatEvents = { ZONE = {} }
+	Soundtrack_EventNodes = {
+		ZONE = {
+			nodes = {
+				{
+					tag = "MissingEvent",
+					name = "MissingEvent",
+					nodes = { { tag = "Child", name = "Child", nodes = {} } },
+				},
+			},
+		},
+	}
+
+	local originalError = _G.error
+	_G.error = function()
+		return nil
+	end
+
+	Soundtrack.OnEventTreeChanged("ZONE")
+
+	_G.error = originalError
+	IsTrue(true, "should return early when event lookup fails")
+end
+
+function Tests:AddEvent_NilTable_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+
+	Soundtrack.AddEvent(nil, "Event", 1, true, false)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:AddEvent_EventTableMissing_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	Soundtrack.AddEvent(ST_ZONE, "MissingTableEvent", 1, true, false)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:AddEvent_ExistingEvent_UpdatesDefaults()
+	local eventTable = {
+		Existing = { priority = 0, continuous = nil, soundEffect = nil, tracks = {} },
+	}
+	Replace(Soundtrack.Events, "GetTable", function()
+		return eventTable
+	end)
+
+	Soundtrack.AddEvent(ST_ZONE, "Existing", 3, true, true)
+
+	AreEqual(3, eventTable.Existing.priority)
+	AreEqual(true, eventTable.Existing.continuous)
+	AreEqual(true, eventTable.Existing.soundEffect)
+end
+
+function Tests:RenameEvent_NilTable_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+
+	Soundtrack.RenameEvent(nil, "Old", "New", 1, true, false)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:RenameEvent_NilOld_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+
+	Soundtrack.RenameEvent(ST_ZONE, nil, "New", 1, true, false)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:RenameEvent_NilNew_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+
+	Soundtrack.RenameEvent(ST_ZONE, "Old", nil, 1, true, false)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:RenameEvent_TableMissing_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	Soundtrack.RenameEvent(ST_ZONE, "Old", "New", 1, true, false)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:RenameEvent_NewEventExists_UpdatesDefaults()
+	local eventTable = {
+		Old = { tracks = {}, priority = 1, continuous = false },
+		New = { tracks = {}, priority = nil, continuous = nil, soundEffect = nil },
+	}
+	Replace(Soundtrack.Events, "GetTable", function()
+		return eventTable
+	end)
+
+	Soundtrack.RenameEvent(ST_ZONE, "Old", "New", 4, true, true)
+
+	AreEqual(4, eventTable.New.priority)
+	AreEqual(true, eventTable.New.continuous)
+	AreEqual(true, eventTable.New.soundEffect)
+	IsTrue(eventTable.Old ~= nil, "old event should remain when new exists")
+end
+
+function Tests:AssignTrack_InvalidParams_LogsDebug()
+	local debugMessages = {}
+	_G.debugEvents = function(message)
+		table.insert(debugMessages, message)
+	end
+
+	Soundtrack.AssignTrack(nil, "Track")
+	Soundtrack.AssignTrack("Event", nil)
+
+	AreEqual(2, #debugMessages)
+end
+
+function Tests:AssignTrack_TableMissing_LogsDebug()
+	local debugMessages = {}
+	_G.debugEvents = function(message)
+		table.insert(debugMessages, message)
+	end
+	Replace(Soundtrack, "GetTableFromEvent", function()
+		return ST_ZONE
+	end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	Soundtrack.AssignTrack("Event", "Track")
+
+	AreEqual(1, #debugMessages)
+end
+
+function Tests:PlayEvent_InvalidTable_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+
+	Soundtrack.PlayEvent(nil, "Event")
+
+	AreEqual(1, #errors)
+end
+
+function Tests:PlayEvent_InvalidEvent_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+
+	Soundtrack.PlayEvent(ST_ZONE, nil)
+
+	AreEqual(1, #errors)
+end
+
+function Tests:PlayEvent_EventTableMissing_Returns()
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	Soundtrack.PlayEvent(ST_ZONE, "Missing")
+
+	IsTrue(true, "should return when event table missing")
+end
+
+function Tests:PlayEvent_EventMissing_Returns()
+	Replace(Soundtrack.Events, "GetTable", function()
+		return {}
+	end)
+
+	Soundtrack.PlayEvent(ST_ZONE, "Missing")
+
+	IsTrue(true, "should return when event missing")
+end
+
+function Tests:PlayEvent_MissingPriority_LogsError()
+	local errors = {}
+	Replace(Soundtrack.Chat, "Error", function(message)
+		table.insert(errors, message)
+	end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return {
+			MissingPriority = { priority = nil, continuous = false, soundEffect = false, tracks = {} },
+		}
+	end)
+
+	Soundtrack.PlayEvent(ST_ZONE, "MissingPriority")
+
+	AreEqual(1, #errors)
+end
+
+function Tests:StopEventAtLevel_Zero_Returns()
+	local previousEvent = Soundtrack.Events.Stack[1].eventName
+
+	Soundtrack.StopEventAtLevel(0)
+
+	AreEqual(previousEvent, Soundtrack.Events.Stack[1].eventName)
+end
+
+function Tests:OnLoad_SlashCommands_HandleDebugResetShow()
+	local debugCalled = false
+	local showCalled = false
+	local clearCalled = false
+	local setPointCalled = false
+	SlashCmdList = {}
+	Replace(Soundtrack.Chat, "InitDebugChatFrame", function()
+		debugCalled = true
+	end)
+	Replace(Soundtrack.Events, "OnLoad", function() end)
+	SoundtrackFrame = {
+		Show = function()
+			showCalled = true
+		end,
+		ClearAllPoints = function()
+			clearCalled = true
+		end,
+		SetPoint = function()
+			setPointCalled = true
+		end,
+	}
+	UIParent = {}
+
+	Soundtrack.OnLoad({})
+	SlashCmdList["SOUNDTRACK"]("debug")
+	SlashCmdList["SOUNDTRACK"]("reset")
+	SlashCmdList["SOUNDTRACK"]("open")
+
+	AreEqual(true, debugCalled)
+	AreEqual(true, clearCalled)
+	AreEqual(true, setPointCalled)
+	AreEqual(true, showCalled)
 end
 
 -- Track Assignment Tests

@@ -36,6 +36,27 @@ function Tests:EventHasTracks_NonexistentEvent_ReturnsFalse()
 	IsFalse(Soundtrack.Events.EventHasTracks("TestTable", "NonexistentEvent"), "nonexistent event should return false")
 end
 
+function Tests:EventHasTracks_NilTable_ReturnsFalse()
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	IsFalse(Soundtrack.Events.EventHasTracks("TestTable", "AnyEvent"))
+end
+
+function Tests:GetTrackCount_ReturnsZeroForNilEvent()
+	local getTrackCount
+	for i = 1, 10 do
+		local name, value = debug.getupvalue(Soundtrack.Events.GetCurrentStackLevel, i)
+		if name == "GetTrackCount" then
+			getTrackCount = value
+			break
+		end
+	end
+
+	AreEqual(0, getTrackCount(nil))
+end
+
 function Tests:EventExists_ExistingEvent_ReturnsTrue()
 	Replace(Soundtrack.Events, "GetTable", function()
 		return {
@@ -260,6 +281,39 @@ function Tests:PlayRandomTrackByTable_WhilePaused_DoesNotPlay()
 	AreEqual(true, played) -- Returns true but doesn't actually play
 end
 
+function Tests:PlayRandomTrackByTable_PausedSoundEffect_PlaysTrack()
+	Soundtrack.Events.Add(ST_ZONE, "PausedSfxEvent", "sfx.mp3")
+	Soundtrack_Tracks["sfx.mp3"] = { filePath = "sfx.mp3" }
+	Soundtrack.Events.Paused = true
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["PausedSfxEvent"].soundEffect = true
+
+	local played = false
+	Replace(Soundtrack.Library, "PlayTrack", function()
+		played = true
+	end)
+
+	Soundtrack.Events.PlayRandomTrackByTable(ST_ZONE, "PausedSfxEvent", 0)
+
+	Soundtrack.Events.Paused = false
+	IsTrue(played, "Sound effect should play even when paused")
+end
+
+function Tests:PlayRandomTrackByTable_NonRandom_OffsetZeroWrapsToEnd()
+	Soundtrack.Events.Add(ST_ZONE, "ZeroIndex", "track1.mp3")
+	Soundtrack.Events.Add(ST_ZONE, "ZeroIndex", "track2.mp3")
+	Soundtrack_Tracks["track1.mp3"] = { filePath = "track1.mp3" }
+	Soundtrack_Tracks["track2.mp3"] = { filePath = "track2.mp3" }
+
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["ZeroIndex"].random = false
+	eventTable["ZeroIndex"].lastTrackIndex = 1
+
+	Soundtrack.Events.PlayRandomTrackByTable(ST_ZONE, "ZeroIndex", -1)
+
+	AreEqual(2, eventTable["ZeroIndex"].lastTrackIndex)
+end
+
 -- GetCurrentEvent Tests
 function Tests:GetCurrentEvent_WithEventPlaying_ReturnsEvent()
 	Soundtrack.AddEvent(ST_ZONE, "CurrentEvent", ST_ZONE_LVL, true, false)
@@ -390,6 +444,200 @@ function Tests:PlaybackTrueStop_StopsEventAndClearsStack()
 
 	local eventName, tableName = Soundtrack.Events.GetEventAtStackLevel(ST_ZONE_LVL)
 	IsFalse(eventName)
+end
+
+function Tests:GetTable_InvalidTable_LogsError()
+	local errorLogged = false
+	Replace(Soundtrack.Chat, "Error", function(msg)
+		if string.match(msg, "Attempt to access invalid event table") then
+			errorLogged = true
+		end
+	end)
+
+	SoundtrackAddon.db.profile.events = {}
+	local result = Soundtrack.Events._OriginalGetTable("DoesNotExist")
+
+	IsTrue(result == nil)
+	IsTrue(errorLogged)
+end
+
+function Tests:GetTable_ValidTable_ReturnsTable()
+	SoundtrackAddon.db.profile.events = { TestTable = {} }
+	local result = Soundtrack.Events._OriginalGetTable("TestTable")
+
+	IsTrue(result ~= nil)
+end
+
+function Tests:GetTable_NilTableName_ReturnsNil()
+	local result = Soundtrack.Events.GetTable(nil)
+	IsTrue(result == nil)
+end
+
+function Tests:VerifyStackLevel_Invalid_LogsError()
+	Soundtrack.Events.Add(ST_ZONE, "InvalidStack", ST_ZONE_LVL, true, false)
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["InvalidStack"].tracks = {}
+
+	local errorLogged = false
+	Replace(Soundtrack.Chat, "Error", function(msg)
+		if string.match(msg, "BAD STACK LEVEL") then
+			errorLogged = true
+		end
+	end)
+
+	Soundtrack.Events.PlayEvent(ST_ZONE, "InvalidStack", 17, false, nil, 0)
+
+	IsTrue(errorLogged)
+end
+
+function Tests:PlayEvent_InvalidParameters_NoCrash()
+	Soundtrack.Events.PlayEvent(ST_ZONE, nil, ST_ZONE_LVL, false)
+	Soundtrack.Events.PlayEvent(ST_ZONE, "Event", nil, false)
+	Soundtrack.Events.PlayEvent(nil, "Event", ST_ZONE_LVL, false)
+end
+
+function Tests:PlayEvent_SoundEffect_UsesPlayRandom()
+	Soundtrack.Events.Add(ST_MISC, "SfxEvent", "sfx.mp3")
+	Soundtrack_Tracks["sfx.mp3"] = { filePath = "sfx.mp3" }
+	Soundtrack.Events.GetTable(ST_MISC)["SfxEvent"].tracks = { "sfx.mp3" }
+	Soundtrack.Events.GetTable(ST_MISC)["SfxEvent"].soundEffect = true
+
+	local called = false
+	Replace(Soundtrack.Events, "PlayRandomTrackByTable", function()
+		called = true
+		return true
+	end)
+
+	Soundtrack.Events.PlayEvent(ST_MISC, "SfxEvent", ST_SFX_LVL, false, nil, 0)
+
+	IsTrue(called)
+end
+
+function Tests:AddEvent_NilEventName_Returns()
+	Soundtrack.Events.Add(ST_ZONE, nil, "track.mp3")
+end
+
+function Tests:AddEvent_InvalidTable_LogsTrace()
+	local traceLogged = false
+	Replace(Soundtrack.Chat, "TraceEvents", function(msg)
+		if string.match(msg, "Cannot find table") then
+			traceLogged = true
+		end
+	end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return nil
+	end)
+
+	Soundtrack.Events.Add("Missing", "Event", "track.mp3")
+
+	IsTrue(traceLogged)
+end
+
+function Tests:RenameEvent_SameName_NoChanges()
+	SoundtrackAddon.db.profile.events = { TestTable = { Same = { tracks = {} } } }
+	Soundtrack.Events.RenameEvent("TestTable", "Same", "Same")
+
+	IsTrue(SoundtrackAddon.db.profile.events.TestTable.Same ~= nil)
+end
+
+function Tests:RenameEvent_UpdatesMiscEventsTable()
+	SoundtrackAddon.db.profile.events = { TestTable = {} }
+	Soundtrack_MiscEvents = { OldName = { foo = "bar" } }
+
+	Soundtrack.Events.RenameEvent("TestTable", "OldName", "NewName")
+
+	IsTrue(Soundtrack_MiscEvents.NewName ~= nil)
+	IsTrue(Soundtrack_MiscEvents.OldName == nil)
+end
+
+function Tests:OnStackChanged_BadData_ThrowsError()
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function()
+		return 1
+	end)
+	Soundtrack.Events.Stack[1] = nil
+
+	local ok = pcall(function()
+		Soundtrack.Events.OnStackChanged(false)
+	end)
+
+	IsFalse(ok)
+end
+
+function Tests:PlayEvent_PlayOnceText_WhenNotContinuous()
+	Soundtrack.Events.Add(ST_ZONE, "OnceEvent", ST_ZONE_LVL, false, false)
+	Soundtrack_Tracks["once.mp3"] = { filePath = "once.mp3" }
+	Soundtrack.Events.GetTable(ST_ZONE)["OnceEvent"].tracks = { "once.mp3" }
+
+	local sawOnce = false
+	Replace(Soundtrack.Chat, "TraceEvents", function(msg)
+		if string.match(msg, "Once") then
+			sawOnce = true
+		end
+	end)
+
+	Soundtrack.Events.PlayEvent(ST_ZONE, "OnceEvent", ST_ZONE_LVL, false, nil)
+
+	IsTrue(sawOnce)
+end
+
+function Tests:OnStackChanged_InvalidPlayRandom_LogsTrace()
+	Soundtrack.Events.Stack[ST_ZONE_LVL] = { eventName = "StackEvent", tableName = ST_ZONE, offset = 0 }
+	Soundtrack.Events.GetTable(ST_ZONE)["StackEvent"] = { tracks = { "s.mp3" }, random = true, priority = ST_ZONE_LVL }
+	Soundtrack_Tracks["s.mp3"] = { filePath = "s.mp3" }
+
+	local traceLogged = false
+	Replace(Soundtrack.Events, "PlayRandomTrackByTable", function()
+		return false
+	end)
+	Replace(Soundtrack.Chat, "TraceEvents", function(msg)
+		if msg == "Not supposed to play invalid events." then
+			traceLogged = true
+		end
+	end)
+	Replace(SoundtrackUI, "OnEventStackChanged", function() end)
+
+	Soundtrack.Events.OnStackChanged(false)
+
+	IsTrue(traceLogged)
+end
+
+function Tests:Events_OnLoad_RegistersEvents()
+	local events = {}
+	local frame = {
+		RegisterEvent = function(_, eventName)
+			table.insert(events, eventName)
+		end,
+	}
+
+	Soundtrack.Events.OnLoad(frame)
+
+	AreEqual(2, #events)
+	IsTrue(events[1] == "PLAYER_ENTERING_WORLD")
+	IsTrue(events[2] == "PLAYER_ENTERING_BATTLEGROUND")
+end
+
+function Tests:Events_OnEvent_RestartsWhenNotPaused()
+	local restarted = false
+	Replace(Soundtrack.Events, "RestartLastEvent", function()
+		restarted = true
+	end)
+
+	Soundtrack.Events.Paused = false
+	Soundtrack.Events.OnEvent(nil, "PLAYER_ENTERING_WORLD")
+
+	IsTrue(restarted)
+end
+
+function Tests:Events_OnEvent_WhenPaused_DoesNotRestart()
+	local restarted = false
+	Replace(Soundtrack.Events, "RestartLastEvent", function()
+		restarted = true
+	end)
+
+	Soundtrack.Events.Paused = true
+	Soundtrack.Events.OnEvent(nil, "PLAYER_ENTERING_BATTLEGROUND")
+
+	IsFalse(restarted)
 end
 
 -- Pause Tests

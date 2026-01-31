@@ -500,6 +500,7 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/Events.lua")
   -- Patch GetTable to auto-create missing tables (for test compatibility)
   local originalGetTable = Soundtrack.Events.GetTable
+  Soundtrack.Events._OriginalGetTable = originalGetTable
   Soundtrack.Events.GetTable = function(eventTableName)
     if not eventTableName then
       return nil

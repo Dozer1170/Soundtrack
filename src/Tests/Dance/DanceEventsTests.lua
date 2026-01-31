@@ -42,7 +42,8 @@ function Tests:OnEvent_DanceEmoteByPlayer_PlaysCorrectGender()
 		}
 	})
 
-	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", "TestPlayer dances.", "TestPlayer")
+	local emoteText = "TestPlayer" .. SOUNDTRACK_DANCE_EMOTES[1]
+	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", emoteText, "TestPlayer")
 end
 
 function Tests:OnEvent_DanceEmoteByOtherPlayer_DoesNotPlay()
@@ -105,7 +106,8 @@ function Tests:OnEvent_FemalePlayerDance_PlaysFemaleMusic()
 		}
 	})
 
-	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", "TestPlayer dances.", "TestPlayer")
+	local emoteText = "TestPlayer" .. SOUNDTRACK_DANCE_EMOTES[1]
+	Soundtrack.DanceEvents.OnEvent(nil, "CHAT_MSG_TEXT_EMOTE", emoteText, "TestPlayer")
 end
 
 function Tests:Initialize_AddsAllRaceGenderCombinations()
