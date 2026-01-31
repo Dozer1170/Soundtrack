@@ -6,6 +6,8 @@ Soundtrack is a World of Warcraft addon that allows you to assign music and soun
 
 IMPORTANT - Always back up your SoundtrackMusic folder and MyTracks.lua before upgrading. Some addon clients will delete and re-extract the directories which will wipe any previous songs you had.
 
+IMPORTANT - If GenerateMyLibrary.ps1 closes immediately and doesn't do anything it is likely that your Windows installation does not allow script execution. Follow these instructions to enable script execution. https://answers.microsoft.com/en-us/windows/forum/all/execution-of-scripts-is-disabled-how-do-you-enable/e19d41b2-ab61-e011-8dfc-68b599b31bf5
+
 ## Introduction
 
 Ever get tired of World of Warcraft's default music? Wish you could inject a little bit of aural life into your game, but on your own terms? Soundtrack is the mod for you! Soundtrack allows you to assign any music you own from your own personal music library to almost any event in the game, including death, getting on your mount, leveling up, entering stealth, and various forms of combat that can distinguish between world mobs, PvP, boss battles, and more! When the event occurs, Soundtrack will play the music you have assigned to that event, almost as if the music were a part of the game itself!
