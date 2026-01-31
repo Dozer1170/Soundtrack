@@ -1,6 +1,75 @@
 #!/usr/bin/env lua
 -- Standalone test runner with custom harness (no external dependency)
 
+local pathSep = package.config:sub(1, 1)
+
+local function JoinPath(...)
+  local parts = { ... }
+  return table.concat(parts, pathSep)
+end
+
+local function GetScriptDir()
+  local source = debug.getinfo(1, "S").source
+  if source:sub(1, 1) == "@" then
+    source = source:sub(2)
+  end
+  return source:match("^(.*[/\\])") or "./"
+end
+
+local TESTS_DIR = GetScriptDir():gsub("[/\\]$", "")
+local PROJECT_ROOT = JoinPath(TESTS_DIR, "..", "..")
+
+local function RootPath(relativePath)
+  return JoinPath(PROJECT_ROOT, relativePath)
+end
+
+local function ToChunkName(relativePath)
+  return "@" .. relativePath:gsub("\\", "/")
+end
+
+_G.ST_TESTS_DIR = TESTS_DIR
+_G.ST_PATH_SEP = pathSep
+
+local function initCoverage()
+  local flag = os.getenv("SOUNDTRACK_COVERAGE")
+  if not flag then
+    return
+  end
+
+  flag = string.lower(flag)
+  local enabled = flag == "1" or flag == "true" or flag == "yes" or flag == "on"
+  if not enabled then
+    return
+  end
+
+  local ok, err = pcall(require, "luacov")
+  if not ok then
+    io.stderr:write("Soundtrack: coverage requested but luacov is unavailable (" .. tostring(err) .. ")\n")
+  else
+    _G.__SoundtrackCoverageActive = true
+  end
+end
+
+initCoverage()
+
+local function LoadSourceFile(filepath)
+  local file = io.open(RootPath(filepath), "r")
+  if not file then
+    print("Error: could not open source file " .. filepath)
+    return
+  end
+  local content = file:read("*a")
+  file:close()
+
+  local chunkName = ToChunkName(filepath)
+  local fn, err = load(content, chunkName)
+  if not fn then
+    print("Error loading source file " .. filepath .. ": " .. err)
+    return
+  end
+  fn()
+end
+
 -- ---------------------------------------------------------------------
 -- Minimal test harness
 local allTests = {}
@@ -231,10 +300,10 @@ end
 
 local function SetupSoundtrack()
   -- Load actual Constants, Globals, and Localization from source files
-  dofile("../Soundtrack/Core/Constants.lua")
-  dofile("../Soundtrack/Core/Globals.lua")
-  dofile("../Soundtrack/Core/Localization/SoundtrackLocalization.lua")
-  dofile("../Soundtrack/Core/Localization/Localization.en.lua")
+  LoadSourceFile("src/Soundtrack/Core/Constants.lua")
+  LoadSourceFile("src/Soundtrack/Core/Globals.lua")
+  LoadSourceFile("src/Soundtrack/Core/Localization/SoundtrackLocalization.lua")
+  LoadSourceFile("src/Soundtrack/Core/Localization/Localization.en.lua")
 
   _G.IsRetail = true
 
@@ -401,26 +470,9 @@ local function SetupSoundtrack()
 end
 
 -- Helper to load source files
-local function LoadSourceFile(filepath)
-  local file = io.open(filepath, "r")
-  if not file then
-    print("Error: could not open source file " .. filepath)
-    return
-  end
-  local content = file:read("*a")
-  file:close()
-
-  local fn, err = load(content, filepath)
-  if not fn then
-    print("Error loading source file " .. filepath .. ": " .. err)
-    return
-  end
-  fn()
-end
-
 -- Helper to load source files
 local function loadSourceFile(filepath)
-  local file = io.open(filepath, "r")
+  local file = io.open(RootPath(filepath), "r")
   if not file then
     print("Error: could not open source file " .. filepath)
     return
@@ -428,7 +480,8 @@ local function loadSourceFile(filepath)
   local content = file:read("*a")
   file:close()
 
-  local fn, err = load(content, filepath)
+  local chunkName = ToChunkName(filepath)
+  local fn, err = load(content, chunkName)
   if not fn then
     print("Error loading source file " .. filepath .. ": " .. err)
     return
@@ -440,11 +493,11 @@ local function ResetState()
   SetWoWGlobals()
   SetupSoundtrack()
 
-  LoadSourceFile("../Soundtrack/Core/Utils/StringUtils.lua")
-  LoadSourceFile("../Soundtrack/Core/Utils/TableUtils.lua")
-  LoadSourceFile("../Soundtrack/Core/Utils/Sorting.lua")
-  LoadSourceFile("../Soundtrack/Core/Utils/Cleanup.lua")
-  LoadSourceFile("../Soundtrack/Core/Events.lua")
+  LoadSourceFile("src/Soundtrack/Core/Utils/StringUtils.lua")
+  LoadSourceFile("src/Soundtrack/Core/Utils/TableUtils.lua")
+  LoadSourceFile("src/Soundtrack/Core/Utils/Sorting.lua")
+  LoadSourceFile("src/Soundtrack/Core/Utils/Cleanup.lua")
+  LoadSourceFile("src/Soundtrack/Core/Events.lua")
   -- Patch GetTable to auto-create missing tables (for test compatibility)
   local originalGetTable = Soundtrack.Events.GetTable
   Soundtrack.Events.GetTable = function(eventTableName)
@@ -468,11 +521,11 @@ local function ResetState()
     return SoundtrackAddon.db.profile.events[eventTableName]
   end
 
-  LoadSourceFile("../Soundtrack/Core/Timers.lua")
-  LoadSourceFile("../Soundtrack/Core/Library.lua")
+  LoadSourceFile("src/Soundtrack/Core/Timers.lua")
+  LoadSourceFile("src/Soundtrack/Core/Library.lua")
 
   -- Load real Soundtrack.lua for actual implementations
-  LoadSourceFile("../Soundtrack/Core/Soundtrack.lua")
+  LoadSourceFile("src/Soundtrack/Core/Soundtrack.lua")
 
   -- Initialize SoundtrackAddon to set up db (simulate OnInitialize)
   if SoundtrackAddon and SoundtrackAddon.OnInitialize then
@@ -494,10 +547,10 @@ local function ResetState()
     end
   end
 
-  LoadSourceFile("../Soundtrack/Core/Auras/Auras.lua")
-  LoadSourceFile("../Soundtrack/Core/Battle/BattleEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/Dance/DanceEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/MiscEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/Auras/Auras.lua")
+  LoadSourceFile("src/Soundtrack/Core/Battle/BattleEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/Dance/DanceEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/MiscEvents.lua")
 
   -- Add test mocks and legacy functions for Misc module
   if Soundtrack.Misc then
@@ -557,15 +610,15 @@ local function ResetState()
     end
   end
 
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/ClassEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/DruidEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/LootEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/MountEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/NpcEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/PlayerStatusEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/MiscEvents/StealthEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/PetBattle/PetBattleEvents.lua")
-  LoadSourceFile("../Soundtrack/Core/Zones/ZoneEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/ClassEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/DruidEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/LootEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/MountEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/NpcEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/PlayerStatusEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/MiscEvents/StealthEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/PetBattle/PetBattleEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/Zones/ZoneEvents.lua")
 end
 
 -- Initial bootstrap before loading tests
@@ -574,7 +627,8 @@ ResetState()
 -- ---------------------------------------------------------------------
 -- General helpers for test loading
 local function LoadTestFile(filepath)
-  local file = io.open(filepath, "r")
+  local fullPath = JoinPath(TESTS_DIR, filepath)
+  local file = io.open(fullPath, "r")
   if not file then
     print("Error: could not open " .. filepath)
     return
@@ -582,7 +636,8 @@ local function LoadTestFile(filepath)
   local content = file:read("*a")
   file:close()
 
-  local fn, err = load(content, filepath)
+  local chunkName = ToChunkName("src/Tests/" .. filepath)
+  local fn, err = load(content, chunkName)
   if not fn then
     print("Error loading " .. filepath .. ": " .. err)
     return

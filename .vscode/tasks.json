@@ -26,6 +26,37 @@
             "problemMatcher": []
         },
         {
+            "label": "Run Unit Tests with Coverage",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "SOUNDTRACK_COVERAGE=1 lua src/Tests/TestRunner.lua && luacov -c .luacov -r lcov"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "powershell.exe",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-Command",
+                    "$env:SOUNDTRACK_COVERAGE=1; lua .\\src\\Tests\\TestRunner.lua; if ($LASTEXITCODE -eq 0) { luacov -c .\\.luacov -r lcov } else { exit $LASTEXITCODE }"
+                ]
+            },
+            "group": {
+                "kind": "test"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Package and Install (Retail)",
             "type": "shell",
             "command": ".\\scripts\\powershell\\packageAndInstallRetail.ps1",

@@ -1,0 +1,14 @@
+return {
+	runreport = false,
+	statsfile = "luacov.stats.out",
+	reportfile = "coverage/lcov.info",
+	include = {
+		"src/Soundtrack/",
+	},
+	exclude = {
+		"src/Soundtrack/Libs/",
+		"src/Soundtrack/Images/",
+		"src/Soundtrack/GenerateMyLibrary",
+		"src/Tests/",
+	},
+}

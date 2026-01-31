@@ -8,9 +8,10 @@ When making code changes to the Soundtrack addon, always follow this workflow:
    - All 256 tests must pass before proceeding
    - If tests fail, fix the issues before continuing
 
-2. **Package and Install**: After successful test completion, automatically package and install the addon
-   - Run `.\scripts\powershell\packageAndInstallRetail.ps1` from the project root
-   - This creates the zip file and installs it to the WoW AddOns directory
+2. **Package and Install**: After successful test completion, package and install the addon when possible
+   - On Windows, run `.\scripts\powershell\packageAndInstallRetail.ps1` from the project root
+   - On macOS, packaging is optional—only run `./scripts/packageAndInstallRetailMac` if your WoW installation is available, otherwise skip without blocking the workflow
+   - These scripts create the zip file and install it to the WoW AddOns directory
 
 ## Project Structure
 
@@ -39,4 +40,4 @@ When making code changes to the Soundtrack addon, always follow this workflow:
 
 ## After Making Changes
 
-Always conclude work sessions by running the test suite and packaging the addon for immediate in-game testing.
+Always conclude work sessions by running the test suite. Package/install afterward when the platform scripts and game installation are available.

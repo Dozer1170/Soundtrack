@@ -262,7 +262,7 @@ end
 
 function Tests:LoadTracks_WithMyTracksFile_LoadsCustomTracks()
 	-- Load the example MyTracks file
-	dofile("ExampleMyTracks.lua")
+	dofile(ST_TESTS_DIR .. ST_PATH_SEP .. "ExampleMyTracks.lua")
 
 	-- Clear existing tracks
 	Soundtrack_Tracks = {}
