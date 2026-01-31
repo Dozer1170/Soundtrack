@@ -20,5 +20,14 @@ and you don't need to install java or python to run the tools.
 
     You should now have a MyTracks.lua file in your SoundtrackMusic directory. If so then you are good to go!
 
-    If it fails for any reason, you can try to use one of the legacy methods below to generate your library.
-
+Troubleshooting steps for powershell (credit Mrwario52):
+1. Start menu -> type powershell -> right click powershell and select Run as administrator.
+2. Check the current script execution policy by using the Get-ExecutionPolicy cmdlet. To do this, input “Get-ExecutionPolicy” (without quotes) and press Enter on your keyboard. PowerShell may return a value of Restricted.
+3. To change the script execution policy, use the Set-ExecutionPolicy cmdlet. Input “Set-ExecutionPolicy unrestricted” (without quotes) and press Enter on your keyboard.
+4. To ensure that the script execution policy has been changed, use the Get-ExecutionPolicy cmdlet again. PowerShell should return a value of Unrestricted.
+5. You should now be able to run your PowerShell scripts.
+6. Find where you music addon is for me its C:\World of Warcraft\_retail_\Interface\AddOns\Soundtrack
+7. Type cd "C:\World of warcraft_retail\Interface\AddOns\Soundtrack" (or where ever your folder is located)
+8. Now type .\GenerateMyLibrary.ps1
+9. If it succeeds, then in the future you can just right click -> run with powershell on GenerateMyLibrary.ps1
+10. If you are still having issues make a post on the curseforge page for help: https://www.curseforge.com/wow/addons/soundtrack/comments
