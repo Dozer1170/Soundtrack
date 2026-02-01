@@ -30,6 +30,21 @@ local battleEvents = {
 	SOUNDTRACK_PVP_BATTLE,
 }
 
+local function GetBossZoneEventName()
+	if not Soundtrack.ZoneEvents or not Soundtrack.ZoneEvents.GetCurrentZonePaths then
+		return nil
+	end
+
+	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
+	for _, zonePath in ipairs(zonePaths) do
+		if Soundtrack.Events.EventHasTracks(ST_BOSS_ZONES, zonePath) then
+			return zonePath
+		end
+	end
+
+	return nil
+end
+
 -- Returns a classification number. Used to compare classifications
 function Soundtrack.BattleEvents.GetClassificationLevel(classificationText)
 	for i, c in ipairs(classifications) do
@@ -224,7 +239,12 @@ local function AnalyzeBattleSituation()
 		or (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex)
 	then
 		if battleType == SOUNDTRACK_BOSS_BATTLE then
-			Soundtrack.PlayEvent(ST_BATTLE, battleType)
+			local bossZoneEventName = GetBossZoneEventName()
+			if bossZoneEventName then
+				Soundtrack.PlayEvent(ST_BOSS_ZONES, bossZoneEventName)
+			else
+				Soundtrack.PlayEvent(ST_BATTLE, battleType)
+			end
 		else
 			Soundtrack.PlayEvent(ST_BATTLE, battleType)
 		end

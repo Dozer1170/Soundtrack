@@ -1,21 +1,31 @@
+local function GetSelectedZoneTableName()
+	if SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
+		return ST_BOSS_ZONES
+	end
+
+	return ST_ZONE
+end
+
 local function RemoveZone(eventName)
-	Soundtrack.Events.DeleteEvent("Zone", eventName)
+	Soundtrack.Events.DeleteEvent(GetSelectedZoneTableName(), eventName)
 end
 
 local function ToggleZoneExpansion(expanded)
-	for _, eventNode in pairs(SoundtrackAddon.db.profile.events["Zone"]) do
+	local tableName = GetSelectedZoneTableName()
+	for _, eventNode in pairs(SoundtrackAddon.db.profile.events[tableName]) do
 		eventNode.expanded = expanded
 	end
-	Soundtrack.OnEventTreeChanged(ST_ZONE)
+	Soundtrack.OnEventTreeChanged(tableName)
 	SoundtrackUI.UpdateEventsUI()
 end
 
 function SoundtrackUI.OnAddZoneButtonClick()
-	Soundtrack_ZoneEvents_AddZones()
+	Soundtrack_ZoneEvents_AddZones(GetSelectedZoneTableName())
 
 	-- Select the newly added area.
-	if GetSubZoneText() ~= nil then
-		SoundtrackUI.SelectedEvent = GetSubZoneText()
+	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
+	if zonePaths and zonePaths[1] then
+		SoundtrackUI.SelectedEvent = zonePaths[1]
 	else
 		SoundtrackUI.SelectedEvent = GetRealZoneText()
 	end

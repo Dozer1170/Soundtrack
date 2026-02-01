@@ -27,7 +27,7 @@ Core/MiscEvents/MiscDummyFrame.xml
 Core/PetBattle/PetBattleDummyFrame.xml
 Core/Dance/DanceDummyFrame.xml
 Core/Zones/ZoneDummyFrame.xml
-Core/UI/Minimap.lua
+Core/UI/MinimapUI.lua
 Core/UI/NowPlayingFrame.xml
 Core/UI/ControlFrame.xml
 ../SoundtrackMusic/MyTracks.lua

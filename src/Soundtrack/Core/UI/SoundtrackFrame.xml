@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="SoundtrackUI.lua"/>
-  <Script file="EventStack.lua" />
+  <Script file="EventStackUI.lua" />
   <Script file="EventsUI.lua" />
-  <Script file="MovingTitle.lua" />
-  <Script file="PetBattles.lua" />
-  <Script file="Playlists.lua" />
-  <Script file="Tracks.lua" />
-  <Script file="Zones.lua" />
+  <Script file="MovingTitleUI.lua" />
+  <Script file="PetBattlesUI.lua" />
+  <Script file="PlaylistsUI.lua" />
+  <Script file="TracksUI.lua" />
+  <Script file="ZonesUI.lua" />
   <Include file="EventsList.xml"/>
   <Include file="Tabs/OptionsTab.xml"/>
   <Include file="Tabs/ProfilesTab.xml"/>
@@ -84,7 +84,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab3" inherits="SoundtrackFrameTabTemplate" id="3" text="Pet Battles">
+      <Button name="SoundtrackFrameTab3" inherits="SoundtrackFrameTabTemplate" id="3" text="Boss Zones">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab2" relativePoint="TOPRIGHT">
             <Offset>
@@ -93,7 +93,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab4" inherits="SoundtrackFrameTabTemplate" id="4" text="Dances">
+      <Button name="SoundtrackFrameTab4" inherits="SoundtrackFrameTabTemplate" id="4" text="Pet Battles">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab3" relativePoint="TOPRIGHT">
             <Offset>
@@ -102,7 +102,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab5" inherits="SoundtrackFrameTabTemplate" id="5" text="Misc">
+      <Button name="SoundtrackFrameTab5" inherits="SoundtrackFrameTabTemplate" id="5" text="Dances">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab4" relativePoint="TOPRIGHT">
             <Offset>
@@ -111,7 +111,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab6" inherits="SoundtrackFrameTabTemplate" id="6" text="Playlists">
+      <Button name="SoundtrackFrameTab6" inherits="SoundtrackFrameTabTemplate" id="6" text="Misc">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab5" relativePoint="TOPRIGHT">
             <Offset>
@@ -120,7 +120,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab7" inherits="SoundtrackFrameTabTemplate" id="7" text="Options">
+      <Button name="SoundtrackFrameTab7" inherits="SoundtrackFrameTabTemplate" id="7" text="Playlists">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab6" relativePoint="TOPRIGHT">
             <Offset>
@@ -129,7 +129,7 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab8" inherits="SoundtrackFrameTabTemplate" id="8" text="Profiles">
+      <Button name="SoundtrackFrameTab8" inherits="SoundtrackFrameTabTemplate" id="8" text="Options">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab7" relativePoint="TOPRIGHT">
             <Offset>
@@ -138,9 +138,18 @@
           </Anchor>
         </Anchors>
       </Button>
-      <Button name="SoundtrackFrameTab9" inherits="SoundtrackFrameTabTemplate" id="9" text="About">
+      <Button name="SoundtrackFrameTab9" inherits="SoundtrackFrameTabTemplate" id="9" text="Profiles">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab8" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-8" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SoundtrackFrameTab10" inherits="SoundtrackFrameTabTemplate" id="10" text="About">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab9" relativePoint="TOPRIGHT">
             <Offset>
               <AbsDimension x="-8" y="0"/>
             </Offset>

@@ -267,36 +267,8 @@ function SoundtrackUI.RefreshAssignedTracks()
 	-- ScrollFrame stuff
 	FauxScrollFrame_Update(
 		SoundtrackFrameAssignedTracksScrollFrame,
-		#assignedTracks + 1,
+		table.getn(assignedTracks) + 1,
 		ASSIGNED_TRACKS_TO_DISPLAY,
 		EVENTS_ITEM_HEIGHT
 	)
-
-	SoundtrackUI.RefreshUpDownButtons()
-end
-
-function SoundtrackUI.MoveAssignedTrack(direction)
-	local eventTable = Soundtrack.Events.GetTable(SoundtrackUI.SelectedEventsTable)
-	if eventTable[SoundtrackUI.SelectedEvent] ~= nil then
-		local event = eventTable[SoundtrackUI.SelectedEvent]
-		local currentIndex = IndexOf(event.tracks, SoundtrackUI.SelectedTrack)
-
-		if currentIndex > 0 then
-			if direction < 0 and currentIndex > 1 then
-				-- Move up
-				local newIndex = currentIndex - 1
-				local temp = event.tracks[newIndex]
-				event.tracks[newIndex] = event.tracks[currentIndex]
-				event.tracks[currentIndex] = temp
-			elseif direction > 0 and currentIndex < #event.tracks then
-				-- Move down
-				local newIndex = currentIndex + 1
-				local temp = event.tracks[newIndex]
-				event.tracks[newIndex] = event.tracks[currentIndex]
-				event.tracks[currentIndex] = temp
-			end
-		end
-
-		SoundtrackUI.RefreshAssignedTracks()
-	end
 end

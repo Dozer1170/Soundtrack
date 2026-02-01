@@ -97,6 +97,40 @@ function Tests:AddZones_AssignsPriorities_CorrectLevels()
 	AreEqual(ST_MINIMAP_LVL, minimap.priority)
 end
 
+function Tests:AddZones_BossZones_AssignsBossPriority()
+	MockZone("Kalimdor", "Mulgore", "Thunder Bluff", "Elder Rise")
+
+	Soundtrack_ZoneEvents_AddZones(ST_BOSS_ZONES)
+
+	local bossTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	IsTrue(bossTable["Kalimdor/Mulgore/Thunder Bluff/Elder Rise"] ~= nil, "Boss minimap zone created")
+	IsTrue(bossTable["Kalimdor/Mulgore/Thunder Bluff"] ~= nil, "Boss subzone created")
+	IsTrue(bossTable["Kalimdor/Mulgore"] ~= nil, "Boss zone created")
+	IsTrue(bossTable["Kalimdor"] ~= nil, "Boss continent created")
+
+	local minimap = Soundtrack.GetEvent(ST_BOSS_ZONES, "Kalimdor/Mulgore/Thunder Bluff/Elder Rise")
+	local subzone = Soundtrack.GetEvent(ST_BOSS_ZONES, "Kalimdor/Mulgore/Thunder Bluff")
+	local zone = Soundtrack.GetEvent(ST_BOSS_ZONES, "Kalimdor/Mulgore")
+	local continent = Soundtrack.GetEvent(ST_BOSS_ZONES, "Kalimdor")
+
+	AreEqual(ST_BOSS_LVL, minimap.priority)
+	AreEqual(ST_BOSS_LVL, subzone.priority)
+	AreEqual(ST_BOSS_LVL, zone.priority)
+	AreEqual(ST_BOSS_LVL, continent.priority)
+end
+
+function Tests:GetCurrentZonePaths_ReturnsMostSpecificFirst()
+	MockZone("Eastern Kingdoms", "Elwynn Forest", "Goldshire", "Lion's Pride Inn")
+
+	local paths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
+
+	AreEqual(4, #paths)
+	AreEqual("Eastern Kingdoms/Elwynn Forest/Goldshire/Lion's Pride Inn", paths[1])
+	AreEqual("Eastern Kingdoms/Elwynn Forest/Goldshire", paths[2])
+	AreEqual("Eastern Kingdoms/Elwynn Forest", paths[3])
+	AreEqual("Eastern Kingdoms", paths[4])
+end
+
 function Tests:AddZones_Instance_CreatesInstanceEvent()
 	Replace("IsInInstance", function()
 		return true, "party"

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="NowPlayingFrame.lua"/>
+  <Script file="NowPlayingFrameUI.lua"/>
   <!-- These frames are shown when the current track changes -->
   <Frame name="NowPlayingTextFrame" movable="true" enableMouse="true" parent="UIParent" frameStrata="LOW" toplevel="true">
     <Anchors>

@@ -52,7 +52,68 @@ local function AssignPriority(tableName, eventName, priority)
 	end
 end
 
-function Soundtrack_ZoneEvents_AddZones()
+function Soundtrack.ZoneEvents.GetCurrentZonePaths()
+	local zoneText = GetRealZoneText()
+	if zoneText == nil then
+		return {}
+	end
+
+	local continentName, zoneName = FindContinentByZone()
+	local zoneSubText = GetSubZoneText()
+	local minimapZoneText = GetMinimapZoneText()
+
+	if zoneName ~= nil and zoneName ~= zoneText then
+		if zoneSubText ~= nil and zoneSubText ~= "" then
+			minimapZoneText = zoneSubText
+		end
+		if zoneText ~= nil and zoneText ~= "" then
+			zoneSubText = zoneText
+		end
+		zoneText = zoneName
+	end
+
+	local zoneText1, zoneText2, zoneText3, zoneText4
+	local zonePath
+
+	if not IsNullOrEmpty(continentName) then
+		zoneText1 = continentName
+		zonePath = continentName
+	end
+
+	if not IsNullOrEmpty(zoneText) then
+		zoneText2 = continentName .. "/" .. zoneText
+		zonePath = zoneText2
+	end
+
+	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
+		zoneText3 = zonePath .. "/" .. zoneSubText
+		zonePath = zoneText3
+	end
+
+	if zoneText ~= minimapZoneText and zoneSubText ~= minimapZoneText and not IsNullOrEmpty(minimapZoneText) then
+		zoneText4 = zonePath .. "/" .. minimapZoneText
+		zonePath = zoneText4
+	end
+
+	local results = {}
+	if zoneText4 then
+		table.insert(results, zoneText4)
+	end
+	if zoneText3 then
+		table.insert(results, zoneText3)
+	end
+	if zoneText2 then
+		table.insert(results, zoneText2)
+	end
+	if zoneText1 then
+		table.insert(results, zoneText1)
+	end
+
+	return results
+end
+
+function Soundtrack_ZoneEvents_AddZones(tableName)
+	local targetTable = tableName or ST_ZONE
 	local zoneText = GetRealZoneText()
 	if zoneText == nil then
 		return
@@ -101,36 +162,29 @@ function Soundtrack_ZoneEvents_AddZones()
 
 	Soundtrack.Chat.TraceZones("AddZone Zone: " .. zonePath)
 
-	if zoneText4 then
-		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-		if eventTable[zoneText4] == nil then
-			Soundtrack.AddEvent(ST_ZONE, zoneText4, ST_MINIMAP_LVL, true)
+	local function AddZoneEvent(eventName, priority)
+		local eventTable = Soundtrack.Events.GetTable(targetTable)
+		if eventTable[eventName] == nil then
+			Soundtrack.AddEvent(targetTable, eventName, priority, true)
 		end
-		AssignPriority(ST_ZONE, zoneText4, ST_MINIMAP_LVL)
+		AssignPriority(targetTable, eventName, priority)
+	end
+
+	local bossPriority = ST_BOSS_LVL
+	if zoneText4 then
+		AddZoneEvent(zoneText4, targetTable == ST_BOSS_ZONES and bossPriority or ST_MINIMAP_LVL)
 	end
 
 	if zoneText3 then
-		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-		if eventTable[zoneText3] == nil then
-			Soundtrack.AddEvent(ST_ZONE, zoneText3, ST_SUBZONE_LVL, true)
-		end
-		AssignPriority(ST_ZONE, zoneText3, ST_SUBZONE_LVL)
+		AddZoneEvent(zoneText3, targetTable == ST_BOSS_ZONES and bossPriority or ST_SUBZONE_LVL)
 	end
 
 	if zoneText2 then
-		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-		if eventTable[zoneText2] == nil then
-			Soundtrack.AddEvent(ST_ZONE, zoneText2, ST_ZONE_LVL, true)
-		end
-		AssignPriority(ST_ZONE, zoneText2, ST_ZONE_LVL)
+		AddZoneEvent(zoneText2, targetTable == ST_BOSS_ZONES and bossPriority or ST_ZONE_LVL)
 	end
 
 	if zoneText1 then
-		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-		if eventTable[zoneText1] == nil then
-			Soundtrack.AddEvent(ST_ZONE, zoneText1, ST_CONTINENT_LVL, true)
-		end
-		AssignPriority(ST_ZONE, zoneText1, ST_CONTINENT_LVL)
+		AddZoneEvent(zoneText1, targetTable == ST_BOSS_ZONES and bossPriority or ST_CONTINENT_LVL)
 	end
 end
 

@@ -8,6 +8,7 @@ SoundtrackUI = {}
 Soundtrack_EventTabs = {
 	ST_BATTLE,
 	ST_ZONE,
+	ST_BOSS_ZONES,
 	ST_PETBATTLES,
 	ST_DANCE,
 	ST_MISC,

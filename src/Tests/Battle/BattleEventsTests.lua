@@ -341,6 +341,32 @@ function Tests:OnEvent_PLAYER_REGEN_DISABLED_BossBattlePlays()
 	AreEqual(SOUNDTRACK_BOSS_BATTLE, played.eventName)
 end
 
+function Tests:OnEvent_PLAYER_REGEN_DISABLED_BossBattlePrefersBossZone()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	Replace(Soundtrack.BattleEvents, "GetGroupEnemyClassification", function()
+		return "boss", false
+	end)
+
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return { "Kalimdor/Onyxia's Lair" }
+	end)
+
+	Soundtrack.Events.GetTable(ST_BOSS_ZONES)["Kalimdor/Onyxia's Lair"] = { tracks = { "boss.mp3" } }
+
+	local played = {}
+	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
+		played.tableName = tableName
+		played.eventName = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
+
+	AreEqual(ST_BOSS_ZONES, played.tableName)
+	AreEqual("Kalimdor/Onyxia's Lair", played.eventName)
+end
+
 function Tests:OnEvent_PLAYER_REGEN_DISABLED_RareBattlePlays()
 	ResetBattleState()
 	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
