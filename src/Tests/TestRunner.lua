@@ -186,6 +186,122 @@ _G.Replace = Tests.Replace
 -- ---------------------------------------------------------------------
 -- Global mocks
 local function SetWoWGlobals()
+  local function MockFontString(name)
+    local obj = {
+      _text = "",
+      SetText = function(self, text) self._text = text or "" end,
+      GetText = function(self) return self._text end,
+      SetWidth = function() end,
+      SetHeight = function() end,
+      SetPoint = function() end,
+      SetFont = function() end,
+      SetJustifyH = function() end,
+    }
+    if name then
+      _G[name] = obj
+    end
+    return obj
+  end
+
+  local function MockFrame(name)
+    local obj = {
+      _visible = false,
+      Show = function(self) self._visible = true end,
+      Hide = function(self) self._visible = false end,
+      IsVisible = function(self) return self._visible end,
+      SetPoint = function() end,
+      ClearAllPoints = function() end,
+      SetAlpha = function() end,
+      EnableMouse = function() end,
+      RegisterForDrag = function() end,
+      StartMoving = function() end,
+      StopMovingOrSizing = function() end,
+      SetBackdrop = function() end,
+      SetBackdropColor = function() end,
+      SetStatusBarColor = function() end,
+      SetMinMaxValues = function() end,
+      SetValue = function() end,
+      GetWidth = function() return 200 end,
+      SetVertexColor = function() end,
+      SetNormalFontObject = function() end,
+      SetHighlightFontObject = function() end,
+      SetHighlightTexture = function() end,
+      LockHighlight = function() end,
+      UnlockHighlight = function() end,
+      CreateFontString = function() return MockFontString() end,
+      SetFontString = function() end,
+      SetID = function() end,
+      GetID = function() return 1 end,
+    }
+    if name then
+      _G[name] = obj
+    end
+    return obj
+  end
+
+  local function MockStatusBar(name)
+    local bar = MockFrame(name)
+    MockFrame(name .. "Background")
+    MockFrame(name .. "FillBar")
+    MockFontString(name .. "Text1")
+    return bar
+  end
+
+  _G.UIParent = MockFrame("UIParent")
+  _G.CreateFrame = function(_, name)
+    return MockFrame(name)
+  end
+
+  _G.UIDropDownMenu_CreateInfo = function() return {} end
+  _G.UIDropDownMenu_AddButton = function() end
+  _G.UIDropDownMenu_Initialize = function() end
+  _G.UIDropDownMenu_SetSelectedID = function() end
+  _G.UIDropDownMenu_SetWidth = function() end
+  _G.UIDropDownMenu_SetText = function() end
+  _G.ToggleDropDownMenu = function() end
+  _G.PanelTemplates_SetNumTabs = function() end
+  _G.PanelTemplates_SetTab = function() end
+  _G.PanelTemplates_Tab_OnClick = function() end
+  _G.FauxScrollFrame_GetOffset = function() return 0 end
+  _G.FauxScrollFrame_Update = function() end
+  _G.FauxScrollFrame_OnVerticalScroll = function() end
+
+  _G.SoundtrackFrame = MockFrame("SoundtrackFrame")
+  MockStatusBar("SoundtrackFrame_StatusBarEvent")
+  MockStatusBar("SoundtrackFrame_StatusBarTrack")
+  MockStatusBar("SoundtrackControlFrame_StatusBarEvent")
+  MockStatusBar("SoundtrackControlFrame_StatusBarTrack")
+  MockFontString("SoundtrackFrame_StatusBarEventText1")
+  MockFontString("SoundtrackFrame_StatusBarEventText2")
+  MockFontString("SoundtrackFrame_StatusBarTrackText1")
+  MockFontString("SoundtrackFrame_StatusBarTrackText2")
+  MockFontString("SoundtrackControlFrame_StatusBarEventText1")
+  MockFontString("SoundtrackControlFrame_StatusBarEventText2")
+  MockFontString("SoundtrackControlFrame_StatusBarTrackText1")
+  MockFontString("SoundtrackControlFrame_StatusBarTrackText2")
+  MockFrame("SoundtrackControlFrame_PlaylistMenu")
+  MockFrame("SoundtrackControlFrame_StatusBarTrack")
+  MockFrame("SoundtrackControlFrame_NextButton")
+  MockFrame("SoundtrackControlFrame_PlayButton")
+  MockFrame("SoundtrackControlFrame_StopButton")
+  MockFrame("SoundtrackControlFrame_PreviousButton")
+  MockFrame("SoundtrackControlFrame_TrueStopButton")
+  MockFrame("SoundtrackControlFrame_InfoButton")
+  MockFontString("SoundtrackControlFrameStackTitle")
+  for i = 1, 16 do
+    MockFontString("SoundtrackControlFrameStack" .. i)
+  end
+
+  MockFontString("TrackTextString")
+  MockFontString("AlbumTextString")
+  MockFontString("ArtistTextString")
+  MockFontString("TrackTextBG1")
+  MockFontString("AlbumTextBG1")
+  MockFontString("ArtistTextBG1")
+  MockFrame("NowPlayingTextFrame")
+  _G.UIFrameFlashStop = function() end
+  _G.UIFrameFlash = function() end
+
   _G.UnitExists = function() return false end
   _G.UnitClassification = function() return "normal" end
   _G.UnitIsPlayer = function() return false end
@@ -367,19 +483,7 @@ local function SetupSoundtrack()
     self._events[evt] = true
   end
 
-  _G.SoundtrackUI = {
-    UpdateTracksUI = function() end,
-    UpdateEventsUI = function() end,
-    RefreshShowingTab = function() end,
-    RefreshTracks = function() end,
-    Initialize = function() end,
-    OnEventStackChanged = function() end,
-    NowPlayingFrame = {
-      SetNowPlayingText = function() end,
-    },
-    SelectedEventsTable = nil,
-    SelectedEvent = nil,
-  }
+  _G.SoundtrackUI = _G.SoundtrackUI or { SelectedEventsTable = nil, SelectedEvent = nil }
 
   -- Mock C_AddOns for getting addon metadata
   _G.C_AddOns = {
@@ -620,6 +724,24 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/MiscEvents/StealthEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/PetBattle/PetBattleEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/Zones/ZoneEvents.lua")
+
+  -- Load UI modules for coverage
+  LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/ControlFrameUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/EventStackUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/EventsUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/MovingTitleUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/PetBattlesUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/PlaylistsUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/TracksUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/ZonesUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/TooltipUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/NowPlayingFrameUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/PlaybackControlsUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/MinimapUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/Tabs/OptionsTabUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/Tabs/ProfilesTabUI.lua")
+
 end
 
 -- Initial bootstrap before loading tests

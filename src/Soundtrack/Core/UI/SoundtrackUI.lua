@@ -165,6 +165,13 @@ local function RefreshCurrentlyPlaying()
 	else
 		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
 		local eventName = Soundtrack.Events.Stack[stackLevel].eventName
+		if not eventName then
+			SoundtrackFrame_StatusBarEventText1:SetText(SOUNDTRACK_NO_EVENT_PLAYING)
+			SoundtrackFrame_StatusBarEventText2:SetText("")
+			SetStatusBarProgress("SoundtrackFrame_StatusBarEvent", nil, nil)
+			SetStatusBarProgress("SoundtrackControlFrame_StatusBarEvent", nil, nil)
+			return
+		end
 		SoundtrackFrame_StatusBarEventText1:SetText(GetPathFileName(eventName))
 		local event = Soundtrack.GetEvent(tableName, eventName)
 
