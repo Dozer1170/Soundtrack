@@ -600,6 +600,7 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/Utils/StringUtils.lua")
   LoadSourceFile("src/Soundtrack/Core/Utils/TableUtils.lua")
   LoadSourceFile("src/Soundtrack/Core/Utils/Sorting.lua")
+  LoadSourceFile("src/Soundtrack/Core/Utils/TabUtils.lua")
   LoadSourceFile("src/Soundtrack/Core/Utils/Cleanup.lua")
   LoadSourceFile("src/Soundtrack/Core/Events.lua")
   -- Patch GetTable to auto-create missing tables (for test compatibility)
@@ -784,6 +785,8 @@ local testFiles = {
   "SoundtrackTests.lua",
   "Utils/StringUtilsTests.lua",
   "TimersTests.lua",
+  "UI/SoundtrackUITests.lua",
+  "UI/EventsUITests.lua",
   "Zones/ZoneEventsTests.lua",
 }
 
