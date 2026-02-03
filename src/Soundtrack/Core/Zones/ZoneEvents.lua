@@ -112,8 +112,7 @@ function Soundtrack.ZoneEvents.GetCurrentZonePaths()
 	return results
 end
 
-function Soundtrack_ZoneEvents_AddZones(tableName)
-	local targetTable = tableName or ST_ZONE
+function Soundtrack_ZoneEvents_AddZones()
 	local zoneText = GetRealZoneText()
 	if zoneText == nil then
 		return
@@ -163,28 +162,26 @@ function Soundtrack_ZoneEvents_AddZones(tableName)
 	Soundtrack.Chat.TraceZones("AddZone Zone: " .. zonePath)
 
 	local function AddZoneEvent(eventName, priority)
-		local eventTable = Soundtrack.Events.GetTable(targetTable)
+		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
 		if eventTable[eventName] == nil then
-			Soundtrack.AddEvent(targetTable, eventName, priority, true)
+			Soundtrack.AddEvent(ST_ZONE, eventName, priority, true)
 		end
-		AssignPriority(targetTable, eventName, priority)
+		AssignPriority(ST_ZONE, eventName, priority)
 	end
-
-	local bossPriority = ST_BOSS_LVL
 	if zoneText4 then
-		AddZoneEvent(zoneText4, targetTable == ST_BOSS_ZONES and bossPriority or ST_MINIMAP_LVL)
+		AddZoneEvent(zoneText4, ST_MINIMAP_LVL)
 	end
 
 	if zoneText3 then
-		AddZoneEvent(zoneText3, targetTable == ST_BOSS_ZONES and bossPriority or ST_SUBZONE_LVL)
+		AddZoneEvent(zoneText3, ST_SUBZONE_LVL)
 	end
 
 	if zoneText2 then
-		AddZoneEvent(zoneText2, targetTable == ST_BOSS_ZONES and bossPriority or ST_ZONE_LVL)
+		AddZoneEvent(zoneText2, ST_ZONE_LVL)
 	end
 
 	if zoneText1 then
-		AddZoneEvent(zoneText1, targetTable == ST_BOSS_ZONES and bossPriority or ST_CONTINENT_LVL)
+		AddZoneEvent(zoneText1, ST_CONTINENT_LVL)
 	end
 end
 

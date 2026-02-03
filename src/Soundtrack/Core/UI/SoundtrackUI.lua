@@ -5,7 +5,7 @@ SoundtrackUI.SelectedEventsTable = nil
 SOUNDTRACKFRAME_COLUMNHEADERNAME_LIST = {
 	{ name = "File Path", type = "filePath" },
 	{ name = "File Name", type = "fileName" },
-	{ name = "Title", type = "title" },
+	{ name = "Title",     type = "title" },
 }
 
 local SUB_FRAME_ASSIGNED_TRACKS = "SoundtrackFrameAssignedTracks"
@@ -53,7 +53,7 @@ local function TabChanged()
 
 	SoundtrackUI.UpdateEventsUI()
 
-	if SoundtrackUI.SelectedEventsTable == ST_ZONE or SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
+	if SoundtrackUI.SelectedEventsTable == ST_ZONE then
 		SoundtrackFrameAddZoneButton:Show()
 		SoundtrackFrameRemoveZoneButton:Show()
 		SoundtrackFrameCollapseAllZoneButton:Show()
@@ -361,25 +361,22 @@ function SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.SelectedEventsTable = "Zone"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 3 then
-		SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
-		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 4 then
 		SoundtrackUI.SelectedEventsTable = "Pet Battles"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 5 then
+	elseif SoundtrackFrame.selectedTab == 4 then
 		SoundtrackUI.SelectedEventsTable = "Dance"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 6 then
+	elseif SoundtrackFrame.selectedTab == 5 then
 		SoundtrackUI.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 7 then
+	elseif SoundtrackFrame.selectedTab == 6 then
 		SoundtrackUI.SelectedEventsTable = "Playlists"
 		SoundtrackFrameEventFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 8 then
+	elseif SoundtrackFrame.selectedTab == 7 then
 		SoundtrackFrameOptionsTab:Show()
-	elseif SoundtrackFrame.selectedTab == 9 then
+	elseif SoundtrackFrame.selectedTab == 8 then
 		SoundtrackFrameProfilesFrame:Show()
-	elseif SoundtrackFrame.selectedTab == 10 then
+	elseif SoundtrackFrame.selectedTab == 9 then
 		SoundtrackFrameAboutFrame:Show()
 	end
 

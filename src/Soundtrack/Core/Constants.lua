@@ -18,7 +18,6 @@ ST_PREVIEW_LVL = 16 -- Level 16: Preview
 
 ST_BATTLE = "Battle"
 ST_ZONE = "Zone"
-ST_BOSS_ZONES = "Boss Zones"
 ST_PETBATTLES = "Pet Battles"
 ST_DANCE = "Dance"
 ST_MISC = "Misc"

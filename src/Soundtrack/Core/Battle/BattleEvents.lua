@@ -30,21 +30,6 @@ local battleEvents = {
 	SOUNDTRACK_PVP_BATTLE,
 }
 
-local function GetBossZoneEventName()
-	if not Soundtrack.ZoneEvents or not Soundtrack.ZoneEvents.GetCurrentZonePaths then
-		return nil
-	end
-
-	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
-	for _, zonePath in ipairs(zonePaths) do
-		if Soundtrack.Events.EventHasTracks(ST_BOSS_ZONES, zonePath) then
-			return zonePath
-		end
-	end
-
-	return nil
-end
-
 -- Returns a classification number. Used to compare classifications
 function Soundtrack.BattleEvents.GetClassificationLevel(classificationText)
 	for i, c in ipairs(classifications) do
@@ -102,7 +87,7 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 			end
 		end
 	end
-	
+
 	-- add boss units (boss1 through boss5)
 	for index = 1, 5 do
 		if UnitExists("boss" .. index) then
@@ -145,7 +130,8 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 	end
 
 	local classificationText = GetClassificationText(highestClassification)
-	Soundtrack.Chat.TraceBattle("GetGroupEnemyClassification: classification=" .. tostring(classificationText) .. ", pvpEnabled=" .. tostring(pvpEnabled))
+	Soundtrack.Chat.TraceBattle("GetGroupEnemyClassification: classification=" ..
+	tostring(classificationText) .. ", pvpEnabled=" .. tostring(pvpEnabled))
 	return classificationText, pvpEnabled
 end
 
@@ -205,7 +191,6 @@ local function StartVictoryMusic()
 					Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
 					Soundtrack.PlayEvent(ST_MISC, SOUNDTRACK_VICTORY)
 				end
-
 			else
 				Soundtrack.StopEventAtLevel(ST_BATTLE_LVL)
 				Soundtrack.StopEventAtLevel(ST_BOSS_LVL)
@@ -238,16 +223,7 @@ local function AnalyzeBattleSituation()
 		or battleType == SOUNDTRACK_BOSS_BATTLE
 		or (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex)
 	then
-		if battleType == SOUNDTRACK_BOSS_BATTLE then
-			local bossZoneEventName = GetBossZoneEventName()
-			if bossZoneEventName then
-				Soundtrack.PlayEvent(ST_BOSS_ZONES, bossZoneEventName)
-			else
-				Soundtrack.PlayEvent(ST_BATTLE, battleType)
-			end
-		else
-			Soundtrack.PlayEvent(ST_BATTLE, battleType)
-		end
+		Soundtrack.PlayEvent(ST_BATTLE, battleType)
 	end
 	currentBattleTypeIndex = battleTypeIndex
 end
@@ -299,7 +275,6 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		else
 			StopCombatMusic()
 		end
-
 	elseif event == "PLAYER_UNGHOST" then
 		Soundtrack.StopEvent(ST_MISC, SOUNDTRACK_GHOST)
 	elseif event == "PLAYER_ALIVE" then

@@ -363,7 +363,6 @@ function Tests:SortAllEvents_SortsAllTables_ProcessesAllEventTabs()
 	zoneTable["ZoneEvent"] = { tracks = {} }
 
 	-- Initialize all other event tables to avoid nil errors
-	Soundtrack.Events.GetTable(ST_BOSS_ZONES)
 	Soundtrack.Events.GetTable(ST_PETBATTLES)
 	Soundtrack.Events.GetTable(ST_DANCE)
 	Soundtrack.Events.GetTable(ST_MISC)
