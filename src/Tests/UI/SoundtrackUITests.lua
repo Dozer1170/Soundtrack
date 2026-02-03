@@ -115,7 +115,7 @@ function Tests:OnLoad_RegistersSpecialFrameAndTabs()
 	SoundtrackUI.OnLoad()
 
 	AreEqual("SoundtrackFrame", UISpecialFrames[1])
-	AreEqual(10, numTabs)
+	AreEqual(9, numTabs)
 	AreEqual(1, selectedTab)
 end
 

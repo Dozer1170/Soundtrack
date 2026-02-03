@@ -18,8 +18,8 @@
                     "-NoProfile",
                     "-ExecutionPolicy",
                     "Bypass",
-                    "-Command",
-                    "if (Test-Path .\\luacov.stats.out) { Remove-Item .\\luacov.stats.out -Force }; $env:SOUNDTRACK_COVERAGE=1; lua .\\src\\Tests\\TestRunner.lua; if ($LASTEXITCODE -eq 0) { luacov -c .\\.luacov -r lcov } else { exit $LASTEXITCODE }"
+                    "-File",
+                    ".\\scripts\\powershell\\runUnitTests.ps1"
                 ]
             },
             "group": {
@@ -51,8 +51,8 @@
                     "-NoProfile",
                     "-ExecutionPolicy",
                     "Bypass",
-                    "-Command",
-                    "genhtml coverage\\lcov.info -o coverage\\html"
+                    "-File",
+                    ".\\scripts\\powershell\\generateCoverageReport.ps1"
                 ]
             },
             "group": "build",
