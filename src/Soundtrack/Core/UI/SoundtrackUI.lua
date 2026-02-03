@@ -223,7 +223,7 @@ end
 function SoundtrackUI.OnLoad()
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
-	PanelTemplates_SetNumTabs(SoundtrackFrame, 10)
+	PanelTemplates_SetNumTabs(SoundtrackFrame, 9)
 	PanelTemplates_SetTab(SoundtrackFrame, 1)
 end
 
