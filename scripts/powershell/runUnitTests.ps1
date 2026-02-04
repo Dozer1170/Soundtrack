@@ -32,7 +32,8 @@ function Initialize-LuaRocksEnvironment {
     if (-not [string]::IsNullOrWhiteSpace($luaPath)) {
         if ([string]::IsNullOrWhiteSpace($env:LUA_PATH)) {
             $env:LUA_PATH = $luaPath
-        } else {
+        }
+        else {
             $env:LUA_PATH = "$luaPath;" + $env:LUA_PATH
         }
     }
@@ -41,7 +42,8 @@ function Initialize-LuaRocksEnvironment {
     if (-not [string]::IsNullOrWhiteSpace($luaCPath)) {
         if ([string]::IsNullOrWhiteSpace($env:LUA_CPATH)) {
             $env:LUA_CPATH = $luaCPath
-        } else {
+        }
+        else {
             $env:LUA_CPATH = "$luaCPath;" + $env:LUA_CPATH
         }
     }
@@ -50,15 +52,78 @@ function Initialize-LuaRocksEnvironment {
     return $script:LuaRocksEnvironment
 }
 
-function Get-LuaCovExecutable {
+function Get-LuaCovCommand {
     $envInfo = Initialize-LuaRocksEnvironment
 
     $luacov = Get-Command luacov -ErrorAction SilentlyContinue
     if ($luacov) {
-        return $luacov.Source
+        $path = $luacov.Source
+        $extension = [System.IO.Path]::GetExtension($path)
+        $requiresLua = [string]::IsNullOrWhiteSpace($extension)
+        return @{ Path = $path; UseLua = $requiresLua }
+    }
+
+    $candidates = @(
+        "luacov.bat",
+        "luacov.cmd",
+        "luacov.exe",
+        "luacov.lua",
+        "luacov"
+    )
+
+    foreach ($candidate in $candidates) {
+        $fullPath = Join-Path $envInfo.BinPath $candidate
+        if (Test-Path $fullPath) {
+            $extension = [System.IO.Path]::GetExtension($fullPath)
+            $requiresLua = [string]::IsNullOrWhiteSpace($extension) -or ($extension -ieq ".lua")
+            return @{ Path = $fullPath; UseLua = $requiresLua }
+        }
     }
 
     throw "luacov executable was not found even after adding '$($envInfo.BinPath)' to PATH."
+}
+
+function Invoke-LuaCov {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]] $Arguments
+    )
+
+    $command = Get-LuaCovCommand
+
+    if ($command.UseLua) {
+        & lua $command.Path @Arguments
+    }
+    else {
+        & $command.Path @Arguments
+    }
+}
+
+function Test-LuaCovReporter {
+    try {
+        & lua -e "require('luacov.reporter.lcov')" 1>$null 2>$null
+        return $LASTEXITCODE -eq 0
+    }
+    catch {
+        return $false
+    }
+}
+
+function Ensure-LuaCovReporter {
+    if (Test-LuaCovReporter) {
+        return
+    }
+
+    $envInfo = Initialize-LuaRocksEnvironment
+    Write-Host "luacov-reporter-lcov not found. Installing via LuaRocks..." -ForegroundColor Cyan
+    & $envInfo.Command install luacov-reporter-lcov
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to install luacov-reporter-lcov via LuaRocks."
+    }
+
+    if (-not (Test-LuaCovReporter)) {
+        throw "luacov-reporter-lcov is still unavailable after installation."
+    }
 }
 
 $statsFile = Join-Path (Get-Location) "luacov.stats.out"
@@ -80,6 +145,6 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-$luacovPath = Get-LuaCovExecutable
-& $luacovPath -c .\.luacov -r lcov
+Ensure-LuaCovReporter
+Invoke-LuaCov -Arguments @("-c", ".\.luacov", "-r", "lcov")
 exit $LASTEXITCODE
