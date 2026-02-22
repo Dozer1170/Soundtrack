@@ -223,7 +223,22 @@ local function AnalyzeBattleSituation()
 		or battleType == SOUNDTRACK_BOSS_BATTLE
 		or (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex)
 	then
-		Soundtrack.PlayEvent(ST_BATTLE, battleType)
+		-- For boss battles, check for zone-specific boss music first
+		if battleType == SOUNDTRACK_BOSS_BATTLE then
+			-- Auto-discover the zone for boss fights
+			if SoundtrackAddon.db.profile.settings.AutoAddZones then
+				Soundtrack.BossZoneEvents.AddCurrentZone()
+			end
+
+			local bossZoneEvent = Soundtrack.BossZoneEvents.GetCurrentBossZoneEvent()
+			if bossZoneEvent then
+				Soundtrack.PlayEvent(ST_BOSS_ZONES, bossZoneEvent)
+			else
+				Soundtrack.PlayEvent(ST_BATTLE, battleType)
+			end
+		else
+			Soundtrack.PlayEvent(ST_BATTLE, battleType)
+		end
 	end
 	currentBattleTypeIndex = battleTypeIndex
 end

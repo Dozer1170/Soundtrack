@@ -11,6 +11,11 @@ local function ToggleZoneExpansion(expanded)
 end
 
 function SoundtrackUI.OnAddZoneButtonClick()
+	if SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
+		SoundtrackUI.OnAddBossZoneButtonClick()
+		return
+	end
+
 	Soundtrack_ZoneEvents_AddZones()
 
 	-- Select the newly added area.
@@ -25,16 +30,31 @@ function SoundtrackUI.OnAddZoneButtonClick()
 end
 
 function SoundtrackUI.OnCollapseAllZoneButtonClick()
+	if SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
+		SoundtrackUI.OnCollapseAllBossZoneButtonClick()
+		return
+	end
+
 	Soundtrack.Chat.TraceFrame("Collapsing all zone events")
 	ToggleZoneExpansion(false)
 end
 
 function SoundtrackUI.OnExpandAllZoneButtonClick()
+	if SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
+		SoundtrackUI.OnExpandAllBossZoneButtonClick()
+		return
+	end
+
 	Soundtrack.Chat.TraceFrame("Expanding all zone events")
 	ToggleZoneExpansion(true)
 end
 
 function SoundtrackUI.OnFrameRemoveZoneButtonClick()
+	if SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
+		SoundtrackUI.OnFrameRemoveBossZoneButtonClick()
+		return
+	end
+
 	StaticPopupDialogs["SOUNDTRACK_REMOVE_ZONE_POPUP"] = {
 		preferredIndex = 3,
 		text = "Do you want to remove this zone?",

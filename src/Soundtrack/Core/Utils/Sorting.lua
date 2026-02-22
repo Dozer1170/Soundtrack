@@ -118,11 +118,16 @@ function Soundtrack.SortEvents(eventTableName)
 		lowerEventFilter = string.lower(Soundtrack.eventFilter)
 	end
 
+	local eventTable = Soundtrack.Events.GetTable(eventTableName)
+	if not eventTable then
+		return
+	end
+
 	Soundtrack.Chat.TraceFrame(
-		"Sorting events for " .. eventTableName .. " (" .. #SoundtrackAddon.db.profile.events[eventTableName] .. ")"
+		"Sorting events for " .. eventTableName .. " (" .. #eventTable .. ")"
 	)
 
-	for k, _ in pairs(SoundtrackAddon.db.profile.events[eventTableName]) do
+	for k, _ in pairs(eventTable) do
 		if k ~= "Preview" then -- Hide internal events
 			if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
 				table.insert(Soundtrack_FlatEvents[eventTableName], k)

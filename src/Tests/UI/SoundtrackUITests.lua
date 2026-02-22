@@ -115,7 +115,7 @@ function Tests:OnLoad_RegistersSpecialFrameAndTabs()
 	SoundtrackUI.OnLoad()
 
 	AreEqual("SoundtrackFrame", UISpecialFrames[1])
-	AreEqual(9, numTabs)
+	AreEqual(10, numTabs)
 	AreEqual(1, selectedTab)
 end
 
@@ -357,7 +357,7 @@ function Tests:RefreshShowingTab_UpdatesFramesAndButtons()
 	Replace(Soundtrack, "StopEvent", function() end)
 	Replace(Soundtrack, "StopEventAtLevel", function() end)
 
-	SoundtrackFrame.selectedTab = 2
+	SoundtrackFrame.selectedTab = 3
 	SoundtrackUI.RefreshShowingTab()
 
 	AreEqual("Zone", SoundtrackUI.SelectedEventsTable)
@@ -365,7 +365,7 @@ function Tests:RefreshShowingTab_UpdatesFramesAndButtons()
 	IsTrue(SoundtrackFrameAddZoneButton:IsVisible())
 	IsFalse(SoundtrackFrameAddPlaylistButton:IsVisible())
 
-	SoundtrackFrame.selectedTab = 7
+	SoundtrackFrame.selectedTab = 8
 	SoundtrackUI.RefreshShowingTab()
 
 	IsTrue(SoundtrackFrameOptionsTab:IsVisible())
