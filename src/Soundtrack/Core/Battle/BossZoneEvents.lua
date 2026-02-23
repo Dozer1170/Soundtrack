@@ -8,22 +8,20 @@
 
 Soundtrack.BossZoneEvents = {}
 
--- Reuses zone path logic from ZoneEvents to build hierarchical zone paths.
--- Returns zone paths from most specific to least specific.
-function Soundtrack.BossZoneEvents.GetCurrentZonePaths()
-	return Soundtrack.ZoneEvents.GetCurrentZonePaths()
-end
-
 -- Add the current zone to the Boss Zones event table.
 function Soundtrack.BossZoneEvents.AddCurrentZone()
-	local zonePaths = Soundtrack.BossZoneEvents.GetCurrentZonePaths()
+	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
 	if not zonePaths or #zonePaths == 0 then
 		return
 	end
 
+	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	if not bossZoneTable then
+		return
+	end
+
 	for _, zonePath in ipairs(zonePaths) do
-		local eventTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
-		if eventTable[zonePath] == nil then
+		if bossZoneTable[zonePath] == nil then
 			Soundtrack.AddEvent(ST_BOSS_ZONES, zonePath, ST_BOSS_LVL, true)
 		end
 	end
@@ -32,19 +30,19 @@ end
 -- Returns the most specific boss zone event for the current location
 -- that has tracks assigned, or nil if none found.
 function Soundtrack.BossZoneEvents.GetCurrentBossZoneEvent()
-	local zonePaths = Soundtrack.BossZoneEvents.GetCurrentZonePaths()
+	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
 	if not zonePaths or #zonePaths == 0 then
 		return nil
 	end
 
-	local eventTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
-	if not eventTable then
+	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	if not bossZoneTable then
 		return nil
 	end
 
 	-- zonePaths is ordered most specific to least specific
 	for _, zonePath in ipairs(zonePaths) do
-		local event = eventTable[zonePath]
+		local event = bossZoneTable[zonePath]
 		if event and event.tracks and #event.tracks > 0 then
 			return zonePath
 		end
@@ -59,6 +57,10 @@ function Soundtrack.BossZoneEvents.Initialize()
 	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
 	if zoneTable then
 		local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+		if not bossZoneTable then
+			return
+		end
+
 		for zonePath, _ in pairs(zoneTable) do
 			-- Ensure all ancestor paths (e.g. "Instances" for "Instances/Amirdrassil") exist.
 			local parts = StringSplit(zonePath, "/")

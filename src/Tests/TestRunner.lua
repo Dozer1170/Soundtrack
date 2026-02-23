@@ -744,7 +744,6 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/UI/MinimapUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/Tabs/OptionsTabUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/Tabs/ProfilesTabUI.lua")
-
 end
 
 -- Initial bootstrap before loading tests
@@ -790,6 +789,8 @@ local testFiles = {
   "TimersTests.lua",
   "UI/SoundtrackUITests.lua",
   "UI/EventsUITests.lua",
+  "UI/BossZonesUITests.lua",
+  "UI/ZonesUITests.lua",
   "Zones/ZoneEventsTests.lua",
 }
 

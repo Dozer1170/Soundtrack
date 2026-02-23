@@ -112,76 +112,31 @@ function Soundtrack.ZoneEvents.GetCurrentZonePaths()
 	return results
 end
 
+local function PriorityForPath(path)
+	local _, slashes = path:gsub("/", "")
+	if slashes == 0 then return ST_CONTINENT_LVL
+	elseif slashes == 1 then return ST_ZONE_LVL
+	elseif slashes == 2 then return ST_SUBZONE_LVL
+	else return ST_MINIMAP_LVL
+	end
+end
+
 function Soundtrack_ZoneEvents_AddZones()
-	local zoneText = GetRealZoneText()
-	if zoneText == nil then
+	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
+	if not zonePaths or #zonePaths == 0 then
 		return
 	end
 
-	local continentName, zoneName = FindContinentByZone()
-	local zoneSubText = GetSubZoneText()
-	local minimapZoneText = GetMinimapZoneText()
-
-	if zoneName ~= nil and zoneName ~= zoneText then
-		if zoneSubText ~= nil and zoneSubText ~= "" then
-			minimapZoneText = zoneSubText
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	-- Iterate least-specific to most-specific (reverse of GetCurrentZonePaths order)
+	for i = #zonePaths, 1, -1 do
+		local zonePath = zonePaths[i]
+		local priority = PriorityForPath(zonePath)
+		Soundtrack.Chat.TraceZones("AddZone: " .. zonePath)
+		if eventTable[zonePath] == nil then
+			Soundtrack.AddEvent(ST_ZONE, zonePath, priority, true)
 		end
-		if zoneText ~= nil and zoneText ~= "" then
-			zoneSubText = zoneText
-		end
-		zoneText = zoneName
-	end
-
-	-- Construct full zone path
-	local zoneText1, zoneText2, zoneText3, zoneText4, zonePath
-
-	if not IsNullOrEmpty(continentName) then
-		zoneText1 = continentName
-		Soundtrack.Chat.TraceZones("AddZone Continent: " .. zoneText1)
-		zonePath = continentName
-	end
-
-	if not IsNullOrEmpty(zoneText) then
-		zoneText2 = continentName .. "/" .. zoneText
-		Soundtrack.Chat.TraceZones("AddZone ZoneText: " .. zoneText2)
-		zonePath = zoneText2
-	end
-
-	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
-		zoneText3 = zonePath .. "/" .. zoneSubText
-		Soundtrack.Chat.TraceZones("AddZone SubZoneText: " .. zoneText3)
-		zonePath = zoneText3
-	end
-
-	if zoneText ~= minimapZoneText and zoneSubText ~= minimapZoneText and not IsNullOrEmpty(minimapZoneText) then
-		zoneText4 = zonePath .. "/" .. minimapZoneText
-		Soundtrack.Chat.TraceZones("AddZone MinimapZoneText: " .. zoneText4)
-		zonePath = zoneText4
-	end
-
-	Soundtrack.Chat.TraceZones("AddZone Zone: " .. zonePath)
-
-	local function AddZoneEvent(eventName, priority)
-		local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-		if eventTable[eventName] == nil then
-			Soundtrack.AddEvent(ST_ZONE, eventName, priority, true)
-		end
-		AssignPriority(ST_ZONE, eventName, priority)
-	end
-	if zoneText4 then
-		AddZoneEvent(zoneText4, ST_MINIMAP_LVL)
-	end
-
-	if zoneText3 then
-		AddZoneEvent(zoneText3, ST_SUBZONE_LVL)
-	end
-
-	if zoneText2 then
-		AddZoneEvent(zoneText2, ST_ZONE_LVL)
-	end
-
-	if zoneText1 then
-		AddZoneEvent(zoneText1, ST_CONTINENT_LVL)
+		AssignPriority(ST_ZONE, zonePath, priority)
 	end
 end
 
