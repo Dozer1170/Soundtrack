@@ -63,6 +63,41 @@ function Tests:Initialize_CreatesNoEvents()
 	AreEqual(0, count, "Boss Zones should start empty")
 end
 
+function Tests:Initialize_CopiesZonesFromZoneTable()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Elwynn Forest", ST_ZONE_LVL, true)
+
+	Soundtrack.BossZoneEvents.Initialize()
+
+	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	IsTrue(bossZoneTable["Eastern Kingdoms"] ~= nil, "Continent copied to boss zones")
+	IsTrue(bossZoneTable["Eastern Kingdoms/Elwynn Forest"] ~= nil, "Zone copied to boss zones")
+	AreEqual(ST_BOSS_LVL, bossZoneTable["Eastern Kingdoms"].priority, "Continent has boss priority")
+	AreEqual(ST_BOSS_LVL, bossZoneTable["Eastern Kingdoms/Elwynn Forest"].priority, "Zone has boss priority")
+end
+
+function Tests:Initialize_DoesNotOverwriteExistingBossZones()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Elwynn Forest", ST_ZONE_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Eastern Kingdoms/Elwynn Forest", ST_BOSS_LVL, true)
+	Soundtrack.Events.Add(ST_BOSS_ZONES, "Eastern Kingdoms/Elwynn Forest", "Sound/Music/boss.mp3")
+
+	Soundtrack.BossZoneEvents.Initialize()
+
+	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	AreEqual(1, #bossZoneTable["Eastern Kingdoms/Elwynn Forest"].tracks, "Existing boss zone tracks preserved")
+end
+
+function Tests:Initialize_CreatesAncestorPathsForDeepZones()
+	-- Only the deep path is in ST_ZONE (e.g. player visited instance before zone init ran)
+	Soundtrack.AddEvent(ST_ZONE, "Instances/Amirdrassil", ST_ZONE_LVL, true)
+
+	Soundtrack.BossZoneEvents.Initialize()
+
+	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	IsTrue(bossZoneTable["Instances"] ~= nil, "Ancestor 'Instances' created in boss zones")
+	IsTrue(bossZoneTable["Instances/Amirdrassil"] ~= nil, "Zone 'Instances/Amirdrassil' created in boss zones")
+end
+
 -- AddCurrentZone Tests
 
 function Tests:AddCurrentZone_OutdoorZone_CreatesHierarchy()
@@ -113,7 +148,8 @@ function Tests:AddCurrentZone_EventHasBossLevelPriority()
 	Soundtrack.BossZoneEvents.AddCurrentZone()
 
 	local eventTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
-	AreEqual(ST_BOSS_LVL, eventTable["Eastern Kingdoms/Deadmines"].priority, "Boss zone event should have boss level priority")
+	AreEqual(ST_BOSS_LVL, eventTable["Eastern Kingdoms/Deadmines"].priority,
+	"Boss zone event should have boss level priority")
 end
 
 -- GetCurrentBossZoneEvent Tests

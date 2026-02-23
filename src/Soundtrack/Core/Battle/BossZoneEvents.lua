@@ -54,5 +54,21 @@ function Soundtrack.BossZoneEvents.GetCurrentBossZoneEvent()
 end
 
 function Soundtrack.BossZoneEvents.Initialize()
-	-- No pre-populated events. Users discover zones as they encounter boss fights.
+	-- Copy any zones from the zones table into the boss zones table if they are missing.
+	-- Also ensure all parent path segments exist so the UI tree renders correctly.
+	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
+	if zoneTable then
+		local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+		for zonePath, _ in pairs(zoneTable) do
+			-- Ensure all ancestor paths (e.g. "Instances" for "Instances/Amirdrassil") exist.
+			local parts = StringSplit(zonePath, "/")
+			local cumulativePath = ""
+			for i, part in ipairs(parts) do
+				cumulativePath = i == 1 and part or (cumulativePath .. "/" .. part)
+				if bossZoneTable[cumulativePath] == nil then
+					Soundtrack.AddEvent(ST_BOSS_ZONES, cumulativePath, ST_BOSS_LVL, true)
+				end
+			end
+		end
+	end
 end
