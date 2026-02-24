@@ -392,3 +392,96 @@ function Tests:Initialize_AddsContinentsAndZones()
 	IsTrue(added["Kalimdor"], "continent event should be added")
 	IsTrue(added["Kalimdor/Mulgore"], "zone event should be added")
 end
+
+function Tests:AddZones_CallsAddCurrentBossZone()
+	MockZone("Eastern Kingdoms", "Elwynn Forest", "", "")
+	local called = false
+	Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function()
+		called = true
+	end)
+
+	Soundtrack_ZoneEvents_AddZones()
+
+	IsTrue(called, "AddCurrentZone should be called when adding zones")
+end
+
+function Tests:OnZoneChanged_AutoAddZonesEnabled_CallsAddCurrentBossZone()
+	SoundtrackAddon.db.profile.settings.AutoAddZones = true
+	MockZone("Eastern Kingdoms", "Elwynn Forest", "", "")
+	local called = false
+	Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function()
+		called = true
+	end)
+
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
+
+	IsTrue(called, "AddCurrentZone should be called when AutoAddZones is enabled")
+end
+
+function Tests:OnZoneChanged_AutoAddZonesDisabled_DoesNotCallAddCurrentBossZone()
+	SoundtrackAddon.db.profile.settings.AutoAddZones = false
+	MockZone("Eastern Kingdoms", "Elwynn Forest", "", "")
+	local called = false
+	Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function()
+		called = true
+	end)
+
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
+
+	IsFalse(called, "AddCurrentZone should not be called when AutoAddZones is disabled")
+end
+
+-- DeleteZone Tests
+
+function Tests:DeleteZone_RemovesSelectedZone()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+
+	Soundtrack.ZoneEvents.DeleteZone("Eastern Kingdoms")
+
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern Kingdoms"] == nil, "Selected zone removed")
+end
+
+function Tests:DeleteZone_RemovesChildZones()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Elwynn Forest", ST_ZONE_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Dun Morogh", ST_ZONE_LVL, true)
+
+	Soundtrack.ZoneEvents.DeleteZone("Eastern Kingdoms")
+
+	local t = Soundtrack.Events.GetTable(ST_ZONE)
+	IsTrue(t["Eastern Kingdoms"] == nil, "Parent zone removed")
+	IsTrue(t["Eastern Kingdoms/Elwynn Forest"] == nil, "First child removed")
+	IsTrue(t["Eastern Kingdoms/Dun Morogh"] == nil, "Second child removed")
+end
+
+function Tests:DeleteZone_RemovesDeepChildren()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Elwynn Forest", ST_ZONE_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Elwynn Forest/Goldshire", ST_SUBZONE_LVL, true)
+
+	Soundtrack.ZoneEvents.DeleteZone("Eastern Kingdoms")
+
+	local t = Soundtrack.Events.GetTable(ST_ZONE)
+	IsTrue(t["Eastern Kingdoms"] == nil, "Grandparent removed")
+	IsTrue(t["Eastern Kingdoms/Elwynn Forest"] == nil, "Child removed")
+	IsTrue(t["Eastern Kingdoms/Elwynn Forest/Goldshire"] == nil, "Deep child removed")
+end
+
+function Tests:DeleteZone_PreservesUnrelatedZones()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms/Elwynn Forest", ST_ZONE_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Kalimdor", ST_CONTINENT_LVL, true)
+
+	Soundtrack.ZoneEvents.DeleteZone("Eastern Kingdoms")
+
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Kalimdor"] ~= nil, "Unrelated zone preserved")
+end
+
+function Tests:DeleteZone_ExactPrefixMatch_DoesNotRemoveSimilarNames()
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	Soundtrack.AddEvent(ST_ZONE, "Eastern KingdomsExtra", ST_CONTINENT_LVL, true)
+
+	Soundtrack.ZoneEvents.DeleteZone("Eastern Kingdoms")
+
+	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern KingdomsExtra"] ~= nil, "Similar-named zone preserved")
+end

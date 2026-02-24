@@ -85,7 +85,7 @@ function Soundtrack.Events.PlayRandomTrackByTable(tableName, eventName, offset)
 							index = 1
 						end
 					end
-				--Soundtrack.Chat.TraceEvents("Adjusted Random index: "..index)
+					--Soundtrack.Chat.TraceEvents("Adjusted Random index: "..index)
 				else
 					--Soundtrack.Chat.TraceEvents("Non random")
 					-- Non random playback
@@ -258,12 +258,25 @@ function Soundtrack.Events.Remove(eventTableName, eventName, trackName)
 	end
 end
 
-function Soundtrack.Events.DeleteEvent(tableName, eventName)
+function Soundtrack.Events.DeleteEvent(tableName, eventName, deleteChildren)
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 	if eventTable then
 		if eventTable[eventName] then
 			Soundtrack.Chat.TraceEvents("Removing event: " .. eventName)
 			eventTable[eventName] = nil
+		end
+		if deleteChildren then
+			local prefix = eventName .. "/"
+			local toRemove = {}
+			for key in pairs(eventTable) do
+				if key:sub(1, #prefix) == prefix then
+					table.insert(toRemove, key)
+				end
+			end
+			for _, key in ipairs(toRemove) do
+				Soundtrack.Chat.TraceEvents("Removing child event: " .. key)
+				eventTable[key] = nil
+			end
 		end
 		Soundtrack.SortEvents(tableName)
 	end

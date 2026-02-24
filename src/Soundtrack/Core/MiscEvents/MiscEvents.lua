@@ -69,6 +69,11 @@ function Soundtrack.Misc.PlayEvent(eventName)
 		return
 	end
 
+	if not eventTable[eventName] then
+		Soundtrack.Chat.Warning("PlayEvent: event not registered: " .. tostring(eventName))
+		return
+	end
+
 	local currentEvent = Soundtrack.Events.Stack[eventTable[eventName].priority].eventName
 	if eventName ~= currentEvent then
 		Soundtrack.PlayEvent(ST_MISC, eventName)
@@ -78,6 +83,11 @@ end
 function Soundtrack.Misc.StopEvent(eventName)
 	local eventTable = Soundtrack.Events.GetTable(ST_MISC)
 	if not eventTable then
+		return
+	end
+
+	if not eventTable[eventName] then
+		Soundtrack.Chat.Warning("StopEvent: event not registered: " .. tostring(eventName))
 		return
 	end
 
