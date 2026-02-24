@@ -138,6 +138,12 @@ function Soundtrack_ZoneEvents_AddZones()
 		end
 		AssignPriority(ST_ZONE, zonePath, priority)
 	end
+
+	Soundtrack.BossZoneEvents.AddCurrentZone()
+end
+
+function Soundtrack.ZoneEvents.DeleteZone(eventName)
+	Soundtrack.Events.DeleteEvent(ST_ZONE, eventName, true)
 end
 
 local function OnZoneChanged()
@@ -238,6 +244,10 @@ local function OnZoneChanged()
 		Soundtrack.PlayEvent(ST_ZONE, zoneText1, false)
 	else
 		Soundtrack.StopEventAtLevel(ST_CONTINENT_LVL)
+	end
+
+	if SoundtrackAddon.db.profile.settings.AutoAddZones then
+		Soundtrack.BossZoneEvents.AddCurrentZone()
 	end
 end
 

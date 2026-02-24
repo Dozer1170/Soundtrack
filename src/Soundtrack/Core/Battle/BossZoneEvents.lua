@@ -3,7 +3,7 @@
 
     Boss Zone events functions.
     Allows users to assign boss-fight music per zone.
-    Zones are auto-discovered when boss fights occur.
+    Zones are auto-discovered when entering a new area.
 ]]
 
 Soundtrack.BossZoneEvents = {}
@@ -25,6 +25,10 @@ function Soundtrack.BossZoneEvents.AddCurrentZone()
 			Soundtrack.AddEvent(ST_BOSS_ZONES, zonePath, ST_BOSS_LVL, true)
 		end
 	end
+end
+
+function Soundtrack.BossZoneEvents.DeleteZone(eventName)
+	Soundtrack.Events.DeleteEvent(ST_BOSS_ZONES, eventName, true)
 end
 
 -- Returns the most specific boss zone event for the current location

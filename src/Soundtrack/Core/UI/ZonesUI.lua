@@ -1,20 +1,5 @@
 local function RemoveZone(eventName)
-	Soundtrack.Events.DeleteEvent(ST_ZONE, eventName)
-
-	-- Also remove any child zones whose path is prefixed by this zone.
-	local prefix = eventName .. "/"
-	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
-	if eventTable then
-		local toRemove = {}
-		for key in pairs(eventTable) do
-			if key:sub(1, #prefix) == prefix then
-				table.insert(toRemove, key)
-			end
-		end
-		for _, key in ipairs(toRemove) do
-			Soundtrack.Events.DeleteEvent(ST_ZONE, key)
-		end
-	end
+	Soundtrack.ZoneEvents.DeleteZone(eventName)
 end
 
 local function ToggleZoneExpansion(expanded)

@@ -569,6 +569,32 @@ function Tests:EventsDeleteEvent_ExistingEvent_RemovesCompletely()
 	IsFalse(eventTable["ToDelete"])
 end
 
+function Tests:EventsDeleteEvent_DeleteChildren_RemovesChildEvents()
+	Soundtrack.Events.Add(ST_ZONE, "Parent", "track.mp3")
+	Soundtrack.Events.Add(ST_ZONE, "Parent/Child", "track.mp3")
+	Soundtrack.Events.Add(ST_ZONE, "Parent/Child/Grandchild", "track.mp3")
+	Soundtrack.Events.Add(ST_ZONE, "Other", "track.mp3")
+
+	Soundtrack.Events.DeleteEvent(ST_ZONE, "Parent", true)
+
+	local t = Soundtrack.Events.GetTable(ST_ZONE)
+	IsTrue(t["Parent"] == nil, "Parent removed")
+	IsTrue(t["Parent/Child"] == nil, "Child removed")
+	IsTrue(t["Parent/Child/Grandchild"] == nil, "Grandchild removed")
+	IsTrue(t["Other"] ~= nil, "Unrelated event preserved")
+end
+
+function Tests:EventsDeleteEvent_WithoutDeleteChildren_PreservesChildren()
+	Soundtrack.Events.Add(ST_ZONE, "Parent", "track.mp3")
+	Soundtrack.Events.Add(ST_ZONE, "Parent/Child", "track.mp3")
+
+	Soundtrack.Events.DeleteEvent(ST_ZONE, "Parent", false)
+
+	local t = Soundtrack.Events.GetTable(ST_ZONE)
+	IsTrue(t["Parent"] == nil, "Parent removed")
+	IsTrue(t["Parent/Child"] ~= nil, "Child preserved when deleteChildren is false")
+end
+
 function Tests:EventsClearEvent_WithTracks_RemovesAllTracks()
 	Soundtrack.Events.Add(ST_ZONE, "ClearTest", "track1.mp3")
 	Soundtrack.Events.Add(ST_ZONE, "ClearTest", "track2.mp3")

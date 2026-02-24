@@ -149,7 +149,7 @@ function Tests:AddCurrentZone_EventHasBossLevelPriority()
 
 	local eventTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
 	AreEqual(ST_BOSS_LVL, eventTable["Eastern Kingdoms/Deadmines"].priority,
-	"Boss zone event should have boss level priority")
+		"Boss zone event should have boss level priority")
 end
 
 -- GetCurrentBossZoneEvent Tests
@@ -290,4 +290,59 @@ end
 
 function Tests:TabUtils_Playlists_ReturnsIndex7()
 	AreEqual(7, TabUtils.GetTabIndex(ST_PLAYLISTS), "Playlists should be tab index 7 (shifted)")
+end
+
+-- DeleteZone Tests
+
+function Tests:DeleteZone_RemovesSelectedZone()
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances", ST_BOSS_LVL, true)
+
+	Soundtrack.BossZoneEvents.DeleteZone("Instances")
+
+	IsTrue(Soundtrack.Events.GetTable(ST_BOSS_ZONES)["Instances"] == nil, "Selected zone removed")
+end
+
+function Tests:DeleteZone_RemovesChildZones()
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances/The Deadmines", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances/Blackfathom Deeps", ST_BOSS_LVL, true)
+
+	Soundtrack.BossZoneEvents.DeleteZone("Instances")
+
+	local t = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	IsTrue(t["Instances"] == nil, "Parent zone removed")
+	IsTrue(t["Instances/The Deadmines"] == nil, "First child removed")
+	IsTrue(t["Instances/Blackfathom Deeps"] == nil, "Second child removed")
+end
+
+function Tests:DeleteZone_RemovesDeepChildren()
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Eastern Kingdoms", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Eastern Kingdoms/Elwynn Forest", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Eastern Kingdoms/Elwynn Forest/Goldshire", ST_BOSS_LVL, true)
+
+	Soundtrack.BossZoneEvents.DeleteZone("Eastern Kingdoms")
+
+	local t = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	IsTrue(t["Eastern Kingdoms"] == nil, "Grandparent removed")
+	IsTrue(t["Eastern Kingdoms/Elwynn Forest"] == nil, "Child removed")
+	IsTrue(t["Eastern Kingdoms/Elwynn Forest/Goldshire"] == nil, "Deep child removed")
+end
+
+function Tests:DeleteZone_PreservesUnrelatedZones()
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances/The Deadmines", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Eastern Kingdoms", ST_BOSS_LVL, true)
+
+	Soundtrack.BossZoneEvents.DeleteZone("Instances")
+
+	IsTrue(Soundtrack.Events.GetTable(ST_BOSS_ZONES)["Eastern Kingdoms"] ~= nil, "Unrelated zone preserved")
+end
+
+function Tests:DeleteZone_ExactPrefixMatch_DoesNotRemoveSimilarNames()
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances", ST_BOSS_LVL, true)
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "InstancesExtra", ST_BOSS_LVL, true)
+
+	Soundtrack.BossZoneEvents.DeleteZone("Instances")
+
+	IsTrue(Soundtrack.Events.GetTable(ST_BOSS_ZONES)["InstancesExtra"] ~= nil, "Similar-named zone preserved")
 end
