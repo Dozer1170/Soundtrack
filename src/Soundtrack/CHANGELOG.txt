@@ -1,3 +1,7 @@
+6.1.0
+- Added boss zone events
+- Deleting a zone or boss zone now also removes all child zones
+
 6.0.2
 - Fix bug with zones getting cleared
 
