@@ -270,17 +270,20 @@ function Soundtrack.RenameEvent(tableName, oldEventName, newEventName, _priority
 	Soundtrack.SortEvents(tableName)
 end
 
-function Soundtrack.AssignTrack(eventName, trackName)
+function Soundtrack.AssignTrack(tableName, eventName, trackName)
 	if IsNullOrEmpty(eventName) or IsNullOrEmpty(trackName) then
 		debugEvents("AssignTrack: Invalid table or event name")
 		return
 	end
 
-	local tableName = Soundtrack.GetTableFromEvent(eventName)
+	if IsNullOrEmpty(tableName) then
+		tableName = Soundtrack.GetTableFromEvent(eventName)
+	end
+
 	local eventTable = Soundtrack.Events.GetTable(tableName)
 
 	if not eventTable then
-		debugEvents("Cannot find table : " .. tableName)
+		debugEvents("Cannot find table : " .. tostring(tableName))
 		return
 	end
 

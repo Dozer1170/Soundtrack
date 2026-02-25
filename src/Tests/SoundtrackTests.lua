@@ -388,8 +388,8 @@ function Tests:AssignTrack_InvalidParams_LogsDebug()
 		table.insert(debugMessages, message)
 	end
 
-	Soundtrack.AssignTrack(nil, "Track")
-	Soundtrack.AssignTrack("Event", nil)
+	Soundtrack.AssignTrack(ST_ZONE, nil, "Track")
+	Soundtrack.AssignTrack(ST_ZONE, "Event", nil)
 
 	AreEqual(2, #debugMessages)
 end
@@ -406,7 +406,7 @@ function Tests:AssignTrack_TableMissing_LogsDebug()
 		return nil
 	end)
 
-	Soundtrack.AssignTrack("Event", "Track")
+	Soundtrack.AssignTrack(nil, "Event", "Track")
 
 	AreEqual(1, #debugMessages)
 end
@@ -624,10 +624,50 @@ function Tests:AssignTrack_ValidEvent_AddsTrackToEvent()
 	Soundtrack.AddEvent(ST_ZONE, "AssignTest", ST_ZONE_LVL, true, false)
 	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
 
-	Soundtrack.AssignTrack("AssignTest", "assigned.mp3")
+	Soundtrack.AssignTrack(ST_ZONE, "AssignTest", "assigned.mp3")
 
 	AreEqual(1, #eventTable["AssignTest"].tracks)
 	AreEqual("assigned.mp3", eventTable["AssignTest"].tracks[1])
+end
+
+function Tests:AssignTrack_WithNilTableName_FallsBackToGetTableFromEvent()
+	Soundtrack.AddEvent(ST_ZONE, "FallbackTest", ST_ZONE_LVL, true, false)
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+
+	Soundtrack.AssignTrack(nil, "FallbackTest", "fallback.mp3")
+
+	AreEqual(1, #eventTable["FallbackTest"].tracks)
+	AreEqual("fallback.mp3", eventTable["FallbackTest"].tracks[1])
+end
+
+function Tests:AssignTrack_WithExplicitTableName_DoesNotCallGetTableFromEvent()
+	Soundtrack.AddEvent(ST_ZONE, "ExplicitTableTest", ST_ZONE_LVL, true, false)
+	local getTableFromEventCalled = false
+	Replace(Soundtrack, "GetTableFromEvent", function()
+		getTableFromEventCalled = true
+		return ST_ZONE
+	end)
+
+	Soundtrack.AssignTrack(ST_ZONE, "ExplicitTableTest", "explicit.mp3")
+
+	IsFalse(getTableFromEventCalled, "GetTableFromEvent should not be called when tableName is provided")
+end
+
+function Tests:AssignTrack_SameEventInTwoTables_ExplicitTableNameTargetsCorrectTable()
+	-- Simulate the Boss Zones bug: the same zone path exists in both Zone and Boss Zones tables.
+	-- Without an explicit table name, GetTableFromEvent returns whichever comes first in
+	-- Soundtrack_EventTabs (Boss Zones), causing Zone track assignments to land in the wrong table.
+	local sharedEventName = "Instances/Amirdrassil"
+	Soundtrack.AddEvent(ST_BOSS_ZONES, sharedEventName, ST_BOSS_LVL, true, false)
+	Soundtrack.AddEvent(ST_ZONE, sharedEventName, ST_ZONE_LVL, true, false)
+
+	Soundtrack.AssignTrack(ST_ZONE, sharedEventName, "zone_track.mp3")
+
+	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
+	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	AreEqual(1, #zoneTable[sharedEventName].tracks)
+	AreEqual("zone_track.mp3", zoneTable[sharedEventName].tracks[1])
+	AreEqual(0, #bossZoneTable[sharedEventName].tracks)
 end
 
 function Tests:LoadTracks_WithMyTracksFile_LoadsCustomTracks()

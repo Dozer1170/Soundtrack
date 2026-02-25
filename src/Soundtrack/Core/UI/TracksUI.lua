@@ -6,7 +6,7 @@ local function PlayPreviewTrack(trackName)
 	-- Make sure the preview event exists
 	Soundtrack.Events.DeleteEvent(ST_MISC, "Preview")
 	Soundtrack.AddEvent(ST_MISC, "Preview", ST_PREVIEW_LVL, true)
-	Soundtrack.AssignTrack("Preview", trackName)
+	Soundtrack.AssignTrack(ST_MISC, "Preview", trackName)
 	Soundtrack.PlayEvent(ST_MISC, "Preview", true)
 end
 
@@ -37,7 +37,7 @@ function SoundtrackUI.OnTrackCheckBoxClick(self, _, _)
 			)
 		else
 			-- Add the track to the events list.
-			Soundtrack.AssignTrack(SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
+			Soundtrack.AssignTrack(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
 		end
 	end
 
@@ -61,7 +61,7 @@ function SoundtrackUI.OnAssignedTrackCheckBoxClick(self, _, _)
 		)
 	else
 		-- Add the track to the events list.
-		Soundtrack.AssignTrack(SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
+		Soundtrack.AssignTrack(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
 	end
 
 	-- To refresh assigned track counts.
@@ -103,7 +103,7 @@ function SoundtrackUI.OnAllButtonClick()
 
 	-- The highlight all of them
 	for i = 1, #Soundtrack_SortedTracks, 1 do
-		Soundtrack.AssignTrack(SoundtrackUI.SelectedEvent, Soundtrack_SortedTracks[i])
+		Soundtrack.AssignTrack(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent, Soundtrack_SortedTracks[i])
 	end
 	SoundtrackUI.UpdateEventsUI()
 end
