@@ -95,6 +95,14 @@ function SoundtrackAddon:OnInitialize()
 		},
 	}, true)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+	-- Ensure event sub-tables exist immediately so any early zone/battle events
+	-- (which also fire on PLAYER_ENTERING_WORLD) can access them before LoadTracks runs.
+	for _, eventTabName in ipairs(Soundtrack_EventTabs) do
+		if not self.db.profile.events[eventTabName] then
+			self.db.profile.events[eventTabName] = {}
+		end
+	end
 end
 
 function SoundtrackAddon:PLAYER_ENTERING_WORLD()
