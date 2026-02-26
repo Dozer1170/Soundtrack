@@ -17,7 +17,6 @@
 ## Playback Quality
 
 - **Per-event volume control** — A slider on each event to scale its relative volume (0–100%), since custom MP3s vary wildly in recorded loudness.
-- **Crossfade / fade transitions** — Smooth fade-out/fade-in between events instead of abrupt stops, approximated via `SetVolume` on the master channel.
 - **Track scheduling modes** — Per event: random, sequential, or *weighted random* (assign play-probability weights per track).
 - **Minimum play duration** — Don't interrupt a track that started less than N seconds ago, even if the triggering event changes (prevents rapid skipping during micro zone transitions).
 
