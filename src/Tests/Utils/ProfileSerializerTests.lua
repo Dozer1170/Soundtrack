@@ -29,6 +29,68 @@ local function RoundTrip(data)
 end
 
 -- ---------------------------------------------------------------------------
+-- Decode tests (parse-only, no side effects)
+-- ---------------------------------------------------------------------------
+
+function Tests:Decode_ValidString_ReturnsData()
+	local str = Soundtrack.ProfileSerializer.Export()
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Decode succeeds on valid string")
+	IsTrue(type(data) == "table", "Returns a table")
+end
+
+function Tests:Decode_EmptyString_ReturnsFalse()
+	local ok, _ = Soundtrack.ProfileSerializer.Decode("")
+	IsFalse(ok, "Empty string returns false")
+end
+
+function Tests:Decode_WrongHeader_ReturnsFalse()
+	local ok, msg = Soundtrack.ProfileSerializer.Decode("WRONG_HEADER:{}")
+	IsFalse(ok, "Wrong header returns false")
+	IsTrue(msg:find("Invalid") ~= nil, "Error mentions invalid")
+end
+
+function Tests:Decode_DoesNotWriteToProfile()
+	local original = SoundtrackAddon.db.profile.events
+	local str = Soundtrack.ProfileSerializer.Export()
+
+	-- Modify profile after exporting, then decode.
+	SoundtrackAddon.db.profile.events = { _sentinel = true }
+	Soundtrack.ProfileSerializer.Decode(str)
+
+	-- Profile should be unchanged (Decode must not write).
+	IsTrue(SoundtrackAddon.db.profile.events._sentinel == true, "Decode did not overwrite profile")
+	SoundtrackAddon.db.profile.events = original
+end
+
+-- ---------------------------------------------------------------------------
+-- Apply tests
+-- ---------------------------------------------------------------------------
+
+function Tests:Apply_WritesEventsToProfile()
+	local data = {
+		events   = { [ST_ZONE] = { ["Elwynn"] = { tracks = { "x.mp3" }, priority = 2 } } },
+		settings = {},
+	}
+	Soundtrack.ProfileSerializer.Apply(data)
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE]["Elwynn"] ~= nil, "Events applied")
+end
+
+function Tests:Apply_WritesSettingsToProfile()
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 0
+	local data = { events = {}, settings = { BattleCooldown = 99 } }
+	Soundtrack.ProfileSerializer.Apply(data)
+	AreEqual(99, SoundtrackAddon.db.profile.settings.BattleCooldown, "Setting applied")
+end
+
+function Tests:Apply_NilEvents_DoesNotClearProfile()
+	SoundtrackAddon.db.profile.events[ST_ZONE] = { ["Keep"] = { tracks = {} } }
+	local data = { settings = { Debug = false } }
+	Soundtrack.ProfileSerializer.Apply(data)
+	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE]["Keep"] ~= nil, "Events untouched when nil in data")
+end
+
+-- ---------------------------------------------------------------------------
 -- Export tests
 -- ---------------------------------------------------------------------------
 
@@ -62,7 +124,7 @@ end
 function Tests:Import_WrongHeader_ReturnsFalse()
 	local ok, msg = Soundtrack.ProfileSerializer.Import("NOT_A_SOUNDTRACK_STRING:{}")
 	IsFalse(ok, "Wrong header returns false")
-	IsTrue(msg:find("Invalid"), "Error mentions invalid")
+	IsTrue(msg:find("Invalid") ~= nil, "Error mentions invalid")
 end
 
 function Tests:Import_MalformedPayload_ReturnsFalse()

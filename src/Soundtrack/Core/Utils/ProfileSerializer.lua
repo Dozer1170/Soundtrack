@@ -220,16 +220,17 @@ function Soundtrack.ProfileSerializer.Export()
     return HEADER .. Encode(data)
 end
 
--- Parses an export string and applies it to the current profile.
--- Returns true, message  on success.
+-- Parses an export string and returns the decoded table WITHOUT writing
+-- anything to the current profile.
+-- Returns true, data    on success.
 -- Returns false, errorMsg on failure.
-function Soundtrack.ProfileSerializer.Import(str)
+function Soundtrack.ProfileSerializer.Decode(str)
     if not str or str == "" then
         return false, "Empty import string."
     end
 
     if str:sub(1, #HEADER) ~= HEADER then
-        return false, "Invalid profile string – make sure you copied the full export."
+        return false, "Invalid profile string - make sure you copied the full export."
     end
 
     local payload = str:sub(#HEADER + 1)
@@ -248,15 +249,30 @@ function Soundtrack.ProfileSerializer.Import(str)
         return false, "Unexpected data format."
     end
 
-    if result.events then
-        SoundtrackAddon.db.profile.events = result.events
-    end
+    return true, result
+end
 
-    if result.settings then
-        for k, v in pairs(result.settings) do
+-- Applies previously decoded profile data to the current profile.
+-- Expects the table returned by Decode().
+function Soundtrack.ProfileSerializer.Apply(data)
+    if data.events then
+        SoundtrackAddon.db.profile.events = data.events
+    end
+    if data.settings then
+        for k, v in pairs(data.settings) do
             SoundtrackAddon.db.profile.settings[k] = v
         end
     end
+end
 
+-- Parses an export string and applies it to the current profile.
+-- Returns true, message  on success.
+-- Returns false, errorMsg on failure.
+function Soundtrack.ProfileSerializer.Import(str)
+    local ok, result = Soundtrack.ProfileSerializer.Decode(str)
+    if not ok then
+        return false, result
+    end
+    Soundtrack.ProfileSerializer.Apply(result)
     return true, "Profile imported successfully."
 end

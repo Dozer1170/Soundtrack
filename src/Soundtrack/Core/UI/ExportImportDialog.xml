@@ -4,7 +4,7 @@
   <Frame name="SoundtrackExportImportFrame" parent="UIParent" movable="true" enableMouse="true"
          frameStrata="DIALOG" inherits="BackdropTemplate" hidden="true">
     <Size>
-      <AbsDimension x="500" y="340"/>
+      <AbsDimension x="500" y="385"/>
     </Size>
     <Anchors>
       <Anchor point="CENTER"/>
@@ -33,7 +33,7 @@
           </Anchors>
         </FontString>
         <FontString name="SoundtrackExportImportInstructions" inherits="GameFontHighlightSmall"
-                    text="To export: click Select All then Ctrl-C.   To import: paste text, then click Import.">
+                    text="To export: click Select All then Ctrl-C.   To import: paste text, enter a new profile name, then click Import.">
           <Size><AbsDimension x="460" y="0"/></Size>
           <Anchors>
             <Anchor point="TOP">
@@ -62,6 +62,33 @@
           </OnLoad>
         </Scripts>
       </EditBox>
+      <!-- Profile name row (used when importing) -->
+      <Frame name="SoundtrackExportImportProfileNameRow">
+        <Size><AbsDimension x="440" y="22"/></Size>
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset><AbsDimension x="20" y="58"/></Offset>
+          </Anchor>
+        </Anchors>
+        <Frames>
+          <FontString name="SoundtrackExportImportProfileNameLabel" inherits="GameFontHighlightSmall"
+                      text="New Profile Name:">
+            <Anchors>
+              <Anchor point="LEFT"/>
+            </Anchors>
+          </FontString>
+          <EditBox name="SoundtrackExportImportProfileNameEditBox"
+                   inherits="SoundtrackFrame_EditBoxTemplate" autoFocus="false" letters="128">
+            <Size><AbsDimension x="200" y="22"/></Size>
+            <Anchors>
+              <Anchor point="LEFT" relativePoint="RIGHT"
+                      relativeTo="SoundtrackExportImportProfileNameLabel">
+                <Offset><AbsDimension x="6" y="0"/></Offset>
+              </Anchor>
+            </Anchors>
+          </EditBox>
+        </Frames>
+      </Frame>
       <!-- Buttons -->
       <Button name="SoundtrackExportImportSelectAllButton" inherits="UIPanelButtonTemplate"
               text="Select All">
