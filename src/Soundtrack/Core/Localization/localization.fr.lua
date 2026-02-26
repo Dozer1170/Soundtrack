@@ -332,7 +332,12 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_CLEAR_TRACKS_TIP = "Nettoyer les pistes copiees."
 
 	SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION = "Êtes-vous sûr de vouloir effacer l’événement sélectionné ?"
-end
+	SOUNDTRACK_FADE_TRANSITION = "Fondu enchaîné"
+	SOUNDTRACK_FADE_TRANSITION_TIP =
+		"Diminue progressivement le volume de la piste actuelle et augmente celui de la nouvelle lors d'un changement de musique. Nécessite que la 'Durée du fondu' soit supérieure à zéro."
+	SOUNDTRACK_FADE_DURATION = "Durée du fondu"
+	SOUNDTRACK_FADE_DURATION_TIP =
+		"Durée (en secondes) du fondu sortant et entrant lors des transitions entre les pistes."end
 
 local function LoadFrench()
 	if GetLocale() == "frFR" then

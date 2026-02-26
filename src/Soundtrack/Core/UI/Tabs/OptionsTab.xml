@@ -328,6 +328,48 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Frame>
+      <CheckButton name="OptionsTab_FadeTransition" inherits="UICheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_SilenceDropDown" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-25"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>OptionsTab_FadeTransition.Text:SetText(SOUNDTRACK_FADE_TRANSITION)</OnLoad>
+          <OnClick>Soundtrack.OptionsTab.ToggleFadeTransition()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_FADE_TRANSITION, SOUNDTRACK_FADE_TRANSITION_TIP)</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </CheckButton>
+      <Frame name="OptionsTab_FadeTransitionDurationDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_FadeTransition" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-21"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="$parentLabel" inherits="GameFontHighlightSmall" text="Fade Duration">
+              <Anchors>
+                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="0" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>OptionsTab_FadeTransitionDurationDropDown.Text:SetText(SOUNDTRACK_FADE_DURATION); </OnLoad>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_FADE_DURATION, SOUNDTRACK_FADE_DURATION_TIP)</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Frame>
       <CheckButton name="OptionsTab_EnableDebugMode" inherits="UICheckButtonTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringDebugOptions" relativePoint="BOTTOMLEFT">

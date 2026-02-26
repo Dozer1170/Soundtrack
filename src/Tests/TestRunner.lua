@@ -326,6 +326,16 @@ local function SetWoWGlobals()
   _G.GetNumGroupMembers = function() return 0 end
   _G.GetNumSubgroupMembers = function() return 0 end
   _G.GetTime = function() return 0 end
+  local _cvarStore = {}
+  _G.GetCVar = function(key)
+    if key == "Sound_MusicVolume" then
+      return _cvarStore[key] or "1"
+    end
+    return _cvarStore[key] or "0"
+  end
+  _G.SetCVar = function(key, value)
+    _cvarStore[key] = tostring(value)
+  end
   _G.UnitOnTaxi = function(unit) return false end
   _G.IsMounted = function() return false end
   _G.IsFlying = function() return false end
@@ -406,6 +416,8 @@ local defaultSettings = {
   Silence = 5,
   EscalateBattleMusic = true,
   AutoAddZones = true,
+  FadeTransition = false,  -- keep fade off so existing tests use instant switching
+  FadeTransitionDuration = 2,
 }
 
 local function CloneDefaults()
@@ -786,6 +798,7 @@ local testFiles = {
   "PetBattle/PetBattleEventsTests.lua",
   "Utils/SortingTests.lua",
   "Utils/ProfileSerializerTests.lua",
+  "Library/FadeTransitionTests.lua",
   "SoundtrackTests.lua",
   "Utils/StringUtilsTests.lua",
   "TimersTests.lua",

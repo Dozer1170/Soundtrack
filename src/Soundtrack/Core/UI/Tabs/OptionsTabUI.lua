@@ -4,6 +4,7 @@ function Soundtrack.OptionsTab.Initialize()
 	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnLoad()
 	Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
 	Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnLoad()
 end
 
 function Soundtrack.OptionsTab.Refresh()
@@ -26,6 +27,7 @@ function Soundtrack.OptionsTab.Refresh()
 	OptionsTab_EnableMiscMusic:SetChecked(s.EnableMiscMusic)
 
 	OptionsTab_HidePlaybackButtons:SetChecked(s.HideControlButtons)
+	OptionsTab_FadeTransition:SetChecked(s.FadeTransition)
 
 	local cvar_LoopMusic = GetCVar("Sound_ZoneMusicNoDelay")
 	Soundtrack.Chat.TraceFrame("Sound_ZoneMusicNoDelay: " .. cvar_LoopMusic)
@@ -292,6 +294,71 @@ function Soundtrack.OptionsTab.SilenceDropDown_OnClick(self)
 	SoundtrackUI.selectedSilence = self:GetID()
 	-- Save settings.
 	SoundtrackAddon.db.profile.settings.Silence = silences[SoundtrackUI.selectedSilence]
+end
+
+function Soundtrack.OptionsTab.ToggleFadeTransition()
+	SoundtrackAddon.db.profile.settings.FadeTransition =
+		not SoundtrackAddon.db.profile.settings.FadeTransition
+end
+
+-- Fade transition duration dropdown
+
+local fadeDurations = { 0.5, 1, 2, 3, 5 }
+
+local function GetFadeDurations()
+	return { "0.5 seconds", "1 second", "2 seconds", "3 seconds", "5 seconds" }
+end
+
+local function GetCurrentFadeDuration()
+	if SoundtrackAddon == nil or SoundtrackAddon.db == nil then
+		return 3 -- default index: 2 seconds
+	end
+	local saved = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+	for i, d in ipairs(fadeDurations) do
+		if saved == d then
+			return i
+		end
+	end
+	return 3 -- fallback: 2 seconds
+end
+
+function Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnLoad()
+	SoundtrackUI.selectedFadeDuration = GetCurrentFadeDuration()
+	UIDropDownMenu_Initialize(
+		OptionsTab_FadeTransitionDurationDropDown,
+		Soundtrack.OptionsTab.FadeTransitionDurationDropDown_Initialize
+	)
+end
+
+function Soundtrack.OptionsTab.FadeTransitionDurationDropDown_Initialize()
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_LoadDurations(GetFadeDurations())
+	UIDropDownMenu_SetSelectedID(OptionsTab_FadeTransitionDurationDropDown, SoundtrackUI.selectedFadeDuration)
+	UIDropDownMenu_SetWidth(OptionsTab_FadeTransitionDurationDropDown, 110)
+end
+
+function Soundtrack.OptionsTab.FadeTransitionDurationDropDown_LoadDurations(durationTexts)
+	local currentDuration = SoundtrackUI.selectedFadeDuration
+	local info
+
+	for i, durationText in ipairs(durationTexts) do
+		local checked = nil
+		if currentDuration == i then
+			checked = 1
+			UIDropDownMenu_SetText(OptionsTab_FadeTransitionDurationDropDown, durationText)
+		end
+
+		info = {}
+		info.text    = durationText
+		info.func    = Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnClick
+		info.checked = checked
+		UIDropDownMenu_AddButton(info)
+	end
+end
+
+function Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnClick(self)
+	UIDropDownMenu_SetSelectedID(OptionsTab_FadeTransitionDurationDropDown, self:GetID())
+	SoundtrackUI.selectedFadeDuration = self:GetID()
+	SoundtrackAddon.db.profile.settings.FadeTransitionDuration = fadeDurations[SoundtrackUI.selectedFadeDuration]
 end
 
 function Soundtrack.OptionsTab.ToggleAutoAddZones()

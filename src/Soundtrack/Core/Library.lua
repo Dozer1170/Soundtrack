@@ -3,7 +3,11 @@ Soundtrack.Library = {}
 local nextTrackInfo
 local nextFileName
 local nextTrackName
-local fadeOut = false
+-- Fade state machine: "idle" | "instant" | "fading_out" | "fading_in"
+local fadeState      = "idle"
+local fadeStartTime  = 0
+local fadeDuration   = 0
+local savedMusicVolume = 1
 
 Soundtrack.Library.CurrentlyPlayingTrack = nil
 
@@ -14,6 +18,20 @@ end
 local function RemoveContinuityTimers()
 	Soundtrack.Timers.Remove("FadeOut")
 	Soundtrack.Timers.Remove("TrackFinished")
+end
+
+local function IsFadeEnabled()
+	if not SoundtrackAddon or not SoundtrackAddon.db then return false end
+	local s = SoundtrackAddon.db.profile.settings
+	return s.FadeTransition == true and (s.FadeTransitionDuration or 0) > 0
+end
+
+local function GetMusicVolume()
+	return tonumber(GetCVar("Sound_MusicVolume")) or 1
+end
+
+local function SetMusicVolume(v)
+	SetCVar("Sound_MusicVolume", tostring(math.max(0, math.min(1, v))))
 end
 
 local fadeOutTime = 1
@@ -119,23 +137,84 @@ end
 
 function Soundtrack.Library.StopTrack()
 	Soundtrack.Chat.TraceLibrary("StopTrack()")
-	fadeOut = true
 	nextTrackInfo = nil
+	if IsFadeEnabled() then
+		savedMusicVolume = GetMusicVolume()
+		fadeDuration  = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+		fadeStartTime = GetTime()
+		fadeState     = "fading_out"
+	else
+		fadeState = "instant"
+	end
 end
 
 function Soundtrack.Library.OnUpdate()
-	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
-	if fadeOut == true or (stackLevel == 0 and Soundtrack.Library.CurrentlyPlayingTrack ~= nil) then
+	local now = GetTime()
+
+	-- Volume fade-out in progress
+	if fadeState == "fading_out" then
+		local elapsed  = now - fadeStartTime
+		local progress = fadeDuration > 0 and math.min(1, elapsed / fadeDuration) or 1
+		SetMusicVolume(savedMusicVolume * (1 - progress))
+		if progress >= 1 then
+			Soundtrack.Library.StopMusic()
+			Soundtrack.Library.CurrentlyPlayingTrack = nil
+			if nextTrackInfo ~= nil then
+				DelayedPlayMusic()
+				nextTrackInfo = nil
+				fadeStartTime = now
+				fadeState     = "fading_in"
+			else
+				SetMusicVolume(savedMusicVolume)
+				fadeState = "idle"
+				SoundtrackUI.UpdateTracksUI()
+			end
+		end
+		return
+	end
+
+	-- Volume fade-in in progress
+	if fadeState == "fading_in" then
+		local elapsed  = now - fadeStartTime
+		local progress = fadeDuration > 0 and math.min(1, elapsed / fadeDuration) or 1
+		SetMusicVolume(savedMusicVolume * progress)
+		if progress >= 1 then
+			SetMusicVolume(savedMusicVolume)
+			if nextTrackInfo ~= nil then
+				-- New track requested during fade-in; start a fresh fade-out
+				fadeDuration  = (SoundtrackAddon.db.profile.settings.FadeTransitionDuration or 2)
+				fadeStartTime = now
+				fadeState     = "fading_out"
+			else
+				fadeState = "idle"
+			end
+		end
+		return
+	end
+
+	-- Instant switch (fade disabled)
+	if fadeState == "instant" then
 		Soundtrack.Library.StopMusic()
 		Soundtrack.Library.CurrentlyPlayingTrack = nil
-
 		if nextTrackInfo ~= nil then
 			DelayedPlayMusic()
 			nextTrackInfo = nil
 		end
-
 		SoundtrackUI.UpdateTracksUI()
-		fadeOut = false
+		fadeState = "idle"
+		return
+	end
+
+	-- Idle: stop music if nothing is on the stack
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	if stackLevel == 0 and Soundtrack.Library.CurrentlyPlayingTrack ~= nil then
+		Soundtrack.Library.StopMusic()
+		Soundtrack.Library.CurrentlyPlayingTrack = nil
+		if nextTrackInfo ~= nil then
+			DelayedPlayMusic()
+			nextTrackInfo = nil
+		end
+		SoundtrackUI.UpdateTracksUI()
 	end
 end
 
@@ -192,9 +271,20 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	-- Everything ok, play the track
 	if not soundEffect then
 		nextTrackName = trackName
-		-- HACK because of Blizzard broke cross fading
-		-- Start fading out current song
-		fadeOut = true
+		if IsFadeEnabled() then
+			if fadeState == "idle" then
+				savedMusicVolume = GetMusicVolume()
+				fadeDuration  = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+				fadeStartTime = GetTime()
+				fadeState     = "fading_out"
+			elseif fadeState == "fading_out" then
+				-- Already fading; updated nextTrackInfo will play when done
+			elseif fadeState == "fading_in" then
+				-- Let fade-in finish; OnUpdate will detect nextTrackInfo and fade out
+			end
+		else
+			fadeState = "instant"
+		end
 	else
 		Soundtrack.Chat.TraceLibrary("PlaySoundFile(" .. nextFileName .. ")") -- EDITED, replaced fileName with nextFileName
 		PlaySoundFile(nextFileName) -- sound effect. play the music overlapping other music

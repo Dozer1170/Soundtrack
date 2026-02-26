@@ -330,6 +330,13 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_CLEAR_TRACKS_TIP = "Clear the tracks that you copied."
 
 	SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION = "Are you sure you want to clear the selected event?"
+
+	SOUNDTRACK_FADE_TRANSITION = "Überblendung"
+	SOUNDTRACK_FADE_TRANSITION_TIP =
+		"Blendet den aktuellen Titel langsam aus und den neuen ein, wenn sich die Musik ändert. Erfordert, dass die 'Überblendungsdauer' größer als null ist."
+	SOUNDTRACK_FADE_DURATION = "Überblendungsdauer"
+	SOUNDTRACK_FADE_DURATION_TIP =
+		"Wie lange (in Sekunden) das Aus- und Einblenden beim Übergang zwischen Titeln dauert."
 end
 
 local function LoadGerman()

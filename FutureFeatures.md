@@ -4,8 +4,6 @@
 
 - **Time-of-day music** — WoW has a queryable in-game clock. Play different tracks during day vs. night (or dawn/dusk windows).
 - **Weather-based music** — WoW exposes weather effects via `GetWeatherType()`. Add rain, snow, sandstorm, and fog variants per zone.
-- **Low-health tension music** — When player HP drops below a threshold (e.g., 20%), escalate to a tension/urgency track.
-- **Combat duration escalation** — After X seconds in combat, automatically bump to a higher-tier battle track (normal → elite → boss tier), extending the existing escalation system.
 - **Seasonal/holiday music** — Detect in-game holidays via `C_DateAndTime` / `C_Calendar` and layer holiday-specific tracks on top of zone music.
 
 ## New Event Types

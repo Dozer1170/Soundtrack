@@ -329,6 +329,13 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_CLEAR_TRACKS_TIP = "Clear the tracks that you copied."
 
 	SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION = "Are you sure you want to clear the selected event?"
+
+	SOUNDTRACK_FADE_TRANSITION = "Fade Transition"
+	SOUNDTRACK_FADE_TRANSITION_TIP =
+		"Gradually fades out the current track and fades in the new one when music changes. Requires that 'Fade Duration' is greater than zero."
+	SOUNDTRACK_FADE_DURATION = "Fade Duration"
+	SOUNDTRACK_FADE_DURATION_TIP =
+		"How long (in seconds) the fade-out and fade-in each take when transitioning between tracks."
 end
 
 function LoadEnglish()

@@ -332,6 +332,13 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_CLEAR_TRACKS_TIP = "Eliminar pistas de copiado."
 
 	SOUNDTRACK_CLEAR_SELECTED_EVENT_QUESTION = "¿Está seguro de que desea borrar el evento seleccionado?"
+
+	SOUNDTRACK_FADE_TRANSITION = "Transición de fundido"
+	SOUNDTRACK_FADE_TRANSITION_TIP =
+		"Desvanece gradualmente la pista actual y la nueva cuando cambia la música. Requiere que la 'Duración del fundido' sea mayor que cero."
+	SOUNDTRACK_FADE_DURATION = "Duración del fundido"
+	SOUNDTRACK_FADE_DURATION_TIP =
+		"Cuánto tiempo (en segundos) duran el desvanecimiento de salida y entrada al cambiar entre pistas."
 end
 
 local function LoadSpanish()

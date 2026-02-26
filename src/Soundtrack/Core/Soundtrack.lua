@@ -89,6 +89,9 @@ function SoundtrackAddon:OnInitialize()
 				HideControlButtons = false,
 				PlaybackButtonsPosition = "LEFT",
 
+				FadeTransition = false,
+				FadeTransitionDuration = 2,
+
 				YourEnemyLevelOnly = false,
 				k = true,
 			},
