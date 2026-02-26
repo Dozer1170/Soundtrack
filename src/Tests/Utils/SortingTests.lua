@@ -264,23 +264,91 @@ function Tests:SortEvents_HidesPreview_ExcludesPreviewEvent()
 	AreEqual(1, #Soundtrack_FlatEvents[ST_BATTLE])
 end
 
-function Tests:SortEvents_WithFilter_OnlyIncludesMatchingEvents()
-	-- Setup events
+function Tests:SortEvents_WithFilter_OnlyIncludesMatchingFlatEvents()
+	-- Flat (non-hierarchical) events: only matching keys are included.
 	local eventTable = Soundtrack.Events.GetTable(ST_BATTLE)
 	eventTable["Boss_Fight"] = { tracks = {} }
 	eventTable["Trash_Mob"] = { tracks = {} }
 	eventTable["Boss_Victory"] = { tracks = {} }
 
-	-- Set filter
 	Soundtrack.eventFilter = "boss"
-
-	-- Sort events
 	Soundtrack.SortEvents(ST_BATTLE)
 
-	-- Should only include events matching filter
 	AreEqual(2, #Soundtrack_FlatEvents[ST_BATTLE])
 
-	-- Clear filter
+	Soundtrack.eventFilter = nil
+end
+
+function Tests:SortEvents_FilterMatchesMiddleNode_IncludesParentAndChildren()
+	-- Searching "Naxxramas" should show "Instances" (ancestor) and all
+	-- "Instances/Naxxramas/*" children as well as the matching node itself.
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["Instances"] = { tracks = {}, expanded = true }
+	eventTable["Instances/Naxxramas"] = { tracks = {}, expanded = true }
+	eventTable["Instances/Naxxramas/Plague Quarter"] = { tracks = {}, expanded = true }
+	eventTable["Instances/Naxxramas/Construct Quarter"] = { tracks = {}, expanded = true }
+	eventTable["Instances/The Deadmines"] = { tracks = {}, expanded = true }
+
+	Soundtrack.eventFilter = "naxxramas"
+	Soundtrack.SortEvents(ST_ZONE)
+
+	local tags = {}
+	for _, node in ipairs(Soundtrack_FlatEvents[ST_ZONE]) do
+		tags[node.tag] = true
+	end
+
+	IsTrue(tags["Instances"] == true, "Ancestor 'Instances' included")
+	IsTrue(tags["Instances/Naxxramas"] == true, "Matching node included")
+	IsTrue(tags["Instances/Naxxramas/Plague Quarter"] == true, "Child 'Plague Quarter' included")
+	IsTrue(tags["Instances/Naxxramas/Construct Quarter"] == true, "Child 'Construct Quarter' included")
+	IsTrue(tags["Instances/The Deadmines"] == nil, "Unrelated sibling excluded")
+
+	Soundtrack.eventFilter = nil
+end
+
+function Tests:SortEvents_FilterMatchesParent_IncludesAllDescendants()
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["Eastern Kingdoms"] = { tracks = {}, expanded = true }
+	eventTable["Eastern Kingdoms/Elwynn Forest"] = { tracks = {}, expanded = true }
+	eventTable["Eastern Kingdoms/Duskwood"] = { tracks = {}, expanded = true }
+	eventTable["Kalimdor"] = { tracks = {}, expanded = true }
+
+	Soundtrack.eventFilter = "eastern kingdoms"
+	Soundtrack.SortEvents(ST_ZONE)
+
+	local tags = {}
+	for _, node in ipairs(Soundtrack_FlatEvents[ST_ZONE]) do
+		tags[node.tag] = true
+	end
+
+	IsTrue(tags["Eastern Kingdoms"] == true, "Matching parent included")
+	IsTrue(tags["Eastern Kingdoms/Elwynn Forest"] == true, "Child 'Elwynn Forest' included")
+	IsTrue(tags["Eastern Kingdoms/Duskwood"] == true, "Child 'Duskwood' included")
+	IsTrue(tags["Kalimdor"] == nil, "Unrelated continent excluded")
+
+	Soundtrack.eventFilter = nil
+end
+
+function Tests:SortEvents_FilterMatchesLeaf_IncludesAllAncestors()
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	eventTable["Kalimdor"] = { tracks = {}, expanded = true }
+	eventTable["Kalimdor/Mulgore"] = { tracks = {}, expanded = true }
+	eventTable["Kalimdor/Mulgore/Red Cloud Mesa"] = { tracks = {}, expanded = true }
+	eventTable["Kalimdor/Barrens"] = { tracks = {}, expanded = true }
+
+	Soundtrack.eventFilter = "red cloud"
+	Soundtrack.SortEvents(ST_ZONE)
+
+	local tags = {}
+	for _, node in ipairs(Soundtrack_FlatEvents[ST_ZONE]) do
+		tags[node.tag] = true
+	end
+
+	IsTrue(tags["Kalimdor"] == true, "Top-level ancestor included")
+	IsTrue(tags["Kalimdor/Mulgore"] == true, "Mid-level ancestor included")
+	IsTrue(tags["Kalimdor/Mulgore/Red Cloud Mesa"] == true, "Matching leaf included")
+	IsTrue(tags["Kalimdor/Barrens"] == nil, "Unrelated sibling excluded")
+
 	Soundtrack.eventFilter = nil
 end
 

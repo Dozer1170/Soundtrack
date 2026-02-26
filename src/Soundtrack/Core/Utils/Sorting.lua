@@ -127,13 +127,43 @@ function Soundtrack.SortEvents(eventTableName)
 		"Sorting events for " .. eventTableName .. " (" .. #eventTable .. ")"
 	)
 
-	for k, _ in pairs(eventTable) do
-		if k ~= "Preview" then -- Hide internal events
-			if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
-				table.insert(Soundtrack_FlatEvents[eventTableName], k)
-			elseif k ~= nil and string.find(string.lower(k), lowerEventFilter) ~= nil then
+	if not Soundtrack.eventFilter or Soundtrack.eventFilter == "" then
+		-- No filter: include every event.
+		for k, _ in pairs(eventTable) do
+			if k ~= "Preview" then
 				table.insert(Soundtrack_FlatEvents[eventTableName], k)
 			end
+		end
+	else
+		-- Filter active: include matching events AND their ancestors/descendants so
+		-- the tree renders correctly (e.g. searching "Naxxramas" also shows
+		-- "Instances" above it and "Instances/Naxxramas/Plague Quarter" below it).
+		local included = {}
+		for k, _ in pairs(eventTable) do
+			if k ~= "Preview" and string.find(string.lower(k), lowerEventFilter) ~= nil then
+				included[k] = true
+
+				-- Include every ancestor path that exists in the event table.
+				local parts = StringSplit(k, "/")
+				local ancestorPath = ""
+				for i, part in ipairs(parts) do
+					ancestorPath = i == 1 and part or (ancestorPath .. "/" .. part)
+					if ancestorPath ~= k and eventTable[ancestorPath] then
+						included[ancestorPath] = true
+					end
+				end
+
+				-- Include every descendant path that exists in the event table.
+				local prefix = k .. "/"
+				for otherKey, _ in pairs(eventTable) do
+					if otherKey ~= "Preview" and string.sub(otherKey, 1, #prefix) == prefix then
+						included[otherKey] = true
+					end
+				end
+			end
+		end
+		for k, _ in pairs(included) do
+			table.insert(Soundtrack_FlatEvents[eventTableName], k)
 		end
 	end
 
