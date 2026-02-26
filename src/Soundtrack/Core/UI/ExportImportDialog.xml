@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+  <Script file="ExportImportDialogUI.lua"/>
+  <Frame name="SoundtrackExportImportFrame" parent="UIParent" movable="true" enableMouse="true"
+         frameStrata="DIALOG" inherits="BackdropTemplate" hidden="true">
+    <Size>
+      <AbsDimension x="500" y="340"/>
+    </Size>
+    <Anchors>
+      <Anchor point="CENTER"/>
+    </Anchors>
+    <Scripts>
+      <OnLoad>
+        self:SetBackdrop({
+          bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
+          edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+          tile = true, tileSize = 32, edgeSize = 32,
+          insets = { left = 11, right = 11, top = 11, bottom = 11 }
+        })
+        self:RegisterForDrag("LeftButton")
+        self:SetScript("OnDragStart", self.StartMoving)
+        self:SetScript("OnDragStop",  self.StopMovingOrSizing)
+      </OnLoad>
+    </Scripts>
+    <Layers>
+      <Layer level="OVERLAY">
+        <FontString name="SoundtrackExportImportTitle" inherits="GameFontNormal"
+                    text="Export / Import Profile">
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset><AbsDimension x="0" y="-18"/></Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="SoundtrackExportImportInstructions" inherits="GameFontHighlightSmall"
+                    text="To export: click Select All then Ctrl-C.   To import: paste text, then click Import.">
+          <Size><AbsDimension x="460" y="0"/></Size>
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset><AbsDimension x="0" y="-42"/></Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <!-- EditBox -->
+      <EditBox name="SoundtrackExportImportEditBox" multiLine="true" autoFocus="false"
+               enableMouse="true" letters="500000">
+        <Size>
+          <AbsDimension x="458" y="210"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset><AbsDimension x="0" y="-68"/></Offset>
+          </Anchor>
+        </Anchors>
+        <FontString name="$parentFontString" inherits="ChatFontNormal"/>
+        <Scripts>
+          <OnLoad>
+            self:SetFontObject(ChatFontNormal)
+          </OnLoad>
+        </Scripts>
+      </EditBox>
+      <!-- Buttons -->
+      <Button name="SoundtrackExportImportSelectAllButton" inherits="UIPanelButtonTemplate"
+              text="Select All">
+        <Size><AbsDimension x="100" y="22"/></Size>
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset><AbsDimension x="20" y="20"/></Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ExportImportDialog.SelectAll()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Select All", "Highlights the export text so you can copy it with Ctrl-C.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+      <Button name="SoundtrackExportImportImportButton" inherits="UIPanelButtonTemplate"
+              text="Import">
+        <Size><AbsDimension x="100" y="22"/></Size>
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"
+                  relativeTo="SoundtrackExportImportSelectAllButton">
+            <Offset><AbsDimension x="5" y="0"/></Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ExportImportDialog.Import()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Import", "Paste an exported profile string into the box above, then click Import.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+      <Button name="SoundtrackExportImportCloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT">
+            <Offset><AbsDimension x="-5" y="-5"/></Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ExportImportDialog.Close()</OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+</Ui>

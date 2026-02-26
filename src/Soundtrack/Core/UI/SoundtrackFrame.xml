@@ -13,6 +13,7 @@
   <Include file="Tabs/OptionsTab.xml"/>
   <Include file="Tabs/ProfilesTab.xml"/>
   <Include file="Tabs/AboutTab.xml"/>
+  <Include file="ExportImportDialog.xml"/>
   <!-- ALL TEXTURES -->
   <Texture name="Soundtrack_PlayingIconTexture" file="Interface\Addons\Soundtrack\Images\PlayingIcon" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <Texture name="Soundtrack_PreviousTexture" file="Interface\AddOns\Soundtrack\Images\Previous" inherits="Soundtrack_TextureTemplate" virtual="true"/>

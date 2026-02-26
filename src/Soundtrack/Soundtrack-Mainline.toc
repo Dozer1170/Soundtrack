@@ -19,6 +19,7 @@ Core/Utils/Sorting.lua
 Core/Utils/Cleanup.lua
 Core/Utils/TableUtils.lua
 Core/Utils/TabUtils.lua
+Core/Utils/ProfileSerializer.lua
 Core/UI/GeneralTemplates.xml
 Core/UI/Tabs/TabTemplateRetail.xml
 Core/Auras/AurasDummyFrame.xml

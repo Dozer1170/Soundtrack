@@ -100,6 +100,23 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
+      <Button name="ExportImportProfileButton" inherits="UIPanelButtonTemplate" text="Export / Import...">
+        <Size>
+          <AbsDimension x="200" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="ResetProfileButton">
+            <Offset>
+              <AbsDimension x="0" y="-15"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ExportImportDialog.Open()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Export / Import Profile", "Open a dialog to export the current profile to a share string, or import one from another player.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
     </Frames>
     <Scripts>
       <OnShow>Soundtrack.ProfilesTab.RefreshProfilesFrame()</OnShow>

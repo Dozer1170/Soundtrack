@@ -23,17 +23,10 @@
 - **Track scheduling modes** — Per event: random, sequential, or *weighted random* (assign play-probability weights per track).
 - **Minimum play duration** — Don't interrupt a track that started less than N seconds ago, even if the triggering event changes (prevents rapid skipping during micro zone transitions).
 
-## Profiles & Sharing
-
-- **Profile export / import** — Serialize a profile to a share string (similar to WeakAuras) so users can share setups on forums or Discord.
-- **Per-character vs. account-wide profiles** — Let the user choose whether a profile applies only to the current character or to all characters on the account.
-
 ## UI / Quality of Life
 
 - **"Now Playing" toast** — Brief on-screen notification showing the track name and the event that triggered it (extending the existing `ShowTrackInformation` setting).
 - **Recently played history** — A small log of the last N tracks played, each annotated with the event that caused it.
-- **Bulk track assignment** — Select multiple events and assign an entire folder or album to all of them at once.
-- **Track preview without assigning** — Play any track from the library browser without committing it to an event.
 
 ## Battle System Extensions
 

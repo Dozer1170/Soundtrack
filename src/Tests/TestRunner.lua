@@ -602,6 +602,7 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/Utils/Sorting.lua")
   LoadSourceFile("src/Soundtrack/Core/Utils/TabUtils.lua")
   LoadSourceFile("src/Soundtrack/Core/Utils/Cleanup.lua")
+  LoadSourceFile("src/Soundtrack/Core/Utils/ProfileSerializer.lua")
   LoadSourceFile("src/Soundtrack/Core/Events.lua")
   -- Patch GetTable to auto-create missing tables (for test compatibility)
   local originalGetTable = Soundtrack.Events.GetTable
@@ -784,6 +785,7 @@ local testFiles = {
   "MiscEvents/MountEventsTests.lua",
   "PetBattle/PetBattleEventsTests.lua",
   "Utils/SortingTests.lua",
+  "Utils/ProfileSerializerTests.lua",
   "SoundtrackTests.lua",
   "Utils/StringUtilsTests.lua",
   "TimersTests.lua",
