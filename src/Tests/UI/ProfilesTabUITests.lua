@@ -180,3 +180,109 @@ function Tests:ResetCurrentProfile_ResetsProfileOnAccept()
 
 	IsTrue(SoundtrackAddon.db._resetCalled(), "ResetProfile called on accept")
 end
+
+-- ReloadProfile Tests
+
+function Tests:ReloadProfile_SetsTracksLoadedToFalse()
+	Soundtrack.TracksLoaded = true
+	Replace(SoundtrackAddon, "PLAYER_ENTERING_WORLD", function() end)
+	MockRefreshProfilesFrame()
+
+	Soundtrack.ProfilesTab.ReloadProfile()
+
+	IsFalse(Soundtrack.TracksLoaded, "TracksLoaded set to false")
+end
+
+function Tests:ReloadProfile_CallsPlayerEnteringWorld()
+	local called = false
+	Replace(SoundtrackAddon, "PLAYER_ENTERING_WORLD", function() called = true end)
+	MockRefreshProfilesFrame()
+
+	Soundtrack.ProfilesTab.ReloadProfile()
+
+	IsTrue(called, "PLAYER_ENTERING_WORLD called on SoundtrackAddon")
+end
+
+function Tests:ReloadProfile_CallsRefreshProfilesFrame()
+	local called = false
+	Replace(SoundtrackAddon, "PLAYER_ENTERING_WORLD", function() end)
+	Replace(Soundtrack.ProfilesTab, "RefreshProfilesFrame", function() called = true end)
+
+	Soundtrack.ProfilesTab.ReloadProfile()
+
+	IsTrue(called, "RefreshProfilesFrame called after reload")
+end
+
+-- RefreshProfilesFrame Tests
+
+function Tests:RefreshProfilesFrame_SetsCurrentProfileName()
+	SetupProfileDb({ "Default", "Raid" }, "Raid")
+	local textSet = nil
+	_G["CurrentProfileName"] = { SetText = function(_, text) textSet = text end }
+
+	Soundtrack.ProfilesTab.RefreshProfilesFrame()
+
+	AreEqual("Raid", textSet, "CurrentProfileName set to current profile")
+end
+
+-- InitDropDown Tests
+
+function Tests:InitDropDown_AddsAllProfilesWhenNotSkipping()
+	SetupProfileDb({ "Default", "Raid", "Casual" }, "Default")
+	local added = {}
+	Replace(_G, "UIDropDownMenu_CreateInfo", function() return {} end)
+	Replace(_G, "UIDropDownMenu_AddButton", function(info) table.insert(added, info.text) end)
+
+	Soundtrack.ProfilesTab.InitDropDown(function() end, false)
+
+	AreEqual(3, #added, "All 3 profiles added when not skipping current")
+end
+
+function Tests:InitDropDown_SkipsCurrentProfileWhenRequested()
+	SetupProfileDb({ "Default", "Raid" }, "Default")
+	local added = {}
+	Replace(_G, "UIDropDownMenu_CreateInfo", function() return {} end)
+	Replace(_G, "UIDropDownMenu_AddButton", function(info) table.insert(added, info.text) end)
+
+	Soundtrack.ProfilesTab.InitDropDown(function() end, true)
+
+	AreEqual(1, #added, "Only non-current profile added when skipping current")
+	AreEqual("Raid", added[1], "Raid added (Default skipped)")
+end
+
+function Tests:InitDropDown_ChecksCurrentProfile()
+	SetupProfileDb({ "Default", "Raid" }, "Default")
+	local checkedStates = {}
+	Replace(_G, "UIDropDownMenu_CreateInfo", function() return {} end)
+	Replace(_G, "UIDropDownMenu_AddButton", function(info)
+		table.insert(checkedStates, { name = info.text, checked = info.checked })
+	end)
+
+	Soundtrack.ProfilesTab.InitDropDown(function() end, false)
+
+	local defaultEntry = nil
+	local raidEntry = nil
+	for _, entry in ipairs(checkedStates) do
+		if entry.name == "Default" then defaultEntry = entry end
+		if entry.name == "Raid" then raidEntry = entry end
+	end
+	IsTrue(defaultEntry and defaultEntry.checked, "Default profile is checked")
+	IsFalse(raidEntry and raidEntry.checked, "Raid profile is not checked")
+end
+
+-- OnLoad Tests
+
+function Tests:OnLoad_SetsDropDownTexts()
+	_G["LoadProfileDropDown"] = { initialize = nil }
+	_G["LoadProfileDropDownText"] = { SetText = function(self, t) self._text = t end, _text = "" }
+	_G["CopyFromProfileDropDown"] = { initialize = nil }
+	_G["CopyFromProfileDropDownText"] = { SetText = function(self, t) self._text = t end, _text = "" }
+	_G["DeleteProfileDropDown"] = { initialize = nil }
+	_G["DeleteProfileDropDownText"] = { SetText = function(self, t) self._text = t end, _text = "" }
+
+	Soundtrack.ProfilesTab.OnLoad()
+
+	AreEqual("Load Profile", _G["LoadProfileDropDownText"]._text, "Load Profile text set")
+	AreEqual("Copy From", _G["CopyFromProfileDropDownText"]._text, "Copy From text set")
+	AreEqual("Delete Profile", _G["DeleteProfileDropDownText"]._text, "Delete Profile text set")
+end

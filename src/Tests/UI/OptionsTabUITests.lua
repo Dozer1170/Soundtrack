@@ -218,3 +218,315 @@ function Tests:ToggleFadeTransition_TogglesSettingToFalse()
 
 	IsFalse(GetSetting("FadeTransition"), "FadeTransition toggled to false")
 end
+
+-- ToggleMinimapButton Tests
+
+function Tests:ToggleMinimapButton_CallsToggleMinimap()
+	local called = false
+	Replace(_G, "SoundtrackMinimap_ToggleMinimap", function() called = true end)
+
+	Soundtrack.OptionsTab.ToggleMinimapButton()
+
+	IsTrue(called, "SoundtrackMinimap_ToggleMinimap called")
+end
+
+-- ToggleShowDefaultMusic Tests
+
+function Tests:ToggleShowDefaultMusic_TogglesSettingToFalse()
+	SoundtrackAddon.db.profile.settings.ShowDefaultMusic = true
+	Replace(Soundtrack, "LoadTracks", function() end)
+
+	Soundtrack.OptionsTab.ToggleShowDefaultMusic()
+
+	IsFalse(GetSetting("ShowDefaultMusic"), "ShowDefaultMusic toggled to false")
+end
+
+function Tests:ToggleShowDefaultMusic_TogglesSettingToTrue()
+	SoundtrackAddon.db.profile.settings.ShowDefaultMusic = false
+	Replace(Soundtrack, "LoadTracks", function() end)
+
+	Soundtrack.OptionsTab.ToggleShowDefaultMusic()
+
+	IsTrue(GetSetting("ShowDefaultMusic"), "ShowDefaultMusic toggled to true")
+end
+
+function Tests:ToggleShowDefaultMusic_SetsTracksLoadedToFalse()
+	Replace(Soundtrack, "LoadTracks", function() end)
+
+	Soundtrack.OptionsTab.ToggleShowDefaultMusic()
+
+	IsFalse(Soundtrack.TracksLoaded, "TracksLoaded set to false")
+end
+
+function Tests:ToggleShowDefaultMusic_CallsLoadTracks()
+	local called = false
+	Replace(Soundtrack, "LoadTracks", function() called = true end)
+
+	Soundtrack.OptionsTab.ToggleShowDefaultMusic()
+
+	IsTrue(called, "Soundtrack.LoadTracks called")
+end
+
+-- PlaybackButtonsLocationDropDown Tests
+
+function Tests:PlaybackButtonsLocationDropDown_OnLoad_SetsSelectedLocation()
+	SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = "TOPRIGHT"
+
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnLoad()
+
+	AreEqual(3, SoundtrackUI.selectedLocation, "selectedLocation set to index 3 for TOPRIGHT")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_OnLoad_DefaultsToOneWhenNoMatch()
+	SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition = "UNKNOWN"
+
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnLoad()
+
+	AreEqual(1, SoundtrackUI.selectedLocation, "selectedLocation defaults to 1 when no match")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_Initialize_AddsLocations()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedLocation = 1
+
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_Initialize()
+
+	AreEqual(6, buttonsAdded, "6 location buttons added")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_LoadLocations_AddsButtons()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedLocation = 999
+
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations({ "Left", "Top Left", "Top Right" })
+
+	AreEqual(3, buttonsAdded, "3 buttons added")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_LoadLocations_SetsTextForCurrentLocation()
+	local textSet = nil
+	Replace(_G, "UIDropDownMenu_SetText", function(_, text) textSet = text end)
+	Replace(_G, "UIDropDownMenu_AddButton", function() end)
+	SoundtrackUI.selectedLocation = 2
+
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_LoadLocations({ "Left", "Top Left" })
+
+	AreEqual("Top Left", textSet, "SetText called with current location text")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_OnClick_UpdatesSelectedLocation()
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+	Replace(_G, "SoundtrackFrame_RefreshPlaybackControls", function() end)
+	SoundtrackUI.selectedLocation = 1
+
+	local self = { GetID = function() return 3 end }
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnClick(self)
+
+	AreEqual(3, SoundtrackUI.selectedLocation, "selectedLocation updated to 3")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_OnClick_SavesPositionSetting()
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+	Replace(_G, "SoundtrackFrame_RefreshPlaybackControls", function() end)
+
+	local self = { GetID = function() return 2 end }
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnClick(self)
+
+	AreEqual("TOPLEFT", SoundtrackAddon.db.profile.settings.PlaybackButtonsPosition, "Position saved as TOPLEFT")
+end
+
+function Tests:PlaybackButtonsLocationDropDown_OnClick_CallsRefreshPlaybackControls()
+	local called = false
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+	Replace(_G, "SoundtrackFrame_RefreshPlaybackControls", function() called = true end)
+
+	local self = { GetID = function() return 1 end }
+	Soundtrack.OptionsTab.PlaybackButtonsLocationDropDown_OnClick(self)
+
+	IsTrue(called, "RefreshPlaybackControls called")
+end
+
+-- BattleCooldownDropDown Tests
+
+function Tests:BattleCooldownDropDown_OnLoad_SetsSelectedCooldown()
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 5
+
+	Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
+
+	AreEqual(5, SoundtrackUI.selectedCooldown, "selectedCooldown set to index 5 (5 seconds)")
+end
+
+function Tests:BattleCooldownDropDown_OnLoad_DefaultsToOneWhenNoMatch()
+	SoundtrackAddon.db.profile.settings.BattleCooldown = 999
+
+	Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
+
+	AreEqual(1, SoundtrackUI.selectedCooldown, "selectedCooldown defaults to 1 when no match")
+end
+
+function Tests:BattleCooldownDropDown_Initialize_AddsCooldowns()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedCooldown = 1
+
+	Soundtrack.OptionsTab.BattleCooldownDropDown_Initialize()
+
+	AreEqual(8, buttonsAdded, "8 cooldown buttons added")
+end
+
+function Tests:BattleCooldownDropDown_LoadCooldowns_AddsButtons()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedCooldown = 999
+
+	Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns({ "No cooldown", "1 second", "2 seconds" })
+
+	AreEqual(3, buttonsAdded, "3 cooldown buttons added")
+end
+
+function Tests:BattleCooldownDropDown_LoadCooldowns_SetsTextForCurrentCooldown()
+	local textSet = nil
+	Replace(_G, "UIDropDownMenu_SetText", function(_, text) textSet = text end)
+	Replace(_G, "UIDropDownMenu_AddButton", function() end)
+	SoundtrackUI.selectedCooldown = 1
+
+	Soundtrack.OptionsTab.BattleCooldownDropDown_LoadCooldowns({ "No cooldown", "1 second" })
+
+	AreEqual("No cooldown", textSet, "SetText called with current cooldown text")
+end
+
+function Tests:BattleCooldownDropDown_OnClick_UpdatesSelectedCooldown()
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+
+	local self = { GetID = function() return 4 end }
+	Soundtrack.OptionsTab.BattleCooldownDropDown_OnClick(self)
+
+	AreEqual(4, SoundtrackUI.selectedCooldown, "selectedCooldown updated to 4")
+end
+
+function Tests:BattleCooldownDropDown_OnClick_SavesCooldownSetting()
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+
+	local self = { GetID = function() return 2 end }
+	Soundtrack.OptionsTab.BattleCooldownDropDown_OnClick(self)
+
+	AreEqual(1, SoundtrackAddon.db.profile.settings.BattleCooldown, "BattleCooldown saved as 1 second")
+end
+
+-- SilenceDropDown Tests
+
+function Tests:SilenceDropDown_OnLoad_SetsSelectedSilence()
+	SoundtrackAddon.db.profile.settings.Silence = 30
+
+	Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
+
+	AreEqual(5, SoundtrackUI.selectedSilence, "selectedSilence set to index 5 (30 seconds)")
+end
+
+function Tests:SilenceDropDown_OnLoad_DefaultsToOneWhenNoMatch()
+	SoundtrackAddon.db.profile.settings.Silence = 999
+
+	Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
+
+	AreEqual(1, SoundtrackUI.selectedSilence, "selectedSilence defaults to 1 when no match")
+end
+
+function Tests:SilenceDropDown_Initialize_AddsSilences()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedSilence = 1
+
+	Soundtrack.OptionsTab.SilenceDropDown_Initialize()
+
+	AreEqual(10, buttonsAdded, "10 silence buttons added")
+end
+
+function Tests:SilenceDropDown_LoadSilences_AddsButtons()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedSilence = 999
+
+	Soundtrack.OptionsTab.SilenceDropDown_LoadSilences({ "No silence", "5 seconds", "10 seconds" })
+
+	AreEqual(3, buttonsAdded, "3 silence buttons added")
+end
+
+function Tests:SilenceDropDown_LoadSilences_SetsTextForCurrentSilence()
+	local textSet = nil
+	Replace(_G, "UIDropDownMenu_SetText", function(_, text) textSet = text end)
+	Replace(_G, "UIDropDownMenu_AddButton", function() end)
+	SoundtrackUI.selectedSilence = 2
+
+	Soundtrack.OptionsTab.SilenceDropDown_LoadSilences({ "No silence", "5 seconds" })
+
+	AreEqual("5 seconds", textSet, "SetText called with current silence text")
+end
+
+function Tests:SilenceDropDown_OnClick_UpdatesSelectedSilence()
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+
+	local self = { GetID = function() return 3 end }
+	Soundtrack.OptionsTab.SilenceDropDown_OnClick(self)
+
+	AreEqual(3, SoundtrackUI.selectedSilence, "selectedSilence updated to 3")
+end
+
+function Tests:SilenceDropDown_OnClick_SavesSilenceSetting()
+	Replace(_G, "UIDropDownMenu_SetSelectedID", function() end)
+
+	local self = { GetID = function() return 2 end }
+	Soundtrack.OptionsTab.SilenceDropDown_OnClick(self)
+
+	AreEqual(5, SoundtrackAddon.db.profile.settings.Silence, "Silence saved as 5 seconds")
+end
+
+-- FadeTransitionDurationDropDown Tests
+
+function Tests:FadeTransitionDurationDropDown_OnLoad_SetsSelectedFadeDuration()
+	SoundtrackAddon.db.profile.settings.FadeTransitionDuration = 2
+
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnLoad()
+
+	AreEqual(3, SoundtrackUI.selectedFadeDuration, "selectedFadeDuration set to index 3 (2 seconds)")
+end
+
+function Tests:FadeTransitionDurationDropDown_OnLoad_DefaultsToThreeWhenNoMatch()
+	SoundtrackAddon.db.profile.settings.FadeTransitionDuration = 999
+
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnLoad()
+
+	AreEqual(3, SoundtrackUI.selectedFadeDuration, "selectedFadeDuration defaults to 3 when no match")
+end
+
+function Tests:FadeTransitionDurationDropDown_Initialize_AddsDurations()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedFadeDuration = 1
+
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_Initialize()
+
+	AreEqual(5, buttonsAdded, "5 fade duration buttons added")
+end
+
+function Tests:FadeTransitionDurationDropDown_LoadDurations_AddsButtons()
+	local buttonsAdded = 0
+	Replace(_G, "UIDropDownMenu_AddButton", function() buttonsAdded = buttonsAdded + 1 end)
+	SoundtrackUI.selectedFadeDuration = 999
+
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_LoadDurations({ "0.5 seconds", "1 second", "2 seconds" })
+
+	AreEqual(3, buttonsAdded, "3 fade duration buttons added")
+end
+
+function Tests:FadeTransitionDurationDropDown_LoadDurations_SetsTextForCurrentDuration()
+	local textSet = nil
+	Replace(_G, "UIDropDownMenu_SetText", function(_, text) textSet = text end)
+	Replace(_G, "UIDropDownMenu_AddButton", function() end)
+	SoundtrackUI.selectedFadeDuration = 2
+
+	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_LoadDurations({ "0.5 seconds", "1 second" })
+
+	AreEqual("1 second", textSet, "SetText called with current fade duration text")
+end

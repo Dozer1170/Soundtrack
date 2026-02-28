@@ -1,3 +1,7 @@
+6.2.0
+- Fade out experimental feature
+- Export profile feature
+
 6.1.1
 - Fix bug where zone track checkboxes could not be checked
 
