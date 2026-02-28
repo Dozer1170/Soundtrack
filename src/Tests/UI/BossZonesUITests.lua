@@ -85,3 +85,69 @@ function Tests:RemoveBossZone_PrefixMatchIsExact()
     IsTrue(eventTable["Instances"] == nil, "Selected zone removed")
     IsTrue(eventTable["InstancesExtra"] ~= nil, "Zone with similar name prefix preserved")
 end
+
+-- OnAddBossZoneButtonClick Tests
+
+function Tests:OnAddBossZoneButtonClick_WithZonePath_SetsSelectedEvent()
+    SetupUI()
+    Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function() end)
+    Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+        return { "Eastern Kingdoms/Karazhan", "Eastern Kingdoms" }
+    end)
+
+    SoundtrackUI.OnAddBossZoneButtonClick()
+
+    AreEqual("Eastern Kingdoms/Karazhan", SoundtrackUI.SelectedEvent, "SelectedEvent set to first zone path")
+end
+
+function Tests:OnAddBossZoneButtonClick_WithNoZonePath_SetsSelectedEventToRealZone()
+    SetupUI()
+    Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function() end)
+    Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+        return {}
+    end)
+    Replace(_G, "GetRealZoneText", function() return "Ironforge" end)
+
+    SoundtrackUI.OnAddBossZoneButtonClick()
+
+    AreEqual("Ironforge", SoundtrackUI.SelectedEvent, "SelectedEvent set to GetRealZoneText when no paths")
+end
+
+function Tests:OnAddBossZoneButtonClick_CallsUpdateEventsUI()
+    SetupUI()
+    local called = false
+    Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function() end)
+    Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function() return {} end)
+    Replace(SoundtrackUI, "UpdateEventsUI", function() called = true end)
+
+    SoundtrackUI.OnAddBossZoneButtonClick()
+
+    IsTrue(called, "UpdateEventsUI called after adding boss zone")
+end
+
+-- OnCollapseAllBossZoneButtonClick Tests
+
+function Tests:OnCollapseAllBossZoneButtonClick_SetsExpandedFalse()
+    SetupUI()
+    Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances", ST_BOSS_LVL, true)
+    Replace(Soundtrack, "OnEventTreeChanged", function() end)
+
+    SoundtrackUI.OnCollapseAllBossZoneButtonClick()
+
+    local eventTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+    IsTrue(eventTable["Instances"].expanded == false, "Boss zone event collapsed")
+end
+
+-- OnExpandAllBossZoneButtonClick Tests
+
+function Tests:OnExpandAllBossZoneButtonClick_SetsExpandedTrue()
+    SetupUI()
+    Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances", ST_BOSS_LVL, true)
+    SoundtrackAddon.db.profile.events[ST_BOSS_ZONES]["Instances"].expanded = false
+    Replace(Soundtrack, "OnEventTreeChanged", function() end)
+
+    SoundtrackUI.OnExpandAllBossZoneButtonClick()
+
+    local eventTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+    IsTrue(eventTable["Instances"].expanded == true, "Boss zone event expanded")
+end

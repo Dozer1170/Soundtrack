@@ -258,3 +258,99 @@ function Tests:RoundTrip_EmptyProfile_Succeeds()
 	local ok, msg, result = RoundTrip({ events = {}, settings = {} })
 	IsTrue(ok, "Empty profile import succeeds: " .. tostring(msg))
 end
+
+-- ---------------------------------------------------------------------------
+-- Decode escape-sequence handling
+-- ---------------------------------------------------------------------------
+
+function Tests:Decode_NewlineEscape_Preserved()
+	-- Craft a raw JSON-ish string that has \n escape inside a string value
+	local str = 'SOUNDTRACK_PROFILE_V1:{"events":{},"settings":{"x":"line1\\nline2"}}'
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Decode with \\n escape succeeds")
+	AreEqual("line1\nline2", data.settings.x, "\\n decoded as newline")
+end
+
+function Tests:Decode_TabEscape_Preserved()
+	local str = 'SOUNDTRACK_PROFILE_V1:{"events":{},"settings":{"x":"col1\\tcol2"}}'
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Decode with \\t escape succeeds")
+	AreEqual("col1\tcol2", data.settings.x, "\\t decoded as tab")
+end
+
+function Tests:Decode_UnknownEscape_PassesEscapedCharThrough()
+	-- 'a' is not a known escape so the branch returns 'a' itself
+	local str = 'SOUNDTRACK_PROFILE_V1:{"events":{},"settings":{"x":"\\a"}}'
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Decode with unknown escape succeeds")
+	AreEqual("a", data.settings.x, "Unknown escape passes the escaped char through")
+end
+
+-- ---------------------------------------------------------------------------
+-- Decode number variants
+-- ---------------------------------------------------------------------------
+
+function Tests:Decode_NegativeInteger_Preserved()
+	local str = 'SOUNDTRACK_PROFILE_V1:{"events":{},"settings":{"n":-42}}'
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Decode with negative integer succeeds")
+	AreEqual(-42, data.settings.n, "Negative integer decoded correctly")
+end
+
+function Tests:Decode_DecimalNumber_Preserved()
+	local str = 'SOUNDTRACK_PROFILE_V1:{"events":{},"settings":{"v":0.75}}'
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Decode with decimal number succeeds")
+	AreEqual(0.75, data.settings.v, "Decimal number decoded correctly")
+end
+
+-- ---------------------------------------------------------------------------
+-- Decode error paths
+-- ---------------------------------------------------------------------------
+
+function Tests:Decode_NonTablePayload_ReturnsFalse()
+	-- Payload decodes to a boolean, not a table
+	local str = 'SOUNDTRACK_PROFILE_V1:true'
+	local ok, msg = Soundtrack.ProfileSerializer.Decode(str)
+	IsFalse(ok, "Non-table payload returns false")
+	IsTrue(msg:find("Unexpected") ~= nil, "Error mentions unexpected data format")
+end
+
+function Tests:Decode_MalformedPayload_ReturnsFalse()
+	local str = 'SOUNDTRACK_PROFILE_V1:{"key":?}'
+	local ok, msg = Soundtrack.ProfileSerializer.Decode(str)
+	IsFalse(ok, "Malformed payload returns false")
+	IsTrue(msg ~= nil and #msg > 0, "Error message provided")
+end
+
+-- ---------------------------------------------------------------------------
+-- Import success message
+-- ---------------------------------------------------------------------------
+
+function Tests:Import_ValidString_ReturnsSuccessMessage()
+	local str = Soundtrack.ProfileSerializer.Export()
+	local ok, msg = Soundtrack.ProfileSerializer.Import(str)
+	IsTrue(ok, "Import succeeds")
+	IsTrue(msg:find("successfully") ~= nil, "Success message returned")
+end
+
+-- ---------------------------------------------------------------------------
+-- Encode: non-sequence table (mixed integer + string keys)
+-- The encoder falls back to object mode (only string keys emitted)
+-- ---------------------------------------------------------------------------
+
+function Tests:Encode_MixedKeyTable_EncodesStringKeysAsObject()
+	-- Build a profile containing a settings field whose value is a mixed-key table.
+	-- The Encode function detects isSeq = false and emits an object.
+	local saved = SoundtrackAddon.db.profile
+	local mixedTable = { "first", "second", extraKey = "extra" }  -- n=2 but has string key
+	SoundtrackAddon.db.profile = {
+		events   = {},
+		settings = { data = mixedTable },
+	}
+	local str = Soundtrack.ProfileSerializer.Export()
+	SoundtrackAddon.db.profile = saved
+
+	-- The string should contain the object-encoded version (only "extraKey")
+	IsTrue(str:find('"extraKey"') ~= nil, "Mixed-key table encoded as object with string keys")
+end

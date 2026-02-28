@@ -116,3 +116,132 @@ function Tests:AddPlaylist_WithEmptyName_IncrementsIndexIfNameExists()
 	local eventTable = Soundtrack.Events.GetTable(ST_PLAYLISTS)
 	IsTrue(eventTable["New Event 2"] ~= nil, "Incremented to 'New Event 2' when 'New Event 1' exists")
 end
+
+-- EditBoxOnEnterPressed / EscapePressed handler Tests
+
+local function GetDialog()
+	Replace(_G, "StaticPopup_Show", function() end)
+	SoundtrackUI.OnAddPlaylistButtonClick()
+	return StaticPopupDialogs["SOUNDTRACK_ADD_PLAYLIST_POPUP"]
+end
+
+function Tests:EditBoxOnEnterPressed_AddsPlaylist()
+	SetupUI()
+	if Soundtrack.SortEvents == nil then
+		Soundtrack.SortEvents = function() end
+	end
+
+	local dialog = GetDialog()
+
+	-- Simulate the EditBox: GetName() returns "mockEditBox", _G["mockEditBox"] holds itself
+	local mockEditBox = {
+		GetName = function() return "mockEditBox" end,
+		GetParent = function()
+			return { Hide = function() end }
+		end,
+	}
+	mockEditBox.GetText = function() return "Pressed Playlist" end
+	_G["mockEditBox"] = mockEditBox
+
+	dialog.EditBoxOnEnterPressed(mockEditBox)
+
+	local eventTable = Soundtrack.Events.GetTable(ST_PLAYLISTS)
+	IsTrue(eventTable["Pressed Playlist"] ~= nil, "Playlist added via EditBoxOnEnterPressed")
+end
+
+function Tests:EditBoxOnEnterPressed_HidesParent()
+	SetupUI()
+	if Soundtrack.SortEvents == nil then
+		Soundtrack.SortEvents = function() end
+	end
+
+	local dialog = GetDialog()
+	local hidden = false
+	local mockEditBox = {
+		GetName = function() return "mockEditBox2" end,
+		GetText = function() return "Another Playlist" end,
+		GetParent = function()
+			return { Hide = function() hidden = true end }
+		end,
+	}
+	_G["mockEditBox2"] = mockEditBox
+
+	dialog.EditBoxOnEnterPressed(mockEditBox)
+
+	IsTrue(hidden, "Parent hidden after EditBoxOnEnterPressed")
+end
+
+function Tests:EditBoxOnEscapePressed_HidesParent()
+	local dialog = GetDialog()
+	local hidden = false
+	local mockEditBox = {
+		GetParent = function()
+			return { Hide = function() hidden = true end }
+		end,
+	}
+
+	dialog.EditBoxOnEscapePressed(mockEditBox)
+
+	IsTrue(hidden, "Parent hidden after EditBoxOnEscapePressed")
+end
+
+function Tests:OnShow_SetsFocusAndClearsText()
+	local dialog = GetDialog()
+	local focusSet = false
+	local textCleared = false
+
+	local mockDialog = {
+		GetName = function() return "mockPopupDialog" end,
+	}
+	_G["mockPopupDialogEditBox"] = {
+		SetFocus = function() focusSet = true end,
+		SetText  = function(_, t) textCleared = (t == "") end,
+	}
+
+	dialog.OnShow(mockDialog)
+
+	IsTrue(focusSet,   "SetFocus called on edit box in OnShow")
+	IsTrue(textCleared, "SetText('') called on edit box in OnShow")
+end
+
+-- PlaylistMenuInitialize Tests
+
+function Tests:PlaylistMenuInitialize_AddsButtonForEachPlaylist()
+	SetupUI()
+	Soundtrack.AddEvent(ST_PLAYLISTS, "Jazz", ST_PLAYLIST_LVL, true)
+	Soundtrack.AddEvent(ST_PLAYLISTS, "Rock", ST_PLAYLIST_LVL, true)
+
+	local addedInfos = {}
+	Replace(_G, "UIDropDownMenu_AddButton", function(info)
+		table.insert(addedInfos, info)
+	end)
+
+	SoundtrackUI.PlaylistMenuInitialize()
+
+	AreEqual(2, #addedInfos, "Two menu items added for two playlists")
+end
+
+function Tests:PlaylistMenuInitialize_ButtonFuncPlaysPlaylist()
+	SetupUI()
+	Soundtrack.AddEvent(ST_PLAYLISTS, "OnlyPlaylist", ST_PLAYLIST_LVL, true)
+
+	local capturedTable, capturedEvent
+	Replace(Soundtrack, "PlayEvent", function(tbl, evt)
+		capturedTable = tbl
+		capturedEvent = evt
+	end)
+
+	local capturedInfo
+	Replace(_G, "UIDropDownMenu_AddButton", function(info)
+		capturedInfo = info
+	end)
+
+	SoundtrackUI.PlaylistMenuInitialize()
+
+	-- Call the menu item's func with an ID of 1
+	local mockSelf = { GetID = function() return 1 end }
+	capturedInfo.func(mockSelf)
+
+	AreEqual(ST_PLAYLISTS, capturedTable, "PlayEvent called with ST_PLAYLISTS")
+	AreEqual("OnlyPlaylist", capturedEvent, "PlayEvent called with the playlist name")
+end

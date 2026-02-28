@@ -156,3 +156,106 @@ function Tests:OnInfoButtonLeave_SetsAlphaToPartial()
 
 	AreEqual(0.6, alpha, "Alpha set to 0.6 on leave")
 end
+
+-- Play button Enter/Leave Tests (currently uncovered)
+
+function Tests:OnPlayButtonEnter_SetsAlphaToFull()
+	local alpha = nil
+	_G["SoundtrackControlFrame_PlayButton"].SetAlpha = function(_, a) alpha = a end
+	Replace(Soundtrack, "ShowTip", function() end)
+
+	SoundtrackUI.ControlFrame.OnPlayButtonEnter(SoundtrackControlFrame_PlayButton)
+
+	AreEqual(1.0, alpha, "Alpha set to 1.0 on enter")
+end
+
+function Tests:OnPlayButtonLeave_SetsAlphaToPartial()
+	local alpha = nil
+	_G["SoundtrackControlFrame_PlayButton"].SetAlpha = function(_, a) alpha = a end
+	Replace(Soundtrack, "HideTip", function() end)
+
+	SoundtrackUI.ControlFrame.OnPlayButtonLeave()
+
+	AreEqual(0.6, alpha, "Alpha set to 0.6 on leave")
+end
+
+-- Previous button Enter/Leave Tests (currently uncovered)
+
+function Tests:OnPreviousButtonEnter_SetsAlphaToFull()
+	local alpha = nil
+	_G["SoundtrackControlFrame_PreviousButton"].SetAlpha = function(_, a) alpha = a end
+	Replace(Soundtrack, "ShowTip", function() end)
+
+	SoundtrackUI.ControlFrame.OnPreviousButtonEnter(SoundtrackControlFrame_PreviousButton)
+
+	AreEqual(1.0, alpha, "Alpha set to 1.0 on enter")
+end
+
+function Tests:OnPreviousButtonLeave_SetsAlphaToPartial()
+	local alpha = nil
+	_G["SoundtrackControlFrame_PreviousButton"].SetAlpha = function(_, a) alpha = a end
+	Replace(Soundtrack, "HideTip", function() end)
+
+	SoundtrackUI.ControlFrame.OnPreviousButtonLeave()
+
+	AreEqual(0.6, alpha, "Alpha set to 0.6 on leave")
+end
+
+-- TrueStop button Leave Test (currently uncovered)
+
+function Tests:OnTrueStopButtonLeave_SetsAlphaToPartial()
+	local alpha = nil
+	_G["SoundtrackControlFrame_TrueStopButton"].SetAlpha = function(_, a) alpha = a end
+	Replace(Soundtrack, "HideTip", function() end)
+
+	SoundtrackUI.ControlFrame.OnTrueStopButtonLeave()
+
+	AreEqual(0.6, alpha, "Alpha set to 0.6 on leave")
+end
+
+-- OnInfoButtonEnter Tests (currently uncovered branches)
+
+function Tests:OnInfoButtonEnter_WithValidTrack_CallsShowTipWithTrackInfo()
+	local capturedTitle, capturedArtist, capturedAlbum
+	Replace(Soundtrack, "ShowTip", function(_, title, _, artist, album)
+		capturedTitle = title
+		capturedArtist = artist
+		capturedAlbum = album
+	end)
+
+	Soundtrack.Library.CurrentlyPlayingTrack = "Sound/Music/TestInfo.mp3"
+	Soundtrack_Tracks["Sound/Music/TestInfo.mp3"] = {
+		title = "Info Track",
+		artist = "Info Artist",
+		album = "Info Album",
+	}
+
+	SoundtrackUI.ControlFrame.OnInfoButtonEnter(SoundtrackControlFrame_InfoButton)
+
+	AreEqual("Info Track", capturedTitle, "Title passed to ShowTip")
+	AreEqual("Info Artist", capturedArtist, "Artist passed to ShowTip")
+	AreEqual("Info Album", capturedAlbum, "Album passed to ShowTip")
+end
+
+function Tests:OnInfoButtonEnter_WithNoTrack_CallsShowTipWithGenericInfo()
+	local capturedTitle
+	Replace(Soundtrack, "ShowTip", function(_, title)
+		capturedTitle = title
+	end)
+	Soundtrack.Library.CurrentlyPlayingTrack = nil
+
+	SoundtrackUI.ControlFrame.OnInfoButtonEnter(SoundtrackControlFrame_InfoButton)
+
+	AreEqual(SOUNDTRACK_INFO, capturedTitle, "Generic info tip shown when no track playing")
+end
+
+function Tests:OnInfoButtonEnter_SetsAlphaToFull()
+	local alpha = nil
+	_G["SoundtrackControlFrame_InfoButton"].SetAlpha = function(_, a) alpha = a end
+	Replace(Soundtrack, "ShowTip", function() end)
+	Soundtrack.Library.CurrentlyPlayingTrack = nil
+
+	SoundtrackUI.ControlFrame.OnInfoButtonEnter(SoundtrackControlFrame_InfoButton)
+
+	AreEqual(1.0, alpha, "Alpha set to 1.0 on enter")
+end

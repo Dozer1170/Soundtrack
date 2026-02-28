@@ -797,6 +797,7 @@ local testFiles = {
   "MiscEvents/MountEventsTests.lua",
   "PetBattle/PetBattleEventsTests.lua",
   "Utils/SortingTests.lua",
+  "Utils/TabUtilsTests.lua",
   "Utils/ProfileSerializerTests.lua",
   "Library/FadeTransitionTests.lua",
   "SoundtrackTests.lua",

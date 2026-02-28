@@ -85,3 +85,107 @@ function Tests:RemoveZone_PrefixMatchIsExact()
 	IsTrue(eventTable["Eastern Kingdoms"] == nil, "Selected zone removed")
 	IsTrue(eventTable["Eastern KingdomsExtra"] ~= nil, "Zone with similar name prefix preserved")
 end
+
+-- OnAddZoneButtonClick Tests
+
+function Tests:OnAddZoneButtonClick_WhenBossZones_DelegatesToBossZone()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
+	local called = false
+	Replace(SoundtrackUI, "OnAddBossZoneButtonClick", function() called = true end)
+
+	SoundtrackUI.OnAddZoneButtonClick()
+
+	IsTrue(called, "Delegated to OnAddBossZoneButtonClick")
+end
+
+function Tests:OnAddZoneButtonClick_WithZonePath_SetsSelectedEvent()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_ZONE
+	Replace(_G, "Soundtrack_ZoneEvents_AddZones", function() end)
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return { "Eastern Kingdoms/Elwynn Forest", "Eastern Kingdoms" }
+	end)
+
+	SoundtrackUI.OnAddZoneButtonClick()
+
+	AreEqual("Eastern Kingdoms/Elwynn Forest", SoundtrackUI.SelectedEvent, "SelectedEvent set to first zone path")
+end
+
+function Tests:OnAddZoneButtonClick_WithNoZonePath_SetsSelectedEventToRealZone()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_ZONE
+	Replace(_G, "Soundtrack_ZoneEvents_AddZones", function() end)
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return {}
+	end)
+	Replace(_G, "GetRealZoneText", function() return "Stormwind City" end)
+
+	SoundtrackUI.OnAddZoneButtonClick()
+
+	AreEqual("Stormwind City", SoundtrackUI.SelectedEvent, "SelectedEvent set to GetRealZoneText when no paths")
+end
+
+function Tests:OnAddZoneButtonClick_CallsUpdateEventsUI()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_ZONE
+	local called = false
+	Replace(_G, "Soundtrack_ZoneEvents_AddZones", function() end)
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function() return {} end)
+	Replace(SoundtrackUI, "UpdateEventsUI", function() called = true end)
+
+	SoundtrackUI.OnAddZoneButtonClick()
+
+	IsTrue(called, "UpdateEventsUI called after adding zone")
+end
+
+-- OnCollapseAllZoneButtonClick Tests
+
+function Tests:OnCollapseAllZoneButtonClick_WhenBossZones_Delegates()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
+	local called = false
+	Replace(SoundtrackUI, "OnCollapseAllBossZoneButtonClick", function() called = true end)
+
+	SoundtrackUI.OnCollapseAllZoneButtonClick()
+
+	IsTrue(called, "Delegated to OnCollapseAllBossZoneButtonClick")
+end
+
+function Tests:OnCollapseAllZoneButtonClick_SetsExpandedFalse()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_ZONE
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	Replace(Soundtrack, "OnEventTreeChanged", function() end)
+
+	SoundtrackUI.OnCollapseAllZoneButtonClick()
+
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	IsTrue(eventTable["Eastern Kingdoms"].expanded == false, "Zone event collapsed")
+end
+
+-- OnExpandAllZoneButtonClick Tests
+
+function Tests:OnExpandAllZoneButtonClick_WhenBossZones_Delegates()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
+	local called = false
+	Replace(SoundtrackUI, "OnExpandAllBossZoneButtonClick", function() called = true end)
+
+	SoundtrackUI.OnExpandAllZoneButtonClick()
+
+	IsTrue(called, "Delegated to OnExpandAllBossZoneButtonClick")
+end
+
+function Tests:OnExpandAllZoneButtonClick_SetsExpandedTrue()
+	SetupUI()
+	SoundtrackUI.SelectedEventsTable = ST_ZONE
+	Soundtrack.AddEvent(ST_ZONE, "Eastern Kingdoms", ST_CONTINENT_LVL, true)
+	SoundtrackAddon.db.profile.events[ST_ZONE]["Eastern Kingdoms"].expanded = false
+	Replace(Soundtrack, "OnEventTreeChanged", function() end)
+
+	SoundtrackUI.OnExpandAllZoneButtonClick()
+
+	local eventTable = Soundtrack.Events.GetTable(ST_ZONE)
+	IsTrue(eventTable["Eastern Kingdoms"].expanded == true, "Zone event expanded")
+end

@@ -1,26 +1,142 @@
 #!/usr/bin/env python3
 """
-coverage.py — generate an HTML coverage report from coverage/lcov.info.
+coverage.py — run all coverage tasks for the Soundtrack project.
 
-The lcov.info file is produced by test.py. This script normalises the SF:
-path entries to absolute POSIX paths (needed when genhtml runs on Windows),
-then invokes genhtml. On Windows it also searches common Strawberry Perl /
-Chocolatey locations if genhtml is not on PATH.
+Steps:
+  1. Locate luarocks and inject its bin/path/cpath into the environment.
+  2. Ensure luacov-reporter-lcov is installed.
+  3. Run luacov -c .luacov -r lcov  →  coverage/lcov.info  (if stats exist).
+  4. Normalise SF: paths in lcov.info for genhtml compatibility.
+  5. Run genhtml  →  coverage/html/
+
+Can be run standalone after tests have produced luacov.stats.out, or is
+called automatically by test.py at the end of a test run.
 
 Usage (from project root):
     python3 scripts/coverage.py
 """
 
-import re
+from __future__ import annotations
+
+import os
 import shutil
 import subprocess
 import sys
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 ROOT          = Path(__file__).parent.parent
-LCOV_INFO     = ROOT / "coverage" / "lcov.info"
-LCOV_NORM     = ROOT / "coverage" / "lcov.norm.info"
-HTML_DIR      = ROOT / "coverage" / "html"
+STATS_FILE    = ROOT / "luacov.stats.out"
+LUACOV_CFG    = ROOT / ".luacov"
+COVERAGE_DIR  = ROOT / "coverage"
+LCOV_INFO     = COVERAGE_DIR / "lcov.info"
+LCOV_NORM     = COVERAGE_DIR / "lcov.norm.info"
+HTML_DIR      = COVERAGE_DIR / "html"
+
+# ---------------------------------------------------------------------------
+# LuaRocks environment
+# ---------------------------------------------------------------------------
+
+def _run(cmd: list, **kwargs) -> subprocess.CompletedProcess:
+    """Run a command and return its CompletedProcess."""
+    return subprocess.run(cmd, **kwargs)
+
+
+def find_luarocks() -> str:
+    """Return the path to the luarocks executable, or raise."""
+    lr = shutil.which("luarocks")
+    if lr:
+        return lr
+    raise RuntimeError(
+        "luarocks was not found on PATH. "
+        "Install LuaRocks or add it to PATH to enable coverage reporting."
+    )
+
+
+def setup_luarocks_env(luarocks: str) -> dict:
+    """
+    Query luarocks for its lr-bin / lr-path / lr-cpath and merge them into
+    a copy of the current environment dict, which is then returned.
+    """
+    env = os.environ.copy()
+
+    def query(flag: str) -> str:
+        result = _run([luarocks, "path", flag], capture_output=True, text=True)
+        return result.stdout.strip().splitlines()[-1].strip() if result.stdout.strip() else ""
+
+    bin_path  = query("--lr-bin")
+    lua_path  = query("--lr-path")
+    lua_cpath = query("--lr-cpath")
+
+    if bin_path:
+        sep = ";" if sys.platform == "win32" else ":"
+        existing = env.get("PATH", "")
+        if bin_path not in existing.split(sep):
+            env["PATH"] = bin_path + sep + existing
+
+    if lua_path:
+        sep = ";"
+        existing = env.get("LUA_PATH", "")
+        env["LUA_PATH"] = (lua_path + sep + existing) if existing else lua_path
+
+    if lua_cpath:
+        sep = ";"
+        existing = env.get("LUA_CPATH", "")
+        env["LUA_CPATH"] = (lua_cpath + sep + existing) if existing else lua_cpath
+
+    return env
+
+
+# ---------------------------------------------------------------------------
+# luacov helpers
+# ---------------------------------------------------------------------------
+
+def find_luacov(luarocks_bin: str) -> list:
+    """
+    Return a command list for invoking luacov.
+    On most platforms it's just ['luacov']. On Windows it may be a .lua
+    script that needs to be driven with lua.
+    """
+    luacov = shutil.which("luacov")
+    if luacov:
+        ext = Path(luacov).suffix.lower()
+        if ext in ("", ".exe", ".bat", ".cmd"):
+            return [luacov]
+        return ["lua", luacov]
+
+    for name in ("luacov.bat", "luacov.cmd", "luacov.exe", "luacov.lua", "luacov"):
+        candidate = Path(luarocks_bin) / name
+        if candidate.exists():
+            if candidate.suffix.lower() in ("", ".exe", ".bat", ".cmd"):
+                return [str(candidate)]
+            return ["lua", str(candidate)]
+
+    raise RuntimeError(
+        "luacov was not found. "
+        "Install it with: luarocks install luacov"
+    )
+
+
+def ensure_lcov_reporter(luarocks: str, env: dict) -> None:
+    """Install luacov-reporter-lcov via luarocks if it isn't available."""
+    check = _run(
+        ["lua", "-e", "require('luacov.reporter.lcov')"],
+        capture_output=True, env=env
+    )
+    if check.returncode == 0:
+        return
+
+    print("luacov-reporter-lcov not found — installing via luarocks...")
+    result = _run([luarocks, "install", "luacov-reporter-lcov"], env=env)
+    if result.returncode != 0:
+        sys.exit("ERROR: Failed to install luacov-reporter-lcov.")
+
+    verify = _run(
+        ["lua", "-e", "require('luacov.reporter.lcov')"],
+        capture_output=True, env=env
+    )
+    if verify.returncode != 0:
+        sys.exit("ERROR: luacov-reporter-lcov still unavailable after installation.")
+
 
 # ---------------------------------------------------------------------------
 # Path normalisation
@@ -123,15 +239,32 @@ def run_genhtml(lcov_file: Path, output_dir: Path) -> int:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    if not LCOV_INFO.exists():
+    # 1. Set up luarocks environment
+    luarocks = find_luarocks()
+    env = setup_luarocks_env(luarocks)
+    luarocks_bin = env.get("PATH", "").split(";" if sys.platform == "win32" else ":")[0]
+
+    COVERAGE_DIR.mkdir(exist_ok=True)
+
+    # 2. Run luacov to produce lcov.info (only if fresh stats are available)
+    if STATS_FILE.exists():
+        ensure_lcov_reporter(luarocks, env)
+        luacov_cmd = find_luacov(luarocks_bin)
+        print("Running luacov to generate lcov.info...")
+        result = _run(luacov_cmd + ["-c", str(LUACOV_CFG), "-r", "lcov"], env=env, cwd=ROOT)
+        if result.returncode != 0:
+            sys.exit(result.returncode)
+    elif not LCOV_INFO.exists():
         sys.exit(
-            f"ERROR: {LCOV_INFO.relative_to(ROOT)} not found. "
+            f"ERROR: Neither {STATS_FILE.name} nor {LCOV_INFO.relative_to(ROOT)} found. "
             "Run 'python3 scripts/test.py' first."
         )
 
+    # 3. Normalise SF: paths for genhtml
     print("Normalising lcov paths...")
     normalise_lcov(LCOV_INFO, LCOV_NORM)
 
+    # 4. Generate HTML report
     print(f"Generating HTML report → {HTML_DIR.relative_to(ROOT)}/")
     rc = run_genhtml(LCOV_NORM, HTML_DIR)
     sys.exit(rc)
