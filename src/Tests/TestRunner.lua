@@ -806,6 +806,18 @@ local testFiles = {
   "UI/EventsUITests.lua",
   "UI/BossZonesUITests.lua",
   "UI/ZonesUITests.lua",
+  "UI/ControlFrameUITests.lua",
+  "UI/EventStackUITests.lua",
+  "UI/PetBattlesUITests.lua",
+  "UI/PlaylistsUITests.lua",
+  "UI/TracksUITests.lua",
+  "UI/TooltipUITests.lua",
+  "UI/NowPlayingFrameUITests.lua",
+  "UI/PlaybackControlsUITests.lua",
+  "UI/MinimapUITests.lua",
+  "UI/OptionsTabUITests.lua",
+  "UI/ProfilesTabUITests.lua",
+  "UI/MovingTitleUITests.lua",
   "Zones/ZoneEventsTests.lua",
 }
 
