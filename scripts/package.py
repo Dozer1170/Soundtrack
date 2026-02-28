@@ -13,6 +13,7 @@ Options:
                               macOS   → /Applications/World of Warcraft
                               Windows → C:\\World of Warcraft
                               Linux   → /mnt/c/World of Warcraft
+    --skip-tests            Skip running the unit test suite.
     --skip-localization     Skip the localization consistency check.
 """
 
@@ -34,6 +35,7 @@ SOUNDTRACK_SRC = SRC / "Soundtrack"
 TOC_FILE = SOUNDTRACK_SRC / "Soundtrack-Mainline.toc"
 LOCALIZATION_DIR = SOUNDTRACK_SRC / "Core" / "Localization"
 REFERENCE_LOCALE = LOCALIZATION_DIR / "Localization.en.lua"
+TEST_SCRIPT      = ROOT / "scripts" / "test.py"
 
 FLAVOR_FOLDERS = {
     "retail":      "_retail_",
@@ -59,6 +61,16 @@ EXCLUDE_PATTERNS = [
     re.compile(r"\.gitignore$"),
     re.compile(r"\.gitattributes$"),
 ]
+
+# ---------------------------------------------------------------------------
+# Test runner
+# ---------------------------------------------------------------------------
+
+def run_tests() -> bool:
+    """Run scripts/test.py. Returns True if all tests pass."""
+    result = subprocess.run([sys.executable, str(TEST_SCRIPT)], cwd=ROOT)
+    return result.returncode == 0
+
 
 # ---------------------------------------------------------------------------
 # Localization check (mirrors scripts/checkLocalization)
@@ -187,9 +199,18 @@ def main() -> None:
                         help="WoW flavor to install into (default: retail).")
     parser.add_argument("--wow-path", default=None,
                         help="Path to the WoW root directory (auto-detected if omitted).")
+    parser.add_argument("--skip-tests", action="store_true",
+                        help="Skip running the unit test suite.")
     parser.add_argument("--skip-localization", action="store_true",
                         help="Skip the localization consistency check.")
     args = parser.parse_args()
+
+    # --- Unit tests ---
+    if not args.skip_tests:
+        print("Running unit tests...\n")
+        if not run_tests():
+            sys.exit("\nPackaging aborted: unit tests failed.")
+        print()
 
     # --- Localization check ---
     if not args.skip_localization:

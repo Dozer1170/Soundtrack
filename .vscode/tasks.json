@@ -74,28 +74,14 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "dedicated",
-                "clear": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Test and Install (Retail)",
-            "dependsOn": [
-                "Run Unit Tests",
-                "Package and Install (Retail)"
-            ],
-            "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "presentation": {
                 "reveal": "always",
-                "panel": "dedicated"
+                "panel": "dedicated",
+                "clear": true
             },
             "problemMatcher": []
         },
