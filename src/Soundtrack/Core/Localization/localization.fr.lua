@@ -3,8 +3,6 @@
 --------------------------------------------------
 
 local function RegisterGeneralStrings()
-	LOCALIZATION_LOADED = true
-
 	SOUNDTRACK_DANCE_EMOTES = {}
 
 	SOUNDTRACK_TITLE = "Soundtrack"
@@ -81,17 +79,6 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_REMOVE_BATTLE = "Supprimer l'evenement de bataille"
 	SOUNDTRACK_REMOVE_BATTLE_TIP = "Supprime l'evenement selectionne de bataille."
-
-	-- Bosses Tab
-	SOUNDTRACK_ADD_TARGET_PARTY_BUTTON = "Ajouter Party"
-	SOUNDTRACK_ADD_TARGET_RAID_BUTTON = "Ajouter Raid"
-	SOUNDTRACK_ADD_TARGET_PARTY = "Ajouter la cible en Party Boss"
-	SOUNDTRACK_ADD_TARGET_RAID = "Ajouter la cible en Raid Boss"
-	SOUNDTRACK_ADD_TARGET_TIP = "Ajoute la cible a la liste, ou entrez le nom d'un PNJ pour l'ajouter a la liste."
-	SOUNDTRACK_ADD_BOSS_TIP = "Ajouter nom du mob:"
-
-	SOUNDTRACK_REMOVE_TARGET = "Supprimer cible"
-	SOUNDTRACK_REMOVE_TARGET_TIP = "Supprime le mob cible sur la liste."
 
 	-- Zones Tab
 	SOUNDTRACK_ADD_ZONE = "Ajouter le Lieu"
@@ -341,7 +328,7 @@ local function RegisterGeneralStrings()
 
 local function LoadFrench()
 	if GetLocale() == "frFR" then
-		LOCALIZATION_LOADED = true
+		SoundtrackLocalization.LOCALIZATION_LOADED = true
 
 		RegisterGeneralStrings()
 		SoundtrackLocalization.RegisterDruidStrings("Druide", "Changer Forme")

@@ -4,23 +4,18 @@
         {
             "label": "Run Unit Tests",
             "type": "shell",
-            "command": "/bin/bash",
+            "command": "python3",
             "args": [
-                "-c",
-                "rm -f luacov.stats.out && SOUNDTRACK_COVERAGE=1 lua src/Tests/TestRunner.lua && luacov -c .luacov -r lcov"
+                "scripts/test.py"
             ],
+            "windows": {
+                "command": "python",
+                "args": [
+                    "scripts/test.py"
+                ]
+            },
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
-            "windows": {
-                "command": "powershell.exe",
-                "args": [
-                    "-NoProfile",
-                    "-ExecutionPolicy",
-                    "Bypass",
-                    "-File",
-                    ".\\scripts\\powershell\\runUnitTests.ps1"
-                ]
             },
             "group": {
                 "kind": "test",
@@ -36,24 +31,18 @@
         {
             "label": "Generate HTML Coverage Report",
             "type": "shell",
-            "command": "genhtml",
+            "command": "python3",
             "args": [
-                "coverage/lcov.info",
-                "-o",
-                "coverage/html"
+                "scripts/coverage.py"
             ],
+            "windows": {
+                "command": "python",
+                "args": [
+                    "scripts/coverage.py"
+                ]
+            },
             "options": {
                 "cwd": "${workspaceFolder}"
-            },
-            "windows": {
-                "command": "powershell.exe",
-                "args": [
-                    "-NoProfile",
-                    "-ExecutionPolicy",
-                    "Bypass",
-                    "-File",
-                    ".\\scripts\\powershell\\generateCoverageReport.ps1"
-                ]
             },
             "group": "build",
             "presentation": {
@@ -66,7 +55,25 @@
         {
             "label": "Package and Install (Retail)",
             "type": "shell",
-            "command": ".\\scripts\\powershell\\packageAndInstallRetail.ps1",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "retail"
+            ],
+            "windows": {
+                "command": "python",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "retail"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -95,7 +102,25 @@
         {
             "label": "Package and Install (Classic)",
             "type": "shell",
-            "command": ".\\scripts\\powershell\\packageAndInstallClassic.ps1",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "classic"
+            ],
+            "windows": {
+                "command": "python",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "classic"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -107,7 +132,25 @@
         {
             "label": "Package and Install (Classic Era)",
             "type": "shell",
-            "command": ".\\scripts\\powershell\\packageAndInstallClassicEra.ps1",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "classic-era"
+            ],
+            "windows": {
+                "command": "python",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "classic-era"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -119,7 +162,19 @@
         {
             "label": "Package Only",
             "type": "shell",
-            "command": ".\\scripts\\powershell\\package.ps1",
+            "command": "python3",
+            "args": [
+                "scripts/package.py"
+            ],
+            "windows": {
+                "command": "python",
+                "args": [
+                    "scripts/package.py"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",

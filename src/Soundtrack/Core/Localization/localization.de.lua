@@ -2,8 +2,6 @@
 -- localization.de.lua (German)
 --------------------------------------------------
 local function RegisterGeneralStrings()
-	LOCALIZATION_LOADED = true
-
 	SOUNDTRACK_DANCE_EMOTES = {
 		" fangt spontan zu tanzen an.",
 		" tanzt mit ",
@@ -84,18 +82,6 @@ local function RegisterGeneralStrings()
 
 	SOUNDTRACK_REMOVE_BATTLE = "Remove Battle Event"
 	SOUNDTRACK_REMOVE_BATTLE_TIP = "Removes the selected battle event."
-
-	-- Bosses Tab
-	SOUNDTRACK_ADD_TARGET_PARTY_BUTTON = "Add Party"
-	SOUNDTRACK_ADD_TARGET_RAID_BUTTON = "Add Raid"
-	SOUNDTRACK_ADD_TARGET_PARTY = "Add Target as Party Boss"
-	SOUNDTRACK_ADD_TARGET_RAID = "Add Target as Raid Boss"
-	SOUNDTRACK_ADD_TARGET_TIP =
-		"Add the currently targeted mob to the list, or enter the name of a mob to add to the list."
-	SOUNDTRACK_ADD_BOSS_TIP = "Add named mob:"
-
-	SOUNDTRACK_REMOVE_TARGET = "Remove Target"
-	SOUNDTRACK_REMOVE_TARGET_TIP = "Removes the selected mob from the list."
 
 	-- Zones Tab
 	SOUNDTRACK_ADD_ZONE = "Add Zone"
