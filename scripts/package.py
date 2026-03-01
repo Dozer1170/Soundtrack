@@ -35,7 +35,7 @@ FLAVOR_FOLDERS = {
     "retail":      "_retail_",
     "classic":     "_classic_",
     "classic-era": "_classic_era_",
-    "anniversary": "_classic_era_anniversary_",
+    "anniversary": "_anniversary_",
 }
 
 DEFAULT_WOW_PATH = {

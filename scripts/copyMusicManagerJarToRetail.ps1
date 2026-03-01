@@ -1,1 +1,0 @@
-cp C:\Git\Soundtrack\src\SoundtrackMusic\LegacyLibraryGeneration\MusicManager.jar "C:\World of Warcraft\_retail_\Interface\Addons\SoundtrackMusic\LegacyLibraryGeneration\"

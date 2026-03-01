@@ -9,3 +9,5 @@ MyTracks.lua
 *.xxd
 .DS_Store
 *.pyc
+coverage/
+luacov.stats.out

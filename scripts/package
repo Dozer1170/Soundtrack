@@ -1,8 +1,0 @@
-#!/bin/bash
-
-OUT_FILE=$1
-
-rm $OUT_FILE
-cd src
-zip -r ../$OUT_FILE Soundtrack -x "*.iml" -x "*.hexdumptmp*" -x "*MyTracks.lua*" -x "*.pyc*" -x "*LegacyLibraryGeneration/META-INF/*" -x "*LegacyLibraryGeneration/src/*" -x "*.DS_Store"
-cd ..
