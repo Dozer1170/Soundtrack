@@ -18,8 +18,6 @@ local function SetupProfileDb(profiles, currentProfile)
 	local copiedFrom = nil
 	local deletedProfile = nil
 	local loadedProfile = nil
-	local resetCalled = false
-
 	SoundtrackAddon.db.GetProfiles = function(self) return profiles end
 	SoundtrackAddon.db.GetCurrentProfile = function(self) return currentProfile end
 	SoundtrackAddon.db.SetProfile = function(self, name)
@@ -28,13 +26,10 @@ local function SetupProfileDb(profiles, currentProfile)
 	end
 	SoundtrackAddon.db.CopyProfile = function(self, name) copiedFrom = name end
 	SoundtrackAddon.db.DeleteProfile = function(self, name) deletedProfile = name end
-	SoundtrackAddon.db.ResetProfile = function(self) resetCalled = true end
-
 	-- Expose for test assertions
 	SoundtrackAddon.db._copiedFrom = function() return copiedFrom end
 	SoundtrackAddon.db._deletedProfile = function() return deletedProfile end
 	SoundtrackAddon.db._loadedProfile = function() return loadedProfile end
-	SoundtrackAddon.db._resetCalled = function() return resetCalled end
 end
 
 local function MockReloadProfile()
@@ -521,51 +516,6 @@ function Tests:DeleteSelectedProfile_DoesNothingForActiveProfile()
 	Soundtrack.ProfilesTab.DeleteSelectedProfile()
 
 	AreEqual(nil, shown, "No dialog shown when attempting to delete the active profile")
-end
-
--- ─────────────────────────────────────────────────────────────
--- ResetSelectedProfile
--- ─────────────────────────────────────────────────────────────
-
-function Tests:ResetSelectedProfile_ShowsConfirmDialog()
-	SetupChat()
-	SetupProfileDb({ "Default", "Raid" }, "Default")
-	MockRenderFunctions()
-	local shown = nil
-	Replace(_G, "StaticPopup_Show", function(key) shown = key end)
-
-	Soundtrack.ProfilesTab.SelectProfile("Default")
-	Soundtrack.ProfilesTab.ResetSelectedProfile()
-
-	AreEqual("PROFILES_RESET_CONFIRM", shown, "Reset confirm dialog shown")
-end
-
-function Tests:ResetSelectedProfile_ResetsActiveProfileOnAccept()
-	SetupChat()
-	SetupProfileDb({ "Default" }, "Default")
-	MockRenderFunctions()
-	MockReloadProfile()
-	Replace(_G, "StaticPopup_Show", function() end)
-
-	Soundtrack.ProfilesTab.SelectProfile("Default")
-	Soundtrack.ProfilesTab.ResetSelectedProfile()
-	StaticPopupDialogs["PROFILES_RESET_CONFIRM"].OnAccept()
-
-	IsTrue(SoundtrackAddon.db._resetCalled(), "ResetProfile called on accept")
-end
-
-function Tests:ResetSelectedProfile_ResetsNonActiveProfileOnAccept()
-	SetupChat()
-	SetupProfileDb({ "Default", "Raid" }, "Default")
-	MockRenderFunctions()
-	MockRefreshProfilesFrame()
-	Replace(_G, "StaticPopup_Show", function() end)
-
-	Soundtrack.ProfilesTab.SelectProfile("Raid")
-	Soundtrack.ProfilesTab.ResetSelectedProfile()
-	StaticPopupDialogs["PROFILES_RESET_CONFIRM"].OnAccept()
-
-	IsTrue(SoundtrackAddon.db._resetCalled(), "ResetProfile called for non-active profile")
 end
 
 -- ─────────────────────────────────────────────────────────────

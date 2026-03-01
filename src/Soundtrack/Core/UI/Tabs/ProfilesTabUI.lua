@@ -1,7 +1,6 @@
 Soundtrack.ProfilesTab = {}
 
 local PROFILES_DELETE_CONFIRM = "PROFILES_DELETE_CONFIRM"
-local PROFILES_RESET_CONFIRM = "PROFILES_RESET_CONFIRM"
 local PROFILES_NEW = "PROFILES_NEW"
 local PROFILES_RENAME = "PROFILES_RENAME"
 local PROFILE_ALREADY_EXISTS = "PROFILE_ALREADY_EXISTS"
@@ -358,41 +357,6 @@ function Soundtrack.ProfilesTab.DeleteSelectedProfile()
 		hideOnEscape = true,
 	}
 	StaticPopup_Show(PROFILES_DELETE_CONFIRM)
-end
-
---- Confirm and reset the currently highlighted profile to defaults.
-function Soundtrack.ProfilesTab.ResetSelectedProfile()
-	local profile = selectedProfile or SoundtrackAddon.db:GetCurrentProfile()
-	Soundtrack.Chat.TraceProfiles("Requesting reset of profile: " .. profile)
-	local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
-
-	StaticPopupDialogs[PROFILES_RESET_CONFIRM] = {
-		text = 'Reset "'
-			.. profile
-			.. '" to default Soundtrack settings? This cannot be undone.',
-		button1 = "Reset",
-		button2 = "Cancel",
-		OnAccept = function()
-			-- If resetting a non-active profile, temporarily switch to it.
-			local switched = (profile ~= currentProfile)
-			if switched then
-				SoundtrackAddon.db:SetProfile(profile)
-			end
-			SoundtrackAddon.db:ResetProfile()
-			if switched then
-				SoundtrackAddon.db:SetProfile(currentProfile)
-			else
-				-- Active profile was reset – reload events/tracks.
-				Soundtrack.ProfilesTab.ReloadProfile()
-				return
-			end
-			Soundtrack.ProfilesTab.RefreshProfilesFrame()
-		end,
-		timeout = 0,
-		whileDead = true,
-		hideOnEscape = true,
-	}
-	StaticPopup_Show(PROFILES_RESET_CONFIRM)
 end
 
 -- ─────────────────────────────────────────────────────────────
