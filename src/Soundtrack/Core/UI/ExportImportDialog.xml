@@ -44,9 +44,9 @@
       </Layer>
     </Layers>
     <Frames>
-      <!-- EditBox -->
-      <EditBox name="SoundtrackExportImportEditBox" multiLine="true" autoFocus="false"
-               enableMouse="true" letters="500000">
+      <!-- Scrollable text area using Blizzard's InputScrollFrameTemplate,
+           the same pattern ChatCopyPaste uses for its copy window. -->
+      <ScrollFrame name="SoundtrackExportImportScrollFrame" inherits="InputScrollFrameTemplate">
         <Size>
           <AbsDimension x="458" y="210"/>
         </Size>
@@ -55,13 +55,18 @@
             <Offset><AbsDimension x="0" y="-68"/></Offset>
           </Anchor>
         </Anchors>
-        <FontString name="$parentFontString" inherits="ChatFontNormal" nonspacewrap="true"/>
         <Scripts>
           <OnLoad>
-            self:SetFontObject(ChatFontNormal)
+            if self.CharCount then self.CharCount:Hide() end
+            self.EditBox:SetFontObject(ChatFontNormal)
+            self.EditBox:SetMaxLetters(500000)
+            self.EditBox:SetAutoFocus(false)
+            -- Constrain the inner EditBox width so long unbroken strings
+            -- (like base64) wrap at the character level instead of overflowing.
+            self.EditBox:SetWidth(self:GetWidth() - 16)
           </OnLoad>
         </Scripts>
-      </EditBox>
+      </ScrollFrame>
       <!-- Profile name row (used when importing) -->
       <Frame name="SoundtrackExportImportProfileNameRow">
         <Size><AbsDimension x="440" y="22"/></Size>
@@ -94,7 +99,7 @@
         </Frames>
       </Frame>
       <!-- Buttons -->
-      <Button name="SoundtrackExportImportSelectAllButton" inherits="UIPanelButtonTemplate"
+      <Button name="SoundtrackExportImportCopyButton" inherits="UIPanelButtonTemplate"
               text="Select All">
         <Size><AbsDimension x="100" y="22"/></Size>
         <Anchors>
@@ -103,8 +108,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>Soundtrack.ExportImportDialog.SelectAll()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, "Select All", "Highlights the export text so you can copy it with Ctrl-C.")</OnEnter>
+          <OnClick>Soundtrack.ExportImportDialog.Copy()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Select All", "Selects all export text. Press Ctrl-C to copy to clipboard.")</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
@@ -113,7 +118,7 @@
         <Size><AbsDimension x="100" y="22"/></Size>
         <Anchors>
           <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"
-                  relativeTo="SoundtrackExportImportSelectAllButton">
+                  relativeTo="SoundtrackExportImportCopyButton">
             <Offset><AbsDimension x="5" y="0"/></Offset>
           </Anchor>
         </Anchors>

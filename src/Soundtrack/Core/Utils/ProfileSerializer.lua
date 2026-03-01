@@ -4,12 +4,15 @@
     Profile Serializer — converts profile data (events + settings) to a
     share string that can be copy-pasted between players, and restores it.
 
-    Format: "SOUNDTRACK_PROFILE_V1:" followed by a compact JSON-like encoding.
+    Format V2: "SOUNDTRACK_PROFILE_V2:" followed by a Base64-encoded payload.
+    Format V1: "SOUNDTRACK_PROFILE_V1:" followed by raw JSON (legacy, still decoded).
 ]]
 
 Soundtrack.ProfileSerializer = {}
 
-local HEADER = "SOUNDTRACK_PROFILE_V1:"
+local HEADER_V1              = "SOUNDTRACK_PROFILE_V1:"
+local HEADER_V2              = "SOUNDTRACK_PROFILE_V2:"
+local HEADER                 = HEADER_V2 -- used when exporting
 
 -- ---------------------------------------------------------------------------
 -- Encoder
@@ -217,7 +220,7 @@ function Soundtrack.ProfileSerializer.Export()
         events   = profile.events,
         settings = profile.settings,
     }
-    return HEADER .. Encode(data)
+    return HEADER .. Base64Encode(Encode(data))
 end
 
 -- Parses an export string and returns the decoded table WITHOUT writing
@@ -229,11 +232,16 @@ function Soundtrack.ProfileSerializer.Decode(str)
         return false, "Empty import string."
     end
 
-    if str:sub(1, #HEADER) ~= HEADER then
+    local payload
+    if str:sub(1, #HEADER_V2) == HEADER_V2 then
+        -- V2: base64-encoded payload
+        payload = Base64Decode(str:sub(#HEADER_V2 + 1))
+    elseif str:sub(1, #HEADER_V1) == HEADER_V1 then
+        -- V1 legacy: raw JSON payload
+        payload = str:sub(#HEADER_V1 + 1)
+    else
         return false, "Invalid profile string - make sure you copied the full export."
     end
-
-    local payload = str:sub(#HEADER + 1)
 
     local ok, result = pcall(function()
         _src = payload

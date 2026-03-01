@@ -1,43 +1,55 @@
-Soundtrack.ExportImportDialog = {}
+Soundtrack.ExportImportDialog       = {}
 
 local IMPORT_PROFILE_ALREADY_EXISTS = "SOUNDTRACK_IMPORT_PROFILE_EXISTS"
 local IMPORT_PROFILE_NAME_EMPTY     = "SOUNDTRACK_IMPORT_PROFILE_EMPTY"
+
+local function GetEditBox()
+    return SoundtrackExportImportScrollFrame.EditBox
+end
 
 -- Called by the Export / Import button on the Profiles tab.
 function Soundtrack.ExportImportDialog.Open()
     SoundtrackExportImportFrame:Show()
     SoundtrackExportImportFrame:Raise()
     -- Pre-populate the EditBox with the current profile export string.
+    local editBox = GetEditBox()
     local str = Soundtrack.ProfileSerializer.Export()
-    SoundtrackExportImportEditBox:SetText(str)
-    SoundtrackExportImportEditBox:HighlightText(0, #str)
+    -- Use Insert (not SetText) so InputScrollFrameTemplate's OnTextChanged
+    -- fires and the scroll frame correctly measures the content height.
+    editBox:SetText("")
+    editBox:Insert(str)
+    editBox:HighlightText()
     -- Clear the profile name field each time the dialog opens.
     SoundtrackExportImportProfileNameEditBox:SetText("")
-    SoundtrackExportImportEditBox:SetFocus()
+    editBox:SetFocus()
 end
 
 function Soundtrack.ExportImportDialog.Close()
     SoundtrackExportImportFrame:Hide()
 end
 
--- Highlights the share-string EditBox so the user can Ctrl-C.
-function Soundtrack.ExportImportDialog.SelectAll()
-    SoundtrackExportImportEditBox:SetFocus()
-    SoundtrackExportImportEditBox:HighlightText()
+-- Selects all export text and focuses the box so the user can press Ctrl+C.
+-- (CopyToClipboard is a protected function addons cannot call directly.)
+function Soundtrack.ExportImportDialog.Copy()
+    local editBox = GetEditBox()
+    editBox:SetFocus()
+    editBox:HighlightText()
 end
 
 -- Reads the share string and the target profile name, creates a new profile,
 -- applies the data into it, and reloads.
 function Soundtrack.ExportImportDialog.Import()
-    local str         = SoundtrackExportImportEditBox:GetText()
+    local str         = GetEditBox():GetText()
     local profileName = SoundtrackExportImportProfileNameEditBox:GetText()
 
     -- Validate profile name.
     if not profileName or profileName == "" then
         StaticPopupDialogs[IMPORT_PROFILE_NAME_EMPTY] = {
-            text    = "Please enter a name for the new profile before importing.",
+            text = "Please enter a name for the new profile before importing.",
             button1 = "OK",
-            timeout = 0, whileDead = true, hideOnEscape = true,
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
         }
         StaticPopup_Show(IMPORT_PROFILE_NAME_EMPTY)
         return
@@ -47,9 +59,11 @@ function Soundtrack.ExportImportDialog.Import()
     local profiles = SoundtrackAddon.db:GetProfiles()
     if HasValue(profiles, profileName) then
         StaticPopupDialogs[IMPORT_PROFILE_ALREADY_EXISTS] = {
-            text    = 'A profile named "' .. profileName .. '" already exists. Choose a different name.',
+            text = 'A profile named "' .. profileName .. '" already exists. Choose a different name.',
             button1 = "OK",
-            timeout = 0, whileDead = true, hideOnEscape = true,
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
         }
         StaticPopup_Show(IMPORT_PROFILE_ALREADY_EXISTS)
         return

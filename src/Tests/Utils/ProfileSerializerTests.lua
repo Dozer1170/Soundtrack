@@ -12,7 +12,7 @@ local function RoundTrip(data)
 	-- Export using a temporary profile, then import into a fresh one.
 	local saved = SoundtrackAddon.db.profile
 	SoundtrackAddon.db.profile = {
-		events   = data.events   or {},
+		events   = data.events or {},
 		settings = data.settings or {},
 	}
 	local str = Soundtrack.ProfileSerializer.Export()
@@ -95,13 +95,13 @@ end
 -- ---------------------------------------------------------------------------
 
 function Tests:Export_ReturnsStringWithHeader()
-	local header = "SOUNDTRACK_PROFILE_V1:"
+	local header = "SOUNDTRACK_PROFILE_V2:"
 	local str = Soundtrack.ProfileSerializer.Export()
 	IsTrue(str:sub(1, #header) == header, "Header present")
 end
 
 function Tests:Export_NonEmptyString()
-	local header = "SOUNDTRACK_PROFILE_V1:"
+	local header = "SOUNDTRACK_PROFILE_V2:"
 	local str = Soundtrack.ProfileSerializer.Export()
 	IsTrue(#str > #header, "Export string is non-empty beyond header")
 end
@@ -183,8 +183,8 @@ function Tests:RoundTrip_BooleanFields_Preserved()
 	})
 	IsTrue(ok, "Import succeeded")
 	local event = result.events[ST_MISC]["Swimming"]
-	AreEqual(false, event.random,     "random=false preserved")
-	AreEqual(true,  event.continuous, "continuous=true preserved")
+	AreEqual(false, event.random, "random=false preserved")
+	AreEqual(true, event.continuous, "continuous=true preserved")
 end
 
 function Tests:RoundTrip_NumberPriority_Preserved()
@@ -204,17 +204,17 @@ function Tests:RoundTrip_Settings_Preserved()
 	local ok, _, result = RoundTrip({
 		events = {},
 		settings = {
-			BattleCooldown  = 5,
-			Silence         = 3,
-			Debug           = false,
-			AutoAddZones    = true,
+			BattleCooldown = 5,
+			Silence        = 3,
+			Debug          = false,
+			AutoAddZones   = true,
 		},
 	})
 	IsTrue(ok, "Import succeeded")
-	AreEqual(5,     result.settings.BattleCooldown, "BattleCooldown preserved")
-	AreEqual(3,     result.settings.Silence,        "Silence preserved")
-	AreEqual(false, result.settings.Debug,          "Debug=false preserved")
-	AreEqual(true,  result.settings.AutoAddZones,   "AutoAddZones=true preserved")
+	AreEqual(5, result.settings.BattleCooldown, "BattleCooldown preserved")
+	AreEqual(3, result.settings.Silence, "Silence preserved")
+	AreEqual(false, result.settings.Debug, "Debug=false preserved")
+	AreEqual(true, result.settings.AutoAddZones, "AutoAddZones=true preserved")
 end
 
 function Tests:RoundTrip_SpecialCharsInEventName_Preserved()
@@ -250,8 +250,8 @@ function Tests:RoundTrip_MultipleEventTables_Preserved()
 		settings = {},
 	})
 	IsTrue(ok, "Import succeeded")
-	IsTrue(result.events[ST_ZONE]["Elwynn Forest"]   ~= nil, "Zone event preserved")
-	IsTrue(result.events[ST_BATTLE]["Normal Battle"]  ~= nil, "Battle event preserved")
+	IsTrue(result.events[ST_ZONE]["Elwynn Forest"] ~= nil, "Zone event preserved")
+	IsTrue(result.events[ST_BATTLE]["Normal Battle"] ~= nil, "Battle event preserved")
 end
 
 function Tests:RoundTrip_EmptyProfile_Succeeds()
@@ -343,7 +343,7 @@ function Tests:Encode_MixedKeyTable_EncodesStringKeysAsObject()
 	-- Build a profile containing a settings field whose value is a mixed-key table.
 	-- The Encode function detects isSeq = false and emits an object.
 	local saved = SoundtrackAddon.db.profile
-	local mixedTable = { "first", "second", extraKey = "extra" }  -- n=2 but has string key
+	local mixedTable = { "first", "second", extraKey = "extra" } -- n=2 but has string key
 	SoundtrackAddon.db.profile = {
 		events   = {},
 		settings = { data = mixedTable },
@@ -351,6 +351,9 @@ function Tests:Encode_MixedKeyTable_EncodesStringKeysAsObject()
 	local str = Soundtrack.ProfileSerializer.Export()
 	SoundtrackAddon.db.profile = saved
 
-	-- The string should contain the object-encoded version (only "extraKey")
-	IsTrue(str:find('"extraKey"') ~= nil, "Mixed-key table encoded as object with string keys")
+	-- Export is now base64-encoded V2; decode it and check the structure.
+	local ok, data = Soundtrack.ProfileSerializer.Decode(str)
+	IsTrue(ok, "Export can be decoded")
+	IsTrue(data.settings.data ~= nil, "settings.data present")
+	IsTrue(data.settings.data.extraKey == "extra", "Mixed-key table encoded as object with string keys")
 end

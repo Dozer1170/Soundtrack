@@ -414,7 +414,7 @@ function Soundtrack.Events.GetCurrentStackLevel()
 			if validStackLevel == 0 and trackCount > 0 then
 				validStackLevel = i
 			elseif not event.continuous then
-				Soundtrack.Chat.TraceEvents("Removing obsolete event: " .. Soundtrack.Events.Stack[i].eventName)
+				Soundtrack.Chat.TraceEvents("Removing non-continuous event: " .. Soundtrack.Events.Stack[i].eventName)
 				Soundtrack.Events.Stack[i].eventName = nil
 				Soundtrack.Events.Stack[i].tableName = nil
 				Soundtrack.Events.Stack[i].offset = 0
