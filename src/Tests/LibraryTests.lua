@@ -507,31 +507,37 @@ function Tests:PlayTrack_OggTrack_UsesOggPath()
 		"ogg tracks should play via the addon music directory")
 end
 
-function Tests:StopTrack_SetsFadeOutFlag()
+function Tests:StopTrack_ClearsPendingTrackDuringFadeOut()
+	-- When a fade-out is already in progress, StopTrack should cancel the
+	-- queued next track so it never plays once the fade-out completes.
 	Soundtrack_Tracks = {
-		["QueuedTrack"] = {
-			length = 60,
-			title = "Queued",
-			mp3 = true
-		}
+		["PlayingTrack"] = { length = 180, title = "Playing", mp3 = true },
+		["QueuedTrack"]  = { length = 60, title = "Queued", mp3 = true },
 	}
+	SoundtrackAddon.db.profile.settings.FadeTransition = true
+	SoundtrackAddon.db.profile.settings.FadeTransitionDuration = 2
+	local currentTime = 0
 	local playMusicCalled = false
-	Replace("PlayMusic", function()
-		playMusicCalled = true
-	end)
+	Replace("GetTime", function() return currentTime end)
+	Replace("PlayMusic", function() playMusicCalled = true end)
 	Replace("StopMusic", function() end)
-	Replace(Soundtrack.Events, "GetCurrentStackLevel", function()
-		return 1
-	end)
-	Replace(Soundtrack.Events, "GetCurrentEvent", function()
-		return { continuous = false }
-	end)
+	Replace("SetCVar", function() end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
 	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
-	Soundtrack.Library.PlayTrack("QueuedTrack")
+
+	-- Something is already playing, so PlayTrack starts a fade-out
+	Soundtrack.Library.CurrentlyPlayingTrack = "PlayingTrack"
+	Soundtrack.Library.PlayTrack("QueuedTrack") -- queued, waiting for fade-out to finish
+
+	-- Before fade-out completes, StopTrack is called (clears the queued track)
 	Soundtrack.Library.StopTrack()
+
+	currentTime = 4 -- advance past full fade duration
 	Soundtrack.Library.OnUpdate()
-	IsFalse(playMusicCalled, "StopTrack should clear any pending playback requests")
+
+	IsFalse(playMusicCalled, "StopTrack should clear any pending playback requests queued during a fade-out")
 end
 
 function Tests:PlayTrack_FadeOutTimer_CallsStopEventAtLevel()

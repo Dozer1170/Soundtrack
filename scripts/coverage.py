@@ -99,14 +99,19 @@ def find_luacov(luarocks_bin: str) -> list:
     luacov = shutil.which("luacov")
     if luacov:
         ext = Path(luacov).suffix.lower()
-        if ext in ("", ".exe", ".bat", ".cmd"):
+        if ext in (".exe", ".bat", ".cmd"):
+            return [luacov]
+        if ext == "" and sys.platform != "win32":
             return [luacov]
         return ["lua", luacov]
 
     for name in ("luacov.bat", "luacov.cmd", "luacov.exe", "luacov.lua", "luacov"):
         candidate = Path(luarocks_bin) / name
         if candidate.exists():
-            if candidate.suffix.lower() in ("", ".exe", ".bat", ".cmd"):
+            ext = candidate.suffix.lower()
+            if ext in (".exe", ".bat", ".cmd"):
+                return [str(candidate)]
+            if ext == "" and sys.platform != "win32":
                 return [str(candidate)]
             return ["lua", str(candidate)]
 

@@ -427,6 +427,7 @@ end
 -- Returns the highest stack level event or nil if no event is happening
 function Soundtrack.Events.GetCurrentEvent()
 	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	if stackLevel == 0 then return nil end
 	local tableName = Soundtrack.Events.Stack[stackLevel].tableName
 	local eventName = Soundtrack.Events.Stack[stackLevel].eventName
 	return Soundtrack.GetEvent(tableName, eventName)

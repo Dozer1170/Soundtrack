@@ -10,8 +10,12 @@ local Tests = Tests("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 local function SetupFadeTrack()
 	Soundtrack_Tracks = {
-		["FadeTrack"] = { length = 180, title = "Fade Song", mp3 = true },
+		["FadeTrack"]    = { length = 180, title = "Fade Song", mp3 = true },
+		["PrevFadeTrack"] = { length = 180, title = "Previous Song", mp3 = true },
 	}
+	-- Simulate something already playing so fade tests exercise the real fade path.
+	-- Fading only kicks in when transitioning between tracks, not on first play.
+	Soundtrack.Library.CurrentlyPlayingTrack = "PrevFadeTrack"
 end
 
 local function EnableFade(duration)
@@ -154,6 +158,72 @@ function Tests:FadeEnabled_FadeIn_RestoresVolumeAfterTrackStarts()
 	Soundtrack.Library.OnUpdate()
 
 	AreEqual(0.8, lastVolume, "Volume must be restored to 0.8 after fade-in completes")
+end
+
+function Tests:FadeEnabled_PlayTrack_NothingPlaying_PlaysImmediately()
+	EnableFade(2)
+	SetupFadeTrack()
+	Soundtrack.Library.CurrentlyPlayingTrack = nil -- nothing currently playing
+	local h = MakeFadeHelpers()
+
+	-- With nothing playing, music must start during PlayTrack itself (not deferred to OnUpdate)
+	Soundtrack.Library.PlayTrack("FadeTrack")
+
+	IsTrue(h.PlayedPath() ~= nil, "Track must play immediately during PlayTrack when nothing is playing, even with fade enabled")
+	AreEqual("Interface\\AddOns\\SoundtrackMusic\\FadeTrack.mp3", h.PlayedPath())
+end
+
+function Tests:FadeEnabled_PlayTrack_DuringFadeIn_InterruptsFadeInImmediately()
+	EnableFade(2)
+	Soundtrack_Tracks = {
+		["ZoneTrack"]   = { length = 180, title = "Zone", mp3 = true },
+		["CombatTrack"] = { length = 180, title = "Combat", mp3 = true },
+	}
+
+	local currentTime = 0
+	local playedPaths = {}
+	Replace("GetTime",   function() return currentTime end)
+	Replace("PlayMusic", function(path) table.insert(playedPaths, path) end)
+	Replace("StopMusic", function() end)
+	Replace("SetCVar",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
+	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+
+	-- Zone track starts (simulating something already playing so fade is used)
+	Soundtrack.Library.CurrentlyPlayingTrack = "ZoneTrack"
+	Soundtrack.Library.PlayTrack("ZoneTrack") -- zone changes to a new zone; fade-out starts
+	currentTime = 2                            -- fade-out complete -> zone plays, fade-in begins
+	Soundtrack.Library.OnUpdate()
+
+	-- Mid fade-in, combat starts
+	currentTime = 3  -- 1s into a 2s fade-in
+	Soundtrack.Library.PlayTrack("CombatTrack")
+
+	-- Should immediately start a fade-out (not wait for fade-in to complete)
+	-- Advance time past the new fade-out duration
+	currentTime = 5
+	Soundtrack.Library.OnUpdate()
+
+	local lastPath = playedPaths[#playedPaths]
+	AreEqual("Interface\\AddOns\\SoundtrackMusic\\CombatTrack.mp3", lastPath,
+		"Combat track must play after fade-out completes, not wait for zone fade-in to finish")
+end
+
+function Tests:FadeEnabled_StopTrack_NothingPlaying_StopsInstantly()
+	EnableFade(2)
+	Soundtrack.Library.CurrentlyPlayingTrack = nil
+	local stopCalled = false
+	Replace("StopMusic", function() stopCalled = true end)
+	Replace("SetCVar", function() end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 0 end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
+
+	Soundtrack.Library.StopTrack()
+	Soundtrack.Library.OnUpdate()
+
+	IsTrue(stopCalled, "StopMusic should still be called even with nothing playing")
 end
 
 function Tests:FadeEnabled_StopTrack_FadesOutWithoutPlayingNewTrack()

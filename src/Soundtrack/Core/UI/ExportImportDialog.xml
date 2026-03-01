@@ -55,7 +55,7 @@
             <Offset><AbsDimension x="0" y="-68"/></Offset>
           </Anchor>
         </Anchors>
-        <FontString name="$parentFontString" inherits="ChatFontNormal"/>
+        <FontString name="$parentFontString" inherits="ChatFontNormal" nonspacewrap="true"/>
         <Scripts>
           <OnLoad>
             self:SetFontObject(ChatFontNormal)
@@ -70,13 +70,17 @@
             <Offset><AbsDimension x="20" y="58"/></Offset>
           </Anchor>
         </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <FontString name="SoundtrackExportImportProfileNameLabel" inherits="GameFontHighlightSmall"
+                        text="New Profile Name:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
         <Frames>
-          <FontString name="SoundtrackExportImportProfileNameLabel" inherits="GameFontHighlightSmall"
-                      text="New Profile Name:">
-            <Anchors>
-              <Anchor point="LEFT"/>
-            </Anchors>
-          </FontString>
           <EditBox name="SoundtrackExportImportProfileNameEditBox"
                    inherits="SoundtrackFrame_EditBoxTemplate" autoFocus="false" letters="128">
             <Size><AbsDimension x="200" y="22"/></Size>

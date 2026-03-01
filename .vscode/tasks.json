@@ -9,7 +9,7 @@
                 "scripts/test.py"
             ],
             "windows": {
-                "command": "python",
+                "command": "py",
                 "args": [
                     "scripts/test.py"
                 ]
@@ -36,7 +36,7 @@
                 "scripts/coverage.py"
             ],
             "windows": {
-                "command": "python",
+                "command": "py",
                 "args": [
                     "scripts/coverage.py"
                 ]
@@ -63,7 +63,7 @@
                 "retail"
             ],
             "windows": {
-                "command": "python",
+                "command": "py",
                 "args": [
                     "scripts/package.py",
                     "--install",
@@ -96,7 +96,7 @@
                 "classic"
             ],
             "windows": {
-                "command": "python",
+                "command": "py",
                 "args": [
                     "scripts/package.py",
                     "--install",
@@ -126,7 +126,7 @@
                 "classic-era"
             ],
             "windows": {
-                "command": "python",
+                "command": "py",
                 "args": [
                     "scripts/package.py",
                     "--install",
@@ -153,7 +153,7 @@
                 "scripts/package.py"
             ],
             "windows": {
-                "command": "python",
+                "command": "py",
                 "args": [
                     "scripts/package.py"
                 ]

@@ -1,13 +1,14 @@
-Soundtrack.Library = {}
+Soundtrack.Library                       = {}
 
 local nextTrackInfo
 local nextFileName
 local nextTrackName
 -- Fade state machine: "idle" | "instant" | "fading_out" | "fading_in"
-local fadeState      = "idle"
-local fadeStartTime  = 0
-local fadeDuration   = 0
-local savedMusicVolume = 1
+local fadeState                          = "idle"
+local fadeStartTime                      = 0
+local fadeDuration                       = 0
+local savedMusicVolume                   = 1
+local isPreviewActive                    = false -- true while a preview track is playing
 
 Soundtrack.Library.CurrentlyPlayingTrack = nil
 
@@ -82,13 +83,13 @@ function Soundtrack.Library.AddTrack(trackName, _length, _title, _artist, _album
 		Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album }
 	elseif _extension == ".MP3" then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true }
 	elseif _extension == ".OGG" then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, ogg = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, ogg = true }
 	elseif _extension == ".WAV" then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, wav = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, wav = true }
 	end
 end
 
@@ -103,16 +104,16 @@ end
 function Soundtrack.Library.AddDefaultTrack(trackName, _length, _title, _artist, _album)
 	if _extension == nil then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, defaultTrack = true }
 	elseif _extension == ".MP3" then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true, defaultTrack = true }
 	elseif _extension == ".OGG" then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, ogg = true, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, ogg = true, defaultTrack = true }
 	elseif _extension == ".WAV" then
 		Soundtrack_Tracks[trackName] =
-			{ length = _length, title = _title, artist = _artist, album = _album, wav = true, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, wav = true, defaultTrack = true }
 	end
 end
 
@@ -138,14 +139,17 @@ end
 function Soundtrack.Library.StopTrack()
 	Soundtrack.Chat.TraceLibrary("StopTrack()")
 	nextTrackInfo = nil
-	if IsFadeEnabled() then
+	local nothingPlaying = (Soundtrack.Library.CurrentlyPlayingTrack == nil
+		or Soundtrack.Library.CurrentlyPlayingTrack == "None")
+	if IsFadeEnabled() and not isPreviewActive and not nothingPlaying then
 		savedMusicVolume = GetMusicVolume()
-		fadeDuration  = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
-		fadeStartTime = GetTime()
-		fadeState     = "fading_out"
+		fadeDuration     = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+		fadeStartTime    = GetTime()
+		fadeState        = "fading_out"
 	else
 		fadeState = "instant"
 	end
+	isPreviewActive = false
 end
 
 function Soundtrack.Library.OnUpdate()
@@ -271,23 +275,44 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	-- Everything ok, play the track
 	if not soundEffect then
 		nextTrackName = trackName
-		if IsFadeEnabled() then
+		local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+		local playingPreview = (stackLevel == ST_PREVIEW_LVL)
+		local skipFade = playingPreview or isPreviewActive
+		isPreviewActive = playingPreview
+		local nothingPlaying = (Soundtrack.Library.CurrentlyPlayingTrack == nil
+			or Soundtrack.Library.CurrentlyPlayingTrack == "None")
+
+		if nothingPlaying or skipFade then
+			-- Nothing to fade from: play immediately rather than waiting for OnUpdate.
+			-- Going through the "instant" state leaves a window where StopTrack can
+			-- clear nextTrackInfo before OnUpdate fires, silently dropping the track.
+			Soundtrack.Library.StopMusic()
+			Soundtrack.Library.CurrentlyPlayingTrack = nil
+			DelayedPlayMusic()
+			nextTrackInfo = nil
+			fadeState = "idle"
+		elseif IsFadeEnabled() then
 			if fadeState == "idle" then
 				savedMusicVolume = GetMusicVolume()
+				fadeDuration     = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+				fadeStartTime    = GetTime()
+				fadeState        = "fading_out"
+			elseif fadeState == "fading_out" then
+				-- Already fading out; updated nextTrackInfo will play when done
+			elseif fadeState == "fading_in" then
+				-- Interrupt the fade-in early: snap to full volume and start a fresh
+				-- fade-out so the new track (e.g. combat music) plays without delay.
+				SetMusicVolume(savedMusicVolume)
 				fadeDuration  = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
 				fadeStartTime = GetTime()
 				fadeState     = "fading_out"
-			elseif fadeState == "fading_out" then
-				-- Already fading; updated nextTrackInfo will play when done
-			elseif fadeState == "fading_in" then
-				-- Let fade-in finish; OnUpdate will detect nextTrackInfo and fade out
 			end
 		else
 			fadeState = "instant"
 		end
 	else
 		Soundtrack.Chat.TraceLibrary("PlaySoundFile(" .. nextFileName .. ")") -- EDITED, replaced fileName with nextFileName
-		PlaySoundFile(nextFileName) -- sound effect. play the music overlapping other music
+		PlaySoundFile(nextFileName)                                     -- sound effect. play the music overlapping other music
 		nextTrackInfo = nil
 	end
 
