@@ -1,0 +1,203 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Unit Tests",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/test.py"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/test.py"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate HTML Coverage Report",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/coverage.py"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/coverage.py"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Retail)",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "retail"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "retail"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Classic)",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "classic"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "classic"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Classic Era)",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "classic-era"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "classic-era"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package and Install (Anniversary)",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/package.py",
+                "--install",
+                "--flavor",
+                "anniversary"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/package.py",
+                    "--install",
+                    "--flavor",
+                    "anniversary"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Package Only",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/package.py"
+            ],
+            "windows": {
+                "command": "py",
+                "args": [
+                    "scripts/package.py"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
