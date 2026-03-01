@@ -61,9 +61,14 @@
             self.EditBox:SetFontObject(ChatFontNormal)
             self.EditBox:SetMaxLetters(500000)
             self.EditBox:SetAutoFocus(false)
-            -- Constrain the inner EditBox width so long unbroken strings
-            -- (like base64) wrap at the character level instead of overflowing.
-            self.EditBox:SetWidth(self:GetWidth() - 16)
+            -- Use a very large width to prevent word-wrap. Share strings have no
+            -- spaces so wrapping at ~442px would force WoW to compute thousands
+            -- of line-break positions on paste, freezing the client.
+            self.EditBox:SetWidth(10000)
+            -- Strip the OnTextChanged handler that InputScrollFrameTemplate wires
+            -- up for cursor-tracking scrolling. That behaviour is not needed in a
+            -- paste/copy dialog and adds unnecessary overhead.
+            self.EditBox:SetScript("OnTextChanged", nil)
           </OnLoad>
         </Scripts>
       </ScrollFrame>

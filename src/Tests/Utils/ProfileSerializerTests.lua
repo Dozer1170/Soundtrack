@@ -95,15 +95,21 @@ end
 -- ---------------------------------------------------------------------------
 
 function Tests:Export_ReturnsStringWithHeader()
-	local header = "SOUNDTRACK_PROFILE_V2:"
+	local header = "SOUNDTRACK_PROFILE_V3:"
 	local str = Soundtrack.ProfileSerializer.Export()
 	IsTrue(str:sub(1, #header) == header, "Header present")
 end
 
 function Tests:Export_NonEmptyString()
-	local header = "SOUNDTRACK_PROFILE_V2:"
+	local header = "SOUNDTRACK_PROFILE_V3:"
 	local str = Soundtrack.ProfileSerializer.Export()
 	IsTrue(#str > #header, "Export string is non-empty beyond header")
+end
+
+function Tests:Export_ContainsPrettyPrintedJSON()
+	local str = Soundtrack.ProfileSerializer.Export()
+	IsTrue(str:find("\n") ~= nil, "Export string contains newlines (pretty-printed)")
+	IsTrue(str:find("{") ~= nil, "Export string contains JSON object braces")
 end
 
 -- ---------------------------------------------------------------------------

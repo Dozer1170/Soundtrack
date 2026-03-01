@@ -4,15 +4,17 @@
     Profile Serializer — converts profile data (events + settings) to a
     share string that can be copy-pasted between players, and restores it.
 
-    Format V2: "SOUNDTRACK_PROFILE_V2:" followed by a Base64-encoded payload.
-    Format V1: "SOUNDTRACK_PROFILE_V1:" followed by raw JSON (legacy, still decoded).
+    Format V3: "SOUNDTRACK_PROFILE_V3:" followed by pretty-printed JSON.
+    Format V2: "SOUNDTRACK_PROFILE_V2:" followed by a Base64-encoded payload (legacy, still decoded).
+    Format V1: "SOUNDTRACK_PROFILE_V1:" followed by compact JSON (legacy, still decoded).
 ]]
 
 Soundtrack.ProfileSerializer = {}
 
 local HEADER_V1              = "SOUNDTRACK_PROFILE_V1:"
 local HEADER_V2              = "SOUNDTRACK_PROFILE_V2:"
-local HEADER                 = HEADER_V2 -- used when exporting
+local HEADER_V3              = "SOUNDTRACK_PROFILE_V3:"
+local HEADER                 = HEADER_V3 -- used when exporting
 
 -- ---------------------------------------------------------------------------
 -- Encoder
@@ -73,6 +75,60 @@ local function Encode(val)
     return "null"
 end
 
+-- Pretty-printing encoder (used for V3 export).
+local function EncodePretty(val, indent)
+    indent = indent or 0
+    local t = type(val)
+    if t == "nil" then
+        return "null"
+    elseif t == "boolean" then
+        return val and "true" or "false"
+    elseif t == "number" then
+        if val == math.floor(val) then
+            return tostring(math.floor(val))
+        end
+        return tostring(val)
+    elseif t == "string" then
+        local escaped = val:gsub("\\", "\\\\"):gsub('"', '\\"')
+        return '"' .. escaped .. '"'
+    elseif t == "table" then
+        local n = #val
+        local isSeq = (n > 0)
+        if isSeq then
+            for k in pairs(val) do
+                if type(k) ~= "number" or k ~= math.floor(k) or k < 1 or k > n then
+                    isSeq = false
+                    break
+                end
+            end
+        end
+        local pad      = string.rep("  ", indent)
+        local innerPad = string.rep("  ", indent + 1)
+        if isSeq then
+            if n == 0 then return "[]" end
+            local parts = {}
+            for i = 1, n do
+                table.insert(parts, innerPad .. EncodePretty(val[i], indent + 1))
+            end
+            return "[\n" .. table.concat(parts, ",\n") .. "\n" .. pad .. "]"
+        else
+            local keys = {}
+            for k in pairs(val) do
+                if type(k) == "string" then table.insert(keys, k) end
+            end
+            if #keys == 0 then return "{}" end
+            table.sort(keys)
+            local parts = {}
+            for _, k in ipairs(keys) do
+                local escapedKey = k:gsub("\\", "\\\\"):gsub('"', '\\"')
+                table.insert(parts, innerPad .. '"' .. escapedKey .. '": ' .. EncodePretty(val[k], indent + 1))
+            end
+            return "{\n" .. table.concat(parts, ",\n") .. "\n" .. pad .. "}"
+        end
+    end
+    return "null"
+end
+
 -- ---------------------------------------------------------------------------
 -- Decoder — recursive descent parser
 -- ---------------------------------------------------------------------------
@@ -94,6 +150,17 @@ local function Expect(c)
     local got = Advance()
     if got ~= c then
         error("Expected '" .. c .. "' got '" .. got .. "' at position " .. (_pos - 1))
+    end
+end
+
+local function SkipWS()
+    while _pos <= #_src do
+        local c = _src:sub(_pos, _pos)
+        if c == ' ' or c == '\t' or c == '\n' or c == '\r' then
+            _pos = _pos + 1
+        else
+            break
+        end
     end
 end
 
@@ -149,20 +216,25 @@ end
 local function DecodeObject()
     Expect('{')
     local obj = {}
+    SkipWS()
     if Peek() == '}' then
         Advance()
         return obj
     end
     while true do
         local key = DecodeString()
+        SkipWS()
         Expect(':')
+        SkipWS()
         obj[key] = DecodeValue()
+        SkipWS()
         local c = Peek()
         if c == '}' then
             Advance()
             break
         end
         Expect(',')
+        SkipWS()
     end
     return obj
 end
@@ -170,23 +242,27 @@ end
 local function DecodeArray()
     Expect('[')
     local arr = {}
+    SkipWS()
     if Peek() == ']' then
         Advance()
         return arr
     end
     while true do
         table.insert(arr, DecodeValue())
+        SkipWS()
         local c = Peek()
         if c == ']' then
             Advance()
             break
         end
         Expect(',')
+        SkipWS()
     end
     return arr
 end
 
 DecodeValue = function()
+    SkipWS()
     local c = Peek()
     if c == '"' then
         return DecodeString()
@@ -220,7 +296,7 @@ function Soundtrack.ProfileSerializer.Export()
         events   = profile.events,
         settings = profile.settings,
     }
-    return HEADER .. Base64Encode(Encode(data))
+    return HEADER .. "\n" .. EncodePretty(data)
 end
 
 -- Parses an export string and returns the decoded table WITHOUT writing
@@ -233,11 +309,14 @@ function Soundtrack.ProfileSerializer.Decode(str)
     end
 
     local payload
-    if str:sub(1, #HEADER_V2) == HEADER_V2 then
-        -- V2: base64-encoded payload
+    if str:sub(1, #HEADER_V3) == HEADER_V3 then
+        -- V3: pretty-printed JSON (may start with a newline)
+        payload = str:sub(#HEADER_V3 + 1)
+    elseif str:sub(1, #HEADER_V2) == HEADER_V2 then
+        -- V2 legacy: base64-encoded payload
         payload = Base64Decode(str:sub(#HEADER_V2 + 1))
     elseif str:sub(1, #HEADER_V1) == HEADER_V1 then
-        -- V1 legacy: raw JSON payload
+        -- V1 legacy: compact JSON payload
         payload = str:sub(#HEADER_V1 + 1)
     else
         return false, "Invalid profile string - make sure you copied the full export."

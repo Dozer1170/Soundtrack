@@ -756,6 +756,7 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/UI/PlaybackControlsUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/MinimapUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/Tabs/OptionsTabUI.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/ExportImportDialogUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/Tabs/ProfilesTabUI.lua")
 end
 
@@ -817,6 +818,7 @@ local testFiles = {
   "UI/PlaybackControlsUITests.lua",
   "UI/MinimapUITests.lua",
   "UI/OptionsTabUITests.lua",
+  "UI/ExportImportDialogUITests.lua",
   "UI/ProfilesTabUITests.lua",
   "UI/MovingTitleUITests.lua",
   "Zones/ZoneEventsTests.lua",

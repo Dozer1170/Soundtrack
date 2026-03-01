@@ -9,17 +9,37 @@ end
 
 -- Called by the Export / Import button on the Profiles tab.
 function Soundtrack.ExportImportDialog.Open()
+    Soundtrack.ExportImportDialog.OpenForExport(SoundtrackAddon.db:GetCurrentProfile())
+end
+
+-- Open the dialog pre-populated with the export string for a specific profile.
+-- Temporarily switches to that profile to read its data, then switches back.
+function Soundtrack.ExportImportDialog.OpenForExport(profileName)
+    local currentProfile = SoundtrackAddon.db:GetCurrentProfile()
+    if profileName ~= currentProfile then
+        SoundtrackAddon.db:SetProfile(profileName)
+    end
+    local str = Soundtrack.ProfileSerializer.Export()
+    if profileName ~= currentProfile then
+        SoundtrackAddon.db:SetProfile(currentProfile)
+    end
+
     SoundtrackExportImportFrame:Show()
     SoundtrackExportImportFrame:Raise()
-    -- Pre-populate the EditBox with the current profile export string.
     local editBox = GetEditBox()
-    local str = Soundtrack.ProfileSerializer.Export()
-    -- Use Insert (not SetText) so InputScrollFrameTemplate's OnTextChanged
-    -- fires and the scroll frame correctly measures the content height.
     editBox:SetText("")
     editBox:Insert(str)
     editBox:HighlightText()
-    -- Clear the profile name field each time the dialog opens.
+    SoundtrackExportImportProfileNameEditBox:SetText(profileName)
+    editBox:SetFocus()
+end
+
+-- Open the dialog cleared and ready for an import paste.
+function Soundtrack.ExportImportDialog.OpenForImport()
+    SoundtrackExportImportFrame:Show()
+    SoundtrackExportImportFrame:Raise()
+    local editBox = GetEditBox()
+    editBox:SetText("")
     SoundtrackExportImportProfileNameEditBox:SetText("")
     editBox:SetFocus()
 end

@@ -1,6 +1,54 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Include file="ProfilesTabUI.lua"/>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- Profile list item template (created dynamically in Lua)    -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <Button name="ProfilesTab_ListItemTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="240" y="24"/>
+    </Size>
+    <Layers>
+      <Layer level="ARTWORK">
+        <!-- Gold arrow marks the currently ACTIVE profile -->
+        <FontString name="$parentActiveArrow" inherits="GameFontHighlight" text="|cFFFFD100>|r">
+          <Anchors>
+            <Anchor point="LEFT">
+              <Offset>
+                <AbsDimension x="2" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <!-- Profile name label -->
+        <FontString name="$parentProfileNameText" inherits="GameFontHighlightSmall" justifyH="LEFT">
+          <Size>
+            <AbsDimension x="210" y="16"/>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT">
+              <Offset>
+                <AbsDimension x="20" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+    <Scripts>
+      <OnClick>
+        if self.profileName then
+          Soundtrack.ProfilesTab.SelectProfile(self.profileName)
+        end
+      </OnClick>
+    </Scripts>
+  </Button>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- Profiles Tab template                                       -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
   <Frame name="SoundtrackFrameProfilesFrameTemplate" hidden="true" virtual="true">
     <Size>
       <RelDimension x="0.5" y="0.8"/>
@@ -8,115 +56,270 @@
     <Anchors>
       <Anchor point="TOP" relativeTo="SoundtrackFrame" relativePoint="TOP"/>
     </Anchors>
+
+    <!-- ── FontStrings and Textures go in Layers ── -->
     <Layers>
-      <Layer level="BACKGROUND">
-        <FontString name="CurrentProfileNameLabel" inherits="GameFontNormal" text="Current Profile:">
+      <Layer level="ARTWORK">
+
+        <!-- LEFT COLUMN header -->
+        <FontString name="ProfilesTab_LeftHeader" inherits="GameFontNormal" text="PROFILES">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
-                <AbsDimension x="50" y="-50"/>
+                <AbsDimension x="10" y="-50"/>
               </Offset>
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="CurrentProfileName" inherits="GameFontNormal">
+
+        <!-- Legend: explain the active-profile marker -->
+        <FontString name="ProfilesTab_ActiveLegend" inherits="GameFontDisableSmall" text="&gt; = active profile">
           <Anchors>
-            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="CurrentProfileNameLabel">
+            <Anchor point="TOPLEFT">
               <Offset>
-                <AbsDimension x="5" y="0"/>
+                <AbsDimension x="10" y="-68"/>
               </Offset>
             </Anchor>
           </Anchors>
         </FontString>
+
+        <!-- Vertical divider between columns -->
+        <Texture name="ProfilesTab_Divider">
+          <Size>
+            <AbsDimension x="1" y="420"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="268" y="-45"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <Color r="0.4" g="0.35" b="0.2" a="0.8"/>
+        </Texture>
+
+        <!-- RIGHT COLUMN header -->
+        <FontString name="ProfilesTab_RightHeader" inherits="GameFontNormal" text="PROFILE DETAILS">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="285" y="-50"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+
+        <!-- Selected profile name (large) -->
+        <FontString name="ProfilesTab_DetailName" inherits="GameFontHighlightLarge">
+          <Size>
+            <AbsDimension x="500" y="20"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="285" y="-75"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+
+        <!-- "Active" badge shown when the selected profile is the active one -->
+        <FontString name="ProfilesTab_ActiveBadge" inherits="GameFontHighlightSmall" text="|cFFFFD100[Active]|r">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="285" y="-100"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+
+        <!-- Actions section header -->
+        <FontString name="ProfilesTab_ActionsHeader" inherits="GameFontNormal" text="Actions">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="285" y="-130"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+
+        <!-- Danger Zone section header (shifted down to fit Rename row) -->
+        <FontString name="ProfilesTab_DangerHeader" inherits="GameFontNormal" text="Danger Zone">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="285" y="-230"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+
+        <!-- Red separator line above Danger Zone buttons -->
+        <Texture name="ProfilesTab_DangerSeparator">
+          <Size>
+            <AbsDimension x="430" y="1"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="285" y="-248"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <Color r="0.6" g="0.1" b="0.1" a="0.7"/>
+        </Texture>
+
       </Layer>
     </Layers>
+
+    <!-- ── Interactive frames and buttons go in Frames ── -->
     <Frames>
-      <EditBox name="NewProfileEditBox" inherits="SoundtrackFrame_EditBoxTemplate">
+
+      <!-- ══════════════════  LEFT COLUMN  ══════════════════ -->
+
+      <!-- Scrollable Profile List -->
+      <ScrollFrame name="ProfilesTab_ScrollFrame" inherits="UIPanelScrollFrameTemplate">
         <Size>
-          <AbsDimension x="100" y="22"/>
+          <AbsDimension x="245" y="327"/>
         </Size>
         <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CurrentProfileNameLabel">
-            <AbsDimension x="20" y="-20"/>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="10" y="-90"/>
+            </Offset>
           </Anchor>
         </Anchors>
-      </EditBox>
-      <Button name="CreateNewProfileButton" inherits="UIPanelButtonTemplate" text="Create New Profile">
-        <Size>
-          <AbsDimension x="200" y="22"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="NewProfileEditBox">
-            <AbsDimension x="10" y="0"/>
-          </Anchor>
-        </Anchors>
+        <Frames>
+          <!-- Scroll child – height adjusted by Lua -->
+          <Frame name="ProfilesTab_ScrollChild">
+            <Size>
+              <AbsDimension x="220" y="10"/>
+            </Size>
+          </Frame>
+        </Frames>
         <Scripts>
-          <OnClick>Soundtrack.ProfilesTab.CreateNewProfile()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, "Create New Profile", "Create a new profile with the name provided.")</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
+          <OnLoad>self:SetScrollChild(ProfilesTab_ScrollChild)</OnLoad>
         </Scripts>
-      </Button>
-      <Frame name="LoadProfileDropDown" inherits="UIDropDownMenuTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="NewProfileEditBox">
-            <Offset>
-              <AbsDimension x="-28" y="-22"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Frame>
-      <Frame name="CopyFromProfileDropDown" inherits="UIDropDownMenuTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="LoadProfileDropDown">
-            <Offset>
-              <AbsDimension x="0" y="-20"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Frame>
-      <Frame name="DeleteProfileDropDown" inherits="UIDropDownMenuTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CopyFromProfileDropDown">
-            <Offset>
-              <AbsDimension x="0" y="-20"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Frame>
-      <Button name="ResetProfileButton" inherits="UIPanelButtonTemplate" text="Reset Current Profile">
+      </ScrollFrame>
+
+      <!-- New Profile Button -->
+      <Button name="ProfilesTab_NewProfileButton" inherits="UIPanelButtonTemplate" text="+ New Profile">
         <Size>
-          <AbsDimension x="200" y="22"/>
+          <AbsDimension x="150" y="22"/>
         </Size>
         <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="DeleteProfileDropDown">
+          <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="18" y="-20"/>
+              <AbsDimension x="10" y="-425"/>
             </Offset>
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>Soundtrack.ProfilesTab.ResetCurrentProfile()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, "Reset Current Profile", "Resets the current profile to default settings.")</OnEnter>
+          <OnClick>Soundtrack.ProfilesTab.ShowNewProfileDialog()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "New Profile", "Create a new profile. A dialog will ask for a name.")</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="ExportImportProfileButton" inherits="UIPanelButtonTemplate" text="Export / Import...">
+
+      <!-- ══════════════════  RIGHT COLUMN  ══════════════════ -->
+
+      <!-- Set Active – row 1 of actions (y=-130 header, gap 8 → y=-160) -->
+      <Button name="ProfilesTab_SetActiveButton" inherits="UIPanelButtonTemplate" text="Set Active">
         <Size>
-          <AbsDimension x="200" y="22"/>
+          <AbsDimension x="130" y="22"/>
         </Size>
         <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="ResetProfileButton">
+          <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="0" y="-15"/>
+              <AbsDimension x="285" y="-160"/>
             </Offset>
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>Soundtrack.ExportImportDialog.Open()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, "Export / Import Profile", "Open a dialog to export the current profile to a share string, or import one from another player.")</OnEnter>
+          <OnClick>Soundtrack.ProfilesTab.SetActiveProfile()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Set Active", "Load this profile and apply its music settings.")</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
+
+      <!-- Duplicate (beside Set Active, row 1) -->
+      <Button name="ProfilesTab_DuplicateButton" inherits="UIPanelButtonTemplate" text="Duplicate">
+        <Size>
+          <AbsDimension x="130" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="425" y="-160"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ProfilesTab.DuplicateProfile()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Duplicate", "Copy this profile into a new profile with a (Copy) suffix.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+
+      <!-- Rename (row 2 of actions: y=-160-22-8=-190) -->
+      <Button name="ProfilesTab_RenameButton" inherits="UIPanelButtonTemplate" text="Rename">
+        <Size>
+          <AbsDimension x="130" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="285" y="-190"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ProfilesTab.ShowRenameProfileDialog()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Rename Profile", "Give this profile a new name.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+
+      <!-- Delete Profile – below DangerSeparator (y=-248+1+8=-257) -->
+      <Button name="ProfilesTab_DeleteButton" inherits="UIPanelButtonTemplate" text="Delete Profile">
+        <Size>
+          <AbsDimension x="130" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="285" y="-257"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ProfilesTab.DeleteSelectedProfile()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Delete Profile", "Permanently delete this profile. The active profile cannot be deleted.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+
+      <!-- Reset Profile (beside Delete) -->
+      <Button name="ProfilesTab_ResetButton" inherits="UIPanelButtonTemplate" text="Reset Profile">
+        <Size>
+          <AbsDimension x="130" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="425" y="-257"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ProfilesTab.ResetSelectedProfile()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, "Reset Profile", "Reset this profile to default Soundtrack settings.")</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+
     </Frames>
     <Scripts>
       <OnShow>Soundtrack.ProfilesTab.RefreshProfilesFrame()</OnShow>
