@@ -136,17 +136,34 @@ function Soundtrack.Library.PauseMusic()
 	SoundtrackUI.UpdateTracksUI()
 end
 
+function Soundtrack.Library.IsFadingOut()
+	return fadeState == "fading_out"
+end
+
+function Soundtrack.Library.IsFadingIn()
+	return fadeState == "fading_in"
+end
+
 function Soundtrack.Library.StopTrack()
-	Soundtrack.Chat.TraceLibrary("StopTrack()")
-	nextTrackInfo = nil
 	local nothingPlaying = (Soundtrack.Library.CurrentlyPlayingTrack == nil
 		or Soundtrack.Library.CurrentlyPlayingTrack == "None")
+	Soundtrack.Chat.TraceLibrary(string.format(
+		"[StopTrack] playing=%s fadeState=%s fadeEnabled=%s preview=%s nothingPlaying=%s",
+		tostring(Soundtrack.Library.CurrentlyPlayingTrack),
+		tostring(fadeState),
+		tostring(IsFadeEnabled()),
+		tostring(isPreviewActive),
+		tostring(nothingPlaying)
+	))
+	nextTrackInfo = nil
 	if IsFadeEnabled() and not isPreviewActive and not nothingPlaying then
+		Soundtrack.Chat.TraceLibrary("[StopTrack] -> starting fade-out")
 		savedMusicVolume = GetMusicVolume()
 		fadeDuration     = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
 		fadeStartTime    = GetTime()
 		fadeState        = "fading_out"
 	else
+		Soundtrack.Chat.TraceLibrary("[StopTrack] -> instant stop")
 		fadeState = "instant"
 	end
 	isPreviewActive = false
@@ -161,14 +178,20 @@ function Soundtrack.Library.OnUpdate()
 		local progress = fadeDuration > 0 and math.min(1, elapsed / fadeDuration) or 1
 		SetMusicVolume(savedMusicVolume * (1 - progress))
 		if progress >= 1 then
+			Soundtrack.Chat.TraceLibrary(string.format(
+				"[OnUpdate/fading_out] complete. nextTrack=%s",
+				nextTrackName and tostring(nextTrackName) or "nil"
+			))
 			Soundtrack.Library.StopMusic()
 			Soundtrack.Library.CurrentlyPlayingTrack = nil
 			if nextTrackInfo ~= nil then
+				Soundtrack.Chat.TraceLibrary("[OnUpdate/fading_out] -> playing next track, starting fade-in")
 				DelayedPlayMusic()
 				nextTrackInfo = nil
 				fadeStartTime = now
 				fadeState     = "fading_in"
 			else
+				Soundtrack.Chat.TraceLibrary("[OnUpdate/fading_out] -> no next track, returning to idle")
 				SetMusicVolume(savedMusicVolume)
 				fadeState = "idle"
 				SoundtrackUI.UpdateTracksUI()
@@ -184,12 +207,19 @@ function Soundtrack.Library.OnUpdate()
 		SetMusicVolume(savedMusicVolume * progress)
 		if progress >= 1 then
 			SetMusicVolume(savedMusicVolume)
+			Soundtrack.Chat.TraceLibrary(string.format(
+				"[OnUpdate/fading_in] complete. playing=%s nextTrack=%s",
+				tostring(Soundtrack.Library.CurrentlyPlayingTrack),
+				nextTrackName and tostring(nextTrackName) or "nil"
+			))
 			if nextTrackInfo ~= nil then
 				-- New track requested during fade-in; start a fresh fade-out
+				Soundtrack.Chat.TraceLibrary("[OnUpdate/fading_in] -> pending next track, starting fade-out")
 				fadeDuration  = (SoundtrackAddon.db.profile.settings.FadeTransitionDuration or 2)
 				fadeStartTime = now
 				fadeState     = "fading_out"
 			else
+				Soundtrack.Chat.TraceLibrary("[OnUpdate/fading_in] -> idle")
 				fadeState = "idle"
 			end
 		end
@@ -282,10 +312,23 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 		local nothingPlaying = (Soundtrack.Library.CurrentlyPlayingTrack == nil
 			or Soundtrack.Library.CurrentlyPlayingTrack == "None")
 
+		Soundtrack.Chat.TraceLibrary(string.format(
+			"[PlayTrack] track=%s stackLevel=%d fadeState=%s fadeEnabled=%s playing=%s nothingPlaying=%s skipFade=%s preview=%s",
+			tostring(trackName),
+			tostring(stackLevel),
+			tostring(fadeState),
+			tostring(IsFadeEnabled()),
+			tostring(Soundtrack.Library.CurrentlyPlayingTrack),
+			tostring(nothingPlaying),
+			tostring(skipFade),
+			tostring(playingPreview)
+		))
+
 		if nothingPlaying or skipFade then
 			-- Nothing to fade from: play immediately rather than waiting for OnUpdate.
 			-- Going through the "instant" state leaves a window where StopTrack can
 			-- clear nextTrackInfo before OnUpdate fires, silently dropping the track.
+			Soundtrack.Chat.TraceLibrary("[PlayTrack] -> immediate play (nothing playing or skipFade)")
 			Soundtrack.Library.StopMusic()
 			Soundtrack.Library.CurrentlyPlayingTrack = nil
 			DelayedPlayMusic()
@@ -293,26 +336,36 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 			fadeState = "idle"
 		elseif IsFadeEnabled() then
 			if fadeState == "idle" then
+				Soundtrack.Chat.TraceLibrary("[PlayTrack] -> fade enabled, idle -> starting fade-out")
 				savedMusicVolume = GetMusicVolume()
 				fadeDuration     = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
 				fadeStartTime    = GetTime()
 				fadeState        = "fading_out"
 			elseif fadeState == "fading_out" then
 				-- Already fading out; updated nextTrackInfo will play when done
+				Soundtrack.Chat.TraceLibrary(string.format(
+					"[PlayTrack] -> already fading_out, queueing track=%s (overwrites previous queue)",
+					tostring(trackName)
+				))
 			elseif fadeState == "fading_in" then
 				-- Interrupt the fade-in early: snap to full volume and start a fresh
 				-- fade-out so the new track (e.g. combat music) plays without delay.
+				Soundtrack.Chat.TraceLibrary(string.format(
+					"[PlayTrack] -> fading_in, interrupting with new track=%s -> snap vol + new fade-out",
+					tostring(trackName)
+				))
 				SetMusicVolume(savedMusicVolume)
 				fadeDuration  = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
 				fadeStartTime = GetTime()
 				fadeState     = "fading_out"
 			end
 		else
+			Soundtrack.Chat.TraceLibrary("[PlayTrack] -> fade disabled, instant switch")
 			fadeState = "instant"
 		end
 	else
-		Soundtrack.Chat.TraceLibrary("PlaySoundFile(" .. nextFileName .. ")") -- EDITED, replaced fileName with nextFileName
-		PlaySoundFile(nextFileName)                                     -- sound effect. play the music overlapping other music
+		Soundtrack.Chat.TraceLibrary("[PlayTrack] -> sound effect: PlaySoundFile(" .. nextFileName .. ")")
+		PlaySoundFile(nextFileName)
 		nextTrackInfo = nil
 	end
 

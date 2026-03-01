@@ -166,12 +166,17 @@ function Soundtrack.Events.OnStackChanged(forceRestart)
 
 		-- Avoid restarting already playing event
 		if forceRestart or currentTableName ~= tableName or currentEventName ~= eventName then
-			-- Avoid restarting a song that is in both events
+			-- Avoid restarting a song that is in both events.
+			-- Skip this optimization when actively fading: CurrentlyPlayingTrack still
+			-- holds the old track while it's being phased out, so it must not be treated
+			-- as "already playing correctly" for an incoming event.
 			local sameTrack = false
-			for _, v in ipairs(event.tracks) do
-				if v == currentTrack then
-					sameTrack = true
-					break
+			if not Soundtrack.Library.IsFadingOut() and not Soundtrack.Library.IsFadingIn() then
+				for _, v in ipairs(event.tracks) do
+					if v == currentTrack then
+						sameTrack = true
+						break
+					end
 				end
 			end
 			if not sameTrack or forceRestart then
