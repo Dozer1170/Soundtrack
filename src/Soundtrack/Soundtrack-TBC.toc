@@ -1,0 +1,37 @@
+## Interface: 20505
+## Title: Soundtrack
+## Version: 5.0.0
+## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
+## Notes: Music customization system.
+## OptionalDeps: WoWUnit
+## RequiredDeps: 
+## SavedVariables: Soundtrack_Settings, Soundtrack_CustomEvents, Soundtrack_Events, SoundtrackDB
+## IconTexture: Interface\Icons\INV_Misc_Flute_01
+Embeds.xml
+Core/Soundtrack.xml
+Core/Classic.lua
+Core/Utils/OldSaveMigrator.lua
+Core/Utils/EventUtils.lua
+Core/Utils/DebugUtils.lua
+Core/Utils/StringUtils.lua
+Core/Utils/Chat.lua
+Core/Utils/Sorting.lua
+Core/Utils/Cleanup.lua
+Core/Utils/TableUtils.lua
+Core/Utils/TabUtils.lua
+Core/UI/GeneralTemplates.xml
+Core/UI/Tabs/TabTemplateClassic.xml
+Core/Auras/AurasDummyFrame.xml
+Core/UI/SoundtrackFrame.xml
+Core/Battle/BattleDummyFrame.xml
+Core/Custom/CustomDummyFrame.xml
+Core/MiscEvents/MiscDummyFrame.xml
+Core/PetBattle/PetBattleDummyFrame.xml
+Core/Dance/DanceDummyFrame.xml
+Core/Zones/ZoneDummyFrame.xml
+Core/UI/Minimap.lua
+Core/UI/NowPlayingFrame.xml
+Core/UI/ControlFrame.xml
+Tests/TestCommon.lua
+Tests/ZoneEventTests.lua
+../SoundtrackMusic/MyTracks.lua
