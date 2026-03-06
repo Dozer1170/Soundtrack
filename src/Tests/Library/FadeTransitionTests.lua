@@ -297,3 +297,93 @@ function Tests:FadeEnabled_OptionsTab_DurationDropDownOnClick_SavesDuration()
 	AreEqual(1, SoundtrackAddon.db.profile.settings.FadeTransitionDuration,
 		"Selecting index 2 should save 1-second duration")
 end
+
+-- ---------------------------------------------------------------------------
+-- Tests: OnMusicVolumeCVarChanged
+-- ---------------------------------------------------------------------------
+
+function Tests:OnMusicVolumeCVarChanged_WhenIdle_UpdatesSavedVolume()
+	EnableFade(2)
+	SetupFadeTrack()
+	local h = MakeFadeHelpers()
+	-- No fade in progress; volume change should be respected
+	Replace("GetCVar", function(key)
+		if key == "Sound_MusicVolume" then return "0.5" end
+		return "0"
+	end)
+
+	Soundtrack.Library.OnMusicVolumeCVarChanged(0.6)
+
+	-- Start a fade and confirm the new volume is used as the base
+	Soundtrack.Library.PlayTrack("FadeTrack")
+	h.SetTime(1) -- halfway through fade-out
+	Soundtrack.Library.OnUpdate()
+
+	local calls = h.SetCVarCalls()
+	IsTrue(#calls > 0, "SetCVar should be called during fade")
+	-- At t=1/2 of a 2s fade, volume should be around 0.5 * 0.6 = 0.3 (not 0.5 * 1.0)
+	local vol = calls[#calls]
+	IsTrue(vol <= 0.31, "Volume should be based on externally updated volume (0.6), not default 1.0")
+end
+
+function Tests:OnMusicVolumeCVarChanged_WhenFading_DoesNotUpdateSavedVolume()
+	EnableFade(2)
+	SetupFadeTrack()
+	local currentTime = 0
+	local lastSetVolume = nil
+	Replace("GetTime",   function() return currentTime end)
+	Replace("PlayMusic", function() end)
+	Replace("StopMusic", function() end)
+	Replace("GetCVar",   function(key)
+		if key == "Sound_MusicVolume" then return "0.8" end
+		return "0"
+	end)
+	Replace("SetCVar", function(key, value)
+		if key == "Sound_MusicVolume" then lastSetVolume = tonumber(value) end
+	end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
+	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+
+	-- Start a fade (savedMusicVolume captured as 0.8)
+	Soundtrack.Library.PlayTrack("FadeTrack")
+	currentTime = 1 -- mid-fade; now simulate external CVar change
+	Soundtrack.Library.OnMusicVolumeCVarChanged(0.3) -- should be ignored during fade
+	Soundtrack.Library.OnUpdate() -- continue fade
+
+	-- Fade completes; volume should restore to original 0.8, not 0.3
+	currentTime = 2
+	Soundtrack.Library.OnUpdate()
+	currentTime = 4 -- fade-in completes
+	Soundtrack.Library.OnUpdate()
+
+	AreEqual(0.8, lastSetVolume, "Volume should restore to 0.8 (original), ignoring mid-fade CVar change")
+end
+
+function Tests:SoundtrackAddon_CVAR_UPDATE_ForMusicVolume_CallsLibrary()
+	local capturedVolume = nil
+	Replace(Soundtrack.Library, "OnMusicVolumeCVarChanged", function(vol) capturedVolume = vol end)
+
+	SoundtrackAddon:CVAR_UPDATE("Sound_MusicVolume", "0.75")
+
+	AreEqual(0.75, capturedVolume, "Library.OnMusicVolumeCVarChanged called with parsed volume")
+end
+
+function Tests:SoundtrackAddon_CVAR_UPDATE_ForOtherCvar_DoesNotCallLibrary()
+	local called = false
+	Replace(Soundtrack.Library, "OnMusicVolumeCVarChanged", function() called = true end)
+
+	SoundtrackAddon:CVAR_UPDATE("Sound_MasterVolume", "0.5")
+
+	IsFalse(called, "Library.OnMusicVolumeCVarChanged must not be called for unrelated CVars")
+end
+
+function Tests:SoundtrackAddon_CVAR_UPDATE_InvalidValue_DefaultsToOne()
+	local capturedVolume = nil
+	Replace(Soundtrack.Library, "OnMusicVolumeCVarChanged", function(vol) capturedVolume = vol end)
+
+	SoundtrackAddon:CVAR_UPDATE("Sound_MusicVolume", "badvalue")
+
+	AreEqual(1, capturedVolume, "Defaults to 1 when value cannot be parsed as number")
+end

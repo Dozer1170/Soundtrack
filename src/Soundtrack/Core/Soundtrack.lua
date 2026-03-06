@@ -98,6 +98,7 @@ function SoundtrackAddon:OnInitialize()
 		},
 	}, true)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("CVAR_UPDATE")
 
 	-- Ensure event sub-tables exist immediately so any early zone/battle events
 	-- (which also fire on PLAYER_ENTERING_WORLD) can access them before LoadTracks runs.
@@ -125,6 +126,12 @@ function SoundtrackAddon:PLAYER_ENTERING_WORLD()
 		SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.Initialize()
 		Soundtrack.Cleanup.CleanupOldEvents()
+	end
+end
+
+function SoundtrackAddon:CVAR_UPDATE(cvarName, value)
+	if cvarName == "Sound_MusicVolume" then
+		Soundtrack.Library.OnMusicVolumeCVarChanged(tonumber(value) or 1)
 	end
 end
 

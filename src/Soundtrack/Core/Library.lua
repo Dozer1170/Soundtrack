@@ -268,6 +268,15 @@ function Soundtrack.Library.IsTrackActive(trackName)
 	return false
 end
 
+-- Called when the Sound_MusicVolume CVar changes externally (CVAR_UPDATE).
+-- Only update savedMusicVolume when we are not mid-fade; during a fade we
+-- are the ones writing the CVar and must not corrupt the reference level.
+function Soundtrack.Library.OnMusicVolumeCVarChanged(newVolume)
+	if fadeState == "idle" then
+		savedMusicVolume = newVolume
+	end
+end
+
 function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	if soundEffect == nil then
 		soundEffect = false
