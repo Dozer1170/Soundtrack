@@ -196,6 +196,7 @@ local function SetWoWGlobals()
       SetPoint = function() end,
       SetFont = function() end,
       SetJustifyH = function() end,
+      IsTruncated = function() return false end,
     }
     if name then
       _G[name] = obj
@@ -232,6 +233,7 @@ local function SetWoWGlobals()
       SetFontString = function() end,
       SetID = function() end,
       GetID = function() return 1 end,
+      SetScript = function() end,
     }
     if name then
       _G[name] = obj
@@ -416,7 +418,7 @@ local defaultSettings = {
   Silence = 5,
   EscalateBattleMusic = true,
   AutoAddZones = true,
-  FadeTransition = false,  -- keep fade off so existing tests use instant switching
+  FadeTransition = false, -- keep fade off so existing tests use instant switching
   FadeTransitionDuration = 2,
 }
 

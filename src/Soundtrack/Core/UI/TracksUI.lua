@@ -37,7 +37,8 @@ function SoundtrackUI.OnTrackCheckBoxClick(self, _, _)
 			)
 		else
 			-- Add the track to the events list.
-			Soundtrack.AssignTrack(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent, SoundtrackUI.SelectedTrack)
+			Soundtrack.AssignTrack(SoundtrackUI.SelectedEventsTable, SoundtrackUI.SelectedEvent,
+				SoundtrackUI.SelectedTrack)
 		end
 	end
 
@@ -125,13 +126,15 @@ function SoundtrackUI.RefreshTracks()
 			if buttonIndex <= TRACKS_TO_DISPLAY then
 				local nameText = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextName"]
 
+				local fullTrackName
 				if SoundtrackUI.nameHeaderType == "filePath" or SoundtrackUI.nameHeaderType == nil then
-					nameText:SetText(Soundtrack_SortedTracks[i])
+					fullTrackName = Soundtrack_SortedTracks[i]
 				elseif SoundtrackUI.nameHeaderType == "fileName" then
-					nameText:SetText(GetPathFileName(Soundtrack_SortedTracks[i]))
+					fullTrackName = GetPathFileName(Soundtrack_SortedTracks[i])
 				elseif SoundtrackUI.nameHeaderType == "title" then
-					nameText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].title)
+					fullTrackName = Soundtrack_Tracks[Soundtrack_SortedTracks[i]].title
 				end
+				nameText:SetText(fullTrackName)
 
 				local albumText = _G["SoundtrackFrameTrackButton" .. buttonIndex .. "ButtonTextAlbum"]
 				albumText:SetText(Soundtrack_Tracks[Soundtrack_SortedTracks[i]].album)
@@ -141,6 +144,7 @@ function SoundtrackUI.RefreshTracks()
 
 				button = _G["SoundtrackFrameTrackButton" .. buttonIndex]
 
+				button.fullTrackName = fullTrackName
 				button:SetID(buttonIndex)
 
 				button:Show()
@@ -212,13 +216,15 @@ function SoundtrackUI.RefreshAssignedTracks()
 			if buttonIndex <= ASSIGNED_TRACKS_TO_DISPLAY then
 				local nameText = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextName"]
 
+				local fullTrackName
 				if SoundtrackUI.nameHeaderType == "filePath" or SoundtrackUI.nameHeaderType == nil then
-					nameText:SetText(assignedTracks[i])
+					fullTrackName = assignedTracks[i]
 				elseif SoundtrackUI.nameHeaderType == "fileName" then
-					nameText:SetText(GetPathFileName(assignedTracks[i]))
+					fullTrackName = GetPathFileName(assignedTracks[i])
 				elseif SoundtrackUI.nameHeaderType == "title" then
-					nameText:SetText(Soundtrack_Tracks[assignedTracks[i]].title)
+					fullTrackName = Soundtrack_Tracks[assignedTracks[i]].title
 				end
+				nameText:SetText(fullTrackName)
 
 				local albumText = _G["SoundtrackAssignedTrackButton" .. buttonIndex .. "ButtonTextAlbum"]
 				albumText:SetText(Soundtrack_Tracks[assignedTracks[i]].album)
@@ -227,6 +233,7 @@ function SoundtrackUI.RefreshAssignedTracks()
 				artistText:SetText(Soundtrack_Tracks[assignedTracks[i]].artist)
 
 				button = _G["SoundtrackAssignedTrackButton" .. buttonIndex]
+				button.fullTrackName = fullTrackName
 				button:SetID(buttonIndex)
 				button:Show()
 
@@ -271,4 +278,15 @@ function SoundtrackUI.RefreshAssignedTracks()
 		ASSIGNED_TRACKS_TO_DISPLAY,
 		EVENTS_ITEM_HEIGHT
 	)
+end
+
+function SoundtrackUI.OnTrackButtonEnter(self)
+	local nameText = _G[self:GetName() .. "ButtonTextName"]
+	if self.fullTrackName and nameText and nameText:IsTruncated() then
+		Soundtrack.ShowTip(self, self.fullTrackName, nil, nil, nil, "ANCHOR_TOPLEFT", 400)
+	end
+end
+
+function SoundtrackUI.OnTrackButtonLeave()
+	Soundtrack.HideTip()
 end

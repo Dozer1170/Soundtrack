@@ -125,6 +125,8 @@
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
       <OnClick>SoundtrackUI.OnTrackButtonClick(self, button, down)</OnClick>
+      <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
+      <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
     </Scripts>
     <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
   </Button>
@@ -203,6 +205,8 @@
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp");</OnLoad>
       <OnClick>SoundtrackUI.OnAssignedTrackButtonClick(self, button, down);</OnClick>
+      <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
+      <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
     </Scripts>
     <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
   </Button>
