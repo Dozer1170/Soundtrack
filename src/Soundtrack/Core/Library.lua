@@ -104,16 +104,20 @@ end
 function Soundtrack.Library.AddDefaultTrack(trackName, _length, _title, _artist, _album, _resourceId)
 	if _extension == nil then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, defaultTrack = true, resourceId = _resourceId }
+		{ length = _length, title = _title, artist = _artist, album = _album, defaultTrack = true, resourceId =
+		_resourceId }
 	elseif _extension == ".MP3" then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true, defaultTrack = true, resourceId = _resourceId }
+		{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true, defaultTrack = true, resourceId =
+		_resourceId }
 	elseif _extension == ".OGG" then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, ogg = true, defaultTrack = true, resourceId = _resourceId }
+		{ length = _length, title = _title, artist = _artist, album = _album, ogg = true, defaultTrack = true, resourceId =
+		_resourceId }
 	elseif _extension == ".WAV" then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, wav = true, defaultTrack = true, resourceId = _resourceId }
+		{ length = _length, title = _title, artist = _artist, album = _album, wav = true, defaultTrack = true, resourceId =
+		_resourceId }
 	end
 end
 

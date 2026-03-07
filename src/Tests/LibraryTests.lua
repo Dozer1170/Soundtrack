@@ -504,7 +504,8 @@ function Tests:PlayTrack_DefaultTrack_NoResourceId_UsesTrackName()
 		}
 	}
 	local playedPath = PlayTrackAndFlush("Sound/Music/CityMusic/Stormwind.mp3")
-	AreEqual("Sound/Music/CityMusic/Stormwind.mp3", playedPath, "default tracks without a resourceId should use the track name as path")
+	AreEqual("Sound/Music/CityMusic/Stormwind.mp3", playedPath,
+		"default tracks without a resourceId should use the track name as path")
 end
 
 function Tests:PlayTrack_OggTrack_UsesOggPath()
