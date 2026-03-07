@@ -480,7 +480,22 @@ end
 
 function Tests:PlayTrack_DefaultTrack_UsesDefaultPath()
 	Soundtrack_Tracks = {
-		["////Sound/Music/CityMusic/Stormwind.mp3"] = {
+		["zonemusic\\stormwind\\stormwind"] = {
+			length = 180,
+			title = "Stormwind",
+			artist = "",
+			album = "",
+			defaultTrack = true,
+			resourceId = 53200
+		}
+	}
+	local playedPath = PlayTrackAndFlush("zonemusic\\stormwind\\stormwind")
+	AreEqual("53200", playedPath, "default tracks with a resourceId should play using the numeric resource ID")
+end
+
+function Tests:PlayTrack_DefaultTrack_NoResourceId_UsesTrackName()
+	Soundtrack_Tracks = {
+		["Sound/Music/CityMusic/Stormwind.mp3"] = {
 			length = 180,
 			title = "Stormwind",
 			artist = "",
@@ -488,8 +503,8 @@ function Tests:PlayTrack_DefaultTrack_UsesDefaultPath()
 			defaultTrack = true
 		}
 	}
-	local playedPath = PlayTrackAndFlush("////Sound/Music/CityMusic/Stormwind.mp3")
-	AreEqual("Sound/Music/CityMusic/Stormwind.mp3", playedPath, "default track paths should drop the //// prefix")
+	local playedPath = PlayTrackAndFlush("Sound/Music/CityMusic/Stormwind.mp3")
+	AreEqual("Sound/Music/CityMusic/Stormwind.mp3", playedPath, "default tracks without a resourceId should use the track name as path")
 end
 
 function Tests:PlayTrack_OggTrack_UsesOggPath()

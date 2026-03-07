@@ -101,19 +101,19 @@ function Soundtrack.Library.AddTrackOgg(trackName, _length, _title, _artist, _al
 	Soundtrack_Tracks[trackName] = { length = _length, title = _title, artist = _artist, album = _album, ogg = true }
 end
 
-function Soundtrack.Library.AddDefaultTrack(trackName, _length, _title, _artist, _album)
+function Soundtrack.Library.AddDefaultTrack(trackName, _length, _title, _artist, _album, _resourceId)
 	if _extension == nil then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, defaultTrack = true, resourceId = _resourceId }
 	elseif _extension == ".MP3" then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, mp3 = true, defaultTrack = true, resourceId = _resourceId }
 	elseif _extension == ".OGG" then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, ogg = true, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, ogg = true, defaultTrack = true, resourceId = _resourceId }
 	elseif _extension == ".WAV" then
 		Soundtrack_Tracks[trackName] =
-		{ length = _length, title = _title, artist = _artist, album = _album, wav = true, defaultTrack = true }
+		{ length = _length, title = _title, artist = _artist, album = _album, wav = true, defaultTrack = true, resourceId = _resourceId }
 	end
 end
 
@@ -292,13 +292,9 @@ function Soundtrack.Library.PlayTrack(trackName, soundEffect)
 	if nextTrackInfo.defaultTrack then
 		local newTrackName = trackName
 		Soundtrack.Chat.TraceLibrary("PlayDefaultMusicFileName(" .. newTrackName .. ")")
-		local dtrackIndexB, dtrackIndexE = string.find(newTrackName, "////")
-		if not dtrackIndexB then
-			dtrackIndexB = 0
-			dtrackIndexE = 0
-		else
-			newTrackName = string.sub(newTrackName, dtrackIndexE + 1)
-			Soundtrack.Chat.TraceLibrary("PlayDefaultMusicCroppedName(" .. newTrackName .. ")")
+		if nextTrackInfo.resourceId and nextTrackInfo.resourceId ~= 0 then
+			newTrackName = tostring(nextTrackInfo.resourceId)
+			Soundtrack.Chat.TraceLibrary("PlayDefaultMusicResourceId(" .. newTrackName .. ")")
 		end
 		nextFileName = "" .. newTrackName .. ""
 	else
