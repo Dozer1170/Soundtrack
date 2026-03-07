@@ -559,6 +559,17 @@ local function SetupSoundtrack()
       return {} -- Return empty table for tests
     end
   }
+  -- In tests, fire timer callbacks immediately so zone-event debouncing is transparent.
+  _G.C_Timer = {
+    After = function(delay, callback)
+      callback()
+    end,
+    NewTimer = function(delay, callback)
+      callback()
+      return { Cancel = function() end }
+    end,
+  }
+
   _G.C_PetBattles = {
     IsInBattle = function() return false end,
     GetPVPMatchmakingInfo = function() return false end,

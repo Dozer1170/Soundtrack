@@ -3,6 +3,7 @@ Soundtrack.ZoneEvents = {}
 local nextUpdateTime = 0
 local updateInterval = 1
 local zoneType = nil
+local pendingZoneChangeTimer = nil
 
 local function FindContinentByZone()
 	local inInstance, instanceType = IsInInstance()
@@ -251,6 +252,24 @@ local function OnZoneChanged()
 	end
 end
 
+-- When crossing zone boundaries (instances, portals, loading screens), WoW fires
+-- ZONE_CHANGED_NEW_AREA / PLAYER_ENTERING_WORLD before all APIs have settled.
+-- Specifically, GetRealZoneText() can still return the old zone name while
+-- IsInInstance() and C_Map already reflect the new zone, causing the wrong zone
+-- path to be constructed (e.g. old instance name added as a subzone of the new
+-- outdoor zone, or old outdoor zone added under Instances).  A short debounce
+-- gives all APIs time to reach a consistent state before we act on them.
+local function ScheduleZoneChange()
+	if pendingZoneChangeTimer then
+		pendingZoneChangeTimer:Cancel()
+		pendingZoneChangeTimer = nil
+	end
+	pendingZoneChangeTimer = C_Timer.NewTimer(0.5, function()
+		pendingZoneChangeTimer = nil
+		OnZoneChanged()
+	end)
+end
+
 function Soundtrack.ZoneEvents.OnLoad(self)
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	self:RegisterEvent("ZONE_CHANGED")
@@ -279,14 +298,14 @@ function Soundtrack.ZoneEvents.OnEvent(_, event, _)
 
 	Soundtrack.Chat.TraceZones(event)
 
-	if
-		event == "ZONE_CHANGED"
-		or event == "ZONE_CHANGED_INDOORS"
-		or event == "ZONE_CHANGED_NEW_AREA"
-		or event == "PLAYER_ENTERING_WORLD"
-	then
+	if event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
+		-- Subzone changes within the same zone: APIs are consistent, handle immediately.
 		Soundtrack.Chat.TraceZones("Event: " .. event)
 		OnZoneChanged()
+	elseif event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
+		-- Cross-zone / loading-screen transitions: debounce so stale API data settles.
+		Soundtrack.Chat.TraceZones("Event: " .. event)
+		ScheduleZoneChange()
 	end
 end
 
