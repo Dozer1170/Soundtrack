@@ -10,7 +10,7 @@ local Tests = Tests("Soundtrack", "PLAYER_ENTERING_WORLD")
 
 local function SetupFadeTrack()
 	Soundtrack_Tracks = {
-		["FadeTrack"]    = { length = 180, title = "Fade Song", mp3 = true },
+		["FadeTrack"]     = { length = 180, title = "Fade Song", mp3 = true },
 		["PrevFadeTrack"] = { length = 180, title = "Previous Song", mp3 = true },
 	}
 	-- Simulate something already playing so fade tests exercise the real fade path.
@@ -24,16 +24,16 @@ local function EnableFade(duration)
 end
 
 local function MakeFadeHelpers(overrides)
-	overrides = overrides or {}
-	local currentTime = overrides.startTime or 0
-	local playedPath  = nil
-	local stopCalled  = false
+	overrides          = overrides or {}
+	local currentTime  = overrides.startTime or 0
+	local playedPath   = nil
+	local stopCalled   = false
 	local setCvarCalls = {}
 
-	Replace("GetTime",   function() return currentTime end)
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function(path) playedPath = path end)
 	Replace("StopMusic", function() stopCalled = true end)
-	Replace("SetCVar",   function(key, value)
+	Replace("SetCVar", function(key, value)
 		if key == "Sound_MusicVolume" then
 			table.insert(setCvarCalls, tonumber(value))
 		end
@@ -44,13 +44,13 @@ local function MakeFadeHelpers(overrides)
 	Replace(Soundtrack.Events, "GetCurrentEvent", function()
 		return overrides.event or { continuous = false }
 	end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	return {
-		SetTime = function(t) currentTime = t end,
-		PlayedPath  = function() return playedPath  end,
-		StopCalled  = function() return stopCalled  end,
+		SetTime      = function(t) currentTime = t end,
+		PlayedPath   = function() return playedPath end,
+		StopCalled   = function() return stopCalled end,
 		SetCVarCalls = function() return setCvarCalls end,
 	}
 end
@@ -136,10 +136,10 @@ function Tests:FadeEnabled_FadeIn_RestoresVolumeAfterTrackStarts()
 
 	local currentTime = 0
 	local lastVolume  = nil
-	Replace("GetTime",   function() return currentTime end)
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function() end)
 	Replace("StopMusic", function() end)
-	Replace("GetCVar",   function(key)
+	Replace("GetCVar", function(key)
 		if key == "Sound_MusicVolume" then return "0.8" end
 		return "0"
 	end)
@@ -147,14 +147,14 @@ function Tests:FadeEnabled_FadeIn_RestoresVolumeAfterTrackStarts()
 		if key == "Sound_MusicVolume" then lastVolume = tonumber(value) end
 	end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	Soundtrack.Library.PlayTrack("FadeTrack")
-	currentTime = 2  -- fade-out complete, track starts + fade-in begins
+	currentTime = 2 -- fade-out complete, track starts + fade-in begins
 	Soundtrack.Library.OnUpdate()
-	currentTime = 4  -- fade-in complete
+	currentTime = 4 -- fade-in complete
 	Soundtrack.Library.OnUpdate()
 
 	AreEqual(0.8, lastVolume, "Volume must be restored to 0.8 after fade-in completes")
@@ -169,7 +169,8 @@ function Tests:FadeEnabled_PlayTrack_NothingPlaying_PlaysImmediately()
 	-- With nothing playing, music must start during PlayTrack itself (not deferred to OnUpdate)
 	Soundtrack.Library.PlayTrack("FadeTrack")
 
-	IsTrue(h.PlayedPath() ~= nil, "Track must play immediately during PlayTrack when nothing is playing, even with fade enabled")
+	IsTrue(h.PlayedPath() ~= nil,
+		"Track must play immediately during PlayTrack when nothing is playing, even with fade enabled")
 	AreEqual("Interface\\AddOns\\SoundtrackMusic\\FadeTrack.mp3", h.PlayedPath())
 end
 
@@ -182,23 +183,23 @@ function Tests:FadeEnabled_PlayTrack_DuringFadeIn_InterruptsFadeInImmediately()
 
 	local currentTime = 0
 	local playedPaths = {}
-	Replace("GetTime",   function() return currentTime end)
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function(path) table.insert(playedPaths, path) end)
 	Replace("StopMusic", function() end)
-	Replace("SetCVar",   function() end)
+	Replace("SetCVar", function() end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	-- Zone track starts (simulating something already playing so fade is used)
 	Soundtrack.Library.CurrentlyPlayingTrack = "ZoneTrack"
 	Soundtrack.Library.PlayTrack("ZoneTrack") -- zone changes to a new zone; fade-out starts
-	currentTime = 2                            -- fade-out complete -> zone plays, fade-in begins
+	currentTime = 2                        -- fade-out complete -> zone plays, fade-in begins
 	Soundtrack.Library.OnUpdate()
 
 	-- Mid fade-in, combat starts
-	currentTime = 3  -- 1s into a 2s fade-in
+	currentTime = 3 -- 1s into a 2s fade-in
 	Soundtrack.Library.PlayTrack("CombatTrack")
 
 	-- Should immediately start a fade-out (not wait for fade-in to complete)
@@ -231,23 +232,23 @@ function Tests:FadeEnabled_StopTrack_FadesOutWithoutPlayingNewTrack()
 	SetupFadeTrack()
 	Soundtrack.Library.CurrentlyPlayingTrack = "FadeTrack"
 
-	local stopCalled  = false
-	local playCalled  = false
-	local currentTime = 0
-	Replace("GetTime",   function() return currentTime end)
+	local stopCalled                         = false
+	local playCalled                         = false
+	local currentTime                        = 0
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function() playCalled = true end)
 	Replace("StopMusic", function() stopCalled = true end)
-	Replace("SetCVar",   function() end)
+	Replace("SetCVar", function() end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	Soundtrack.Library.StopTrack() -- no next track
 	currentTime = 2
 	Soundtrack.Library.OnUpdate()
 
-	IsTrue(stopCalled,   "StopMusic must be called after fade-out")
-	IsFalse(playCalled,  "PlayMusic must not be called when just stopping")
+	IsTrue(stopCalled, "StopMusic must be called after fade-out")
+	IsFalse(playCalled, "PlayMusic must not be called when just stopping")
 end
 
 function Tests:FadeEnabled_SecondPlayTrackDuringFadeOut_PlaysLatestTrack()
@@ -259,21 +260,21 @@ function Tests:FadeEnabled_SecondPlayTrackDuringFadeOut_PlaysLatestTrack()
 
 	local currentTime = 0
 	local playedPath  = nil
-	Replace("GetTime",   function() return currentTime end)
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function(path) playedPath = path end)
 	Replace("StopMusic", function() end)
-	Replace("SetCVar",   function() end)
+	Replace("SetCVar", function() end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	Soundtrack.Library.PlayTrack("TrackA")
-	Soundtrack.Library.OnUpdate() -- fade-out starts for TrackA
+	Soundtrack.Library.OnUpdate()       -- fade-out starts for TrackA
 
 	Soundtrack.Library.PlayTrack("TrackB") -- override target before fade completes
 	currentTime = 2
-	Soundtrack.Library.OnUpdate() -- fade-out completes, plays latest target
+	Soundtrack.Library.OnUpdate()       -- fade-out completes, plays latest target
 
 	IsTrue(playedPath ~= nil, "A track should have been played")
 	AreEqual("Interface\\AddOns\\SoundtrackMusic\\TrackB.mp3", playedPath,
@@ -331,10 +332,10 @@ function Tests:OnMusicVolumeCVarChanged_WhenFading_DoesNotUpdateSavedVolume()
 	SetupFadeTrack()
 	local currentTime = 0
 	local lastSetVolume = nil
-	Replace("GetTime",   function() return currentTime end)
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function() end)
 	Replace("StopMusic", function() end)
-	Replace("GetCVar",   function(key)
+	Replace("GetCVar", function(key)
 		if key == "Sound_MusicVolume" then return "0.8" end
 		return "0"
 	end)
@@ -342,15 +343,15 @@ function Tests:OnMusicVolumeCVarChanged_WhenFading_DoesNotUpdateSavedVolume()
 		if key == "Sound_MusicVolume" then lastSetVolume = tonumber(value) end
 	end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	-- Start a fade (savedMusicVolume captured as 0.8)
 	Soundtrack.Library.PlayTrack("FadeTrack")
-	currentTime = 1 -- mid-fade; now simulate external CVar change
+	currentTime = 1                               -- mid-fade; now simulate external CVar change
 	Soundtrack.Library.OnMusicVolumeCVarChanged(0.3) -- should be ignored during fade
-	Soundtrack.Library.OnUpdate() -- continue fade
+	Soundtrack.Library.OnUpdate()                 -- continue fade
 
 	-- Fade completes; volume should restore to original 0.8, not 0.3
 	currentTime = 2
@@ -401,12 +402,12 @@ function Tests:FadeEnabled_StopTrackDuringFadeIn_RestoresOriginalVolume()
 		["Track2"] = { length = 180, title = "Track2", mp3 = true },
 	}
 
-	local currentTime  = 0
-	local lastVolume   = nil
-	Replace("GetTime",   function() return currentTime end)
+	local currentTime = 0
+	local lastVolume  = nil
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function() end)
 	Replace("StopMusic", function() end)
-	Replace("GetCVar",   function(key)
+	Replace("GetCVar", function(key)
 		if key == "Sound_MusicVolume" then return "0.8" end
 		return "0"
 	end)
@@ -414,14 +415,14 @@ function Tests:FadeEnabled_StopTrackDuringFadeIn_RestoresOriginalVolume()
 		if key == "Sound_MusicVolume" then lastVolume = tonumber(value) end
 	end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	-- Something playing; play a new track (starts fade-out of old, then fade-in of new)
 	Soundtrack.Library.CurrentlyPlayingTrack = "Track1"
 	Soundtrack.Library.PlayTrack("Track2")
-	currentTime = 2        -- fade-out complete; Track2 starts + fade-in begins
+	currentTime = 2 -- fade-out complete; Track2 starts + fade-in begins
 	Soundtrack.Library.OnUpdate()
 
 	-- Mid fade-in at t=3  (1s into 2s fade-in → vol ≈ 0.4)
@@ -447,12 +448,12 @@ function Tests:FadeEnabled_StopTrackDuringFadeOut_DoesNotRestartFade()
 	SetupFadeTrack()
 	Soundtrack.Library.CurrentlyPlayingTrack = "FadeTrack"
 
-	local currentTime  = 0
-	local volumeHistory = {}
-	Replace("GetTime",   function() return currentTime end)
+	local currentTime                        = 0
+	local volumeHistory                      = {}
+	Replace("GetTime", function() return currentTime end)
 	Replace("PlayMusic", function() end)
 	Replace("StopMusic", function() end)
-	Replace("GetCVar",   function(key)
+	Replace("GetCVar", function(key)
 		if key == "Sound_MusicVolume" then return "0.8" end
 		return "0"
 	end)
@@ -460,13 +461,13 @@ function Tests:FadeEnabled_StopTrackDuringFadeOut_DoesNotRestartFade()
 		if key == "Sound_MusicVolume" then table.insert(volumeHistory, tonumber(value)) end
 	end)
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
-	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
 	Replace(Soundtrack.Timers, "AddTimer", function() end)
 
 	-- First StopTrack: starts fade-out from 0.8
 	Soundtrack.Library.StopTrack()
-	currentTime = 1  -- halfway through the 2s fade-out; vol ≈ 0.4
+	currentTime = 1 -- halfway through the 2s fade-out; vol ≈ 0.4
 	Soundtrack.Library.OnUpdate()
 
 	-- Capture the volume at the halfway point
