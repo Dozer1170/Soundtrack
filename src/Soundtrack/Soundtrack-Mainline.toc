@@ -1,6 +1,6 @@
-## Interface: 120000
+## Interface: 120001
 ## Title: Soundtrack
-## Version: 6.2.0
+## Version: 6.3.0
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## RequiredDeps: 

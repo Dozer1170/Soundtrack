@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+  <Script file="ChangelogDialogUI.lua"/>
+  <Frame name="SoundtrackChangelogFrame" parent="UIParent" movable="true" enableMouse="true"
+         frameStrata="DIALOG" inherits="BackdropTemplate" hidden="true">
+    <Size>
+      <AbsDimension x="460" y="340"/>
+    </Size>
+    <Anchors>
+      <Anchor point="CENTER"/>
+    </Anchors>
+    <Scripts>
+      <OnLoad>
+        self:SetBackdrop({
+          bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
+          edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+          tile = true, tileSize = 32, edgeSize = 32,
+          insets = { left = 11, right = 11, top = 11, bottom = 11 }
+        })
+        self:RegisterForDrag("LeftButton")
+        self:SetScript("OnDragStart", self.StartMoving)
+        self:SetScript("OnDragStop",  self.StopMovingOrSizing)
+      </OnLoad>
+    </Scripts>
+    <Layers>
+      <Layer level="OVERLAY">
+        <FontString name="SoundtrackChangelogTitle" inherits="GameFontNormal"
+                    text="What's New in Soundtrack">
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset><AbsDimension x="0" y="-18"/></Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="SoundtrackChangelogText" inherits="GameFontHighlight"
+                    justifyH="LEFT" justifyV="TOP" wordwrap="true">
+          <Size>
+            <AbsDimension x="420" y="268"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset><AbsDimension x="0" y="-42"/></Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button name="SoundtrackChangelogOKButton" inherits="UIPanelButtonTemplate" text="OK">
+        <Size><AbsDimension x="100" y="22"/></Size>
+        <Anchors>
+          <Anchor point="BOTTOM">
+            <Offset><AbsDimension x="0" y="16"/></Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ChangelogDialog.Close()</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="SoundtrackChangelogCloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT">
+            <Offset><AbsDimension x="-5" y="-5"/></Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>Soundtrack.ChangelogDialog.Close()</OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+</Ui>

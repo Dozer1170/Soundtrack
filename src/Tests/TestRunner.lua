@@ -468,6 +468,7 @@ local function SetupSoundtrack()
   local AceDB = {
     New = function(self, dbName, defaults, defaultProfile)
       return {
+        global = defaults and defaults.global or {},
         profile = defaults and defaults.profile or {
           events = {},
           settings = CloneDefaults()
@@ -504,6 +505,9 @@ local function SetupSoundtrack()
     GetAddOnMetadata = function(addonName, field)
       if field == "Title" then
         return "Soundtrack"
+      end
+      if field == "Version" then
+        return "6.3.0"
       end
       return nil
     end
@@ -684,6 +688,17 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/Battle/BossZoneEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/Dance/DanceEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/MiscEvents/MiscEvents.lua")
+
+  -- Stub UI frame globals needed by ChangelogDialogUI
+  _G.SoundtrackChangelogText = {
+    SetText = function() end,
+  }
+  _G.SoundtrackChangelogFrame = {
+    Show = function() end,
+    Hide = function() end,
+    Raise = function() end,
+  }
+  LoadSourceFile("src/Soundtrack/Core/UI/ChangelogDialogUI.lua")
 
   -- Add test mocks and legacy functions for Misc module
   if Soundtrack.Misc then

@@ -60,6 +60,9 @@ _G.SOUNDTRACK_BINDING_HEADER = C_AddOns.GetAddOnMetadata(..., "Title")
 
 function SoundtrackAddon:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SoundtrackDB", {
+		global = {
+			LastSeenVersion = "",
+		},
 		profile = {
 			minimap = { hide = false },
 			events = {},
@@ -126,6 +129,7 @@ function SoundtrackAddon:PLAYER_ENTERING_WORLD()
 		SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.Initialize()
 		Soundtrack.Cleanup.CleanupOldEvents()
+		Soundtrack.ChangelogDialog.CheckAndShow()
 	end
 end
 

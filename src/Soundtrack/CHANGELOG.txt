@@ -1,3 +1,13 @@
+6.3.0
+- Add tooltips to track buttons
+- Add export/import dialog for profiles
+- Respect game music volume setting
+- Debounce zone changes to prevent rapid music switching
+- Fix fade out accidentally changing music volume
+- Fix combat music not triggering correctly during fade out
+- Improve fade transition behavior
+- Bump interface version for 12.0.1
+
 6.2.0
 - Fade out experimental feature
 - Improve profile tab UI
