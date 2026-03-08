@@ -1,12 +1,10 @@
 6.3.0
-- Add tooltips to track buttons
-- Add export/import dialog for profiles
-- Respect game music volume setting
-- Debounce zone changes to prevent rapid music switching
-- Fix fade out accidentally changing music volume
+- IMPORTANT: Midnight tracks were added to the default tracks, and the names of the existing default tracks were changed. You may get the dialog indicating that some tracks no longer exist if you had tracks mapped to the old default tracks names. Apologies for any inconvenience this may cause. You will need to purge old tracks and reassign them. This is a one-time inconvenience that will allow for better track organization in the future.
+- Add tooltips to tracks if their name is truncated in the track list
+- Fix to hopefully prevent Instances being added to the wrong parent zone
+- Fix bug where music would fade to the wrong value
 - Fix combat music not triggering correctly during fade out
-- Improve fade transition behavior
-- Bump interface version for 12.0.1
+- Add a changelog dialog
 
 6.2.0
 - Fade out experimental feature
