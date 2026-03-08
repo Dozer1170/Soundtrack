@@ -387,3 +387,103 @@ function Tests:SoundtrackAddon_CVAR_UPDATE_InvalidValue_DefaultsToOne()
 
 	AreEqual(1, capturedVolume, "Defaults to 1 when value cannot be parsed as number")
 end
+
+-- ---------------------------------------------------------------------------
+-- Tests: StopTrack during active fades (volume-stuck regression)
+-- ---------------------------------------------------------------------------
+
+-- Regression: StopTrack called during fading_in must restore the original volume,
+-- not the intermediate low volume that was current at the moment of the call.
+function Tests:FadeEnabled_StopTrackDuringFadeIn_RestoresOriginalVolume()
+	EnableFade(2)
+	Soundtrack_Tracks = {
+		["Track1"] = { length = 180, title = "Track1", mp3 = true },
+		["Track2"] = { length = 180, title = "Track2", mp3 = true },
+	}
+
+	local currentTime  = 0
+	local lastVolume   = nil
+	Replace("GetTime",   function() return currentTime end)
+	Replace("PlayMusic", function() end)
+	Replace("StopMusic", function() end)
+	Replace("GetCVar",   function(key)
+		if key == "Sound_MusicVolume" then return "0.8" end
+		return "0"
+	end)
+	Replace("SetCVar", function(key, value)
+		if key == "Sound_MusicVolume" then lastVolume = tonumber(value) end
+	end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
+	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+
+	-- Something playing; play a new track (starts fade-out of old, then fade-in of new)
+	Soundtrack.Library.CurrentlyPlayingTrack = "Track1"
+	Soundtrack.Library.PlayTrack("Track2")
+	currentTime = 2        -- fade-out complete; Track2 starts + fade-in begins
+	Soundtrack.Library.OnUpdate()
+
+	-- Mid fade-in at t=3  (1s into 2s fade-in → vol ≈ 0.4)
+	currentTime = 3
+	Soundtrack.Library.OnUpdate()
+
+	-- StopTrack called while volume is partway up
+	Soundtrack.Library.StopTrack()
+
+	-- Advance through the full stop fade-out
+	currentTime = 5
+	Soundtrack.Library.OnUpdate()
+
+	-- Volume must be restored to the original 0.8, not the ~0.4 captured mid-fade-in
+	AreEqual(0.8, lastVolume, "Volume must restore to 0.8 after StopTrack during fade-in, not the intermediate value")
+end
+
+-- Regression: StopTrack called a second time during an already-running fading_out
+-- must not restart the fade (which would pop volume back up) and must still
+-- restore to the original volume when complete.
+function Tests:FadeEnabled_StopTrackDuringFadeOut_DoesNotRestartFade()
+	EnableFade(2)
+	SetupFadeTrack()
+	Soundtrack.Library.CurrentlyPlayingTrack = "FadeTrack"
+
+	local currentTime  = 0
+	local volumeHistory = {}
+	Replace("GetTime",   function() return currentTime end)
+	Replace("PlayMusic", function() end)
+	Replace("StopMusic", function() end)
+	Replace("GetCVar",   function(key)
+		if key == "Sound_MusicVolume" then return "0.8" end
+		return "0"
+	end)
+	Replace("SetCVar", function(key, value)
+		if key == "Sound_MusicVolume" then table.insert(volumeHistory, tonumber(value)) end
+	end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
+	Replace(Soundtrack.Events, "GetCurrentEvent",      function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove",   function() end)
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+
+	-- First StopTrack: starts fade-out from 0.8
+	Soundtrack.Library.StopTrack()
+	currentTime = 1  -- halfway through the 2s fade-out; vol ≈ 0.4
+	Soundtrack.Library.OnUpdate()
+
+	-- Capture the volume at the halfway point
+	local volAtHalfway = volumeHistory[#volumeHistory]
+	IsTrue(volAtHalfway < 0.8, "Volume should be below 0.8 halfway through fade-out")
+
+	-- Second StopTrack (e.g. another event fires): must NOT restart / pop volume back up
+	Soundtrack.Library.StopTrack()
+	currentTime = 1.01
+	Soundtrack.Library.OnUpdate()
+	local volAfterSecondStop = volumeHistory[#volumeHistory]
+	IsTrue(volAfterSecondStop <= volAtHalfway + 0.01,
+		"Second StopTrack must not pop volume back up above halfway value")
+
+	-- Complete fade-out; original volume must be restored
+	currentTime = 2
+	Soundtrack.Library.OnUpdate()
+	local lastVolume = volumeHistory[#volumeHistory]
+	AreEqual(0.8, lastVolume, "Volume must restore to 0.8 (original) after fade-out completes")
+end

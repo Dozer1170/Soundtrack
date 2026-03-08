@@ -161,11 +161,25 @@ function Soundtrack.Library.StopTrack()
 	))
 	nextTrackInfo = nil
 	if IsFadeEnabled() and not isPreviewActive and not nothingPlaying then
-		Soundtrack.Chat.TraceLibrary("[StopTrack] -> starting fade-out")
-		savedMusicVolume = GetMusicVolume()
-		fadeDuration     = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
-		fadeStartTime    = GetTime()
-		fadeState        = "fading_out"
+		if fadeState == "fading_out" then
+			-- Already fading out; nextTrackInfo=nil above ensures we stop after the fade completes.
+			Soundtrack.Chat.TraceLibrary("[StopTrack] -> already fading_out, will stop after current fade")
+		elseif fadeState == "fading_in" then
+			-- Interrupt the fade-in: snap to full volume then start a fresh fade-out.
+			-- savedMusicVolume already holds the correct reference level; do not overwrite it.
+			Soundtrack.Chat.TraceLibrary("[StopTrack] -> interrupting fade-in, snap + fade-out")
+			SetMusicVolume(savedMusicVolume)
+			fadeDuration  = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+			fadeStartTime = GetTime()
+			fadeState     = "fading_out"
+		else
+			-- idle: capture the current user volume and start a fresh fade-out.
+			Soundtrack.Chat.TraceLibrary("[StopTrack] -> starting fade-out")
+			savedMusicVolume = GetMusicVolume()
+			fadeDuration     = SoundtrackAddon.db.profile.settings.FadeTransitionDuration
+			fadeStartTime    = GetTime()
+			fadeState        = "fading_out"
+		end
 	else
 		Soundtrack.Chat.TraceLibrary("[StopTrack] -> instant stop")
 		fadeState = "instant"
