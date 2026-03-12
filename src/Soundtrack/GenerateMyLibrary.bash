@@ -602,7 +602,23 @@ function parse_mp3_duration {
 
 #---------- Generate Library --------------
 
-cd "$(dirname "$0")" || exit 1
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+MUSIC_DIR=""
+
+# Parse optional --music argument
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --music)
+      MUSIC_DIR="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+cd "$SCRIPT_DIR" || exit 1
 
 function parseTag {
   frame_text=$(echo "$1" | grep "$2" | tr -d "[:cntrl:]")
@@ -613,6 +629,129 @@ function parseTag {
   fi
 
   echo $frame_text
+}
+
+# Parse the Xing/Info VBR header from the first MP3 frame.
+# Echoes duration in whole seconds when found; echoes nothing on failure.
+# Assumes .hexdumptmp already exists (created by parse_id3v2).
+#
+# Most VBR MP3s encoded by LAME, iTunes, FFmpeg, etc. embed a Xing or Info
+# header immediately after the side-information block in the first audio frame.
+# That header contains the total frame count, from which exact duration is:
+#   duration = total_frames * samples_per_frame / sample_rate
+function get_xing_duration {
+  # Determine where audio data starts by checking for an ID3v2 tag.
+  # Without this, "fffa/fffb" bytes inside embedded album art (JPEG) would
+  # be mistaken for the first audio sync word.
+  local audio_start_chars=0
+  local id3_check
+  id3_check=$(dd if=".hexdumptmp" bs=1 skip=0 count=6 2>/dev/null)
+  if [ "$id3_check" = "494433" ]; then
+    # ID3v2 synchsafe size is encoded in hex chars 12-19 (bytes 6-9).
+    # Each byte is only 7 bits: total = (b0<<21)|(b1<<14)|(b2<<7)|b3.
+    local sb0 sb1 sb2 sb3
+    sb0=$(printf "%d" 0x"$(dd if=".hexdumptmp" bs=1 skip=12 count=2 2>/dev/null)")
+    sb1=$(printf "%d" 0x"$(dd if=".hexdumptmp" bs=1 skip=14 count=2 2>/dev/null)")
+    sb2=$(printf "%d" 0x"$(dd if=".hexdumptmp" bs=1 skip=16 count=2 2>/dev/null)")
+    sb3=$(printf "%d" 0x"$(dd if=".hexdumptmp" bs=1 skip=18 count=2 2>/dev/null)")
+    local tag_size=$(( ((sb0 & 127) << 21) | ((sb1 & 127) << 14) | ((sb2 & 127) << 7) | (sb3 & 127) ))
+    # Audio starts after 10-byte ID3 header + tag body
+    audio_start_chars=$(( (10 + tag_size) * 2 ))
+  fi
+
+  # Find the first MP3 sync word at or after the audio data.
+  # Use //g so that pos() is set correctly after each match.
+  local first_sync=""
+  while IFS= read -r pos; do
+    if [ "$pos" -ge "$audio_start_chars" ] 2>/dev/null; then
+      first_sync="$pos"
+      break
+    fi
+  done < <(perl -n0777e 'print pos()-length($&),"\n" while /fffa|fffb|fff3/g' .hexdumptmp 2>/dev/null | head -20)
+  [ -z "$first_sync" ] && return
+
+  # Read the 4-byte (8 hex char) frame header
+  local fh
+  fh=$(dd if=".hexdumptmp" bs=1 skip="$first_sync" count=8 2>/dev/null)
+  [ ${#fh} -lt 8 ] && return
+
+  # --- Parse MPEG version ---
+  local c3_int c4_int
+  c3_int=$(hex_str_to_int "${fh:2:1}")
+  c4_int=$(hex_str_to_int "${fh:3:1}")
+  local vbit1=$(( c3_int & 1 ))
+  local vbit2=$(( (c4_int & 8) >> 3 ))
+  local vindex=$(( (vbit1 << 1) + vbit2 ))
+  local mpegver
+  mpegver=$(mpeg_version_map $vindex)
+  [ -z "$mpegver" ] && return
+
+  # --- Parse layer ---
+  local lyr_index=$(( (c4_int & 6) >> 1 ))
+  local lyr
+  lyr=$(layer_map $lyr_index)
+  [ -z "$lyr" ] && return
+
+  # --- Parse channel mode (top 2 bits of byte 3, i.e. high nibble of hex char 6) ---
+  local c7_int
+  c7_int=$(hex_str_to_int "${fh:6:1}")
+  local chan_mode=$(( (c7_int & 12) >> 2 ))
+  # 0=stereo, 1=joint stereo, 2=dual channel, 3=mono
+
+  # --- Side-info size (bytes) ---
+  local side_info
+  if [ "$mpegver" -eq 1 ]; then
+    [ "$chan_mode" -eq 3 ] && side_info=17 || side_info=32
+  else
+    [ "$chan_mode" -eq 3 ] && side_info=9 || side_info=17
+  fi
+
+  # --- Locate and check the Xing/Info tag ---
+  # Offset (in hex chars) = frame_start + (4-byte header + side_info) * 2
+  local xing_offset=$(( first_sync + (4 + side_info) * 2 ))
+  local xing_tag
+  xing_tag=$(dd if=".hexdumptmp" bs=1 skip="$xing_offset" count=8 2>/dev/null)
+  [ ${#xing_tag} -lt 8 ] && return
+
+  # "Xing" = 58696e67 (VBR), "Info" = 496e666f (CBR with header)
+  # xxd outputs lowercase, so no case conversion needed.
+  [ "$xing_tag" != "58696e67" ] && [ "$xing_tag" != "496e666f" ] && return
+
+  # --- Read Xing flags (4 bytes) ---
+  local flags_offset=$(( xing_offset + 8 ))
+  local flags_hex
+  flags_hex=$(dd if=".hexdumptmp" bs=1 skip="$flags_offset" count=8 2>/dev/null)
+  [ ${#flags_hex} -lt 8 ] && return
+  local flags
+  flags=$(printf "%d" 0x"$flags_hex" 2>/dev/null)
+
+  # Bit 0 of flags indicates the total frame count field is present
+  [ $(( flags & 1 )) -eq 0 ] && return
+
+  # --- Read total frame count (4 bytes) ---
+  local nframes_offset=$(( flags_offset + 8 ))
+  local nframes_hex
+  nframes_hex=$(dd if=".hexdumptmp" bs=1 skip="$nframes_offset" count=8 2>/dev/null)
+  [ ${#nframes_hex} -lt 8 ] && return
+  local nframes
+  nframes=$(printf "%d" 0x"$nframes_hex" 2>/dev/null)
+  [ -z "$nframes" ] || [ "$nframes" -eq 0 ] && return
+
+  # --- Samples per frame ---
+  local spf
+  spf=$(samples_per_frame_map "${mpegver}_${lyr}")
+  [ -z "$spf" ] && return
+
+  # --- Sampling rate ---
+  local c6_int
+  c6_int=$(hex_str_to_int "${fh:5:1}")
+  local sr_index=$(( (c6_int & 12) >> 2 ))
+  local sr
+  sr=$(sampling_rate_map "${sr_index}_${mpegver}")
+  [ -z "$sr" ] || [ "$sr" -eq 0 ] && return
+
+  # duration = total_frames * samples_per_frame / sample_rate
+  echo $(( nframes * spf / sr ))
 }
 
 function process_file {
@@ -629,14 +768,28 @@ function process_file {
   album=$(parseTag "$tags" "TALB" "None")
   author=$(parseTag "$tags" "TPE1" "None")
 
-  length=$(DEBUG=0 parse_mp3_duration "$filePathWithExtension" 25 1 | grep "Duration" | cut -c10-)
+  # Escape characters that would break Lua string literals
+  trackTitle="${trackTitle//\\/\\\\}"
+  trackTitle="${trackTitle//\"/\\\"}"
+  album="${album//\\/\\\\}"
+  album="${album//\"/\\\"}"
+  author="${author//\\/\\\\}"
+  author="${author//\"/\\\"}"
+
+  # Try the Xing/Info VBR header first (accurate, no dependencies).
+  # Falls back to the frame-sampling estimator for CBR files without a Xing header.
+  length=""
+  length=$(get_xing_duration)
+  if [ -z "$length" ]; then
+    length=$(DEBUG=0 parse_mp3_duration "$filePathWithExtension" 25 1 | grep "Duration" | cut -c10-)
+  fi
 
   echo "$(tput rc)$(tput el)$relativeFilePath: ${length}s, $trackTitle, $author, $album"
 
   addTrackStatement="    Soundtrack.Library.AddTrack(\"$relativeFilePathNoExtension\", $length, \"$trackTitle\", \"$author\", \"$album\")"
   addTrackStatement="${addTrackStatement//\.\//}"
   addTrackStatement="${addTrackStatement//\//\\\\}"
-  echo "$addTrackStatement" >>MyTracks.lua
+  echo "$addTrackStatement" >>"$OUTPUT_LUA"
 }
 
 # Create ../SoundtrackMusic directory if it doesn't exist
@@ -644,10 +797,16 @@ if [ ! -d "../SoundtrackMusic" ]; then
   mkdir -p ../SoundtrackMusic
 fi
 
-cd ../SoundtrackMusic
+if [ -n "$MUSIC_DIR" ]; then
+  cd "$MUSIC_DIR" || exit 1
+  OUTPUT_LUA="$MUSIC_DIR/MyTracks.lua"
+else
+  cd ../SoundtrackMusic || exit 1
+  OUTPUT_LUA="MyTracks.lua"
+fi
 
-echo "-- This file is automatically generated" >MyTracks.lua
-echo "-- Please do not edit it" >>MyTracks.lua
+echo "-- This file is automatically generated" >"$OUTPUT_LUA"
+echo "-- Please do not edit it" >>"$OUTPUT_LUA"
 
 currentDate=$(date)
 {
@@ -659,10 +818,10 @@ currentDate=$(date)
   echo "   else"
   echo "      SoundtrackAddon.db.profile.settings.MyTracksVersionSame = true"
   echo "   end"
-} >>MyTracks.lua
+} >>"$OUTPUT_LUA"
 
 FILES=$(find . -name \*.mp3)
-if [ -z $FILES ]; then
+if [ -z "$FILES" ]; then
   error "No mp3 files found in $(pwd)"
 else
   while IFS= read -r file; do
@@ -670,7 +829,7 @@ else
   done <<<"$FILES"
 fi
 
-echo "end" >>MyTracks.lua
+echo "end" >>"$OUTPUT_LUA"
 
 echo "Generation complete!"
 
