@@ -97,6 +97,16 @@ def load_existing_metadata(lua_path: Path) -> dict[str, tuple[str, str, str]]:
     return meta
 
 
+def escape_lua_string(s: str) -> str:
+    """Escape characters incompatible with Lua double-quoted strings."""
+    s = s.replace('\\', '\\\\')  # Must be first
+    s = s.replace('"', '\\"')
+    s = s.replace('\n', '\\n')
+    s = s.replace('\r', '\\r')
+    s = s.replace('\0', '\\0')
+    return s
+
+
 def mp3_duration(path: Path) -> int:
     """Return duration in whole seconds, or 0 on error."""
     try:
@@ -178,10 +188,10 @@ def main() -> None:
     print(f"\nWriting {lua_path}...")
     lines = ["function Soundtrack_LoadDefaultTracks()"]
     for lua_key, duration, title, artist, album, res_id in entries:
-        # Escape any quotes in metadata
-        title  = title.replace('"', '\\"')
-        artist = artist.replace('"', '\\"')
-        album  = album.replace('"', '\\"')
+        # Escape characters incompatible with Lua double-quoted strings
+        title  = escape_lua_string(title)
+        artist = escape_lua_string(artist)
+        album  = escape_lua_string(album)
         lines.append(
             f'    Soundtrack.Library.AddDefaultTrack("{lua_key}", {duration}, "{title}", "{artist}", "{album}", {res_id})'
         )
