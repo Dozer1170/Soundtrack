@@ -6,12 +6,12 @@
       <!-- EVENT LIST -->
       <Frame name="SoundtrackFrameEventList">
         <Size>
-          <AbsDimension x="200" y="355"/>
+          <AbsDimension x="190" y="355"/>
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame" relativePoint="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-40"/>
+              <AbsDimension x="150" y="-40"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -380,12 +380,12 @@
           <!-- TRACK LIST -->
           <Frame name="SoundtrackFrameTrackList">
             <Size>
-              <AbsDimension x="630" y="300"/>
+              <AbsDimension x="530" y="300"/>
             </Size>
             <Anchors>
               <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame" relativePoint="TOPLEFT">
                 <Offset>
-                  <AbsDimension x="225" y="-40"/>
+                  <AbsDimension x="350" y="-40"/>
                 </Offset>
               </Anchor>
             </Anchors>
@@ -644,7 +644,7 @@
           <!-- Context menus -->
           <Frame name="SoundtrackFrame_AssignedFrame">
             <Size>
-              <AbsDimension x="630" y="155"/>
+              <AbsDimension x="530" y="155"/>
             </Size>
             <Anchors>
               <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTrackList" relativePoint="BOTTOMLEFT"/>

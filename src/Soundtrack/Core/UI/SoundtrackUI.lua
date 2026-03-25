@@ -90,16 +90,19 @@ local function TabChanged()
 	end
 end
 
-local function SelectActiveTab()
+local function SelectActiveTab(skipAnimation)
 	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
 
 	if stackLevel > 0 then
 		Soundtrack.Chat.TraceFrame("Selecting currently playing tab")
 		local tableName = Soundtrack.Events.Stack[stackLevel].tableName
-		SoundtrackUI.SelectedEventsTable = tableName
-		PanelTemplates_SetTab(SoundtrackFrame, TabUtils.GetTabIndex(tableName))
-		TabChanged()
+		local item = SoundtrackNav.GetItemByEventTable(tableName)
+		if item then
+			SoundtrackNav.NavigateTo(item.id, skipAnimation)
+			return true
+		end
 	end
+	return false
 end
 
 local function SetStatusBarProgress(statusBarID, max, current)
@@ -223,8 +226,8 @@ end
 function SoundtrackUI.OnLoad()
 	tinsert(UISpecialFrames, "SoundtrackFrame")
 
-	PanelTemplates_SetNumTabs(SoundtrackFrame, 10)
-	PanelTemplates_SetTab(SoundtrackFrame, 1)
+	-- Initialize tab state for backward compatibility (sidebar nav replaces visual tabs)
+	SoundtrackFrame.selectedTab = 1
 end
 
 function SoundtrackUI.OnUpdate()
@@ -304,8 +307,14 @@ end
 
 function SoundtrackUI.OnShow()
 	RefreshCurrentlyPlaying()
-	SelectActiveTab()
-	SoundtrackUI.RefreshShowingTab()
+
+	-- Navigate to the currently playing tab (instant, no animation on open)
+	local navigated = SelectActiveTab(true)
+	if not navigated then
+		-- Nothing playing — show current page instantly
+		SoundtrackNav.RefreshHighlight()
+		SoundtrackUI.RefreshShowingTab(true)
+	end
 end
 
 function SoundtrackUI.OnHide()
@@ -348,39 +357,79 @@ function SoundtrackUI.OnClearButtonClick()
 	StaticPopup_Show("SOUNDTRACK_CLEAR_SELECTED_EVENT")
 end
 
-function SoundtrackUI.RefreshShowingTab()
+-- Track which content frame is currently shown for animated transitions
+local currentContentFrame = nil
+
+function SoundtrackUI.RefreshShowingTab(skipAnimation)
 	SoundtrackUI.SelectedEventsTable = nil
-	SoundtrackFrameEventFrame:Hide()
-	SoundtrackFrameOptionsTab:Hide()
-	SoundtrackFrameProfilesFrame:Hide()
-	SoundtrackFrameAboutFrame:Hide()
+
+	-- Determine which content frame and event table to show
+	local newFrame = nil
 	if SoundtrackFrame.selectedTab == 1 then
 		SoundtrackUI.SelectedEventsTable = "Battle"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 2 then
 		SoundtrackUI.SelectedEventsTable = "Boss Zones"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 3 then
 		SoundtrackUI.SelectedEventsTable = "Zone"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 4 then
 		SoundtrackUI.SelectedEventsTable = "Pet Battles"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 5 then
 		SoundtrackUI.SelectedEventsTable = "Dance"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 6 then
 		SoundtrackUI.SelectedEventsTable = "Misc"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 7 then
 		SoundtrackUI.SelectedEventsTable = "Playlists"
-		SoundtrackFrameEventFrame:Show()
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 8 then
-		SoundtrackFrameOptionsTab:Show()
+		newFrame = SoundtrackFrameOptionsTab
 	elseif SoundtrackFrame.selectedTab == 9 then
-		SoundtrackFrameProfilesFrame:Show()
+		newFrame = SoundtrackFrameProfilesFrame
 	elseif SoundtrackFrame.selectedTab == 10 then
-		SoundtrackFrameAboutFrame:Show()
+		newFrame = SoundtrackFrameAboutFrame
+	end
+
+	local allContentFrames = {
+		SoundtrackFrameEventFrame,
+		SoundtrackFrameOptionsTab,
+		SoundtrackFrameProfilesFrame,
+		SoundtrackFrameAboutFrame,
+	}
+
+	local oldFrame = currentContentFrame
+	currentContentFrame = newFrame
+
+	if skipAnimation then
+		-- Instant switch (used on initial open)
+		for _, f in ipairs(allContentFrames) do
+			if f ~= newFrame then
+				SoundtrackAnimations.HideInstant(f)
+			end
+		end
+		if newFrame then
+			SoundtrackAnimations.ShowInstant(newFrame)
+		end
+	else
+		-- Animated transition between content pages
+		for _, f in ipairs(allContentFrames) do
+			if f ~= newFrame and f:IsShown() then
+				SoundtrackAnimations.FadeOut(f)
+			end
+		end
+		if newFrame then
+			if oldFrame and oldFrame ~= newFrame then
+				C_Timer.After(0.06, function()
+					SoundtrackAnimations.FadeIn(newFrame)
+				end)
+			else
+				SoundtrackAnimations.FadeIn(newFrame)
+			end
+		end
 	end
 
 	TabChanged()

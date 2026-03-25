@@ -9,15 +9,43 @@ local function MockFrame(name)
 		_visible = false,
 		_enabled = true,
 		_id = 1,
+		_alpha = 1,
 		Show = function(self) self._visible = true end,
 		Hide = function(self) self._visible = false end,
 		IsVisible = function(self) return self._visible end,
+		IsShown = function(self) return self._visible end,
 		Enable = function(self) self._enabled = true end,
 		Disable = function(self) self._enabled = false end,
 		SetPoint = function() end,
 		SetWidth = function() end,
+		SetAlpha = function(self, a) self._alpha = a end,
+		GetAlpha = function(self) return self._alpha end,
 		GetID = function(self) return self._id end,
 		SetID = function(self, id) self._id = id end,
+		CreateAnimationGroup = function()
+			local animGroup = {
+				_playing = false,
+				CreateAnimation = function()
+					return {
+						SetFromAlpha = function() end,
+						SetToAlpha = function() end,
+						SetDuration = function() end,
+						SetSmoothing = function() end,
+					}
+				end,
+				SetScript = function(self, event, func)
+					if event == "OnFinished" then self._onFinished = func end
+				end,
+				Play = function(self)
+					self._playing = true
+					if self._onFinished then self._onFinished() end
+					self._playing = false
+				end,
+				Stop = function(self) self._playing = false end,
+				IsPlaying = function(self) return self._playing end,
+			}
+			return animGroup
+		end,
 	}
 	if name then
 		_G[name] = obj
@@ -103,20 +131,11 @@ end
 
 function Tests:OnLoad_RegistersSpecialFrameAndTabs()
 	UISpecialFrames = {}
-	local numTabs
-	local selectedTab
-	Replace(_G, "PanelTemplates_SetNumTabs", function(_, value)
-		numTabs = value
-	end)
-	Replace(_G, "PanelTemplates_SetTab", function(_, value)
-		selectedTab = value
-	end)
 
 	SoundtrackUI.OnLoad()
 
 	AreEqual("SoundtrackFrame", UISpecialFrames[1])
-	AreEqual(10, numTabs)
-	AreEqual(1, selectedTab)
+	AreEqual(1, SoundtrackFrame.selectedTab)
 end
 
 function Tests:OnUpdate_RefreshesTrackProgress()
@@ -259,12 +278,9 @@ end
 
 function Tests:OnShow_SelectsActiveTabAndRefreshes()
 	SetupEventFrameButtons()
+	SetupTabFrames()
 	Soundtrack.Events.Stack = { { tableName = ST_ZONE, eventName = "Zone" } }
 	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 1 end)
-	local tabIndex
-	Replace(_G, "PanelTemplates_SetTab", function(_, value) tabIndex = value end)
-	local refreshCalled = false
-	Replace(SoundtrackUI, "RefreshShowingTab", function() refreshCalled = true end)
 	Replace(Soundtrack, "StopEventAtLevel", function() end)
 	Replace(SoundtrackUI, "UpdateEventsUI", function() end)
 	Replace(_G, "GetFlatEventsTableForCurrentTab", function()
@@ -273,8 +289,7 @@ function Tests:OnShow_SelectsActiveTabAndRefreshes()
 
 	SoundtrackUI.OnShow()
 
-	AreEqual(TabUtils.GetTabIndex(ST_ZONE), tabIndex)
-	IsTrue(refreshCalled)
+	AreEqual(TabUtils.GetTabIndex(ST_ZONE), SoundtrackFrame.selectedTab)
 	AreEqual(ST_ZONE, SoundtrackUI.SelectedEventsTable)
 end
 

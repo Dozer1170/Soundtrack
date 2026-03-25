@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+  <Script file="SoundtrackAnimations.lua"/>
+  <Script file="SoundtrackNavigation.lua"/>
   <Script file="SoundtrackUI.lua"/>
   <Script file="EventStackUI.lua" />
   <Script file="EventsUI.lua" />
@@ -25,10 +27,10 @@
   <Texture name="Soundtrack_NextDisabledTexture" file="Interface\AddOns\Soundtrack\Images\NextDisabled" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <Texture name="Soundtrack_StopTexture" file="Interface\AddOns\Soundtrack\Images\Stop" inherits="Soundtrack_TextureTemplate" virtual="true"/>
   <Texture name="Soundtrack_InfoTexture" file="Interface\AddOns\Soundtrack\Images\Info" inherits="Soundtrack_TextureTemplate" virtual="true"/>
-  <!--Main frame-->
+  <!--Main frame — redesigned with sidebar navigation -->
   <Frame name="SoundtrackFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
     <Size>
-      <AbsDimension x="870" y="525"/>
+      <AbsDimension x="900" y="550"/>
     </Size>
     <Anchors>
       <Anchor point="TOPLEFT">
@@ -38,16 +40,16 @@
       </Anchor>
     </Anchors>
     <HitRectInsets>
-      <AbsInset left="0" right="30" top="0" bottom="45"/>
+      <AbsInset left="0" right="30" top="0" bottom="10"/>
     </HitRectInsets>
     <Layers>
       <Layer level="OVERLAY">
+        <!-- Title in the header bar -->
         <FontString name="$parentTitleText" inherits="GameFontNormal" text="Soundtrack">
-          <!--SOUNDTRACK_TITLE-->
           <Anchors>
-            <Anchor point="TOP">
+            <Anchor point="TOPLEFT">
               <Offset>
-                <AbsDimension x="0" y="-18"/>
+                <AbsDimension x="22" y="-18"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -55,6 +57,7 @@
       </Layer>
     </Layers>
     <Frames>
+      <!-- Close button -->
       <Button name="SoundtrackFrame_CloseButton" inherits="UIPanelCloseButton">
         <Anchors>
           <Anchor point="TOPRIGHT">
@@ -68,192 +71,249 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <!-- Tabs -->
-      <Button name="SoundtrackFrameTab1" inherits="SoundtrackFrameTabTemplate" id="1" text="Battle">
+
+      <!-- ═══════════════════════════════════════════════════ -->
+      <!-- SIDEBAR NAVIGATION PANEL                           -->
+      <!-- ═══════════════════════════════════════════════════ -->
+      <Frame name="SoundtrackFrame_Sidebar">
+        <Size>
+          <AbsDimension x="134" y="470"/>
+        </Size>
         <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="15" y="8"/>
+              <AbsDimension x="12" y="-36"/>
             </Offset>
           </Anchor>
         </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab2" inherits="SoundtrackFrameTabTemplate" id="2" text="Boss Zones">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab3" inherits="SoundtrackFrameTabTemplate" id="3" text="Zones">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab2" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab4" inherits="SoundtrackFrameTabTemplate" id="4" text="Pet Battles">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab3" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab5" inherits="SoundtrackFrameTabTemplate" id="5" text="Dances">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab4" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab6" inherits="SoundtrackFrameTabTemplate" id="6" text="Misc">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab5" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab7" inherits="SoundtrackFrameTabTemplate" id="7" text="Playlists">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab6" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab8" inherits="SoundtrackFrameTabTemplate" id="8" text="Options">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab7" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab9" inherits="SoundtrackFrameTabTemplate" id="9" text="Profiles">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab8" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="SoundtrackFrameTab10" inherits="SoundtrackFrameTabTemplate" id="10" text="About">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab9" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="-8" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </Button>
-      <StatusBar name="SoundtrackFrame_StatusBarEvent" inherits="SoundtrackFrame_StatusBarTemplate" minValue="0" maxValue="8" defaultValue="1" id="1">
+        <Layers>
+          <Layer level="BACKGROUND">
+            <!-- Sidebar background — slightly darker than the main frame -->
+            <Texture name="SoundtrackFrame_SidebarBg">
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset><AbsDimension x="0" y="2"/></Offset>
+                </Anchor>
+                <Anchor point="BOTTOMRIGHT">
+                  <Offset><AbsDimension x="0" y="-2"/></Offset>
+                </Anchor>
+              </Anchors>
+              <Color r="0.05" g="0.05" b="0.08" a="0.6"/>
+            </Texture>
+          </Layer>
+          <Layer level="ARTWORK">
+            <!-- Vertical divider line on the right edge of the sidebar -->
+            <Texture name="SoundtrackFrame_SidebarDivider">
+              <Size>
+                <AbsDimension x="1" y="470"/>
+              </Size>
+              <Anchors>
+                <Anchor point="TOPRIGHT">
+                  <Offset><AbsDimension x="0" y="2"/></Offset>
+                </Anchor>
+              </Anchors>
+              <Color r="0.3" g="0.3" b="0.35" a="0.5"/>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>SoundtrackNav.BuildSidebar(self)</OnLoad>
+        </Scripts>
+      </Frame>
+
+      <!-- ═══════════════════════════════════════════════════ -->
+      <!-- CONTENT AREA (right of sidebar, above bottom bar)  -->
+      <!-- ═══════════════════════════════════════════════════ -->
+
+      <!-- EVENTS Frame, used for all event assignment tabs -->
+      <Frame name="SoundtrackFrameEventFrame" inherits="SoundtrackFrameEventFrameTemplate"/>
+
+      <!-- OPTIONS TAB -->
+      <Frame name="SoundtrackFrameOptionsTab" inherits="SoundtrackFrameOptionsTabTemplate"/>
+
+      <!-- PROFILES TAB -->
+      <Frame name="SoundtrackFrameProfilesFrame" inherits="SoundtrackFrameProfilesFrameTemplate"/>
+
+      <!-- ABOUT TAB -->
+      <Frame name="SoundtrackFrameAboutFrame" inherits="SoundtrackFrameAboutFrameTemplate"/>
+
+      <!-- ═══════════════════════════════════════════════════ -->
+      <!-- BOTTOM PLAYBACK BAR                                -->
+      <!-- ═══════════════════════════════════════════════════ -->
+      <Frame name="SoundtrackFrame_BottomBar">
+        <Size>
+          <AbsDimension x="876" y="30"/>
+        </Size>
         <Anchors>
           <Anchor point="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="13" y="10"/>
+              <AbsDimension x="12" y="12"/>
             </Offset>
           </Anchor>
         </Anchors>
-      </StatusBar>
-      <StatusBar name="SoundtrackFrame_StatusBarTrack" inherits="SoundtrackFrame_StatusBarTemplate" minValue="0" maxValue="244" defaultValue="23" id="2">
-        <Anchors>
-          <Anchor point="LEFT" relativeTo="SoundtrackFrame_StatusBarEvent" relativePoint="RIGHT">
-            <Offset>
-              <AbsDimension x="5" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-      </StatusBar>
-      <Button name="SoundtrackFrame_PreviousButton" inherits="Soundtrack_PreviousButton">
-        <Size>
-          <AbsDimension x="16" y="16"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackFrame_StatusBarTrack">
-            <Offset>
-              <AbsDimension x="10" y="0"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-        <Scripts>
-          <OnClick>Soundtrack.Events.PlaybackPrevious()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PREVIOUS, SOUNDTRACK_PREVIOUS_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <!-- Subtle top border for the bottom bar -->
+            <Texture name="SoundtrackFrame_BottomBarTopLine">
+              <Size>
+                <AbsDimension x="876" y="1"/>
+              </Size>
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset><AbsDimension x="0" y="4"/></Offset>
+                </Anchor>
+              </Anchors>
+              <Color r="0.3" g="0.3" b="0.35" a="0.4"/>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Frames>
+          <!-- Playback control buttons -->
+          <Button name="SoundtrackFrame_PreviousButton" inherits="Soundtrack_PreviousButton">
+            <Size>
+              <AbsDimension x="16" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="SoundtrackFrame_BottomBar" relativePoint="LEFT">
+                <Offset>
+                  <AbsDimension x="4" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>Soundtrack.Events.PlaybackPrevious()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PREVIOUS, SOUNDTRACK_PREVIOUS_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+          <Button name="SoundtrackFrame_PlayButton" inherits="Soundtrack_PlayButton">
+            <Size>
+              <AbsDimension x="16" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFrame_PreviousButton">
+                <Offset><AbsDimension x="2" y="0"/></Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>Soundtrack.Events.PlaybackPlayStop()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PLAY, SOUNDTRACK_PLAY_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+          <Button name="SoundtrackFrame_StopButton" inherits="Soundtrack_StopButton">
+            <Size>
+              <AbsDimension x="16" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SoundtrackFrame_PlayButton"/>
+            </Anchors>
+            <Scripts>
+              <OnClick>Soundtrack.Events.PlaybackPlayStop()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PAUSE, SOUNDTRACK_PAUSE_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+          <Button name="SoundtrackFrame_NextButton" inherits="Soundtrack_NextButton">
+            <Size>
+              <AbsDimension x="16" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFrame_PlayButton">
+                <Offset><AbsDimension x="2" y="0"/></Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>Soundtrack.Events.PlaybackNext()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_NEXT, SOUNDTRACK_NEXT_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+          <Button name="SoundtrackFrame_TrueStopButton" inherits="Soundtrack_TrueStopButton">
+            <Size>
+              <AbsDimension x="16" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFrame_NextButton">
+                <Offset><AbsDimension x="2" y="0"/></Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>Soundtrack.Events.PlaybackTrueStop()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_STOP, SOUNDTRACK_STOP_TIP);</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+
+          <!-- Status bars -->
+          <StatusBar name="SoundtrackFrame_StatusBarEvent" inherits="SoundtrackFrame_StatusBarTemplate" minValue="0" maxValue="8" defaultValue="1" id="1">
+            <Size>
+              <AbsDimension x="330" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="SoundtrackFrame_TrueStopButton" relativePoint="RIGHT">
+                <Offset>
+                  <AbsDimension x="10" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </StatusBar>
+          <StatusBar name="SoundtrackFrame_StatusBarTrack" inherits="SoundtrackFrame_StatusBarTemplate" minValue="0" maxValue="244" defaultValue="23" id="2">
+            <Size>
+              <AbsDimension x="330" y="16"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="SoundtrackFrame_StatusBarEvent" relativePoint="RIGHT">
+                <Offset>
+                  <AbsDimension x="5" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </StatusBar>
+        </Frames>
+      </Frame>
+
+      <!-- Hidden tab buttons (kept for backward compatibility with PanelTemplates) -->
+      <Button name="SoundtrackFrameTab1" inherits="SoundtrackFrameTabTemplate" id="1" text="Battle" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="-100" y="-100"/></Offset></Anchor></Anchors>
       </Button>
-      <Button name="SoundtrackFrame_PlayButton" inherits="Soundtrack_PlayButton">
-        <Size>
-          <AbsDimension x="16" y="16"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackFrame_PreviousButton"/>
-        </Anchors>
-        <Scripts>
-          <OnClick>Soundtrack.Events.PlaybackPlayStop()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PLAY, SOUNDTRACK_PLAY_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
+      <Button name="SoundtrackFrameTab2" inherits="SoundtrackFrameTabTemplate" id="2" text="Boss Zones" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
       </Button>
-      <Button name="SoundtrackFrame_StopButton" inherits="Soundtrack_StopButton">
-        <Size>
-          <AbsDimension x="16" y="16"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SoundtrackFrame_PlayButton"/>
-        </Anchors>
-        <Scripts>
-          <OnClick>Soundtrack.Events.PlaybackPlayStop()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PAUSE, SOUNDTRACK_PAUSE_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
+      <Button name="SoundtrackFrameTab3" inherits="SoundtrackFrameTabTemplate" id="3" text="Zones" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
       </Button>
-      <Button name="SoundtrackFrame_NextButton" inherits="Soundtrack_NextButton">
-        <Size>
-          <AbsDimension x="16" y="16"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackFrame_PlayButton"/>
-        </Anchors>
-        <Scripts>
-          <OnClick>Soundtrack.Events.PlaybackNext()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_NEXT, SOUNDTRACK_NEXT_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
+      <Button name="SoundtrackFrameTab4" inherits="SoundtrackFrameTabTemplate" id="4" text="Pet Battles" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
       </Button>
-      <Button name="SoundtrackFrame_TrueStopButton" inherits="Soundtrack_TrueStopButton">
-        <Size>
-          <AbsDimension x="16" y="16"/>
-        </Size>
-        <Anchors>
-          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SoundtrackFrame_NextButton"/>
-        </Anchors>
-        <Scripts>
-          <OnClick>Soundtrack.Events.PlaybackTrueStop()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_STOP, SOUNDTRACK_STOP_TIP);</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
+      <Button name="SoundtrackFrameTab5" inherits="SoundtrackFrameTabTemplate" id="5" text="Dances" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
       </Button>
-      <!-- EVENTS Frame, used for all event assignment tabs -->
-      <Frame name="SoundtrackFrameEventFrame" inherits="SoundtrackFrameEventFrameTemplate"/>
-      <!-- OPTIONS TAB -->
-      <Frame name="SoundtrackFrameOptionsTab" inherits="SoundtrackFrameOptionsTabTemplate"/>
-      <!-- PROFILES TAB -->
-      <Frame name="SoundtrackFrameProfilesFrame" inherits="SoundtrackFrameProfilesFrameTemplate"/>
-      <!-- ABOUT TAB -->
-      <Frame name="SoundtrackFrameAboutFrame" inherits="SoundtrackFrameAboutFrameTemplate"/>
+      <Button name="SoundtrackFrameTab6" inherits="SoundtrackFrameTabTemplate" id="6" text="Misc" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
+      </Button>
+      <Button name="SoundtrackFrameTab7" inherits="SoundtrackFrameTabTemplate" id="7" text="Playlists" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
+      </Button>
+      <Button name="SoundtrackFrameTab8" inherits="SoundtrackFrameTabTemplate" id="8" text="Options" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
+      </Button>
+      <Button name="SoundtrackFrameTab9" inherits="SoundtrackFrameTabTemplate" id="9" text="Profiles" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
+      </Button>
+      <Button name="SoundtrackFrameTab10" inherits="SoundtrackFrameTabTemplate" id="10" text="About" hidden="true">
+        <Size><AbsDimension x="1" y="1"/></Size>
+        <Anchors><Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTab1"/></Anchors>
+      </Button>
     </Frames>
     <Scripts>
       <OnLoad>
@@ -268,7 +328,7 @@
         insets = { left = 11, right = 12, top = 12, bottom = 11 },
         });
 
-        self:SetBackdropColor(.1,.1,.1,.9)
+        self:SetBackdropColor(.08,.08,.10,.95)
         self:RegisterForDrag("LeftButton")
         SoundtrackUI.OnLoad()
       </OnLoad>

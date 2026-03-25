@@ -207,12 +207,15 @@ local function SetWoWGlobals()
   local function MockFrame(name)
     local obj = {
       _visible = false,
+      _alpha = 1,
       Show = function(self) self._visible = true end,
       Hide = function(self) self._visible = false end,
       IsVisible = function(self) return self._visible end,
+      IsShown = function(self) return self._visible end,
       SetPoint = function() end,
       ClearAllPoints = function() end,
-      SetAlpha = function() end,
+      SetAlpha = function(self, a) self._alpha = a end,
+      GetAlpha = function(self) return self._alpha end,
       EnableMouse = function() end,
       RegisterForDrag = function() end,
       StartMoving = function() end,
@@ -234,6 +237,50 @@ local function SetWoWGlobals()
       SetID = function() end,
       GetID = function() return 1 end,
       SetScript = function() end,
+      SetSize = function() end,
+      SetAllPoints = function() end,
+      SetColorTexture = function() end,
+      SetText = function() end,
+      SetJustifyH = function() end,
+      SetWidth = function() end,
+      SetTextColor = function() end,
+      CreateTexture = function()
+        return {
+          SetAllPoints = function() end,
+          SetColorTexture = function() end,
+          SetSize = function() end,
+          SetPoint = function() end,
+          Show = function() end,
+          Hide = function() end,
+        }
+      end,
+      CreateAnimationGroup = function()
+        local animGroup = {
+          _playing = false,
+          _onFinished = nil,
+          CreateAnimation = function()
+            return {
+              SetFromAlpha = function() end,
+              SetToAlpha = function() end,
+              SetDuration = function() end,
+              SetSmoothing = function() end,
+            }
+          end,
+          SetScript = function(self, event, func)
+            if event == "OnFinished" then
+              self._onFinished = func
+            end
+          end,
+          Play = function(self)
+            self._playing = true
+            if self._onFinished then self._onFinished() end
+            self._playing = false
+          end,
+          Stop = function(self) self._playing = false end,
+          IsPlaying = function(self) return self._playing end,
+        }
+        return animGroup
+      end,
     }
     if name then
       _G[name] = obj
@@ -769,6 +816,8 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/Zones/ZoneEvents.lua")
 
   -- Load UI modules for coverage
+  LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackAnimations.lua")
+  LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackNavigation.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/ControlFrameUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/EventStackUI.lua")

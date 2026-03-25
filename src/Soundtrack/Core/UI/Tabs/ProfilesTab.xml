@@ -51,10 +51,14 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
   <Frame name="SoundtrackFrameProfilesFrameTemplate" hidden="true" virtual="true">
     <Size>
-      <RelDimension x="0.5" y="0.8"/>
+      <AbsDimension x="738" y="460"/>
     </Size>
     <Anchors>
-      <Anchor point="TOP" relativeTo="SoundtrackFrame" relativePoint="TOP"/>
+      <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame" relativePoint="TOPLEFT">
+        <Offset>
+          <AbsDimension x="150" y="-40"/>
+        </Offset>
+      </Anchor>
     </Anchors>
 
     <!-- ── FontStrings and Textures go in Layers ── -->

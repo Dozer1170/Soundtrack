@@ -337,7 +337,7 @@
       </Layer>
       <Layer level="BACKGROUND">
         <Texture name="$parentBackground">
-          <Color r="0" g="0" b="0.1" a="1"/>
+          <Color r="0.02" g="0.02" b="0.08" a="1"/>
         </Texture>
       </Layer>
     </Layers>
@@ -366,7 +366,7 @@
       </Button>
     </Frames>
     <BarTexture name="$parentBar" file="Interface\PaperDollInfoFrame\UI-Character-Skills-Bar"/>
-    <BarColor r="0.25" g="0.25" b="0.75"/>
+    <BarColor r="0.15" g="0.35" b="0.65"/>
   </StatusBar>
   <!-- Playback buttons -->
   <Button name="Soundtrack_PlaybackButtonTemplate" virtual="true">
