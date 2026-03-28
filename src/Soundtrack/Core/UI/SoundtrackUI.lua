@@ -53,6 +53,12 @@ local function TabChanged()
 
 	SoundtrackUI.UpdateEventsUI()
 
+	if SoundtrackUI.SelectedEventsTable == ST_ENCOUNTER then
+		SoundtrackFrameRemoveEncounterButton:Show()
+	else
+		SoundtrackFrameRemoveEncounterButton:Hide()
+	end
+
 	if SoundtrackUI.SelectedEventsTable == ST_ZONE or SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
 		SoundtrackFrameAddZoneButton:Show()
 		SoundtrackFrameRemoveZoneButton:Show()
@@ -369,28 +375,31 @@ function SoundtrackUI.RefreshShowingTab(skipAnimation)
 		SoundtrackUI.SelectedEventsTable = "Battle"
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 2 then
-		SoundtrackUI.SelectedEventsTable = "Boss Zones"
+		SoundtrackUI.SelectedEventsTable = ST_ENCOUNTER
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 3 then
-		SoundtrackUI.SelectedEventsTable = "Zone"
+		SoundtrackUI.SelectedEventsTable = "Boss Zones"
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 4 then
-		SoundtrackUI.SelectedEventsTable = "Pet Battles"
+		SoundtrackUI.SelectedEventsTable = "Zone"
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 5 then
-		SoundtrackUI.SelectedEventsTable = "Dance"
+		SoundtrackUI.SelectedEventsTable = "Pet Battles"
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 6 then
-		SoundtrackUI.SelectedEventsTable = "Misc"
+		SoundtrackUI.SelectedEventsTable = "Dance"
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 7 then
-		SoundtrackUI.SelectedEventsTable = "Playlists"
+		SoundtrackUI.SelectedEventsTable = "Misc"
 		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 8 then
-		newFrame = SoundtrackFrameOptionsTab
+		SoundtrackUI.SelectedEventsTable = "Playlists"
+		newFrame = SoundtrackFrameEventFrame
 	elseif SoundtrackFrame.selectedTab == 9 then
-		newFrame = SoundtrackFrameProfilesFrame
+		newFrame = SoundtrackFrameOptionsTab
 	elseif SoundtrackFrame.selectedTab == 10 then
+		newFrame = SoundtrackFrameProfilesFrame
+	elseif SoundtrackFrame.selectedTab == 11 then
 		newFrame = SoundtrackFrameAboutFrame
 	end
 

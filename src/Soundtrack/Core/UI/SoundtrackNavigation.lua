@@ -7,15 +7,16 @@ SoundtrackNav = {}
 local NAV_ITEMS = {
 	-- { id, label, section, eventTable, tabIndex (for backward compat) }
 	{ id = "battle",     label = "Battle",      section = "MUSIC",    eventTable = "Battle",      tabIndex = 1 },
-	{ id = "bosszones",  label = "Boss Zones",   section = "MUSIC",    eventTable = "Boss Zones",  tabIndex = 2 },
-	{ id = "zones",      label = "Zones",        section = "MUSIC",    eventTable = "Zone",        tabIndex = 3 },
-	{ id = "petbattles", label = "Pet Battles",  section = "MUSIC",    eventTable = "Pet Battles", tabIndex = 4 },
-	{ id = "dances",     label = "Dances",       section = "MUSIC",    eventTable = "Dance",       tabIndex = 5 },
-	{ id = "misc",       label = "Misc",         section = "MUSIC",    eventTable = "Misc",        tabIndex = 6 },
-	{ id = "playlists",  label = "Playlists",    section = "MUSIC",    eventTable = "Playlists",   tabIndex = 7 },
-	{ id = "options",    label = "Options",       section = "SETTINGS", eventTable = nil,           tabIndex = 8 },
-	{ id = "profiles",   label = "Profiles",      section = "SETTINGS", eventTable = nil,           tabIndex = 9 },
-	{ id = "about",      label = "About",         section = "INFO",     eventTable = nil,           tabIndex = 10 },
+	{ id = "encounters", label = "Encounters",   section = "MUSIC",    eventTable = "Encounter",   tabIndex = 2 },
+	{ id = "bosszones",  label = "Boss Zones",   section = "MUSIC",    eventTable = "Boss Zones",  tabIndex = 3 },
+	{ id = "zones",      label = "Zones",        section = "MUSIC",    eventTable = "Zone",        tabIndex = 4 },
+	{ id = "petbattles", label = "Pet Battles",  section = "MUSIC",    eventTable = "Pet Battles", tabIndex = 5 },
+	{ id = "dances",     label = "Dances",       section = "MUSIC",    eventTable = "Dance",       tabIndex = 6 },
+	{ id = "misc",       label = "Misc",         section = "MUSIC",    eventTable = "Misc",        tabIndex = 7 },
+	{ id = "playlists",  label = "Playlists",    section = "MUSIC",    eventTable = "Playlists",   tabIndex = 8 },
+	{ id = "options",    label = "Options",       section = "SETTINGS", eventTable = nil,           tabIndex = 9 },
+	{ id = "profiles",   label = "Profiles",      section = "SETTINGS", eventTable = nil,           tabIndex = 10 },
+	{ id = "about",      label = "About",         section = "INFO",     eventTable = nil,           tabIndex = 11 },
 }
 
 local SECTIONS = { "MUSIC", "SETTINGS", "INFO" }
@@ -80,13 +81,13 @@ end
 
 -- Get the content frame for a nav item
 function SoundtrackNav.GetContentFrame(item)
-	if item.tabIndex <= 7 then
+	if item.tabIndex <= 8 then
 		return SoundtrackFrameEventFrame
-	elseif item.tabIndex == 8 then
-		return SoundtrackFrameOptionsTab
 	elseif item.tabIndex == 9 then
-		return SoundtrackFrameProfilesFrame
+		return SoundtrackFrameOptionsTab
 	elseif item.tabIndex == 10 then
+		return SoundtrackFrameProfilesFrame
+	elseif item.tabIndex == 11 then
 		return SoundtrackFrameAboutFrame
 	end
 	return nil

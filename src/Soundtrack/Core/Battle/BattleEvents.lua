@@ -163,6 +163,7 @@ local function GetBattleType()
 end
 
 local currentBattleTypeIndex = 0 -- Used to determine battle priorities and escalations
+local currentEncounterName = nil -- Set by ENCOUNTER_START, cleared by ENCOUNTER_END
 
 local function StartVictoryMusic()
 	if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
@@ -211,6 +212,11 @@ local function StopCombatMusic()
 end
 
 local function AnalyzeBattleSituation()
+	-- Don't re-analyze during a named encounter; ENCOUNTER_START already set music.
+	if currentEncounterName then
+		return
+	end
+
 	local battleType = GetBattleType()
 	local battleTypeIndex = IndexOf(battleEvents, battleType)
 
@@ -248,6 +254,8 @@ function Soundtrack.BattleEvents.OnLoad(self)
 	self:RegisterEvent("PLAYER_ALIVE")
 	self:RegisterEvent("PLAYER_DEAD")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	self:RegisterEvent("ENCOUNTER_START")
+	self:RegisterEvent("ENCOUNTER_END")
 end
 
 local nextUpdateTime = 0
@@ -274,7 +282,13 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 
 		-- If we re-enter combat after cooldown, clear timers.
 		Soundtrack.Timers.Remove("BattleCooldown")
-		AnalyzeBattleSituation()
+
+		-- For instanced encounters, ENCOUNTER_START already set the music.
+		if currentEncounterName then
+			currentBattleTypeIndex = IndexOf(battleEvents, SOUNDTRACK_BOSS_BATTLE)
+		else
+			AnalyzeBattleSituation()
+		end
 	elseif event == "PLAYER_REGEN_ENABLED" then
 		if SoundtrackAddon.db.profile.settings.BattleCooldown > 0 then
 			Soundtrack.Timers.AddTimer(
@@ -307,6 +321,24 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		currentBattleTypeIndex = 0 -- out of combat
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		Soundtrack.Chat.TraceBattle("ZONE_CHANGED_NEW_AREA")
+	elseif event == "ENCOUNTER_START" then
+		local _, encounterName = ...
+		currentEncounterName = encounterName
+		Soundtrack.Chat.TraceBattle("Encounter started: " .. tostring(encounterName))
+		Soundtrack.AddEvent(ST_ENCOUNTER, encounterName, ST_BOSS_LVL, true)
+		if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
+			if Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, encounterName) then
+				Soundtrack.PlayEvent(ST_ENCOUNTER, encounterName)
+			else
+				Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE)
+			end
+			currentBattleTypeIndex = IndexOf(battleEvents, SOUNDTRACK_BOSS_BATTLE)
+		end
+	elseif event == "ENCOUNTER_END" then
+		local _, encounterName = ...
+		Soundtrack.Chat.TraceBattle("Encounter ended: " .. tostring(encounterName))
+		currentEncounterName = nil
+		StopCombatMusic()
 	end
 end
 

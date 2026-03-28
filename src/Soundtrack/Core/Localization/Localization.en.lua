@@ -79,6 +79,8 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_ELITE_MOB = "Elite Mob"
 	SOUNDTRACK_RARE = "Rare"
 	SOUNDTRACK_BOSS_BATTLE = "Boss Battle"
+	SOUNDTRACK_ENCOUNTER_REMOVE = "Remove Encounter"
+	SOUNDTRACK_ENCOUNTER_REMOVE_TIP = "Removes the selected encounter from the list."
 	SOUNDTRACK_PVP_BATTLE = "PvP Battle"
 
 	SOUNDTRACK_REMOVE_BATTLE = "Remove Battle Event"

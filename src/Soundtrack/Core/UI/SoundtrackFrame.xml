@@ -10,6 +10,7 @@
   <Script file="PlaylistsUI.lua" />
   <Script file="TracksUI.lua" />
   <Script file="ZonesUI.lua" />
+  <Script file="EncountersUI.lua" />
   <Script file="BossZonesUI.lua" />
   <Include file="EventsList.xml"/>
   <Include file="Tabs/OptionsTab.xml"/>

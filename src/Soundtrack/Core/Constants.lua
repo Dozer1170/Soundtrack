@@ -17,6 +17,7 @@ ST_PLAYLIST_LVL = 15 -- Level 15: Playlists
 ST_PREVIEW_LVL = 16 -- Level 16: Preview
 
 ST_BATTLE = "Battle"
+ST_ENCOUNTER = "Encounter"
 ST_BOSS_ZONES = "Boss Zones"
 ST_ZONE = "Zone"
 ST_PETBATTLES = "Pet Battles"
