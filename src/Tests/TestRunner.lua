@@ -898,6 +898,7 @@ local testFiles = {
   "UI/ExportImportDialogUITests.lua",
   "UI/ProfilesTabUITests.lua",
   "UI/MovingTitleUITests.lua",
+  "UI/SoundtrackNavigationTests.lua",
   "Zones/ZoneEventsTests.lua",
 }
 
