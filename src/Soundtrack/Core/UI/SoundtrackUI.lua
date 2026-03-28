@@ -53,6 +53,12 @@ local function TabChanged()
 
 	SoundtrackUI.UpdateEventsUI()
 
+	if SoundtrackUI.SelectedEventsTable == ST_ENCOUNTER then
+		SoundtrackFrameRemoveEncounterButton:Show()
+	else
+		SoundtrackFrameRemoveEncounterButton:Hide()
+	end
+
 	if SoundtrackUI.SelectedEventsTable == ST_ZONE or SoundtrackUI.SelectedEventsTable == ST_BOSS_ZONES then
 		SoundtrackFrameAddZoneButton:Show()
 		SoundtrackFrameRemoveZoneButton:Show()
@@ -358,28 +364,31 @@ function SoundtrackUI.RefreshShowingTab()
 		SoundtrackUI.SelectedEventsTable = "Battle"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 2 then
-		SoundtrackUI.SelectedEventsTable = "Boss Zones"
+		SoundtrackUI.SelectedEventsTable = ST_ENCOUNTER
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 3 then
-		SoundtrackUI.SelectedEventsTable = "Zone"
+		SoundtrackUI.SelectedEventsTable = "Boss Zones"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 4 then
-		SoundtrackUI.SelectedEventsTable = "Pet Battles"
+		SoundtrackUI.SelectedEventsTable = "Zone"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 5 then
-		SoundtrackUI.SelectedEventsTable = "Dance"
+		SoundtrackUI.SelectedEventsTable = "Pet Battles"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 6 then
-		SoundtrackUI.SelectedEventsTable = "Misc"
+		SoundtrackUI.SelectedEventsTable = "Dance"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 7 then
-		SoundtrackUI.SelectedEventsTable = "Playlists"
+		SoundtrackUI.SelectedEventsTable = "Misc"
 		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 8 then
-		SoundtrackFrameOptionsTab:Show()
+		SoundtrackUI.SelectedEventsTable = "Playlists"
+		SoundtrackFrameEventFrame:Show()
 	elseif SoundtrackFrame.selectedTab == 9 then
-		SoundtrackFrameProfilesFrame:Show()
+		SoundtrackFrameOptionsTab:Show()
 	elseif SoundtrackFrame.selectedTab == 10 then
+		SoundtrackFrameProfilesFrame:Show()
+	elseif SoundtrackFrame.selectedTab == 11 then
 		SoundtrackFrameAboutFrame:Show()
 	end
 

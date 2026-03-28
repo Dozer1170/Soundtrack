@@ -819,13 +819,15 @@ function Tests:BattleEvents_OnLoad_RegistersEvents()
 
 	Soundtrack.BattleEvents.OnLoad(frame)
 
-	AreEqual(6, #events)
+	AreEqual(8, #events)
 	IsTrue(events[1] == "PLAYER_REGEN_DISABLED")
 	IsTrue(events[2] == "PLAYER_REGEN_ENABLED")
 	IsTrue(events[3] == "PLAYER_UNGHOST")
 	IsTrue(events[4] == "PLAYER_ALIVE")
 	IsTrue(events[5] == "PLAYER_DEAD")
 	IsTrue(events[6] == "ZONE_CHANGED_NEW_AREA")
+	IsTrue(events[7] == "ENCOUNTER_START")
+	IsTrue(events[8] == "ENCOUNTER_END")
 end
 
 function Tests:BattleEvents_OnUpdate_ReanalyzesBattle()
@@ -870,4 +872,28 @@ function Tests:BattleEvents_GetBattleType_InvalidBattle()
 	Soundtrack.BattleEvents.OnEvent(nil, "PLAYER_REGEN_DISABLED")
 
 	AreEqual("InvalidBattle", battleType)
+end
+
+function Tests:BattleEvents_EncounterStart_NamedBossTakesPrecedenceOverBossZone()
+	ResetBattleState()
+
+	-- Set up a boss zone with tracks for the current zone.
+	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances/Onyxia's Lair", ST_BOSS_LVL, true)
+	Soundtrack.Events.Add(ST_BOSS_ZONES, "Instances/Onyxia's Lair", "Sound/Music/ZoneMusic/onyxia_zone.mp3")
+
+	-- Set up a named encounter entry with tracks in ST_ENCOUNTER.
+	Soundtrack.AddEvent(ST_ENCOUNTER, "Onyxia", ST_BOSS_LVL, true)
+	Soundtrack.Events.Add(ST_ENCOUNTER, "Onyxia", "Sound/Music/ZoneMusic/onyxia_boss.mp3")
+
+	local playedTable, playedEvent
+	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
+		playedTable = tableName
+		playedEvent = eventName
+	end)
+
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	Soundtrack.BattleEvents.OnEvent(nil, "ENCOUNTER_START", nil, "Onyxia")
+
+	AreEqual(ST_ENCOUNTER, playedTable, "Named encounter table should be used, not boss zone")
+	AreEqual("Onyxia", playedEvent, "Named boss track should play, not zone track")
 end

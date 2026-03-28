@@ -51,6 +51,7 @@ local function MockEditBox(name, text)
 end
 
 local function SetupEventFrameButtons()
+	MockFrame("SoundtrackFrameRemoveEncounterButton")
 	MockFrame("SoundtrackFrameAddZoneButton")
 	MockFrame("SoundtrackFrameRemoveZoneButton")
 	MockFrame("SoundtrackFrameCollapseAllZoneButton")
@@ -357,7 +358,7 @@ function Tests:RefreshShowingTab_UpdatesFramesAndButtons()
 	Replace(Soundtrack, "StopEvent", function() end)
 	Replace(Soundtrack, "StopEventAtLevel", function() end)
 
-	SoundtrackFrame.selectedTab = 3
+	SoundtrackFrame.selectedTab = 4
 	SoundtrackUI.RefreshShowingTab()
 
 	AreEqual("Zone", SoundtrackUI.SelectedEventsTable)
@@ -365,7 +366,7 @@ function Tests:RefreshShowingTab_UpdatesFramesAndButtons()
 	IsTrue(SoundtrackFrameAddZoneButton:IsVisible())
 	IsFalse(SoundtrackFrameAddPlaylistButton:IsVisible())
 
-	SoundtrackFrame.selectedTab = 8
+	SoundtrackFrame.selectedTab = 9
 	SoundtrackUI.RefreshShowingTab()
 
 	IsTrue(SoundtrackFrameOptionsTab:IsVisible())

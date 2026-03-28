@@ -276,20 +276,20 @@ end
 
 -- TabUtils Tests
 
-function Tests:TabUtils_BossZones_ReturnsIndex2()
-	AreEqual(2, TabUtils.GetTabIndex(ST_BOSS_ZONES), "Boss Zones should be tab index 2")
+function Tests:TabUtils_BossZones_ReturnsIndex3()
+	AreEqual(3, TabUtils.GetTabIndex(ST_BOSS_ZONES), "Boss Zones should be tab index 3")
 end
 
-function Tests:TabUtils_Zone_ReturnsIndex3()
-	AreEqual(3, TabUtils.GetTabIndex(ST_ZONE), "Zone should be tab index 3 (shifted)")
+function Tests:TabUtils_Zone_ReturnsIndex4()
+	AreEqual(4, TabUtils.GetTabIndex(ST_ZONE), "Zone should be tab index 4")
 end
 
 function Tests:TabUtils_Battle_ReturnsIndex1()
 	AreEqual(1, TabUtils.GetTabIndex(ST_BATTLE), "Battle should still be tab index 1")
 end
 
-function Tests:TabUtils_Playlists_ReturnsIndex7()
-	AreEqual(7, TabUtils.GetTabIndex(ST_PLAYLISTS), "Playlists should be tab index 7 (shifted)")
+function Tests:TabUtils_Playlists_ReturnsIndex8()
+	AreEqual(8, TabUtils.GetTabIndex(ST_PLAYLISTS), "Playlists should be tab index 8")
 end
 
 -- DeleteZone Tests

@@ -339,6 +339,24 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
+      <Button name="SoundtrackFrameRemoveEncounterButton" inherits="UIPanelButtonTemplate" text="Remove Encounter">
+        <Size>
+          <AbsDimension x="100" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameEventList">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>SoundtrackFrameRemoveEncounterButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
+          <OnClick>SoundtrackUI.OnRemoveEncounterButtonClick()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENCOUNTER_REMOVE, SOUNDTRACK_ENCOUNTER_REMOVE_TIP)</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
       <Button name="SoundtrackFrameAddPetBattlesTargetButton" inherits="UIPanelButtonTemplate" text="Add Target">
         <Size>
           <AbsDimension x="100" y="22"/>
