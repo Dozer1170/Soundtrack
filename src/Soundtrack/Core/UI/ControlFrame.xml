@@ -252,18 +252,8 @@
     </Frames>
     <Scripts>
       <OnLoad>
-        Mixin(self, BackdropTemplateMixin or {});
-        self:SetBackdrop({
-        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tile = true,
-        tileEdge = true,
-        tileSize = 32,
-        edgeSize = 32,
-        insets = { left = 11, right = 12, top = 12, bottom = 11 },
-        });
+        SoundtrackTheme.ApplyFrameBackdrop(self)
         SoundtrackFrame_RefreshPlaybackControls();
-        self:SetBackdropColor(.08,.08,.10,.95)
         self:RegisterForDrag("LeftButton")
         SoundtrackFrame_RefreshPlaybackControls()
       </OnLoad>

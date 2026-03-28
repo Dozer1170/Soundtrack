@@ -11,12 +11,7 @@
     </Anchors>
     <Scripts>
       <OnLoad>
-        self:SetBackdrop({
-          bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
-          edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-          tile = true, tileSize = 32, edgeSize = 32,
-          insets = { left = 11, right = 11, top = 11, bottom = 11 }
-        })
+        SoundtrackTheme.ApplyDialogBackdrop(self)
         self:RegisterForDrag("LeftButton")
         self:SetScript("OnDragStart", self.StartMoving)
         self:SetScript("OnDragStop",  self.StopMovingOrSizing)

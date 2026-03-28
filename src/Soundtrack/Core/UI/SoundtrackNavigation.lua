@@ -192,7 +192,8 @@ local function CreateNavButton(sidebarFrame, item, isChild, parentId)
 	-- Selected texture (active background)
 	local selected = btn:CreateTexture(nil, "BACKGROUND")
 	selected:SetAllPoints()
-	selected:SetColorTexture(0.2, 0.6, 1.0, 0.15)
+	local as = SoundtrackTheme.Colors.accentSubtle
+	selected:SetColorTexture(as.r, as.g, as.b, as.a)
 	selected:Hide()
 	btn._selectedBg = selected
 
@@ -200,7 +201,8 @@ local function CreateNavButton(sidebarFrame, item, isChild, parentId)
 	local activeBar = btn:CreateTexture(nil, "OVERLAY")
 	activeBar:SetSize(3, 18)
 	activeBar:SetPoint("LEFT", btn, "LEFT", 0, 0)
-	activeBar:SetColorTexture(0.3, 0.7, 1.0, 1.0)
+	local ac = SoundtrackTheme.Colors.accent
+	activeBar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
 	activeBar:Hide()
 	btn._activeBar = activeBar
 
@@ -240,7 +242,8 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 		if section and section ~= lastSection then
 			lastSection = section
 			local header = sidebarFrame:CreateFontString("SoundtrackNavHeader_" .. section, "OVERLAY", "GameFontNormalSmall")
-			header:SetText("|cFF888888" .. section .. "|r")
+			local th = SoundtrackTheme.Colors.textHeader
+			header:SetText("|cFF" .. string.format("%02x%02x%02x", th.r*255, th.g*255, th.b*255) .. section .. "|r")
 			header:SetJustifyH("LEFT")
 		end
 
@@ -327,6 +330,9 @@ end
 -- Update visual highlight to reflect activeNavId
 function SoundtrackNav.RefreshHighlight()
 	local activeParentId = SoundtrackNav.GetParentId(activeNavId)
+	local ta = SoundtrackTheme.Colors.textActive
+	local tn = SoundtrackTheme.Colors.textNormal
+	local td = SoundtrackTheme.Colors.textDim
 
 	for id, btn in pairs(navButtons) do
 		local isActive = (id == activeNavId)
@@ -336,7 +342,7 @@ function SoundtrackNav.RefreshHighlight()
 		if isActive then
 			btn._selectedBg:Show()
 			btn._activeBar:Show()
-			btn._label:SetTextColor(0.4, 0.8, 1.0)
+			btn._label:SetTextColor(ta.r, ta.g, ta.b)
 		elseif isActiveParent then
 			btn._selectedBg:Show()
 			btn._activeBar:Hide()
@@ -345,9 +351,9 @@ function SoundtrackNav.RefreshHighlight()
 			btn._selectedBg:Hide()
 			btn._activeBar:Hide()
 			if btn._isChild then
-				btn._label:SetTextColor(0.8, 0.8, 0.8)
+				btn._label:SetTextColor(td.r, td.g, td.b)
 			else
-				btn._label:SetTextColor(1, 1, 1)
+				btn._label:SetTextColor(tn.r, tn.g, tn.b)
 			end
 		end
 	end

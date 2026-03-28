@@ -192,20 +192,7 @@
         <Scripts>
           <!-- EVENT LIST BACKDROP-->
           <OnLoad>
-                        Mixin(self, BackdropTemplateMixin or {});
-                        self:SetBackdrop({
-                        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-                        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-                        tile = true,
-                        tileEdge = true,
-                        tileSize = 32,
-                        edgeSize = 32,
-                        insets = { left = 11, right = 12, top = 12, bottom = 11 },
-                        });
-
-                        self:SetBackdropColor(.1,.1,.1,0.5)
-
-
+                        SoundtrackTheme.ApplyPanelBackdrop(self)
                     </OnLoad>
         </Scripts>
       </Frame>
@@ -643,19 +630,7 @@
             <Scripts>
               <!-- TRACK LIST BACKDROP-->
               <OnLoad>
-                                Mixin(self, BackdropTemplateMixin or {});
-                                self:SetBackdrop({
-                                bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-                                edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-                                tile = true,
-                                tileEdge = true,
-                                tileSize = 32,
-                                edgeSize = 32,
-                                insets = { left = 11, right = 12, top = 12, bottom = 11 },
-                                });
-
-                                self:SetBackdropColor(.1,.1,.1,0.5)
-
+                                SoundtrackTheme.ApplyPanelBackdrop(self)
                             </OnLoad>
             </Scripts>
           </Frame>
@@ -906,18 +881,7 @@
             <Scripts>
               <!-- Assigned Tracks BACKDROP-->
               <OnLoad>
-                                Mixin(self, BackdropTemplateMixin or {});
-                                self:SetBackdrop({
-                                bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-                                edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-                                tile = true,
-                                tileEdge = true,
-                                tileSize = 32,
-                                edgeSize = 32,
-                                insets = { left = 11, right = 12, top = 12, bottom = 11 },
-                                });
-
-                                self:SetBackdropColor(.1,.1,.1,0.5)
+                                SoundtrackTheme.ApplyPanelBackdrop(self)
                             </OnLoad>
             </Scripts>
           </Frame>

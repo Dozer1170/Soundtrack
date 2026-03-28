@@ -816,6 +816,7 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/Zones/ZoneEvents.lua")
 
   -- Load UI modules for coverage
+  LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackTheme.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackAnimations.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackNavigation.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/SoundtrackUI.lua")

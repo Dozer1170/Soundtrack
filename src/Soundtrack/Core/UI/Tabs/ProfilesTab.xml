@@ -99,7 +99,7 @@
               </Offset>
             </Anchor>
           </Anchors>
-          <Color r="0.4" g="0.35" b="0.2" a="0.8"/>
+          <Color r="0.25" g="0.28" b="0.35" a="0.50"/>
         </Texture>
 
         <!-- RIGHT COLUMN header -->
