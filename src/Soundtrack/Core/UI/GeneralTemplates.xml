@@ -44,8 +44,8 @@
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
       <OnClick>SoundtrackUI.OnEventButtonClick(self, button, down)</OnClick>
     </Scripts>
-    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
-      <Color r="0.20" g="0.55" b="1.00" a="0.40"/>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8">
+      <Color r="1.00" g="1.00" b="1.00" a="0.08"/>
     </HighlightTexture>
   </Button>
   <!-- Track list item -->

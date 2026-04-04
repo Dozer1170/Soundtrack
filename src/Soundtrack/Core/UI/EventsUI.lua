@@ -119,9 +119,12 @@ function SoundtrackUI.UpdateEventsUI()
 					button._selectedBg:Show()
 					button._activeBar:Show()
 					button:UnlockHighlight()
+					local ta = SoundtrackTheme.Colors.textActive
+					fo:SetTextColor(ta.r, ta.g, ta.b)
 				else
 					if button._selectedBg then button._selectedBg:Hide() end
 					if button._activeBar then button._activeBar:Hide() end
+					fo:SetTextColor(1, 1, 1)
 				end
 
 				-- Update the icon
