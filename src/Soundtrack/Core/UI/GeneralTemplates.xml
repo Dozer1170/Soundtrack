@@ -120,6 +120,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
+          <OnLoad inherit="append">
+            local ac = SoundtrackTheme.Colors.accent
+            self:SetCheckedTexture("Interface/Buttons/UI-CheckBox-Check")
+            local t = self:GetCheckedTexture()
+            t:SetDesaturated(true)
+            t:SetVertexColor(ac.r, ac.g, ac.b)
+          </OnLoad>
           <OnClick>SoundtrackUI.OnTrackCheckBoxClick(self, button, down)</OnClick>
         </Scripts>
       </CheckButton>
@@ -202,6 +209,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
+          <OnLoad inherit="append">
+            local ac = SoundtrackTheme.Colors.accent
+            self:SetCheckedTexture("Interface/Buttons/UI-CheckBox-Check")
+            local t = self:GetCheckedTexture()
+            t:SetDesaturated(true)
+            t:SetVertexColor(ac.r, ac.g, ac.b)
+          </OnLoad>
           <OnClick>SoundtrackUI.OnAssignedTrackCheckBoxClick(self, button, down);</OnClick>
         </Scripts>
       </CheckButton>
