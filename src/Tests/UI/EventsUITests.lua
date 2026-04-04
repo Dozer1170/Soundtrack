@@ -20,6 +20,7 @@ local function MockFontString(name)
 		SetPoint = function() end,
 		SetFont = function() end,
 		SetJustifyH = function() end,
+		SetTextColor = function() end,
 	}
 	if name then
 		_G[name] = obj

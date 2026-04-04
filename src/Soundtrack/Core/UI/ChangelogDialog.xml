@@ -19,7 +19,7 @@
     </Scripts>
     <Layers>
       <Layer level="OVERLAY">
-        <FontString name="SoundtrackChangelogTitle" inherits="GameFontNormal"
+        <FontString name="SoundtrackChangelogTitle" inherits="GameFontHighlight"
                     text="What's New in Soundtrack">
           <Anchors>
             <Anchor point="TOP">
@@ -41,7 +41,7 @@
       </Layer>
     </Layers>
     <Frames>
-      <Button name="SoundtrackChangelogOKButton" inherits="UIPanelButtonTemplate" text="OK">
+      <Button name="SoundtrackChangelogOKButton" inherits="SoundtrackButtonTemplate" text="OK">
         <Size><AbsDimension x="100" y="22"/></Size>
         <Anchors>
           <Anchor point="BOTTOM">

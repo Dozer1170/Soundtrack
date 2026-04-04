@@ -17,7 +17,7 @@
         </Anchors>
         <Layers>
           <Layer level="ARTWORK">
-            <FontString inherits="GameFontNormal" text="Events">
+            <FontString inherits="GameFontHighlight" text="Events">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset>
@@ -196,53 +196,78 @@
                     </OnLoad>
         </Scripts>
       </Frame>
-      <Button name="SoundtrackFrameCopyCopiedTracksButton" inherits="UIPanelButtonTemplate" text="Copy">
+      <Frame name="SoundtrackFrameCopyPasteBar" inherits="BackdropTemplate">
         <Size>
-          <AbsDimension x="65" y="22"/>
+          <AbsDimension x="211" y="32"/>
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="SoundtrackFrameEventList">
             <Offset>
-              <AbsDimension x="5" y="-75"/>
+              <AbsDimension x="0" y="-75"/>
             </Offset>
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameCopyCopiedTracksButton.Text:SetText(SOUNDTRACK_COPY_BUTTON)</OnLoad>
-          <OnClick>SoundtrackUI.OnCopyTracksButtonClick()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COPY_TRACKS, SOUNDTRACK_COPY_TRACKS_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
+          <OnLoad>SoundtrackTheme.ApplyPanelBackdrop(self)</OnLoad>
         </Scripts>
-      </Button>
-      <Button name="SoundtrackFramePasteCopiedTracksButton" inherits="UIPanelButtonTemplate" text="Paste">
-        <Size>
-          <AbsDimension x="65" y="22"/>
-        </Size>
-        <Anchors>
-          <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFrameCopyCopiedTracksButton"/>
-        </Anchors>
-        <Scripts>
-          <OnLoad>SoundtrackFramePasteCopiedTracksButton.Text:SetText(SOUNDTRACK_PASTE_BUTTON)</OnLoad>
-          <OnClick>SoundtrackUI.OnPasteTracksButtonClick()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PASTE_TRACKS, SOUNDTRACK_PASTE_TRACKS_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </Button>
-      <Button name="SoundtrackFrameClearCopiedTracksButton" inherits="UIPanelButtonTemplate" text="Paste">
-        <Size>
-          <AbsDimension x="65" y="22"/>
-        </Size>
-        <Anchors>
-          <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFramePasteCopiedTracksButton"/>
-        </Anchors>
-        <Scripts>
-          <OnLoad>SoundtrackFrameClearCopiedTracksButton.Text:SetText(SOUNDTRACK_CLEAR_BUTTON)</OnLoad>
-          <OnClick>SoundtrackUI.OnClearCopiedTracksButtonClick()</OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLEAR_TRACKS, SOUNDTRACK_CLEAR_TRACKS_TIP)</OnEnter>
-          <OnLeave>Soundtrack.HideTip()</OnLeave>
-        </Scripts>
-      </Button>
-      <Button name="SoundtrackFrameAddPlaylistButton" inherits="UIPanelButtonTemplate" text="Add">
+        <Frames>
+          <Button name="SoundtrackFrameCopyCopiedTracksButton" inherits="SoundtrackButtonTemplate" text="Copy">
+            <Size>
+              <AbsDimension x="65" y="22"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="SoundtrackFrameCopyPasteBar" relativePoint="LEFT">
+                <Offset>
+                  <AbsDimension x="5" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnLoad>self:SetText(SOUNDTRACK_COPY_BUTTON)</OnLoad>
+              <OnClick>SoundtrackUI.OnCopyTracksButtonClick()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COPY_TRACKS, SOUNDTRACK_COPY_TRACKS_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+          <Button name="SoundtrackFramePasteCopiedTracksButton" inherits="SoundtrackButtonTemplate" text="Paste">
+            <Size>
+              <AbsDimension x="65" y="22"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFrameCopyCopiedTracksButton">
+                <Offset>
+                  <AbsDimension x="4" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnLoad>self:SetText(SOUNDTRACK_PASTE_BUTTON)</OnLoad>
+              <OnClick>SoundtrackUI.OnPasteTracksButtonClick()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PASTE_TRACKS, SOUNDTRACK_PASTE_TRACKS_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+          <Button name="SoundtrackFrameClearCopiedTracksButton" inherits="SoundtrackButtonTemplate" text="Clear">
+            <Size>
+              <AbsDimension x="65" y="22"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFramePasteCopiedTracksButton">
+                <Offset>
+                  <AbsDimension x="4" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnLoad>self:SetText(SOUNDTRACK_CLEAR_BUTTON)</OnLoad>
+              <OnClick>SoundtrackUI.OnClearCopiedTracksButtonClick()</OnClick>
+              <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLEAR_TRACKS, SOUNDTRACK_CLEAR_TRACKS_TIP)</OnEnter>
+              <OnLeave>Soundtrack.HideTip()</OnLeave>
+            </Scripts>
+          </Button>
+        </Frames>
+      </Frame>
+      <Button name="SoundtrackFrameAddPlaylistButton" inherits="SoundtrackButtonTemplate" text="Add">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -250,13 +275,13 @@
           <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameEventList"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameAddPlaylistButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnAddPlaylistButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_PLAYLIST, SOUNDTRACK_ADD_PLAYLIST_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameDeletePlaylistButton" inherits="UIPanelButtonTemplate" text="Remove">
+      <Button name="SoundtrackFrameDeletePlaylistButton" inherits="SoundtrackButtonTemplate" text="Remove">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -264,13 +289,13 @@
           <Anchor point="RIGHT" relativeTo="SoundtrackFrameAddPlaylistButton" relativePoint="LEFT"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameDeletePlaylistButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnDeletePlaylistButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_PLAYLIST, SOUNDTRACK_REMOVE_PLAYLIST_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameAddZoneButton" inherits="UIPanelButtonTemplate" text="Add">
+      <Button name="SoundtrackFrameAddZoneButton" inherits="SoundtrackButtonTemplate" text="Add">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -278,13 +303,13 @@
           <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameEventList"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameAddZoneButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnAddZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ADD_ZONE, SOUNDTRACK_ADD_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameRemoveZoneButton" inherits="UIPanelButtonTemplate" text="Remove">
+      <Button name="SoundtrackFrameRemoveZoneButton" inherits="SoundtrackButtonTemplate" text="Remove">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -292,13 +317,13 @@
           <Anchor point="RIGHT" relativeTo="SoundtrackFrameAddZoneButton" relativePoint="LEFT"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameRemoveZoneButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnFrameRemoveZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_REMOVE_ZONE, SOUNDTRACK_REMOVE_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameExpandAllZoneButton" inherits="UIPanelButtonTemplate" text="Expand All">
+      <Button name="SoundtrackFrameExpandAllZoneButton" inherits="SoundtrackButtonTemplate" text="Expand All">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -306,13 +331,13 @@
           <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameAddZoneButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameExpandAllZoneButton.Text:SetText(SOUNDTRACK_EXPAND_ALL_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_EXPAND_ALL_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnExpandAllZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EXPAND_ALL_BUTTON, SOUNDTRACK_EXPAND_ALL_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameCollapseAllZoneButton" inherits="UIPanelButtonTemplate" text="Collapse All">
+      <Button name="SoundtrackFrameCollapseAllZoneButton" inherits="SoundtrackButtonTemplate" text="Collapse All">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -320,13 +345,13 @@
           <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="SoundtrackFrameExpandAllZoneButton"/>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameCollapseAllZoneButton.Text:SetText(SOUNDTRACK_COLLAPSE_ALL_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_COLLAPSE_ALL_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnCollapseAllZoneButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COLLAPSE_ALL_BUTTON, SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameRemoveEncounterButton" inherits="UIPanelButtonTemplate" text="Remove Encounter">
+      <Button name="SoundtrackFrameRemoveEncounterButton" inherits="SoundtrackButtonTemplate" text="Remove Encounter">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -338,13 +363,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameRemoveEncounterButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnRemoveEncounterButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_ENCOUNTER_REMOVE, SOUNDTRACK_ENCOUNTER_REMOVE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameAddPetBattlesTargetButton" inherits="UIPanelButtonTemplate" text="Add Target">
+      <Button name="SoundtrackFrameAddPetBattlesTargetButton" inherits="SoundtrackButtonTemplate" text="Add Target">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -356,13 +381,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameAddPetBattlesTargetButton.Text:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_ADD_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnAddPetBattleTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_ADD_TARGET, SOUNDTRACK_PETBATTLES_ADD_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackFrameDeletePetBattlesTargetButton" inherits="UIPanelButtonTemplate" text="Remove Target">
+      <Button name="SoundtrackFrameDeletePetBattlesTargetButton" inherits="SoundtrackButtonTemplate" text="Remove Target">
         <Size>
           <AbsDimension x="100" y="22"/>
         </Size>
@@ -374,7 +399,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackFrameDeletePetBattlesTargetButton.Text:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
+          <OnLoad>self:SetText(SOUNDTRACK_REMOVE_BUTTON)</OnLoad>
           <OnClick>SoundtrackUI.OnRemovePetBattleTargetButtonClick()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_PETBATTLES_REMOVE_TARGET, SOUNDTRACK_PETBATTLES_REMOVE_TARGET_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -385,7 +410,7 @@
           <!-- TRACK LIST -->
           <Frame name="SoundtrackFrameTrackList">
             <Size>
-              <AbsDimension x="530" y="300"/>
+              <AbsDimension x="650" y="300"/>
             </Size>
             <Anchors>
               <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame" relativePoint="TOPLEFT">
@@ -396,7 +421,7 @@
             </Anchors>
             <Layers>
               <Layer level="ARTWORK">
-                <FontString inherits="GameFontNormal" text="Track Library">
+                <FontString inherits="GameFontHighlight" text="Track Library">
                   <Anchors>
                     <Anchor point="TOPLEFT">
                       <Offset>
@@ -546,7 +571,7 @@
                 <Anchors>
                   <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="SoundtrackFrame_ColumnHeaderName">
                     <Offset>
-                      <AbsDimension x="20" y="-17"/>
+                      <AbsDimension x="0" y="-17"/>
                     </Offset>
                   </Anchor>
                 </Anchors>
@@ -637,7 +662,7 @@
           <!-- Context menus -->
           <Frame name="SoundtrackFrame_AssignedFrame">
             <Size>
-              <AbsDimension x="530" y="155"/>
+              <AbsDimension x="650" y="155"/>
             </Size>
             <Anchors>
               <Anchor point="TOPLEFT" relativeTo="SoundtrackFrameTrackList" relativePoint="BOTTOMLEFT"/>
@@ -745,7 +770,7 @@
                       <Anchor point="TOP" relativeTo="SoundtrackAssignedTrackButton6" relativePoint="BOTTOM"/>
                     </Anchors>
                   </Button>
-                  <Button name="SoundtrackFrameAllButton" inherits="UIPanelButtonTemplate" text="All">
+                  <Button name="SoundtrackFrameAllButton" inherits="SoundtrackButtonTemplate" text="All">
                     <Size>
                       <AbsDimension x="45" y="15"/>
                     </Size>
@@ -762,7 +787,7 @@
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
                   </Button>
-                  <Button name="SoundtrackFrameClearButton" inherits="UIPanelButtonTemplate" text="Clear">
+                  <Button name="SoundtrackFrameClearButton" inherits="SoundtrackButtonTemplate" text="Clear">
                     <Size>
                       <AbsDimension x="45" y="15"/>
                     </Size>
@@ -775,7 +800,7 @@
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
                   </Button>
-                  <Button name="SoundtrackFrameMoveDown" inherits="UIPanelButtonTemplate" text="Down">
+                  <Button name="SoundtrackFrameMoveDown" inherits="SoundtrackButtonTemplate" text="Down">
                     <Size>
                       <AbsDimension x="45" y="15"/>
                     </Size>
@@ -792,7 +817,7 @@
                       <OnLeave>Soundtrack.HideTip()</OnLeave>
                     </Scripts>
                   </Button>
-                  <Button name="SoundtrackFrameMoveUp" inherits="UIPanelButtonTemplate" text="Up">
+                  <Button name="SoundtrackFrameMoveUp" inherits="SoundtrackButtonTemplate" text="Up">
                     <Size>
                       <AbsDimension x="45" y="15"/>
                     </Size>

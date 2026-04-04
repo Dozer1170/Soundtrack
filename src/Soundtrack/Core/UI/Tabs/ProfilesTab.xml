@@ -12,7 +12,7 @@
     <Layers>
       <Layer level="ARTWORK">
         <!-- Gold arrow marks the currently ACTIVE profile -->
-        <FontString name="$parentActiveArrow" inherits="GameFontHighlight" text="|cFFFFD100>|r">
+        <FontString name="$parentActiveArrow" inherits="GameFontHighlight" text="|cFF66BBFF>|r">
           <Anchors>
             <Anchor point="LEFT">
               <Offset>
@@ -66,7 +66,7 @@
       <Layer level="ARTWORK">
 
         <!-- LEFT COLUMN header -->
-        <FontString name="ProfilesTab_LeftHeader" inherits="GameFontNormal" text="PROFILES">
+        <FontString name="ProfilesTab_LeftHeader" inherits="GameFontHighlight" text="PROFILES">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -103,7 +103,7 @@
         </Texture>
 
         <!-- RIGHT COLUMN header -->
-        <FontString name="ProfilesTab_RightHeader" inherits="GameFontNormal" text="PROFILE DETAILS">
+        <FontString name="ProfilesTab_RightHeader" inherits="GameFontHighlight" text="PROFILE DETAILS">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -128,7 +128,7 @@
         </FontString>
 
         <!-- "Active" badge shown when the selected profile is the active one -->
-        <FontString name="ProfilesTab_ActiveBadge" inherits="GameFontHighlightSmall" text="|cFFFFD100[Active]|r">
+        <FontString name="ProfilesTab_ActiveBadge" inherits="GameFontHighlightSmall" text="|cFF66BBFF[Active]|r">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -139,7 +139,7 @@
         </FontString>
 
         <!-- Actions section header -->
-        <FontString name="ProfilesTab_ActionsHeader" inherits="GameFontNormal" text="Actions">
+        <FontString name="ProfilesTab_ActionsHeader" inherits="GameFontHighlight" text="Actions">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -150,7 +150,7 @@
         </FontString>
 
         <!-- Danger Zone section header (shifted down to fit Rename row) -->
-        <FontString name="ProfilesTab_DangerHeader" inherits="GameFontNormal" text="Danger Zone">
+        <FontString name="ProfilesTab_DangerHeader" inherits="GameFontHighlight" text="Danger Zone">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -209,7 +209,7 @@
       </ScrollFrame>
 
       <!-- New Profile Button -->
-      <Button name="ProfilesTab_NewProfileButton" inherits="UIPanelButtonTemplate" text="+ New Profile">
+      <Button name="ProfilesTab_NewProfileButton" inherits="SoundtrackButtonTemplate" text="+ New Profile">
         <Size>
           <AbsDimension x="150" y="22"/>
         </Size>
@@ -230,7 +230,7 @@
       <!-- ══════════════════  RIGHT COLUMN  ══════════════════ -->
 
       <!-- Set Active – row 1 of actions (y=-130 header, gap 8 → y=-160) -->
-      <Button name="ProfilesTab_SetActiveButton" inherits="UIPanelButtonTemplate" text="Set Active">
+      <Button name="ProfilesTab_SetActiveButton" inherits="SoundtrackButtonTemplate" text="Set Active">
         <Size>
           <AbsDimension x="130" y="22"/>
         </Size>
@@ -249,7 +249,7 @@
       </Button>
 
       <!-- Duplicate (beside Set Active, row 1) -->
-      <Button name="ProfilesTab_DuplicateButton" inherits="UIPanelButtonTemplate" text="Duplicate">
+      <Button name="ProfilesTab_DuplicateButton" inherits="SoundtrackButtonTemplate" text="Duplicate">
         <Size>
           <AbsDimension x="130" y="22"/>
         </Size>
@@ -268,7 +268,7 @@
       </Button>
 
       <!-- Rename (row 2 of actions: y=-160-22-8=-190) -->
-      <Button name="ProfilesTab_RenameButton" inherits="UIPanelButtonTemplate" text="Rename">
+      <Button name="ProfilesTab_RenameButton" inherits="SoundtrackButtonTemplate" text="Rename">
         <Size>
           <AbsDimension x="130" y="22"/>
         </Size>
@@ -287,7 +287,7 @@
       </Button>
 
       <!-- Delete Profile – below DangerSeparator (y=-248+1+8=-257) -->
-      <Button name="ProfilesTab_DeleteButton" inherits="UIPanelButtonTemplate" text="Delete Profile">
+      <Button name="ProfilesTab_DeleteButton" inherits="SoundtrackButtonTemplate" text="Delete Profile">
         <Size>
           <AbsDimension x="130" y="22"/>
         </Size>

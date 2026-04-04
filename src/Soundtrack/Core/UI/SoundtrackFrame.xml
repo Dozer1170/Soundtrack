@@ -32,7 +32,7 @@
   <!--Main frame — redesigned with sidebar navigation -->
   <Frame name="SoundtrackFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
     <Size>
-      <AbsDimension x="900" y="550"/>
+      <AbsDimension x="1020" y="550"/>
     </Size>
     <Anchors>
       <Anchor point="TOPLEFT">
@@ -47,11 +47,11 @@
     <Layers>
       <Layer level="OVERLAY">
         <!-- Title in the header bar -->
-        <FontString name="$parentTitleText" inherits="GameFontNormal" text="Soundtrack">
+        <FontString name="$parentTitleText" inherits="GameFontHighlight" text="Soundtrack">
           <Anchors>
-            <Anchor point="TOPLEFT">
+            <Anchor point="TOP">
               <Offset>
-                <AbsDimension x="22" y="-18"/>
+                <AbsDimension x="0" y="-18"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -144,7 +144,7 @@
       <!-- ═══════════════════════════════════════════════════ -->
       <Frame name="SoundtrackFrame_BottomBar">
         <Size>
-          <AbsDimension x="876" y="30"/>
+          <AbsDimension x="996" y="30"/>
         </Size>
         <Anchors>
           <Anchor point="BOTTOMLEFT">
@@ -158,7 +158,7 @@
             <!-- Subtle top border for the bottom bar -->
             <Texture name="SoundtrackFrame_BottomBarTopLine">
               <Size>
-                <AbsDimension x="876" y="1"/>
+                <AbsDimension x="996" y="1"/>
               </Size>
               <Anchors>
                 <Anchor point="TOPLEFT">

@@ -196,6 +196,7 @@ local function SetWoWGlobals()
       SetPoint = function() end,
       SetFont = function() end,
       SetJustifyH = function() end,
+      SetTextColor = function() end,
       IsTruncated = function() return false end,
     }
     if name then

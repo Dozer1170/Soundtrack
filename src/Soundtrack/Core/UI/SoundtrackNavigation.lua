@@ -9,29 +9,33 @@ local NAV_ITEMS = {
 	-- Items may have a `children` array for collapsible sub-navigation.
 	-- Children inherit the parent's section and are indented in the sidebar.
 	{
-		id = "battle", label = "Battle", section = "MUSIC", eventTable = "Battle", tabIndex = 1,
+		id = "battle",
+		label = "Battle",
+		section = "MUSIC",
+		eventTable = "Battle",
+		tabIndex = 1,
 		children = {
-			{ id = "encounters", label = "Encounters",  eventTable = "Encounter",  tabIndex = 2 },
-			{ id = "bosszones",  label = "Boss Zones",   eventTable = "Boss Zones", tabIndex = 3 },
+			{ id = "encounters", label = "Encounters", eventTable = "Encounter",  tabIndex = 2 },
+			{ id = "bosszones",  label = "Boss Zones", eventTable = "Boss Zones", tabIndex = 3 },
 		},
 	},
-	{ id = "zones",      label = "Zones",        section = "MUSIC",    eventTable = "Zone",        tabIndex = 4 },
-	{ id = "petbattles", label = "Pet Battles",  section = "MUSIC",    eventTable = "Pet Battles", tabIndex = 5 },
-	{ id = "dances",     label = "Dances",       section = "MUSIC",    eventTable = "Dance",       tabIndex = 6 },
-	{ id = "misc",       label = "Misc",         section = "MUSIC",    eventTable = "Misc",        tabIndex = 7 },
-	{ id = "playlists",  label = "Playlists",    section = "MUSIC",    eventTable = "Playlists",   tabIndex = 8 },
-	{ id = "options",    label = "Options",       section = "SETTINGS", eventTable = nil,           tabIndex = 9 },
-	{ id = "profiles",   label = "Profiles",      section = "SETTINGS", eventTable = nil,           tabIndex = 10 },
-	{ id = "about",      label = "About",         section = "INFO",     eventTable = nil,           tabIndex = 11 },
+	{ id = "zones",      label = "Zones",       section = "MUSIC",    eventTable = "Zone",        tabIndex = 4 },
+	{ id = "petbattles", label = "Pet Battles", section = "MUSIC",    eventTable = "Pet Battles", tabIndex = 5 },
+	{ id = "dances",     label = "Dances",      section = "MUSIC",    eventTable = "Dance",       tabIndex = 6 },
+	{ id = "misc",       label = "Misc",        section = "MUSIC",    eventTable = "Misc",        tabIndex = 7 },
+	{ id = "playlists",  label = "Playlists",   section = "MUSIC",    eventTable = "Playlists",   tabIndex = 8 },
+	{ id = "options",    label = "Options",     section = "SETTINGS", eventTable = nil,           tabIndex = 9 },
+	{ id = "profiles",   label = "Profiles",    section = "SETTINGS", eventTable = nil,           tabIndex = 10 },
+	{ id = "about",      label = "About",       section = "INFO",     eventTable = nil,           tabIndex = 11 },
 }
 
 local SECTIONS = { "MUSIC", "SETTINGS", "INFO" }
 
 local activeNavId = "battle"
-local navButtons = {}          -- all buttons keyed by id (parents and children)
-local expandedState = {}       -- tracks which parents are expanded, keyed by parent id
-local childButtons = {}        -- child buttons grouped by parent id for show/hide
-local sidebarFrameRef = nil    -- stored reference for relayout
+local navButtons = {}       -- all buttons keyed by id (parents and children)
+local expandedState = {}    -- tracks which parents are expanded, keyed by parent id
+local childButtons = {}     -- child buttons grouped by parent id for show/hide
+local sidebarFrameRef = nil -- stored reference for relayout
 
 -- Iterator that yields every item (parents and children) in display order
 local function FlatIterator()
@@ -172,13 +176,14 @@ end
 
 -- ─── Sidebar construction ───────────────────────────────────────────
 
-local CHEVRON_RIGHT = "\226\150\184 "  -- ▸
-local CHEVRON_DOWN  = "\226\150\190 "  -- ▾
-local CHILD_INDENT  = 28
-local PARENT_INDENT = 16
-local BUTTON_HEIGHT = 22
-local SECTION_GAP   = 18
-local TOP_PADDING   = -8
+local CHEVRON_RIGHT   = "> "
+local CHEVRON_DOWN    = "v "
+local CHILD_INDENT    = 28
+local PARENT_INDENT   = 16
+local BUTTON_HEIGHT   = 22
+local SECTION_GAP     = 16  -- space between section header and its first button
+local SECTION_TOP_GAP = 26  -- extra breathing room before non-first section headers
+local TOP_PADDING     = -8
 
 local function CreateNavButton(sidebarFrame, item, isChild, parentId)
 	local btn = CreateFrame("Button", "SoundtrackNavButton_" .. item.id, sidebarFrame)
@@ -212,6 +217,9 @@ local function CreateNavButton(sidebarFrame, item, isChild, parentId)
 	label:SetPoint("LEFT", btn, "LEFT", indent, 0)
 	label:SetJustifyH("LEFT")
 	label:SetWidth(126 - indent - 4)
+	-- Set default color using theme to avoid inheriting GameFontHighlightSmall's yellow
+	local defaultColor = isChild and SoundtrackTheme.Colors.textDim or SoundtrackTheme.Colors.textNormal
+	label:SetTextColor(defaultColor.r, defaultColor.g, defaultColor.b)
 	btn._label = label
 	btn._isChild = isChild
 	btn._parentId = parentId
@@ -228,7 +236,7 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 	-- Default: expand any parent whose child is active
 	for _, item in ipairs(NAV_ITEMS) do
 		if item.children then
-			expandedState[item.id] = true  -- start expanded
+			expandedState[item.id] = true -- start expanded
 		end
 	end
 
@@ -241,9 +249,10 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 		-- Section headers (only for top-level items)
 		if section and section ~= lastSection then
 			lastSection = section
-			local header = sidebarFrame:CreateFontString("SoundtrackNavHeader_" .. section, "OVERLAY", "GameFontNormalSmall")
+			local header = sidebarFrame:CreateFontString("SoundtrackNavHeader_" .. section, "OVERLAY",
+				"GameFontNormalSmall")
 			local th = SoundtrackTheme.Colors.textHeader
-			header:SetText("|cFF" .. string.format("%02x%02x%02x", th.r*255, th.g*255, th.b*255) .. section .. "|r")
+			header:SetText("|cFF" .. string.format("%02x%02x%02x", th.r * 255, th.g * 255, th.b * 255) .. section .. "|r")
 			header:SetJustifyH("LEFT")
 		end
 
@@ -282,6 +291,7 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 	end
 
 	SoundtrackNav.RelayoutSidebar()
+	SoundtrackNav.RefreshHighlight()
 end
 
 -- Reposition all buttons based on current expanded/collapsed state
@@ -305,6 +315,10 @@ function SoundtrackNav.RelayoutSidebar()
 		else
 			-- Section header
 			if section and section ~= lastSection then
+				-- Add breathing room before non-first sections
+				if lastSection ~= nil then
+					yOffset = yOffset - SECTION_TOP_GAP
+				end
 				lastSection = section
 				local header = _G["SoundtrackNavHeader_" .. section]
 				if header then

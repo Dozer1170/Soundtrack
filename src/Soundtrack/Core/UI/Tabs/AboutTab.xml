@@ -14,7 +14,7 @@
     <Layers>
       <Layer level="BACKGROUND">
         <!-- ABOUT -->
-        <FontString name="SoundtrackFrame_FontStringAbout1" inherits="GameFontNormal" text="About Soundtrack:">
+        <FontString name="SoundtrackFrame_FontStringAbout1" inherits="GameFontHighlight" text="About Soundtrack:">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -23,7 +23,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringAbout2" inherits="GameFontNormal" text="Created by: Morricone ">
+        <FontString name="SoundtrackFrame_FontStringAbout2" inherits="GameFontHighlight" text="Created by: Morricone ">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout1" relativePoint="BOTTOMLEFT">
               <Offset>
@@ -32,18 +32,18 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontNormal" text="Maintained by: Gartetasa (Dozer1170)">
+        <FontString name="SoundtrackFrame_FontStringAbout3" inherits="GameFontHighlight" text="Maintained by: Gartetasa (Dozer1170)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout2" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontNormal" text="Version: 6.3.0">
+        <FontString name="SoundtrackFrame_FontStringAbout3a" inherits="GameFontHighlight" text="Version: 6.3.0">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout3" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
         <!-- CREDITS -->
-        <FontString name="SoundtrackFrame_FontStringCredits1" inherits="GameFontNormal" text="Credits:">
+        <FontString name="SoundtrackFrame_FontStringCredits1" inherits="GameFontHighlight" text="Credits:">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout1" relativePoint="BOTTOMLEFT">
               <Offset>
@@ -52,7 +52,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits2" inherits="GameFontNormal" text="Athame - GetGroupEnemyClassification fix (before 1.21)">
+        <FontString name="SoundtrackFrame_FontStringCredits2" inherits="GameFontHighlight" text="Athame - GetGroupEnemyClassification fix (before 1.21)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits1" relativePoint="BOTTOMLEFT">
               <Offset>
@@ -61,58 +61,58 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits3" inherits="GameFontNormal" text="csciguy - v1.28 update for 4.0.3 ">
+        <FontString name="SoundtrackFrame_FontStringCredits3" inherits="GameFontHighlight" text="csciguy - v1.28 update for 4.0.3 ">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits2" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits4" inherits="GameFontNormal" text="Darken5 - Music stop fix (1.24c)">
+        <FontString name="SoundtrackFrame_FontStringCredits4" inherits="GameFontHighlight" text="Darken5 - Music stop fix (1.24c)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits3" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits5" inherits="GameFontNormal" text="FluffyBearLina - v1.21 fan update ">
+        <FontString name="SoundtrackFrame_FontStringCredits5" inherits="GameFontHighlight" text="FluffyBearLina - v1.21 fan update ">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits4" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits5a" inherits="GameFontNormal" text="GoTest2 - v2.9.0 Battle and Zone updates for 9.0.1">
+        <FontString name="SoundtrackFrame_FontStringCredits5a" inherits="GameFontHighlight" text="GoTest2 - v2.9.0 Battle and Zone updates for 9.0.1">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits5" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits6" inherits="GameFontNormal" text="IAmParadox - GenerateMyLibrary.py fix (1.17)">
+        <FontString name="SoundtrackFrame_FontStringCredits6" inherits="GameFontHighlight" text="IAmParadox - GenerateMyLibrary.py fix (1.17)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits5a" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits7" inherits="GameFontNormal" text="momokies - French localization (2.0.3)">
+        <FontString name="SoundtrackFrame_FontStringCredits7" inherits="GameFontHighlight" text="momokies - French localization (2.0.3)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits6" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits8" inherits="GameFontNormal" text="sgtrama - Misc. event LFG Complete (1.26)">
+        <FontString name="SoundtrackFrame_FontStringCredits8" inherits="GameFontHighlight" text="sgtrama - Misc. event LFG Complete (1.26)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits7" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits9" inherits="GameFontNormal" text="Si63 - Random setting for playlists fix (1.24b)">
+        <FontString name="SoundtrackFrame_FontStringCredits9" inherits="GameFontHighlight" text="Si63 - Random setting for playlists fix (1.24b)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits8" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits10" inherits="GameFontNormal" text="zephus67 - Misc. event Stealth fix (1.24)">
+        <FontString name="SoundtrackFrame_FontStringCredits10" inherits="GameFontHighlight" text="zephus67 - Misc. event Stealth fix (1.24)">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits9" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringCredits11" inherits="GameFontNormal" text="Gart - Dragonflight onward">
+        <FontString name="SoundtrackFrame_FontStringCredits11" inherits="GameFontHighlight" text="Gart - Dragonflight onward">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits10" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
         <!-- SLASH COMMANDS -->
-        <FontString name="SoundtrackFrame_FontStringSlash1" inherits="GameFontNormal" text="Slash commands: ">
+        <FontString name="SoundtrackFrame_FontStringSlash1" inherits="GameFontHighlight" text="Slash commands: ">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringAbout1" relativePoint="TOPLEFT">
               <Offset>
@@ -121,7 +121,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringSlash2" inherits="GameFontNormal" text="   /soundtrack, /st   - Open Soundtrack window">
+        <FontString name="SoundtrackFrame_FontStringSlash2" inherits="GameFontHighlight" text="   /soundtrack, /st   - Open Soundtrack window">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringSlash1" relativePoint="BOTTOMLEFT">
               <Offset>
@@ -130,17 +130,17 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringSlash3" inherits="GameFontNormal" text="   /soundtrack debug  - Turn on/off debug mode">
+        <FontString name="SoundtrackFrame_FontStringSlash3" inherits="GameFontHighlight" text="   /soundtrack debug  - Turn on/off debug mode">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringSlash2" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringSlash4" inherits="GameFontNormal" text="   /soundtrack report - Open report frame">
+        <FontString name="SoundtrackFrame_FontStringSlash4" inherits="GameFontHighlight" text="   /soundtrack report - Open report frame">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringSlash3" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="SoundtrackFrame_FontStringSlash5" inherits="GameFontNormal" text="   /soundtrack reset  - Reset main window position">
+        <FontString name="SoundtrackFrame_FontStringSlash5" inherits="GameFontHighlight" text="   /soundtrack reset  - Reset main window position">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringSlash4" relativePoint="BOTTOMLEFT"/>
           </Anchors>

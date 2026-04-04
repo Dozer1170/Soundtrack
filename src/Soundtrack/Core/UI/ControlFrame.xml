@@ -16,7 +16,7 @@
     </Anchors>
     <Layers>
       <Layer level="ARTWORK">
-        <FontString name="$parentStackTitle" inherits="GameFontNormal" text="EVENT STACK:">
+        <FontString name="$parentStackTitle" inherits="GameFontHighlightSmall" text="EVENT STACK:">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -25,82 +25,82 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack1" inherits="GameFontNormal">
+        <FontString name="$parentStack1" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStackTitle" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack2" inherits="GameFontNormal">
+        <FontString name="$parentStack2" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack1" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack3" inherits="GameFontNormal">
+        <FontString name="$parentStack3" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack2" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack4" inherits="GameFontNormal">
+        <FontString name="$parentStack4" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack3" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack5" inherits="GameFontNormal">
+        <FontString name="$parentStack5" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack4" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack6" inherits="GameFontNormal">
+        <FontString name="$parentStack6" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack5" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack7" inherits="GameFontNormal">
+        <FontString name="$parentStack7" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack6" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack8" inherits="GameFontNormal">
+        <FontString name="$parentStack8" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack7" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack9" inherits="GameFontNormal">
+        <FontString name="$parentStack9" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack8" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack10" inherits="GameFontNormal">
+        <FontString name="$parentStack10" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack9" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack11" inherits="GameFontNormal">
+        <FontString name="$parentStack11" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack10" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack12" inherits="GameFontNormal">
+        <FontString name="$parentStack12" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack11" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack13" inherits="GameFontNormal">
+        <FontString name="$parentStack13" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack12" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack14" inherits="GameFontNormal">
+        <FontString name="$parentStack14" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack13" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack15" inherits="GameFontNormal">
+        <FontString name="$parentStack15" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack14" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
-        <FontString name="$parentStack16" inherits="GameFontNormal">
+        <FontString name="$parentStack16" inherits="GameFontHighlightSmall">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentStack15" relativePoint="BOTTOMLEFT"/>
           </Anchors>

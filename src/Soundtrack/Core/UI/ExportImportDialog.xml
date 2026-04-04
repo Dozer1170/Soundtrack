@@ -19,7 +19,7 @@
     </Scripts>
     <Layers>
       <Layer level="OVERLAY">
-        <FontString name="SoundtrackExportImportTitle" inherits="GameFontNormal"
+        <FontString name="SoundtrackExportImportTitle" inherits="GameFontHighlight"
                     text="Export / Import Profile">
           <Anchors>
             <Anchor point="TOP">
@@ -99,7 +99,7 @@
         </Frames>
       </Frame>
       <!-- Buttons -->
-      <Button name="SoundtrackExportImportCopyButton" inherits="UIPanelButtonTemplate"
+      <Button name="SoundtrackExportImportCopyButton" inherits="SoundtrackButtonTemplate"
               text="Select All">
         <Size><AbsDimension x="100" y="22"/></Size>
         <Anchors>
@@ -113,7 +113,7 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
-      <Button name="SoundtrackExportImportImportButton" inherits="UIPanelButtonTemplate"
+      <Button name="SoundtrackExportImportImportButton" inherits="SoundtrackButtonTemplate"
               text="Import">
         <Size><AbsDimension x="100" y="22"/></Size>
         <Anchors>

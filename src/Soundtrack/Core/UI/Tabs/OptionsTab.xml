@@ -14,7 +14,7 @@
     </Anchors>
     <Layers>
       <Layer level="BACKGROUND">
-        <FontString name="OptionsTab_FontStringUIOptions" inherits="GameFontNormal" text="User Interface Options">
+        <FontString name="OptionsTab_FontStringUIOptions" inherits="GameFontHighlight" text="User Interface Options">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -23,7 +23,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="OptionsTab_FontStringEventOptions" inherits="GameFontNormal" text="Event Options">
+        <FontString name="OptionsTab_FontStringEventOptions" inherits="GameFontHighlight" text="Event Options">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -32,7 +32,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="OptionsTab_FontStringEnableEventsOptions" inherits="GameFontNormal" text="Enable Events">
+        <FontString name="OptionsTab_FontStringEnableEventsOptions" inherits="GameFontHighlight" text="Enable Events">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
@@ -41,7 +41,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString name="OptionsTab_FontStringDebugOptions" inherits="GameFontNormal" text="Debugging Options">
+        <FontString name="OptionsTab_FontStringDebugOptions" inherits="GameFontHighlight" text="Debugging Options">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>

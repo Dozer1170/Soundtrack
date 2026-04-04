@@ -83,10 +83,10 @@ function Soundtrack.ProfilesTab.PopulateProfileList()
 			btn.activeArrow:SetShown(profileName == currentProfile)
 		end
 
-		-- Selected highlight (colour the button text gold if selected)
+		-- Selected highlight (colour the button text blue-accent if selected)
 		if btn.profileNameText then
 			if profileName == selectedProfile then
-				btn.profileNameText:SetTextColor(1, 0.82, 0, 1)
+				btn.profileNameText:SetTextColor(0.4, 0.8, 1.0, 1)
 			else
 				btn.profileNameText:SetTextColor(1, 1, 1, 1)
 			end
@@ -114,7 +114,7 @@ function Soundtrack.ProfilesTab.RefreshProfileListHighlight()
 			end
 			if btn.profileNameText then
 				if btn.profileName == selectedProfile then
-					btn.profileNameText:SetTextColor(1, 0.82, 0, 1)
+					btn.profileNameText:SetTextColor(0.4, 0.8, 1.0, 1)
 				else
 					btn.profileNameText:SetTextColor(1, 1, 1, 1)
 				end
