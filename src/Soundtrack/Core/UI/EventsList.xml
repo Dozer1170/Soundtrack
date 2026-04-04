@@ -198,7 +198,7 @@
       </Frame>
       <Frame name="SoundtrackFrameCopyPasteBar" inherits="BackdropTemplate">
         <Size>
-          <AbsDimension x="211" y="32"/>
+          <AbsDimension x="190" y="32"/>
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="SoundtrackFrameEventList">
@@ -208,12 +208,20 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>SoundtrackTheme.ApplyPanelBackdrop(self)</OnLoad>
+          <OnLoad>
+            self:SetBackdrop({
+              bgFile   = "Interface/Buttons/WHITE8X8",
+              edgeFile = "Interface/Buttons/WHITE8X8",
+              edgeSize = 2,
+            })
+            self:SetBackdropColor(0.08, 0.13, 0.22, 0.92)
+            self:SetBackdropBorderColor(0.20, 0.50, 0.80, 0.80)
+          </OnLoad>
         </Scripts>
         <Frames>
           <Button name="SoundtrackFrameCopyCopiedTracksButton" inherits="SoundtrackButtonTemplate" text="Copy">
             <Size>
-              <AbsDimension x="65" y="22"/>
+              <AbsDimension x="58" y="22"/>
             </Size>
             <Anchors>
               <Anchor point="LEFT" relativeTo="SoundtrackFrameCopyPasteBar" relativePoint="LEFT">
@@ -231,7 +239,7 @@
           </Button>
           <Button name="SoundtrackFramePasteCopiedTracksButton" inherits="SoundtrackButtonTemplate" text="Paste">
             <Size>
-              <AbsDimension x="65" y="22"/>
+              <AbsDimension x="58" y="22"/>
             </Size>
             <Anchors>
               <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFrameCopyCopiedTracksButton">
@@ -249,7 +257,7 @@
           </Button>
           <Button name="SoundtrackFrameClearCopiedTracksButton" inherits="SoundtrackButtonTemplate" text="Clear">
             <Size>
-              <AbsDimension x="65" y="22"/>
+              <AbsDimension x="58" y="22"/>
             </Size>
             <Anchors>
               <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="SoundtrackFramePasteCopiedTracksButton">

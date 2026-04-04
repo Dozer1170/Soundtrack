@@ -161,9 +161,24 @@ function SoundtrackUI.RefreshTracks()
 				checkBox:SetID(buttonIndex)
 
 				if Soundtrack_SortedTracks[i] == SoundtrackUI.SelectedTrack then
-					button:LockHighlight()
+					if not button._selectedBg then
+						local bg = button:CreateTexture(nil, "BACKGROUND")
+						bg:SetAllPoints()
+						local as = SoundtrackTheme.Colors.accentSubtle
+						bg:SetColorTexture(as.r, as.g, as.b, as.a)
+						button._selectedBg = bg
+						local bar = button:CreateTexture(nil, "OVERLAY")
+						bar:SetSize(3, 14)
+						bar:SetPoint("LEFT", button, "LEFT", 0, 0)
+						local ac = SoundtrackTheme.Colors.accent
+						bar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
+						button._activeBar = bar
+					end
+					button._selectedBg:Show()
+					button._activeBar:Show()
 				else
-					button:UnlockHighlight()
+					if button._selectedBg then button._selectedBg:Hide() end
+					if button._activeBar then button._activeBar:Hide() end
 				end
 
 				if SoundtrackUI.SelectedEvent ~= nil then
@@ -249,9 +264,24 @@ function SoundtrackUI.RefreshAssignedTracks()
 				checkBox:SetID(buttonIndex)
 
 				if assignedTracks[i] == SoundtrackUI.SelectedTrack then
-					button:LockHighlight()
+					if not button._selectedBg then
+						local bg = button:CreateTexture(nil, "BACKGROUND")
+						bg:SetAllPoints()
+						local as = SoundtrackTheme.Colors.accentSubtle
+						bg:SetColorTexture(as.r, as.g, as.b, as.a)
+						button._selectedBg = bg
+						local bar = button:CreateTexture(nil, "OVERLAY")
+						bar:SetSize(3, 14)
+						bar:SetPoint("LEFT", button, "LEFT", 0, 0)
+						local ac = SoundtrackTheme.Colors.accent
+						bar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
+						button._activeBar = bar
+					end
+					button._selectedBg:Show()
+					button._activeBar:Show()
 				else
-					button:UnlockHighlight()
+					if button._selectedBg then button._selectedBg:Hide() end
+					if button._activeBar then button._activeBar:Hide() end
 				end
 
 				if SoundtrackUI.SelectedEvent ~= nil then

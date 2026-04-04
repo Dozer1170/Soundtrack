@@ -16,6 +16,18 @@ local function MockTrackButton(name)
 		GetID = function(self) return self._id end,
 		LockHighlight = function(self) self._locked = true end,
 		UnlockHighlight = function(self) self._locked = false end,
+		CreateTexture = function(self)
+			return {
+				_visible = false,
+				Show = function(self) self._visible = true end,
+				Hide = function(self) self._visible = false end,
+				IsShown = function(self) return self._visible end,
+				SetAllPoints = function() end,
+				SetColorTexture = function() end,
+				SetSize = function() end,
+				SetPoint = function() end,
+			}
+		end,
 		SetPoint = function() end,
 	}
 	if name then
@@ -257,7 +269,7 @@ function Tests:RefreshTracks_SetsAlbumAndArtistText()
 
 	SoundtrackUI.RefreshTracks()
 
-	AreEqual("My Album",  _G["SoundtrackFrameTrackButton1ButtonTextAlbum"]._text,  "Album text set")
+	AreEqual("My Album", _G["SoundtrackFrameTrackButton1ButtonTextAlbum"]._text, "Album text set")
 	AreEqual("My Artist", _G["SoundtrackFrameTrackButton1ButtonTextArtist"]._text, "Artist text set")
 end
 
@@ -271,7 +283,9 @@ function Tests:RefreshTracks_SelectedTrack_LocksHighlight()
 
 	SoundtrackUI.RefreshTracks()
 
-	IsTrue(_G["SoundtrackFrameTrackButton1"]._locked, "Highlight locked for selected track")
+	local btn = _G["SoundtrackFrameTrackButton1"]
+	IsTrue(btn._selectedBg ~= nil, "Selected bg created for selected track")
+	IsTrue(btn._selectedBg._visible, "Highlight visible for selected track")
 end
 
 function Tests:RefreshTracks_UnselectedTrack_UnlocksHighlight()
@@ -284,7 +298,7 @@ function Tests:RefreshTracks_UnselectedTrack_UnlocksHighlight()
 
 	SoundtrackUI.RefreshTracks()
 
-	IsFalse(_G["SoundtrackFrameTrackButton1"]._locked, "Highlight not locked for unselected track")
+	IsFalse(_G["SoundtrackFrameTrackButton1"]._selectedBg, "No selected bg for unselected track")
 end
 
 function Tests:RefreshTracks_ActiveTrack_ChecksCheckBox()
@@ -420,7 +434,9 @@ function Tests:RefreshAssignedTracks_SelectedTrack_LocksHighlight()
 
 	SoundtrackUI.RefreshAssignedTracks()
 
-	IsTrue(_G["SoundtrackAssignedTrackButton1"]._locked, "Assigned button locked for selected track")
+	local btn = _G["SoundtrackAssignedTrackButton1"]
+	IsTrue(btn._selectedBg ~= nil, "Selected bg created for assigned button")
+	IsTrue(btn._selectedBg._visible, "Highlight visible for assigned selected track")
 end
 
 function Tests:RefreshAssignedTracks_ActiveTrack_ChecksCheckBox()

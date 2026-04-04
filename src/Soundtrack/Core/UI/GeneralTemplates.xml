@@ -44,7 +44,9 @@
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
       <OnClick>SoundtrackUI.OnEventButtonClick(self, button, down)</OnClick>
     </Scripts>
-    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
+      <Color r="0.20" g="0.55" b="1.00" a="0.40"/>
+    </HighlightTexture>
   </Button>
   <!-- Track list item -->
   <Button name="SoundtrackFrameTrackButtonTemplate" virtual="true">
@@ -128,7 +130,9 @@
       <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
       <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
     </Scripts>
-    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
+      <Color r="0.20" g="0.55" b="1.00" a="0.15"/>
+    </HighlightTexture>
   </Button>
   <Button name="SoundtrackFrameAssignedTrackButtonTemplate" virtual="true">
     <Size>
@@ -208,7 +212,9 @@
       <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
       <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
     </Scripts>
-    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
+      <Color r="0.20" g="0.55" b="1.00" a="0.15"/>
+    </HighlightTexture>
   </Button>
   <!-- ── Themed button template — dark panel, accent border, white text ── -->
   <Button name="SoundtrackButtonTemplate" virtual="true" inherits="BackdropTemplate">
@@ -240,6 +246,9 @@
       </OnMouseUp>
     </Scripts>
     <NormalFont style="GameFontHighlightSmall"/>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
+      <Color r="0.30" g="0.70" b="1.00" a="0.10"/>
+    </HighlightTexture>
   </Button>
 
   <Button name="SoundtrackFrameColumnHeaderTemplate" virtual="true">

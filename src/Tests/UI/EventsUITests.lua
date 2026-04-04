@@ -46,6 +46,18 @@ local function MockFrame(name)
 		UnlockHighlight = function() end,
 		SetFontString = function(self, fs) self._fontString = fs end,
 		CreateFontString = function() return MockFontString() end,
+		CreateTexture = function()
+			return {
+				_visible = false,
+				Show = function(self) self._visible = true end,
+				Hide = function(self) self._visible = false end,
+				IsShown = function(self) return self._visible end,
+				SetAllPoints = function() end,
+				SetColorTexture = function() end,
+				SetSize = function() end,
+				SetPoint = function() end,
+			}
+		end,
 		SetID = function(self, id) self._id = id end,
 		GetID = function(self) return self._id end,
 		GetText = function(self)

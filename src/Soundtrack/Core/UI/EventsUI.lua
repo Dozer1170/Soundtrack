@@ -92,32 +92,36 @@ function SoundtrackUI.UpdateEventsUI()
 						fo:SetText(GetLeafText(eventName))
 					end
 					button:UnlockHighlight()
-				else
-					button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
-					expanderTexture:Hide()
 				end
 
-				-- Show number of assigned tracks
-				if event then
-					local numAssignedTracks = table.maxn(event.tracks)
-					if numAssignedTracks == 0 then
-						local tempText = button:GetText()
-						fo:SetText(tempText .. "   ")
-					else
-						local tempText = button:GetText()
-						fo:SetText(tempText .. " (" .. numAssignedTracks .. ")")
-					end
-				end
+				local numAssignedTracks = table.getn(event.tracks or {})
+				local tempText = button:GetText()
+				fo:SetText(tempText .. " (" .. numAssignedTracks .. ")")
 
 				local icon = _G["SoundtrackFrameEventButton" .. buttonIndex .. "Icon"]
 				icon:Hide()
 
 				-- Update the highlight if that track is active for the event.
 				if eventName == SoundtrackUI.SelectedEvent then
-					button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
-					button:LockHighlight()
-				else
+					if not button._selectedBg then
+						local bg = button:CreateTexture(nil, "BACKGROUND")
+						bg:SetAllPoints()
+						local as = SoundtrackTheme.Colors.accentSubtle
+						bg:SetColorTexture(as.r, as.g, as.b, as.a)
+						button._selectedBg = bg
+						local bar = button:CreateTexture(nil, "OVERLAY")
+						bar:SetSize(3, 14)
+						bar:SetPoint("LEFT", button, "LEFT", 0, 0)
+						local ac = SoundtrackTheme.Colors.accent
+						bar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
+						button._activeBar = bar
+					end
+					button._selectedBg:Show()
+					button._activeBar:Show()
 					button:UnlockHighlight()
+				else
+					if button._selectedBg then button._selectedBg:Hide() end
+					if button._activeBar then button._activeBar:Hide() end
 				end
 
 				-- Update the icon
