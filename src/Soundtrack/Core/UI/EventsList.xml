@@ -731,7 +731,6 @@
                     </Layers>
                     <Scripts>
                       <OnLoad>SoundtrackTheme.StyleScrollArrows(self)</OnLoad>
-                      </OnLoad>
                       <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, offset, EVENTS_ITEM_HEIGHT, SoundtrackUI.RefreshAssignedTracks)
                                             </OnVerticalScroll>
                     </Scripts>
