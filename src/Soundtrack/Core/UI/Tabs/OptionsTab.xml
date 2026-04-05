@@ -242,7 +242,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_HidePlaybackButtons" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-21"/>
+              <AbsDimension x="-16" y="-21"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -252,7 +252,7 @@
               <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                   <Offset>
-                    <AbsDimension x="0" y="0"/>
+                    <AbsDimension x="16" y="0"/>
                   </Offset>
                 </Anchor>
               </Anchors>
@@ -305,7 +305,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_AutoEscalateBattleMusic" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-15"/>
+              <AbsDimension x="-16" y="-15"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -315,7 +315,7 @@
               <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                   <Offset>
-                    <AbsDimension x="0" y="0"/>
+                    <AbsDimension x="16" y="0"/>
                   </Offset>
                 </Anchor>
               </Anchors>
@@ -392,7 +392,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_LoopMusic" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-21"/>
+              <AbsDimension x="-16" y="-21"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -402,7 +402,7 @@
               <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                   <Offset>
-                    <AbsDimension x="0" y="0"/>
+                    <AbsDimension x="16" y="0"/>
                   </Offset>
                 </Anchor>
               </Anchors>
@@ -420,7 +420,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_SilenceDropDown" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-10"/>
+              <AbsDimension x="16" y="-10"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -436,7 +436,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_FadeTransition" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-21"/>
+              <AbsDimension x="-16" y="-21"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -446,7 +446,7 @@
               <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
                   <Offset>
-                    <AbsDimension x="0" y="0"/>
+                    <AbsDimension x="16" y="0"/>
                   </Offset>
                 </Anchor>
               </Anchors>
