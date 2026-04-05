@@ -88,17 +88,6 @@ end
 
 -- OnAddZoneButtonClick Tests
 
-function Tests:OnAddZoneButtonClick_WhenBossZones_DelegatesToBossZone()
-	SetupUI()
-	SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
-	local called = false
-	Replace(SoundtrackUI, "OnAddBossZoneButtonClick", function() called = true end)
-
-	SoundtrackUI.OnAddZoneButtonClick()
-
-	IsTrue(called, "Delegated to OnAddBossZoneButtonClick")
-end
-
 function Tests:OnAddZoneButtonClick_WithZonePath_SetsSelectedEvent()
 	SetupUI()
 	SoundtrackUI.SelectedEventsTable = ST_ZONE
@@ -141,17 +130,6 @@ end
 
 -- OnCollapseAllZoneButtonClick Tests
 
-function Tests:OnCollapseAllZoneButtonClick_WhenBossZones_Delegates()
-	SetupUI()
-	SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
-	local called = false
-	Replace(SoundtrackUI, "OnCollapseAllBossZoneButtonClick", function() called = true end)
-
-	SoundtrackUI.OnCollapseAllZoneButtonClick()
-
-	IsTrue(called, "Delegated to OnCollapseAllBossZoneButtonClick")
-end
-
 function Tests:OnCollapseAllZoneButtonClick_SetsExpandedFalse()
 	SetupUI()
 	SoundtrackUI.SelectedEventsTable = ST_ZONE
@@ -165,17 +143,6 @@ function Tests:OnCollapseAllZoneButtonClick_SetsExpandedFalse()
 end
 
 -- OnExpandAllZoneButtonClick Tests
-
-function Tests:OnExpandAllZoneButtonClick_WhenBossZones_Delegates()
-	SetupUI()
-	SoundtrackUI.SelectedEventsTable = ST_BOSS_ZONES
-	local called = false
-	Replace(SoundtrackUI, "OnExpandAllBossZoneButtonClick", function() called = true end)
-
-	SoundtrackUI.OnExpandAllZoneButtonClick()
-
-	IsTrue(called, "Delegated to OnExpandAllBossZoneButtonClick")
-end
 
 function Tests:OnExpandAllZoneButtonClick_SetsExpandedTrue()
 	SetupUI()

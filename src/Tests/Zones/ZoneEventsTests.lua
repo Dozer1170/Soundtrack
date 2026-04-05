@@ -393,44 +393,6 @@ function Tests:Initialize_AddsContinentsAndZones()
 	IsTrue(added["Kalimdor/Mulgore"], "zone event should be added")
 end
 
-function Tests:AddZones_CallsAddCurrentBossZone()
-	MockZone("Eastern Kingdoms", "Elwynn Forest", "", "")
-	local called = false
-	Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function()
-		called = true
-	end)
-
-	Soundtrack_ZoneEvents_AddZones()
-
-	IsTrue(called, "AddCurrentZone should be called when adding zones")
-end
-
-function Tests:OnZoneChanged_AutoAddZonesEnabled_CallsAddCurrentBossZone()
-	SoundtrackAddon.db.profile.settings.AutoAddZones = true
-	MockZone("Eastern Kingdoms", "Elwynn Forest", "", "")
-	local called = false
-	Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function()
-		called = true
-	end)
-
-	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
-
-	IsTrue(called, "AddCurrentZone should be called when AutoAddZones is enabled")
-end
-
-function Tests:OnZoneChanged_AutoAddZonesDisabled_DoesNotCallAddCurrentBossZone()
-	SoundtrackAddon.db.profile.settings.AutoAddZones = false
-	MockZone("Eastern Kingdoms", "Elwynn Forest", "", "")
-	local called = false
-	Replace(Soundtrack.BossZoneEvents, "AddCurrentZone", function()
-		called = true
-	end)
-
-	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED")
-
-	IsFalse(called, "AddCurrentZone should not be called when AutoAddZones is disabled")
-end
-
 -- DeleteZone Tests
 
 function Tests:DeleteZone_RemovesSelectedZone()

@@ -654,20 +654,18 @@ function Tests:AssignTrack_WithExplicitTableName_DoesNotCallGetTableFromEvent()
 end
 
 function Tests:AssignTrack_SameEventInTwoTables_ExplicitTableNameTargetsCorrectTable()
-	-- Simulate the Boss Zones bug: the same zone path exists in both Zone and Boss Zones tables.
-	-- Without an explicit table name, GetTableFromEvent returns whichever comes first in
-	-- Soundtrack_EventTabs (Boss Zones), causing Zone track assignments to land in the wrong table.
-	local sharedEventName = "Instances/Amirdrassil"
-	Soundtrack.AddEvent(ST_BOSS_ZONES, sharedEventName, ST_BOSS_LVL, true, false)
+	-- When the same event name exists in two tables, explicit table name must target the right one.
+	local sharedEventName = "Amirdrassil"
+	Soundtrack.AddEvent(ST_ENCOUNTER, sharedEventName, ST_BOSS_LVL, true, false)
 	Soundtrack.AddEvent(ST_ZONE, sharedEventName, ST_ZONE_LVL, true, false)
 
 	Soundtrack.AssignTrack(ST_ZONE, sharedEventName, "zone_track.mp3")
 
 	local zoneTable = Soundtrack.Events.GetTable(ST_ZONE)
-	local bossZoneTable = Soundtrack.Events.GetTable(ST_BOSS_ZONES)
+	local encounterTable = Soundtrack.Events.GetTable(ST_ENCOUNTER)
 	AreEqual(1, #zoneTable[sharedEventName].tracks)
 	AreEqual("zone_track.mp3", zoneTable[sharedEventName].tracks[1])
-	AreEqual(0, #bossZoneTable[sharedEventName].tracks)
+	AreEqual(0, #encounterTable[sharedEventName].tracks)
 end
 
 function Tests:LoadTracks_WithMyTracksFile_LoadsCustomTracks()

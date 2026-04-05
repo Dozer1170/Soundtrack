@@ -13,19 +13,18 @@ local NAV_ITEMS = {
 		label = "Battle",
 		section = "MUSIC",
 		children = {
-			{ id = "general",    label = "General",    eventTable = "Battle",     tabIndex = 1 },
-			{ id = "encounters", label = "Encounters", eventTable = "Encounter",  tabIndex = 2 },
-			{ id = "bosszones",  label = "Boss Zones", eventTable = "Boss Zones", tabIndex = 3 },
+			{ id = "general",    label = "General",    eventTable = "Battle",    tabIndex = 1 },
+			{ id = "encounters", label = "Encounters", eventTable = "Encounter", tabIndex = 2 },
 		},
 	},
-	{ id = "zones",      label = "Zones",       section = "MUSIC",    eventTable = "Zone",        tabIndex = 4 },
-	{ id = "petbattles", label = "Pet Battles", section = "MUSIC",    eventTable = "Pet Battles", tabIndex = 5 },
-	{ id = "dances",     label = "Dances",      section = "MUSIC",    eventTable = "Dance",       tabIndex = 6 },
-	{ id = "misc",       label = "Misc",        section = "MUSIC",    eventTable = "Misc",        tabIndex = 7 },
-	{ id = "playlists",  label = "Playlists",   section = "MUSIC",    eventTable = "Playlists",   tabIndex = 8 },
-	{ id = "options",    label = "Options",     section = "SETTINGS", eventTable = nil,           tabIndex = 9 },
-	{ id = "profiles",   label = "Profiles",    section = "SETTINGS", eventTable = nil,           tabIndex = 10 },
-	{ id = "about",      label = "About",       section = "INFO",     eventTable = nil,           tabIndex = 11 },
+	{ id = "zones",      label = "Zones",       section = "MUSIC",    eventTable = "Zone",        tabIndex = 3 },
+	{ id = "petbattles", label = "Pet Battles", section = "MUSIC",    eventTable = "Pet Battles", tabIndex = 4 },
+	{ id = "dances",     label = "Dances",      section = "MUSIC",    eventTable = "Dance",       tabIndex = 5 },
+	{ id = "misc",       label = "Misc",        section = "MUSIC",    eventTable = "Misc",        tabIndex = 6 },
+	{ id = "playlists",  label = "Playlists",   section = "MUSIC",    eventTable = "Playlists",   tabIndex = 7 },
+	{ id = "options",    label = "Options",     section = "SETTINGS", eventTable = nil,           tabIndex = 8 },
+	{ id = "profiles",   label = "Profiles",    section = "SETTINGS", eventTable = nil,           tabIndex = 9 },
+	{ id = "about",      label = "About",       section = "INFO",     eventTable = nil,           tabIndex = 10 },
 }
 
 local SECTIONS = { "MUSIC", "SETTINGS", "INFO" }
@@ -149,13 +148,13 @@ end
 
 -- Get the content frame for a nav item
 function SoundtrackNav.GetContentFrame(item)
-	if item.tabIndex <= 8 then
+	if item.tabIndex <= 7 then
 		return SoundtrackFrameEventFrame
-	elseif item.tabIndex == 9 then
+	elseif item.tabIndex == 8 then
 		return SoundtrackFrameOptionsTab
-	elseif item.tabIndex == 10 then
+	elseif item.tabIndex == 9 then
 		return SoundtrackFrameProfilesFrame
-	elseif item.tabIndex == 11 then
+	elseif item.tabIndex == 10 then
 		return SoundtrackFrameAboutFrame
 	end
 	return nil
@@ -180,8 +179,8 @@ local CHEVRON_DOWN    = "v "
 local CHILD_INDENT    = 28
 local PARENT_INDENT   = 16
 local BUTTON_HEIGHT   = 22
-local SECTION_GAP     = 16  -- space between section header and its first button
-local SECTION_TOP_GAP = 26  -- extra breathing room before non-first section headers
+local SECTION_GAP     = 16 -- space between section header and its first button
+local SECTION_TOP_GAP = 26 -- extra breathing room before non-first section headers
 local TOP_PADDING     = -8
 
 local function CreateNavButton(sidebarFrame, item, isChild, parentId)

@@ -131,7 +131,7 @@ function Soundtrack.BattleEvents.GetGroupEnemyClassification()
 
 	local classificationText = GetClassificationText(highestClassification)
 	Soundtrack.Chat.TraceBattle("GetGroupEnemyClassification: classification=" ..
-	tostring(classificationText) .. ", pvpEnabled=" .. tostring(pvpEnabled))
+		tostring(classificationText) .. ", pvpEnabled=" .. tostring(pvpEnabled))
 	return classificationText, pvpEnabled
 end
 
@@ -229,17 +229,7 @@ local function AnalyzeBattleSituation()
 		or battleType == SOUNDTRACK_BOSS_BATTLE
 		or (SoundtrackAddon.db.profile.settings.EscalateBattleMusic and battleTypeIndex > currentBattleTypeIndex)
 	then
-		-- For boss battles, check for zone-specific boss music first
-		if battleType == SOUNDTRACK_BOSS_BATTLE then
-			local bossZoneEvent = Soundtrack.BossZoneEvents.GetCurrentBossZoneEvent()
-			if bossZoneEvent then
-				Soundtrack.PlayEvent(ST_BOSS_ZONES, bossZoneEvent)
-			else
-				Soundtrack.PlayEvent(ST_BATTLE, battleType)
-			end
-		else
-			Soundtrack.PlayEvent(ST_BATTLE, battleType)
-		end
+		Soundtrack.PlayEvent(ST_BATTLE, battleType)
 	end
 	currentBattleTypeIndex = battleTypeIndex
 end
@@ -323,12 +313,26 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 		Soundtrack.Chat.TraceBattle("ZONE_CHANGED_NEW_AREA")
 	elseif event == "ENCOUNTER_START" then
 		local _, encounterName = ...
-		currentEncounterName = encounterName
-		Soundtrack.Chat.TraceBattle("Encounter started: " .. tostring(encounterName))
-		Soundtrack.AddEvent(ST_ENCOUNTER, encounterName, ST_BOSS_LVL, true)
+		-- Build zone-prefixed key using only the instance name (e.g. "The Nexus/Anomalus" from path "Instances/The Nexus/The Nexus Point")
+		local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
+		local zonePath = zonePaths and zonePaths[1] or nil
+		local zonePrefix = zonePath and (zonePath:match("^[^/]+/([^/]+)") or zonePath) or nil
+		local fullKey
+		if zonePrefix then
+			-- Ensure the zone ancestor node exists so the tree renders correctly
+			Soundtrack.AddEvent(ST_ENCOUNTER, zonePrefix, ST_BOSS_LVL, true)
+			fullKey = zonePrefix .. "/" .. encounterName
+		else
+			fullKey = encounterName
+		end
+		currentEncounterName = fullKey
+		Soundtrack.Chat.TraceBattle("Encounter started: " .. tostring(encounterName) .. " (" .. fullKey .. ")")
+		Soundtrack.AddEvent(ST_ENCOUNTER, fullKey, ST_BOSS_LVL, true)
 		if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
-			if Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, encounterName) then
-				Soundtrack.PlayEvent(ST_ENCOUNTER, encounterName)
+			if Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, fullKey) then
+				Soundtrack.PlayEvent(ST_ENCOUNTER, fullKey)
+			elseif zonePrefix and Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, zonePrefix) then
+				Soundtrack.PlayEvent(ST_ENCOUNTER, zonePrefix)
 			else
 				Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE)
 			end

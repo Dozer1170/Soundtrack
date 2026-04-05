@@ -373,7 +373,7 @@ function Tests:RefreshShowingTab_UpdatesFramesAndButtons()
 	Replace(Soundtrack, "StopEvent", function() end)
 	Replace(Soundtrack, "StopEventAtLevel", function() end)
 
-	SoundtrackFrame.selectedTab = 4
+	SoundtrackFrame.selectedTab = 3
 	SoundtrackUI.RefreshShowingTab()
 
 	AreEqual("Zone", SoundtrackUI.SelectedEventsTable)
@@ -381,7 +381,7 @@ function Tests:RefreshShowingTab_UpdatesFramesAndButtons()
 	IsTrue(SoundtrackFrameAddZoneButton:IsVisible())
 	IsFalse(SoundtrackFrameAddPlaylistButton:IsVisible())
 
-	SoundtrackFrame.selectedTab = 9
+	SoundtrackFrame.selectedTab = 8
 	SoundtrackUI.RefreshShowingTab()
 
 	IsTrue(SoundtrackFrameOptionsTab:IsVisible())

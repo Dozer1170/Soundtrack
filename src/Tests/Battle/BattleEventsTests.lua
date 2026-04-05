@@ -874,16 +874,18 @@ function Tests:BattleEvents_GetBattleType_InvalidBattle()
 	AreEqual("InvalidBattle", battleType)
 end
 
-function Tests:BattleEvents_EncounterStart_NamedBossTakesPrecedenceOverBossZone()
+function Tests:BattleEvents_EncounterStart_StoresZonePrefixedKey()
 	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
 
-	-- Set up a boss zone with tracks for the current zone.
-	Soundtrack.AddEvent(ST_BOSS_ZONES, "Instances/Onyxia's Lair", ST_BOSS_LVL, true)
-	Soundtrack.Events.Add(ST_BOSS_ZONES, "Instances/Onyxia's Lair", "Sound/Music/ZoneMusic/onyxia_zone.mp3")
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return { "Instances/Onyxia's Lair", "Instances" }
+	end)
 
-	-- Set up a named encounter entry with tracks in ST_ENCOUNTER.
-	Soundtrack.AddEvent(ST_ENCOUNTER, "Onyxia", ST_BOSS_LVL, true)
-	Soundtrack.Events.Add(ST_ENCOUNTER, "Onyxia", "Sound/Music/ZoneMusic/onyxia_boss.mp3")
+	-- Set up the encounter with zone-prefixed tracks (instance name: "Onyxia's Lair")
+	local fullKey = "Onyxia's Lair/Onyxia"
+	Soundtrack.AddEvent(ST_ENCOUNTER, fullKey, ST_BOSS_LVL, true)
+	Soundtrack.Events.Add(ST_ENCOUNTER, fullKey, "Sound/Music/ZoneMusic/onyxia_boss.mp3")
 
 	local playedTable, playedEvent
 	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
@@ -891,9 +893,54 @@ function Tests:BattleEvents_EncounterStart_NamedBossTakesPrecedenceOverBossZone(
 		playedEvent = eventName
 	end)
 
-	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
 	Soundtrack.BattleEvents.OnEvent(nil, "ENCOUNTER_START", nil, "Onyxia")
 
-	AreEqual(ST_ENCOUNTER, playedTable, "Named encounter table should be used, not boss zone")
-	AreEqual("Onyxia", playedEvent, "Named boss track should play, not zone track")
+	AreEqual(ST_ENCOUNTER, playedTable, "Named encounter table should be used")
+	AreEqual(fullKey, playedEvent, "Zone-prefixed encounter key should play")
+end
+
+function Tests:BattleEvents_EncounterStart_FallsBackToZoneLevelTracks()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return { "Instances/Amirdrassil", "Instances" }
+	end)
+
+	-- Zone-level node has tracks, but specific encounter does not
+	-- zonePrefix is "Amirdrassil" (instance name from "Instances/Amirdrassil")
+	local zonePrefix = "Amirdrassil"
+	Soundtrack.AddEvent(ST_ENCOUNTER, zonePrefix, ST_BOSS_LVL, true)
+	Soundtrack.Events.Add(ST_ENCOUNTER, zonePrefix, "Sound/Music/ZoneMusic/amirdrassil_boss.mp3")
+
+	local playedTable, playedEvent
+	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
+		playedTable = tableName
+		playedEvent = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "ENCOUNTER_START", nil, "Fyrakk")
+
+	AreEqual(ST_ENCOUNTER, playedTable, "Encounter table should be used for zone fallback")
+	AreEqual(zonePrefix, playedEvent, "Zone-level tracks should play as fallback")
+end
+
+function Tests:BattleEvents_EncounterStart_FallsBackToDefaultBossWhenNoTracks()
+	ResetBattleState()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return { "Instances/The Deadmines", "Instances" }
+	end)
+
+	local playedTable, playedEvent
+	Replace(Soundtrack, "PlayEvent", function(tableName, eventName)
+		playedTable = tableName
+		playedEvent = eventName
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "ENCOUNTER_START", nil, "Rhahk'Zor")
+
+	AreEqual(ST_BATTLE, playedTable, "Battle table should be used when no tracks exist")
+	AreEqual(SOUNDTRACK_BOSS_BATTLE, playedEvent, "Default boss battle should play as fallback")
 end

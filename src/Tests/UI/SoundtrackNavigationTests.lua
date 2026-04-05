@@ -26,11 +26,9 @@ function Tests:GetItemById_Child_ReturnsItem()
 	AreEqual(2, item.tabIndex, "tabIndex should be 2")
 end
 
-function Tests:GetItemById_BossZones_ReturnsChild()
+function Tests:GetItemById_BossZones_ReturnsNil()
 	local item = SoundtrackNav.GetItemById("bosszones")
-	IsTrue(item ~= nil, "Should find Boss Zones child")
-	AreEqual("Boss Zones", item.label)
-	AreEqual(3, item.tabIndex)
+	AreEqual(nil, item, "Boss Zones nav item no longer exists")
 end
 
 function Tests:GetItemById_NonExistent_ReturnsNil()
@@ -51,13 +49,13 @@ function Tests:GetItemByTabIndex_Child_ReturnsItem()
 end
 
 function Tests:GetItemByTabIndex_OptionsTab_ReturnsItem()
-	local item = SoundtrackNav.GetItemByTabIndex(9)
+	local item = SoundtrackNav.GetItemByTabIndex(8)
 	IsTrue(item ~= nil)
 	AreEqual("options", item.id)
 end
 
 function Tests:GetItemByTabIndex_AboutTab_ReturnsItem()
-	local item = SoundtrackNav.GetItemByTabIndex(11)
+	local item = SoundtrackNav.GetItemByTabIndex(10)
 	IsTrue(item ~= nil)
 	AreEqual("about", item.id)
 end
@@ -74,10 +72,9 @@ function Tests:GetItemByEventTable_Encounter_ReturnsChild()
 	AreEqual("encounters", item.id)
 end
 
-function Tests:GetItemByEventTable_BossZones_ReturnsChild()
+function Tests:GetItemByEventTable_BossZones_ReturnsNil()
 	local item = SoundtrackNav.GetItemByEventTable("Boss Zones")
-	IsTrue(item ~= nil)
-	AreEqual("bosszones", item.id)
+	AreEqual(nil, item, "Boss Zones event table no longer has a nav item")
 end
 
 function Tests:GetItemByEventTable_Zone_ReturnsTopLevel()
@@ -89,9 +86,8 @@ end
 -- ── Parent/child relationship tests ──────────────────────────────────
 
 function Tests:GetParentId_Child_ReturnsParentId()
-	AreEqual("battle", SoundtrackNav.GetParentId("general"),    "general parent should be battle")
+	AreEqual("battle", SoundtrackNav.GetParentId("general"), "general parent should be battle")
 	AreEqual("battle", SoundtrackNav.GetParentId("encounters"), "encounters parent should be battle")
-	AreEqual("battle", SoundtrackNav.GetParentId("bosszones"),  "bosszones parent should be battle")
 end
 
 function Tests:GetParentId_TopLevel_ReturnsNil()
@@ -135,7 +131,7 @@ end
 -- ── Content frame mapping tests ──────────────────────────────────────
 
 function Tests:GetContentFrame_EventTabs_ReturnEventFrame()
-	for tabIdx = 1, 8 do
+	for tabIdx = 1, 7 do
 		local item = SoundtrackNav.GetItemByTabIndex(tabIdx)
 		IsTrue(item ~= nil, "Item for tabIndex " .. tabIdx .. " should exist")
 		local frame = SoundtrackNav.GetContentFrame(item)

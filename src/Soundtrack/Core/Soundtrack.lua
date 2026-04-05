@@ -123,7 +123,6 @@ function SoundtrackAddon:PLAYER_ENTERING_WORLD()
 		Soundtrack.MountEvents.Initialize()
 		Soundtrack.ZoneEvents.Initialize()
 		Soundtrack.BattleEvents.Initialize()
-		Soundtrack.BossZoneEvents.Initialize()
 		Soundtrack.Auras.Initialize()
 		Soundtrack.Misc.Initialize()
 		SoundtrackUI.RefreshShowingTab()
@@ -388,14 +387,14 @@ function Soundtrack.PlayEvent(tableName, eventName, forceRestart)
 
 	Soundtrack.Chat.TraceEvents(
 		"PlayEvent("
-			.. tableName
-			.. ", "
-			.. GetPathFileName(eventName)
-			.. ", "
-			.. priorityText
-			.. ") "
-			.. playOnceText
-			.. sfxText
+		.. tableName
+		.. ", "
+		.. GetPathFileName(eventName)
+		.. ", "
+		.. priorityText
+		.. ") "
+		.. playOnceText
+		.. sfxText
 	)
 
 	-- Add event on the stack

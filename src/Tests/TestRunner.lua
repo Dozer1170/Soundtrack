@@ -733,7 +733,6 @@ local function ResetState()
 
   LoadSourceFile("src/Soundtrack/Core/Auras/Auras.lua")
   LoadSourceFile("src/Soundtrack/Core/Battle/BattleEvents.lua")
-  LoadSourceFile("src/Soundtrack/Core/Battle/BossZoneEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/Dance/DanceEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/MiscEvents/MiscEvents.lua")
 
@@ -829,7 +828,6 @@ local function ResetState()
   LoadSourceFile("src/Soundtrack/Core/UI/PlaylistsUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/TracksUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/ZonesUI.lua")
-  LoadSourceFile("src/Soundtrack/Core/UI/BossZonesUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/TooltipUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/NowPlayingFrameUI.lua")
   LoadSourceFile("src/Soundtrack/Core/UI/PlaybackControlsUI.lua")
@@ -866,7 +864,6 @@ end
 -- Discover and load tests ---------------------------------------------
 local testFiles = {
   "Battle/BattleEventsTests.lua",
-  "Battle/BossZoneEventsTests.lua",
   "Utils/CleanupTests.lua",
   "Dance/DanceEventsTests.lua",
   "EventsTests.lua",
@@ -885,7 +882,6 @@ local testFiles = {
   "TimersTests.lua",
   "UI/SoundtrackUITests.lua",
   "UI/EventsUITests.lua",
-  "UI/BossZonesUITests.lua",
   "UI/ZonesUITests.lua",
   "UI/ControlFrameUITests.lua",
   "UI/EventStackUITests.lua",

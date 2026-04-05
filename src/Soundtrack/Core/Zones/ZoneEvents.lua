@@ -115,10 +115,14 @@ end
 
 local function PriorityForPath(path)
 	local _, slashes = path:gsub("/", "")
-	if slashes == 0 then return ST_CONTINENT_LVL
-	elseif slashes == 1 then return ST_ZONE_LVL
-	elseif slashes == 2 then return ST_SUBZONE_LVL
-	else return ST_MINIMAP_LVL
+	if slashes == 0 then
+		return ST_CONTINENT_LVL
+	elseif slashes == 1 then
+		return ST_ZONE_LVL
+	elseif slashes == 2 then
+		return ST_SUBZONE_LVL
+	else
+		return ST_MINIMAP_LVL
 	end
 end
 
@@ -139,8 +143,6 @@ function Soundtrack_ZoneEvents_AddZones()
 		end
 		AssignPriority(ST_ZONE, zonePath, priority)
 	end
-
-	Soundtrack.BossZoneEvents.AddCurrentZone()
 end
 
 function Soundtrack.ZoneEvents.DeleteZone(eventName)
@@ -248,7 +250,6 @@ local function OnZoneChanged()
 	end
 
 	if SoundtrackAddon.db.profile.settings.AutoAddZones then
-		Soundtrack.BossZoneEvents.AddCurrentZone()
 	end
 end
 
