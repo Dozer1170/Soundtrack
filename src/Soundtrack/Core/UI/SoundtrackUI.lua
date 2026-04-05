@@ -18,6 +18,7 @@ local EVENT_SUB_FRAMES = {
 local currentSubFrame = SUB_FRAME_ASSIGNED_TRACKS
 local suspendRenameEvent = false
 local copiedTracks = {}
+local lastOpenedNavId = nil
 
 local function ShowSubFrame(frameName)
 	for _, value in ipairs(EVENT_SUB_FRAMES) do
@@ -122,10 +123,11 @@ local function SetStatusBarProgress(statusBarID, max, current)
 	statusBarBackground:Hide()
 
 	-- Set bar color depending on skill cost
+	local ac = SoundtrackTheme.Colors.accent
 	if max then
-		statusBar:SetStatusBarColor(0.0, 0.75, 0.0, 0.5)
-		statusBarBackground:SetVertexColor(0.0, 0.5, 0.0, 0.5)
-		statusBarFillBar:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+		statusBar:SetStatusBarColor(ac.r, ac.g, ac.b, 0.8)
+		statusBarBackground:SetVertexColor(ac.r * 0.4, ac.g * 0.4, ac.b * 0.4, 0.5)
+		statusBarFillBar:SetVertexColor(ac.r, ac.g, ac.b, 0.5)
 	else
 		statusBar:SetStatusBarColor(0.25, 0.25, 0.25)
 		statusBar:SetMinMaxValues(0, 0)
@@ -317,13 +319,19 @@ function SoundtrackUI.OnShow()
 	-- Navigate to the currently playing tab (instant, no animation on open)
 	local navigated = SelectActiveTab(true)
 	if not navigated then
-		-- Nothing playing — show current page instantly
-		SoundtrackNav.RefreshHighlight()
-		SoundtrackUI.RefreshShowingTab(true)
+		-- Nothing playing — restore the last tab the user had open this session
+		if lastOpenedNavId then
+			SoundtrackNav.NavigateTo(lastOpenedNavId, true)
+		else
+			SoundtrackNav.RefreshHighlight()
+			SoundtrackUI.RefreshShowingTab(true)
+		end
 	end
 end
 
 function SoundtrackUI.OnHide()
+	lastOpenedNavId = SoundtrackNav.GetActiveId()
+
 	Soundtrack.StopEventAtLevel(ST_PREVIEW_LVL)
 
 	if SoundtrackUI.SelectedEventsTable ~= "Playlists" then

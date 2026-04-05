@@ -416,9 +416,11 @@
     <Scripts>
       <OnLoad>
         local c = SoundtrackTheme.Colors
-        self:SetStatusBarColor(c.barFill.r, c.barFill.g, c.barFill.b)
+        local tex = self:GetStatusBarTexture()
+        if tex then tex:SetDesaturated(true) end
+        self:SetStatusBarColor(c.accent.r, c.accent.g, c.accent.b)
         local fill = _G[self:GetName() .. "FillBar"]
-        if fill then fill:SetVertexColor(c.barFill.r, c.barFill.g, c.barFill.b, 0.5) end
+        if fill then fill:SetVertexColor(c.accent.r, c.accent.g, c.accent.b, 0.5) end
         local bg = _G[self:GetName() .. "Background"]
         if bg then bg:SetVertexColor(c.barBg.r, c.barBg.g, c.barBg.b, c.barBg.a) end
       </OnLoad>

@@ -294,6 +294,49 @@ function Tests:OnShow_SelectsActiveTabAndRefreshes()
 	AreEqual(ST_ZONE, SoundtrackUI.SelectedEventsTable)
 end
 
+function Tests:OnHide_SavesLastOpenedTab()
+	SetupEventFrameButtons()
+	SetupTabFrames()
+	Replace(Soundtrack, "StopEventAtLevel", function() end)
+	SoundtrackUI.SelectedEventsTable = ST_MISC
+
+	SoundtrackNav.NavigateTo("zones", true)
+	SoundtrackUI.OnHide()
+
+	-- Reopen with nothing playing — should restore to "zones"
+	Soundtrack.Events.Stack = {}
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 0 end)
+	Replace(SoundtrackUI, "UpdateEventsUI", function() end)
+	Replace(_G, "GetFlatEventsTableForCurrentTab", function() return {} end)
+
+	SoundtrackUI.OnShow()
+
+	AreEqual("zones", SoundtrackNav.GetActiveId())
+end
+
+function Tests:OnShow_RestoresLastTabWhenNothingPlaying()
+	SetupEventFrameButtons()
+	SetupTabFrames()
+	Soundtrack.Events.Stack = {}
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return 0 end)
+	Replace(Soundtrack, "StopEventAtLevel", function() end)
+	Replace(SoundtrackUI, "UpdateEventsUI", function() end)
+	Replace(_G, "GetFlatEventsTableForCurrentTab", function() return {} end)
+
+	-- Simulate: user was on "options", closed the window
+	SoundtrackNav.NavigateTo("options", true)
+	SoundtrackUI.SelectedEventsTable = ST_OPTIONS
+	SoundtrackUI.OnHide()
+
+	-- Simulate: playing tab temporarily changed activeNavId
+	SoundtrackNav.NavigateTo("general", true)
+
+	-- Reopen with nothing playing — should restore "options"
+	SoundtrackUI.OnShow()
+
+	AreEqual("options", SoundtrackNav.GetActiveId())
+end
+
 function Tests:OnHide_StopsCorrectLevels()
 	local calls = {}
 	Replace(Soundtrack, "StopEventAtLevel", function(level)
