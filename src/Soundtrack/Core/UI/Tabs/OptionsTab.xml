@@ -81,7 +81,7 @@
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
-                <AbsDimension x="550" y="-250"/>
+                <AbsDimension x="550" y="-190"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -420,7 +420,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_SilenceDropDown" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-25"/>
+              <AbsDimension x="0" y="-10"/>
             </Offset>
           </Anchor>
         </Anchors>
