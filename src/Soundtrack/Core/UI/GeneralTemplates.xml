@@ -120,13 +120,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad inherit="append">
-            local ac = SoundtrackTheme.Colors.accent
-            self:SetCheckedTexture("Interface/Buttons/UI-CheckBox-Check")
-            local t = self:GetCheckedTexture()
-            t:SetDesaturated(true)
-            t:SetVertexColor(ac.r, ac.g, ac.b)
-          </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackUI.OnTrackCheckBoxClick(self, button, down)</OnClick>
         </Scripts>
       </CheckButton>
@@ -209,13 +203,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad inherit="append">
-            local ac = SoundtrackTheme.Colors.accent
-            self:SetCheckedTexture("Interface/Buttons/UI-CheckBox-Check")
-            local t = self:GetCheckedTexture()
-            t:SetDesaturated(true)
-            t:SetVertexColor(ac.r, ac.g, ac.b)
-          </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackUI.OnAssignedTrackCheckBoxClick(self, button, down);</OnClick>
         </Scripts>
       </CheckButton>
@@ -233,31 +221,11 @@
   <!-- ── Themed button template — dark panel, accent border, white text ── -->
   <Button name="SoundtrackButtonTemplate" virtual="true" inherits="BackdropTemplate">
     <Scripts>
-      <OnLoad>
-        self:SetBackdrop({
-          bgFile   = "Interface/Buttons/WHITE8X8",
-          edgeFile = "Interface/Buttons/WHITE8X8",
-          edgeSize = 1,
-        })
-        self:SetBackdropColor(0.08, 0.13, 0.22, 0.92)
-        self:SetBackdropBorderColor(0.20, 0.50, 0.80, 0.80)
-      </OnLoad>
-      <OnEnter>
-        self:SetBackdropColor(0.15, 0.28, 0.48, 0.95)
-        self:SetBackdropBorderColor(0.30, 0.70, 1.00, 1.0)
-      </OnEnter>
-      <OnLeave>
-        self:SetBackdropColor(0.08, 0.13, 0.22, 0.92)
-        self:SetBackdropBorderColor(0.20, 0.50, 0.80, 0.80)
-      </OnLeave>
-      <OnMouseDown>
-        self:SetBackdropColor(0.04, 0.08, 0.16, 0.95)
-        self:SetBackdropBorderColor(0.30, 0.70, 1.00, 1.0)
-      </OnMouseDown>
-      <OnMouseUp>
-        self:SetBackdropColor(0.08, 0.13, 0.22, 0.92)
-        self:SetBackdropBorderColor(0.20, 0.50, 0.80, 0.80)
-      </OnMouseUp>
+      <OnLoad>SoundtrackTheme.StyleButton(self)</OnLoad>
+      <OnEnter>SoundtrackTheme.SetButtonStateHover(self)</OnEnter>
+      <OnLeave>SoundtrackTheme.SetButtonStateNormal(self)</OnLeave>
+      <OnMouseDown>SoundtrackTheme.SetButtonStatePressed(self)</OnMouseDown>
+      <OnMouseUp>SoundtrackTheme.SetButtonStateNormal(self)</OnMouseUp>
     </Scripts>
     <NormalFont style="GameFontHighlightSmall"/>
     <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
