@@ -23,6 +23,18 @@
             </Anchor>
           </Anchors>
         </FontString>
+        <Texture name="OptionsTab_DividerUIOptions" file="Interface/Buttons/WHITE8X8">
+          <Size>
+            <AbsDimension x="210" y="2"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringUIOptions" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-3"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
         <FontString name="OptionsTab_FontStringEventOptions" inherits="GameFontHighlight" text="Event Options">
           <Anchors>
             <Anchor point="TOPLEFT">
@@ -32,6 +44,18 @@
             </Anchor>
           </Anchors>
         </FontString>
+        <Texture name="OptionsTab_DividerEventOptions" file="Interface/Buttons/WHITE8X8">
+          <Size>
+            <AbsDimension x="175" y="2"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringEventOptions" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-3"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
         <FontString name="OptionsTab_FontStringEnableEventsOptions" inherits="GameFontHighlight" text="Enable Events">
           <Anchors>
             <Anchor point="TOPLEFT">
@@ -41,6 +65,18 @@
             </Anchor>
           </Anchors>
         </FontString>
+        <Texture name="OptionsTab_DividerEnableEvents" file="Interface/Buttons/WHITE8X8">
+          <Size>
+            <AbsDimension x="165" y="2"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringEnableEventsOptions" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-3"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
         <FontString name="OptionsTab_FontStringDebugOptions" inherits="GameFontHighlight" text="Debugging Options">
           <Anchors>
             <Anchor point="TOPLEFT">
@@ -50,6 +86,18 @@
             </Anchor>
           </Anchors>
         </FontString>
+        <Texture name="OptionsTab_DividerDebugOptions" file="Interface/Buttons/WHITE8X8">
+          <Size>
+            <AbsDimension x="165" y="2"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringDebugOptions" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-3"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
       </Layer>
     </Layers>
     <Frames>
@@ -65,6 +113,7 @@
         <Scripts>
           <OnLoad>OptionsTab_EnableMinimapButton.Text:SetText(SOUNDTRACK_SHOW_MINIMAP_BUTTON)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleMinimapButton()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_MINIMAP_BUTTON,
                         SOUNDTRACK_SHOW_MINIMAP_BUTTON_TIP)
@@ -79,6 +128,7 @@
         <Scripts>
           <OnLoad>OptionsTab_ShowPlaybackControls.Text:SetText(SOUNDTRACK_SHOW_PLAYBACK_CONTROLS)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleShowPlaybackControls()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_PLAYBACK_CONTROLS,
                         SOUNDTRACK_SHOW_PLAYBACK_CONTROLS_TIP)
@@ -97,6 +147,7 @@
         <Scripts>
           <OnLoad>OptionsTab_LockPlaybackControls.Text:SetText(SOUNDTRACK_LOCK_PLAYBACK_CONTROLS)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>
                         SoundtrackControlFrame:EnableMouse(SoundtrackAddon.db.profile.settings.LockPlaybackControls);
                         SoundtrackAddon.db.profile.settings.LockPlaybackControls = not
@@ -119,6 +170,7 @@
         <Scripts>
           <OnLoad>OptionsTab_ShowTrackInformation.Text:SetText(SOUNDTRACK_SHOW_TRACK_INFO)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleShowTrackInformation()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_TRACK_INFO, SOUNDTRACK_SHOW_TRACK_INFO_TIP
                         )
@@ -137,6 +189,7 @@
         <Scripts>
           <OnLoad>OptionsTab_LockNowPlayingFrame.Text:SetText(SOUNDTRACK_LOCK_NOW_PLAYING)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>
                         NowPlayingTextFrame:EnableMouse(SoundtrackAddon.db.profile.settings.LockNowPlayingFrame);
                         SoundtrackAddon.db.profile.settings.LockNowPlayingFrame = not
@@ -158,6 +211,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_ShowDefaultMusic.Text:SetText(SOUNDTRACK_SHOW_DEFAULT_MUSIC)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleShowDefaultMusic()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEFAULT_MUSIC, SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -173,6 +227,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_HidePlaybackButtons.Text:SetText("Hide Playback Buttons")</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackAddon.db.profile.settings.HideControlButtons = not
                         SoundtrackAddon.db.profile.settings.HideControlButtons;
                         SoundtrackFrame_RefreshPlaybackControls()
@@ -220,6 +275,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_AutoAddZones.Text:SetText(SOUNDTRACK_AUTO_ADD_ZONES)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackAddon.db.profile.settings.AutoAddZones = not
                         SoundtrackAddon.db.profile.settings.AutoAddZones
                     </OnClick>
@@ -235,6 +291,7 @@
         <Scripts>
           <OnLoad>OptionsTab_AutoEscalateBattleMusic.Text:SetText(SOUNDTRACK_ESCALATE_BATTLE)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackAddon.db.profile.settings.EscalateBattleMusic = not
                         SoundtrackAddon.db.profile.settings.EscalateBattleMusic
                     </OnClick>
@@ -244,25 +301,9 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </CheckButton>
-      <CheckButton name="OptionsTab_YourEnemyLevelOnly" inherits="UICheckButtonTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="OptionsTab_AutoEscalateBattleMusic" relativePoint="BOTTOMLEFT"/>
-        </Anchors>
-        <Scripts>
-          <OnLoad>OptionsTab_YourEnemyLevelOnly.Text:SetText(SOUNDTRACK_YOUR_ENEMY_LEVEL)
-                    </OnLoad>
-          <OnClick>SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly = not
-                        SoundtrackAddon.db.profile.settings.YourEnemyLevelOnly
-                    </OnClick>
-          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_YOUR_ENEMY_LEVEL,
-                        SOUNDTRACK_YOUR_ENEMY_LEVEL_TIP)
-                    </OnEnter>
-          <OnLeave>Soundtrack.HideTip();</OnLeave>
-        </Scripts>
-      </CheckButton>
       <Frame name="OptionsTab_BattleCooldownDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="OptionsTab_YourEnemyLevelOnly" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_AutoEscalateBattleMusic" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="-15"/>
             </Offset>
@@ -288,16 +329,59 @@
         </Scripts>
       </Frame>
 
-      <CheckButton name="OptionsTab_LoopMusic" inherits="UICheckButtonTemplate">
+      <Frame name="OptionsTab_MusicOptionsHeader">
+        <Size>
+          <AbsDimension x="175" y="20"/>
+        </Size>
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_BattleCooldownDropDown" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-25"/>
+              <AbsDimension x="0" y="-30"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="OptionsTab_FontStringMusicOptions" inherits="GameFontHighlight" text="Music Options">
+              <Anchors>
+                <Anchor point="TOPLEFT"/>
+              </Anchors>
+            </FontString>
+            <Texture name="OptionsTab_DividerMusicOptions" file="Interface/Buttons/WHITE8X8">
+              <Size>
+                <AbsDimension x="175" y="2"/>
+              </Size>
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringMusicOptions" relativePoint="BOTTOMLEFT">
+                  <Offset>
+                    <AbsDimension x="0" y="-3"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            local ac = SoundtrackTheme.Colors.textNormal
+            OptionsTab_FontStringMusicOptions:SetTextColor(ac.r, ac.g, ac.b)
+            local d = SoundtrackTheme.Colors.divider
+            OptionsTab_DividerMusicOptions:SetVertexColor(d.r, d.g, d.b, d.a)
+          </OnLoad>
+        </Scripts>
+      </Frame>
+
+      <CheckButton name="OptionsTab_LoopMusic" inherits="UICheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_FontStringMusicOptions" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-10"/>
             </Offset>
           </Anchor>
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_LoopMusic.Text:SetText(SOUNDTRACK_LOOP_MUSIC)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleLoopMusic()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_LOOP_MUSIC, SOUNDTRACK_LOOP_MUSIC_TIP)
                     </OnEnter>
@@ -342,6 +426,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_FadeTransition.Text:SetText(SOUNDTRACK_FADE_TRANSITION)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleFadeTransition()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_FADE_TRANSITION, SOUNDTRACK_FADE_TRANSITION_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -384,6 +469,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_EnableDebugMode.Text:SetText(SOUNDTRACK_SHOW_DEBUG)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleDebugMode()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_DEBUG, SOUNDTRACK_SHOW_DEBUG_TIP)
                     </OnEnter>
@@ -396,6 +482,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_ShowEventStack.Text:SetText(SOUNDTRACK_SHOW_EVENT_STACK)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>Soundtrack.OptionsTab.ToggleShowEventStack()</OnClick>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_EVENT_STACK,
                         SOUNDTRACK_SHOW_EVENT_STACK_TIP)
@@ -413,6 +500,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_EnableZoneMusic.Text:SetText(SOUNDTRACK_ENABLE_ZONE_MUSIC)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>
                         SoundtrackAddon.db.profile.settings.EnableZoneMusic = not
                         SoundtrackAddon.db.profile.settings.EnableZoneMusic
@@ -435,6 +523,7 @@
         <Scripts>
           <OnLoad>OptionsTab_EnableBattleMusic.Text:SetText(SOUNDTRACK_ENABLE_BATTLE_MUSIC)
                     </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackAddon.db.profile.settings.EnableBattleMusic = not
                         SoundtrackAddon.db.profile.settings.EnableBattleMusic
                     </OnClick>
@@ -450,6 +539,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>OptionsTab_EnableMiscMusic.Text:SetText(SOUNDTRACK_ENABLE_MISC_MUSIC)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
           <OnClick>SoundtrackAddon.db.profile.settings.EnableMiscMusic = not
                         SoundtrackAddon.db.profile.settings.EnableMiscMusic
                     </OnClick>
@@ -461,6 +551,18 @@
       </CheckButton>
     </Frames>
     <Scripts>
+      <OnLoad>
+        local ac = SoundtrackTheme.Colors.textNormal
+        OptionsTab_FontStringUIOptions:SetTextColor(ac.r, ac.g, ac.b)
+        OptionsTab_FontStringEventOptions:SetTextColor(ac.r, ac.g, ac.b)
+        OptionsTab_FontStringEnableEventsOptions:SetTextColor(ac.r, ac.g, ac.b)
+        OptionsTab_FontStringDebugOptions:SetTextColor(ac.r, ac.g, ac.b)
+        local d = SoundtrackTheme.Colors.divider
+        OptionsTab_DividerUIOptions:SetVertexColor(d.r, d.g, d.b, d.a)
+        OptionsTab_DividerEventOptions:SetVertexColor(d.r, d.g, d.b, d.a)
+        OptionsTab_DividerEnableEvents:SetVertexColor(d.r, d.g, d.b, d.a)
+        OptionsTab_DividerDebugOptions:SetVertexColor(d.r, d.g, d.b, d.a)
+      </OnLoad>
       <OnShow>Soundtrack.OptionsTab.Refresh()</OnShow>
     </Scripts>
   </Frame>

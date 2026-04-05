@@ -12,9 +12,8 @@ local NAV_ITEMS = {
 		id = "battle",
 		label = "Battle",
 		section = "MUSIC",
-		eventTable = "Battle",
-		tabIndex = 1,
 		children = {
+			{ id = "general",    label = "General",    eventTable = "Battle",     tabIndex = 1 },
 			{ id = "encounters", label = "Encounters", eventTable = "Encounter",  tabIndex = 2 },
 			{ id = "bosszones",  label = "Boss Zones", eventTable = "Boss Zones", tabIndex = 3 },
 		},
@@ -31,7 +30,7 @@ local NAV_ITEMS = {
 
 local SECTIONS = { "MUSIC", "SETTINGS", "INFO" }
 
-local activeNavId = "battle"
+local activeNavId = "general"
 local navButtons = {}       -- all buttons keyed by id (parents and children)
 local expandedState = {}    -- tracks which parents are expanded, keyed by parent id
 local childButtons = {}     -- child buttons grouped by parent id for show/hide
@@ -189,10 +188,12 @@ local function CreateNavButton(sidebarFrame, item, isChild, parentId)
 	local btn = CreateFrame("Button", "SoundtrackNavButton_" .. item.id, sidebarFrame)
 	btn:SetSize(126, BUTTON_HEIGHT)
 
-	-- Highlight texture (hover)
-	local highlight = btn:CreateTexture(nil, "HIGHLIGHT")
-	highlight:SetAllPoints()
-	highlight:SetColorTexture(1, 1, 1, 0.08)
+	-- Highlight texture (hover) – skipped for non-interactive parent headers
+	if not item.children then
+		local highlight = btn:CreateTexture(nil, "HIGHLIGHT")
+		highlight:SetAllPoints()
+		highlight:SetColorTexture(1, 1, 1, 0.08)
+	end
 
 	-- Selected texture (active background)
 	local selected = btn:CreateTexture(nil, "BACKGROUND")
@@ -258,21 +259,13 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 
 		local btn = CreateNavButton(sidebarFrame, item, isChild, parentId)
 
-		-- Set label text (with chevron for parents that have children)
-		if not isChild and item.children then
-			local chevron = expandedState[item.id] and CHEVRON_DOWN or CHEVRON_RIGHT
-			btn._label:SetText(chevron .. item.label)
-		else
-			btn._label:SetText(item.label)
-		end
+		-- Set label text (parents with children are non-interactive headers – no chevron)
+		btn._label:SetText(item.label)
 
-		-- Click handler
+		-- Click handler – parents with children are non-interactive
 		btn.navId = item.id
 		if not isChild and item.children then
-			btn:SetScript("OnClick", function(self)
-				SoundtrackNav.ToggleExpanded(self.navId)
-				SoundtrackNav.NavigateTo(self.navId)
-			end)
+			btn:EnableMouse(false)
 		else
 			btn:SetScript("OnClick", function(self)
 				SoundtrackNav.NavigateTo(self.navId)
@@ -329,12 +322,6 @@ function SoundtrackNav.RelayoutSidebar()
 
 			btn:SetPoint("TOPLEFT", sidebarFrameRef, "TOPLEFT", 4, yOffset)
 			btn:Show()
-
-			-- Update chevron text for parent buttons
-			if not isChild and item.children then
-				local chevron = expandedState[item.id] and CHEVRON_DOWN or CHEVRON_RIGHT
-				btn._label:SetText(chevron .. item.label)
-			end
 
 			yOffset = yOffset - BUTTON_HEIGHT
 		end

@@ -24,7 +24,7 @@ SoundtrackTheme.Colors = {
 	accentSubtle   = { r = 0.20, g = 0.60, b = 1.00, a = 0.15 },
 
 	-- Divider lines
-	divider        = { r = 0.25, g = 0.28, b = 0.35, a = 0.50 },
+	divider        = { r = 0.25, g = 0.28, b = 0.35, a = 1.0 },
 
 	-- Text
 	textNormal     = { r = 1.00, g = 1.00, b = 1.00 },
@@ -120,12 +120,24 @@ local ButtonBackdrop = {
 function SoundtrackTheme.StyleButton(btn)
 	btn:SetBackdrop(ButtonBackdrop)
 	SoundtrackTheme.SetButtonStateNormal(btn)
+	local h = btn:GetHighlightTexture()
+	local ac = SoundtrackTheme.Colors.accent
+	if h then h:SetVertexColor(ac.r, ac.g, ac.b, 0.10) end
 end
 
 function SoundtrackTheme.SetButtonStateNormal(btn)
 	local c = SoundtrackTheme.Colors
 	btn:SetBackdropColor(c.btnBg.r, c.btnBg.g, c.btnBg.b, c.btnBg.a)
 	btn:SetBackdropBorderColor(c.btnBorder.r, c.btnBorder.g, c.btnBorder.b, c.btnBorder.a)
+	local fs = btn:GetFontString()
+	if fs then fs:SetTextColor(1, 1, 1, 1) end
+end
+
+function SoundtrackTheme.SetButtonStateDisabled(btn)
+	btn:SetBackdropColor(0.05, 0.05, 0.08, 0.70)
+	btn:SetBackdropBorderColor(0.25, 0.25, 0.30, 0.50)
+	local fs = btn:GetFontString()
+	if fs then fs:SetTextColor(0.45, 0.45, 0.50, 1) end
 end
 
 function SoundtrackTheme.SetButtonStateHover(btn)
@@ -146,6 +158,9 @@ function SoundtrackTheme.StyleCheckBox(checkBtn)
 	local t = checkBtn:GetCheckedTexture()
 	t:SetDesaturated(true)
 	t:SetVertexColor(ac.r, ac.g, ac.b)
+	if checkBtn.Text then
+		checkBtn.Text:SetTextColor(1, 1, 1)
+	end
 end
 
 function SoundtrackTheme.StyleScrollArrows(scrollFrame)

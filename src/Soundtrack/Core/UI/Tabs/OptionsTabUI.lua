@@ -20,7 +20,6 @@ function Soundtrack.OptionsTab.Refresh()
 	OptionsTab_ShowEventStack:SetChecked(s.ShowEventStack)
 	OptionsTab_AutoAddZones:SetChecked(s.AutoAddZones)
 	OptionsTab_AutoEscalateBattleMusic:SetChecked(s.EscalateBattleMusic)
-	OptionsTab_YourEnemyLevelOnly:SetChecked(s.YourEnemyLevelOnly)
 
 	OptionsTab_EnableZoneMusic:SetChecked(s.EnableZoneMusic)
 	OptionsTab_EnableBattleMusic:SetChecked(s.EnableBattleMusic)

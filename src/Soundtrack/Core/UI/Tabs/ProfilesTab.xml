@@ -149,12 +149,12 @@
           </Anchors>
         </FontString>
 
-        <!-- Danger Zone section header (shifted down to fit Rename row) -->
+        <!-- Danger Zone section header -->
         <FontString name="ProfilesTab_DangerHeader" inherits="GameFontHighlight" text="Danger Zone">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
-                <AbsDimension x="285" y="-230"/>
+                <AbsDimension x="285" y="-200"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -168,7 +168,7 @@
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>
-                <AbsDimension x="285" y="-248"/>
+                <AbsDimension x="285" y="-218"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -205,6 +205,7 @@
         </Frames>
         <Scripts>
           <OnLoad>self:SetScrollChild(ProfilesTab_ScrollChild)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleScrollArrows(self)</OnLoad>
         </Scripts>
       </ScrollFrame>
 
@@ -267,7 +268,7 @@
         </Scripts>
       </Button>
 
-      <!-- Rename (row 2 of actions: y=-160-22-8=-190) -->
+      <!-- Rename (same row as Set Active and Duplicate) -->
       <Button name="ProfilesTab_RenameButton" inherits="SoundtrackButtonTemplate" text="Rename">
         <Size>
           <AbsDimension x="130" y="22"/>
@@ -275,7 +276,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="285" y="-190"/>
+              <AbsDimension x="565" y="-160"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -286,7 +287,7 @@
         </Scripts>
       </Button>
 
-      <!-- Delete Profile – below DangerSeparator (y=-248+1+8=-257) -->
+      <!-- Delete Profile – below DangerSeparator -->
       <Button name="ProfilesTab_DeleteButton" inherits="SoundtrackButtonTemplate" text="Delete Profile">
         <Size>
           <AbsDimension x="130" y="22"/>
@@ -294,7 +295,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="285" y="-257"/>
+              <AbsDimension x="285" y="-227"/>
             </Offset>
           </Anchor>
         </Anchors>

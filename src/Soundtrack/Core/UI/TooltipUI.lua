@@ -7,10 +7,11 @@ function Soundtrack.ShowTip(self, tipTitle, tipText, tipTextAuthor, tipTextAlbum
 	if minWidth then
 		Soundtrack_Tooltip:SetMinimumWidth(minWidth)
 	end
-	Soundtrack_Tooltip:AddLine(tipTitle, 1, 1, 1, true)
+	local ac = SoundtrackTheme.Colors.textActive
+	Soundtrack_Tooltip:AddLine(tipTitle, ac.r, ac.g, ac.b, true)
 
 	if tipText ~= nil then
-		Soundtrack_Tooltip:AddLine(tipText, nil, nil, nil, true)
+		Soundtrack_Tooltip:AddLine(tipText, 1, 1, 1, true)
 	end
 	if tipTextAuthor ~= nil then
 		Soundtrack_Tooltip:AddLine(tipTextAuthor, 1, 0.9, 0, true)

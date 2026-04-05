@@ -10,6 +10,12 @@ function Tests:GetItemById_TopLevel_ReturnsItem()
 	local item = SoundtrackNav.GetItemById("battle")
 	IsTrue(item ~= nil, "Should find top-level item")
 	AreEqual("Battle", item.label, "Label should be Battle")
+end
+
+function Tests:GetItemById_General_ReturnsChild()
+	local item = SoundtrackNav.GetItemById("general")
+	IsTrue(item ~= nil, "Should find general child item")
+	AreEqual("General", item.label, "Label should be General")
 	AreEqual(1, item.tabIndex, "tabIndex should be 1")
 end
 
@@ -35,7 +41,7 @@ end
 function Tests:GetItemByTabIndex_TopLevel_ReturnsItem()
 	local item = SoundtrackNav.GetItemByTabIndex(1)
 	IsTrue(item ~= nil)
-	AreEqual("battle", item.id)
+	AreEqual("general", item.id)
 end
 
 function Tests:GetItemByTabIndex_Child_ReturnsItem()
@@ -56,10 +62,10 @@ function Tests:GetItemByTabIndex_AboutTab_ReturnsItem()
 	AreEqual("about", item.id)
 end
 
-function Tests:GetItemByEventTable_Battle_ReturnsParent()
+function Tests:GetItemByEventTable_Battle_ReturnsGeneral()
 	local item = SoundtrackNav.GetItemByEventTable("Battle")
 	IsTrue(item ~= nil)
-	AreEqual("battle", item.id)
+	AreEqual("general", item.id)
 end
 
 function Tests:GetItemByEventTable_Encounter_ReturnsChild()
@@ -83,8 +89,9 @@ end
 -- ── Parent/child relationship tests ──────────────────────────────────
 
 function Tests:GetParentId_Child_ReturnsParentId()
+	AreEqual("battle", SoundtrackNav.GetParentId("general"),    "general parent should be battle")
 	AreEqual("battle", SoundtrackNav.GetParentId("encounters"), "encounters parent should be battle")
-	AreEqual("battle", SoundtrackNav.GetParentId("bosszones"), "bosszones parent should be battle")
+	AreEqual("battle", SoundtrackNav.GetParentId("bosszones"),  "bosszones parent should be battle")
 end
 
 function Tests:GetParentId_TopLevel_ReturnsNil()
@@ -172,12 +179,16 @@ function Tests:AllItemsHaveUniqueTabIndices()
 	local seen = {}
 	local items = SoundtrackNav.GetItems()
 	for _, item in ipairs(items) do
-		IsFalse(seen[item.tabIndex] == true, "Duplicate tabIndex: " .. item.tabIndex)
-		seen[item.tabIndex] = true
+		if item.tabIndex ~= nil then
+			IsFalse(seen[item.tabIndex] == true, "Duplicate tabIndex: " .. item.tabIndex)
+			seen[item.tabIndex] = true
+		end
 		if item.children then
 			for _, child in ipairs(item.children) do
-				IsFalse(seen[child.tabIndex] == true, "Duplicate child tabIndex: " .. child.tabIndex)
-				seen[child.tabIndex] = true
+				if child.tabIndex ~= nil then
+					IsFalse(seen[child.tabIndex] == true, "Duplicate child tabIndex: " .. child.tabIndex)
+					seen[child.tabIndex] = true
+				end
 			end
 		end
 	end

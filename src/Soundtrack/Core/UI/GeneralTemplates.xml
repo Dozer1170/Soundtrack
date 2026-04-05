@@ -42,11 +42,14 @@
         </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
+      <OnLoad inherit="append">
+        local h = self:GetHighlightTexture()
+        local c = SoundtrackTheme.Colors.textNormal
+        if h then h:SetVertexColor(c.r, c.g, c.b, 0.08) end
+      </OnLoad>
       <OnClick>SoundtrackUI.OnEventButtonClick(self, button, down)</OnClick>
     </Scripts>
-    <HighlightTexture file="Interface\Buttons\WHITE8X8">
-      <Color r="1.00" g="1.00" b="1.00" a="0.08"/>
-    </HighlightTexture>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8"/>
   </Button>
   <!-- Track list item -->
   <Button name="SoundtrackFrameTrackButtonTemplate" virtual="true">
@@ -127,13 +130,16 @@
     </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
+      <OnLoad inherit="append">
+        local h = self:GetHighlightTexture()
+        local c = SoundtrackTheme.Colors.accentSubtle
+        if h then h:SetVertexColor(c.r, c.g, c.b, c.a) end
+      </OnLoad>
       <OnClick>SoundtrackUI.OnTrackButtonClick(self, button, down)</OnClick>
       <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
       <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
     </Scripts>
-    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
-      <Color r="0.20" g="0.55" b="1.00" a="0.15"/>
-    </HighlightTexture>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD"/>
   </Button>
   <Button name="SoundtrackFrameAssignedTrackButtonTemplate" virtual="true">
     <Size>
@@ -210,27 +216,30 @@
     </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp");</OnLoad>
+      <OnLoad inherit="append">
+        local h = self:GetHighlightTexture()
+        local c = SoundtrackTheme.Colors.accentSubtle
+        if h then h:SetVertexColor(c.r, c.g, c.b, c.a) end
+      </OnLoad>
       <OnClick>SoundtrackUI.OnAssignedTrackButtonClick(self, button, down);</OnClick>
       <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
       <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
     </Scripts>
-    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
-      <Color r="0.20" g="0.55" b="1.00" a="0.15"/>
-    </HighlightTexture>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD"/>
   </Button>
   <!-- ── Themed button template — dark panel, accent border, white text ── -->
   <Button name="SoundtrackButtonTemplate" virtual="true" inherits="BackdropTemplate">
     <Scripts>
       <OnLoad>SoundtrackTheme.StyleButton(self)</OnLoad>
-      <OnEnter>SoundtrackTheme.SetButtonStateHover(self)</OnEnter>
-      <OnLeave>SoundtrackTheme.SetButtonStateNormal(self)</OnLeave>
+      <OnEnable>SoundtrackTheme.SetButtonStateNormal(self)</OnEnable>
+      <OnDisable>SoundtrackTheme.SetButtonStateDisabled(self)</OnDisable>
+      <OnEnter>if self:IsEnabled() then SoundtrackTheme.SetButtonStateHover(self) end</OnEnter>
+      <OnLeave>if self:IsEnabled() then SoundtrackTheme.SetButtonStateNormal(self) else SoundtrackTheme.SetButtonStateDisabled(self) end</OnLeave>
       <OnMouseDown>SoundtrackTheme.SetButtonStatePressed(self)</OnMouseDown>
       <OnMouseUp>SoundtrackTheme.SetButtonStateNormal(self)</OnMouseUp>
     </Scripts>
     <NormalFont style="GameFontHighlightSmall"/>
-    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD">
-      <Color r="0.30" g="0.70" b="1.00" a="0.10"/>
-    </HighlightTexture>
+    <HighlightTexture file="Interface\Buttons\WHITE8X8" alphaMode="ADD"/>
   </Button>
 
   <Button name="SoundtrackFrameColumnHeaderTemplate" virtual="true">
@@ -355,13 +364,10 @@
           <Size>
             <AbsDimension x="0" y="14"/>
           </Size>
-          <Color r="1.0" g="1.0" b="1.0" a="0.5"/>
         </Texture>
       </Layer>
       <Layer level="BACKGROUND">
-        <Texture name="$parentBackground">
-          <Color r="0.03" g="0.03" b="0.06" a="1"/>
-        </Texture>
+        <Texture name="$parentBackground"/>
       </Layer>
     </Layers>
     <Frames>
@@ -383,13 +389,40 @@
           <OnClick>
                         SoundtrackUI.OnStatusBarClick(self, button, down)
                     </OnClick>
+          <OnLoad>
+            local h = self:GetHighlightTexture()
+            local ac = SoundtrackTheme.Colors.accent
+            if h then h:SetVertexColor(ac.r, ac.g, ac.b, 0.25) end
+          </OnLoad>
         </Scripts>
         <NormalTexture name="$parentNormal" file="Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder"/>
-        <HighlightTexture name="$parentHighlight" file="Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorderHighlight"/>
+        <HighlightTexture name="$parentHighlight" file="Interface\Buttons\WHITE8X8">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="5" y="-9"/>
+              </Offset>
+            </Anchor>
+            <Anchor point="BOTTOMRIGHT">
+              <Offset>
+                <AbsDimension x="-3" y="9"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </HighlightTexture>
       </Button>
     </Frames>
     <BarTexture name="$parentBar" file="Interface\PaperDollInfoFrame\UI-Character-Skills-Bar"/>
-    <BarColor r="0.15" g="0.40" b="0.70"/>
+    <Scripts>
+      <OnLoad>
+        local c = SoundtrackTheme.Colors
+        self:SetStatusBarColor(c.barFill.r, c.barFill.g, c.barFill.b)
+        local fill = _G[self:GetName() .. "FillBar"]
+        if fill then fill:SetVertexColor(c.barFill.r, c.barFill.g, c.barFill.b, 0.5) end
+        local bg = _G[self:GetName() .. "Background"]
+        if bg then bg:SetVertexColor(c.barBg.r, c.barBg.g, c.barBg.b, c.barBg.a) end
+      </OnLoad>
+    </Scripts>
   </StatusBar>
   <!-- Playback buttons -->
   <Button name="Soundtrack_PlaybackButtonTemplate" virtual="true">
