@@ -44,6 +44,8 @@ local function MockFrame(name)
 		SetHighlightTexture = function() end,
 		LockHighlight = function() end,
 		UnlockHighlight = function() end,
+		SetVertexColor = function() end,
+		SetDesaturated = function() end,
 		SetFontString = function(self, fs) self._fontString = fs end,
 		CreateFontString = function() return MockFontString() end,
 		CreateTexture = function()

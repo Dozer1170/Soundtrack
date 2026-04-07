@@ -253,6 +253,11 @@ local function _applyScrollArrowStyle(scrollFrame)
 	end
 	StyleArrow(scrollFrame.ScrollBar.ScrollUpButton, true)
 	StyleArrow(scrollFrame.ScrollBar.ScrollDownButton, false)
+	local thumb = scrollFrame.ScrollBar.ThumbTexture
+	if thumb then
+		thumb:SetDesaturated(true)
+		thumb:SetVertexColor(ac.r, ac.g, ac.b)
+	end
 end
 
 local function _applyEventButtonStyle(btn)

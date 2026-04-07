@@ -84,10 +84,13 @@ function SoundtrackUI.UpdateEventsUI()
 				local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][eventName]
 				local expandable = eventNode.nodes and #eventNode.nodes >= 1
 				if expandable then
+					local ac = SoundtrackTheme.Colors.accentDim
 					if event.expanded then
+						collapserTexture:SetVertexColor(ac.r, ac.g, ac.b)
 						collapserTexture:Show()
 						fo:SetText(GetLeafText(eventName))
 					else
+						expanderTexture:SetVertexColor(ac.r, ac.g, ac.b)
 						expanderTexture:Show()
 						fo:SetText(GetLeafText(eventName))
 					end
