@@ -16,8 +16,14 @@ local profileListButtons = {}
 -- ─────────────────────────────────────────────────────────────
 
 function Soundtrack.ProfilesTab.OnLoad()
-	-- Nothing to initialise for dropdowns any more.
-	-- The search box OnTextChanged handler is wired directly in XML.
+	-- Re-apply theme-dependent colors when the theme changes.
+	SoundtrackTheme.RegisterRefreshCallback(function()
+		Soundtrack.ProfilesTab.RefreshProfileListHighlight()
+		local ta = SoundtrackTheme.Colors.textActive
+		if ProfilesTab_ActiveBadge then
+			ProfilesTab_ActiveBadge:SetTextColor(ta.r, ta.g, ta.b)
+		end
+	end)
 end
 
 -- ─────────────────────────────────────────────────────────────
@@ -81,12 +87,15 @@ function Soundtrack.ProfilesTab.PopulateProfileList()
 		-- Active arrow visibility
 		if btn.activeArrow then
 			btn.activeArrow:SetShown(profileName == currentProfile)
+			local ta = SoundtrackTheme.Colors.textActive
+			btn.activeArrow:SetTextColor(ta.r, ta.g, ta.b)
 		end
 
-		-- Selected highlight (colour the button text blue-accent if selected)
+		-- Selected highlight (colour the button text accent if selected)
 		if btn.profileNameText then
+			local ta = SoundtrackTheme.Colors.textActive
 			if profileName == selectedProfile then
-				btn.profileNameText:SetTextColor(0.4, 0.8, 1.0, 1)
+				btn.profileNameText:SetTextColor(ta.r, ta.g, ta.b, 1)
 			else
 				btn.profileNameText:SetTextColor(1, 1, 1, 1)
 			end
@@ -111,10 +120,13 @@ function Soundtrack.ProfilesTab.RefreshProfileListHighlight()
 		if btn:IsShown() then
 			if btn.activeArrow then
 				btn.activeArrow:SetShown(btn.profileName == currentProfile)
+				local ta = SoundtrackTheme.Colors.textActive
+				btn.activeArrow:SetTextColor(ta.r, ta.g, ta.b)
 			end
 			if btn.profileNameText then
+				local ta = SoundtrackTheme.Colors.textActive
 				if btn.profileName == selectedProfile then
-					btn.profileNameText:SetTextColor(0.4, 0.8, 1.0, 1)
+					btn.profileNameText:SetTextColor(ta.r, ta.g, ta.b, 1)
 				else
 					btn.profileNameText:SetTextColor(1, 1, 1, 1)
 				end
@@ -139,6 +151,8 @@ function Soundtrack.ProfilesTab.RefreshDetailsPanel()
 
 	if ProfilesTab_ActiveBadge then
 		ProfilesTab_ActiveBadge:SetShown(isActive)
+		local ta = SoundtrackTheme.Colors.textActive
+		ProfilesTab_ActiveBadge:SetTextColor(ta.r, ta.g, ta.b)
 	end
 
 	-- "Set Active" is disabled when the profile is already active.

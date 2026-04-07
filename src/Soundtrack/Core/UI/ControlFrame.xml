@@ -243,6 +243,7 @@
           <OnLoad>
             self:SetFrameLevel(0);
             UIDropDownMenu_SetWidth(self, 180);
+            SoundtrackTheme.StyleDropDown(self)
           </OnLoad>
           <OnShow>
             UIDropDownMenu_Initialize(self, SoundtrackUI.PlaylistMenuInitialize, "MENU");

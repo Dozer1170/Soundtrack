@@ -326,6 +326,10 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_FADE_DURATION = "Fade Duration"
 	SOUNDTRACK_FADE_DURATION_TIP =
 		"How long (in seconds) the fade-out and fade-in each take when transitioning between tracks."
+
+	SOUNDTRACK_UI_THEME = "UI Color Theme"
+	SOUNDTRACK_UI_THEME_TIP =
+		"Changes the accent color scheme of the Soundtrack UI. 'Class Color' uses your character's class color. The change takes effect immediately."
 end
 
 function LoadEnglish()

@@ -5,6 +5,7 @@ function Soundtrack.OptionsTab.Initialize()
 	Soundtrack.OptionsTab.SilenceDropDown_OnLoad()
 	Soundtrack.OptionsTab.BattleCooldownDropDown_OnLoad()
 	Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnLoad()
+	Soundtrack.OptionsTab.UIThemeDropDown_OnLoad()
 end
 
 function Soundtrack.OptionsTab.Refresh()
@@ -394,4 +395,56 @@ function Soundtrack.OptionsTab.ToggleHidePlaybackButtons()
 	SoundtrackAddon.db.profile.settings.HideControlButtons =
 		not SoundtrackAddon.db.profile.settings.HideControlButtons
 	SoundtrackFrame_RefreshPlaybackControls()
+end
+
+-- UI theme dropdown
+
+local function GetCurrentUIThemeIndex()
+	if SoundtrackAddon == nil or SoundtrackAddon.db == nil then
+		return 1
+	end
+	local savedTheme = SoundtrackAddon.db.profile.settings.UITheme or "Cosmic Blue"
+	for i, name in ipairs(SoundtrackTheme.ThemeNames) do
+		if name == savedTheme then
+			return i
+		end
+	end
+	return 1
+end
+
+function Soundtrack.OptionsTab.UIThemeDropDown_OnLoad()
+	SoundtrackUI.selectedUITheme = GetCurrentUIThemeIndex()
+	UIDropDownMenu_Initialize(
+		OptionsTab_UIThemeDropDown,
+		Soundtrack.OptionsTab.UIThemeDropDown_Initialize
+	)
+end
+
+function Soundtrack.OptionsTab.UIThemeDropDown_Initialize()
+	local current = SoundtrackUI.selectedUITheme
+	for i, name in ipairs(SoundtrackTheme.ThemeNames) do
+		local info = {}
+		info.text = name
+		info.func = Soundtrack.OptionsTab.UIThemeDropDown_OnClick
+		if current == i then
+			info.checked = 1
+			UIDropDownMenu_SetText(OptionsTab_UIThemeDropDown, name)
+		end
+		UIDropDownMenu_AddButton(info)
+	end
+	UIDropDownMenu_SetSelectedID(OptionsTab_UIThemeDropDown, current)
+	UIDropDownMenu_SetWidth(OptionsTab_UIThemeDropDown, 130)
+end
+
+function Soundtrack.OptionsTab.UIThemeDropDown_OnClick(self)
+	UIDropDownMenu_SetSelectedID(OptionsTab_UIThemeDropDown, self:GetID())
+	SoundtrackUI.selectedUITheme = self:GetID()
+	local name = SoundtrackTheme.ThemeNames[SoundtrackUI.selectedUITheme]
+	if name then
+		SoundtrackAddon.db.profile.settings.UITheme = name
+		if name == "Class Color" then
+			SoundtrackTheme.BuildClassColorTheme()
+		end
+		SoundtrackTheme.SetTheme(name)
+	end
 end

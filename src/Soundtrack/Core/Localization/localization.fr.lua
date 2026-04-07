@@ -326,7 +326,12 @@ local function RegisterGeneralStrings()
 		"Diminue progressivement le volume de la piste actuelle et augmente celui de la nouvelle lors d'un changement de musique. Nécessite que la 'Durée du fondu' soit supérieure à zéro."
 	SOUNDTRACK_FADE_DURATION = "Durée du fondu"
 	SOUNDTRACK_FADE_DURATION_TIP =
-		"Durée (en secondes) du fondu sortant et entrant lors des transitions entre les pistes."end
+		"Durée (en secondes) du fondu sortant et entrant lors des transitions entre les pistes."
+
+	SOUNDTRACK_UI_THEME = "Thème de couleur de l'interface"
+	SOUNDTRACK_UI_THEME_TIP =
+		"Modifie le schéma de couleur d'accentuation de l'interface Soundtrack. 'Couleur de classe' utilise la couleur de classe de votre personnage. Le changement prend effet immédiatement."
+end
 
 local function LoadFrench()
 	if GetLocale() == "frFR" then

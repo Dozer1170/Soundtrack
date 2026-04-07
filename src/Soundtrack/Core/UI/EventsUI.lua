@@ -106,16 +106,16 @@ function SoundtrackUI.UpdateEventsUI()
 					if not button._selectedBg then
 						local bg = button:CreateTexture(nil, "BACKGROUND")
 						bg:SetAllPoints()
-						local as = SoundtrackTheme.Colors.accentSubtle
-						bg:SetColorTexture(as.r, as.g, as.b, as.a)
 						button._selectedBg = bg
 						local bar = button:CreateTexture(nil, "OVERLAY")
 						bar:SetSize(3, 14)
 						bar:SetPoint("LEFT", button, "LEFT", 0, 0)
-						local ac = SoundtrackTheme.Colors.accent
-						bar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
 						button._activeBar = bar
 					end
+					local as = SoundtrackTheme.Colors.accentSubtle
+					button._selectedBg:SetColorTexture(as.r, as.g, as.b, as.a)
+					local ac = SoundtrackTheme.Colors.accent
+					button._activeBar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
 					button._selectedBg:Show()
 					button._activeBar:Show()
 					button:UnlockHighlight()

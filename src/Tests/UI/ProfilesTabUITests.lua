@@ -588,10 +588,7 @@ function Tests:RefreshDetailsPanel_SetsDetailNameText()
 	-- Set up UI globals that the real RefreshDetailsPanel reads
 	local textSet = nil
 	_G["ProfilesTab_DetailName"] = { SetText = function(_, text) textSet = text end }
-	_G["ProfilesTab_ActiveBadge"] = { SetShown = function() end }
-	_G["ProfilesTab_SetActiveButton"] = { SetEnabled = function() end }
-	_G["ProfilesTab_DeleteButton"] = { SetEnabled = function() end }
-	-- Only suppress list-building; let the real RefreshDetailsPanel run
+	_G["ProfilesTab_ActiveBadge"] = { SetShown = function() end, SetTextColor = function() end }
 	Replace(Soundtrack.ProfilesTab, "PopulateProfileList", function() end)
 	Replace(Soundtrack.ProfilesTab, "RefreshProfileListHighlight", function() end)
 
@@ -605,7 +602,7 @@ function Tests:RefreshDetailsPanel_DisablesSetActiveButtonForActiveProfile()
 	SetupProfileDb({ "Default" }, "Default")
 	local enabledValue = nil
 	_G["ProfilesTab_DetailName"] = { SetText = function() end }
-	_G["ProfilesTab_ActiveBadge"] = { SetShown = function() end }
+	_G["ProfilesTab_ActiveBadge"] = { SetShown = function() end, SetTextColor = function() end }
 	_G["ProfilesTab_SetActiveButton"] = { SetEnabled = function(_, val) enabledValue = val end }
 	_G["ProfilesTab_DeleteButton"] = { SetEnabled = function() end }
 	Replace(Soundtrack.ProfilesTab, "PopulateProfileList", function() end)
@@ -621,7 +618,7 @@ function Tests:RefreshDetailsPanel_EnablesSetActiveButtonForNonActiveProfile()
 	SetupProfileDb({ "Default", "Raid" }, "Default")
 	local enabledValue = nil
 	_G["ProfilesTab_DetailName"] = { SetText = function() end }
-	_G["ProfilesTab_ActiveBadge"] = { SetShown = function() end }
+	_G["ProfilesTab_ActiveBadge"] = { SetShown = function() end, SetTextColor = function() end }
 	_G["ProfilesTab_SetActiveButton"] = { SetEnabled = function(_, val) enabledValue = val end }
 	_G["ProfilesTab_DeleteButton"] = { SetEnabled = function() end }
 	Replace(Soundtrack.ProfilesTab, "PopulateProfileList", function() end)

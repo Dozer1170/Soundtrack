@@ -219,6 +219,25 @@ end
 
 function SoundtrackUI.Initialize()
 	Soundtrack.OptionsTab.Initialize()
+
+	-- Register a theme-change callback to re-apply all baked-in frame colors.
+	SoundtrackTheme.RegisterRefreshCallback(function()
+		-- Frame backdrops
+		if SoundtrackFrame and SoundtrackFrame.SetBackdropColor then
+			SoundtrackTheme.ApplyFrameBackdrop(SoundtrackFrame)
+		end
+		if SoundtrackControlFrame and SoundtrackControlFrame.SetBackdropColor then
+			SoundtrackTheme.ApplyFrameBackdrop(SoundtrackControlFrame)
+		end
+		if NowPlayingTextFrame and NowPlayingTextFrame.SetBackdropColor then
+			SoundtrackTheme.ApplyFrameBackdrop(NowPlayingTextFrame)
+		end
+
+		-- Force a full list refresh so event/track selection textures pick up new colors
+		if SoundtrackFrame and SoundtrackFrame:IsVisible() then
+			SoundtrackUI.UpdateEventsUI()
+		end
+	end)
 end
 
 function SoundtrackUI.ShowAssignedTracksSubFrame()

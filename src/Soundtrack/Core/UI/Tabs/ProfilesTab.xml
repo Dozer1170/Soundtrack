@@ -12,7 +12,7 @@
     <Layers>
       <Layer level="ARTWORK">
         <!-- Gold arrow marks the currently ACTIVE profile -->
-        <FontString name="$parentActiveArrow" inherits="GameFontHighlight" text="|cFF66BBFF>|r">
+        <FontString name="$parentActiveArrow" inherits="GameFontHighlight" text=">">
           <Anchors>
             <Anchor point="LEFT">
               <Offset>
@@ -128,7 +128,7 @@
         </FontString>
 
         <!-- "Active" badge shown when the selected profile is the active one -->
-        <FontString name="ProfilesTab_ActiveBadge" inherits="GameFontHighlightSmall" text="|cFF66BBFF[Active]|r">
+        <FontString name="ProfilesTab_ActiveBadge" inherits="GameFontHighlightSmall" text="[Active]">
           <Anchors>
             <Anchor point="TOPLEFT">
               <Offset>

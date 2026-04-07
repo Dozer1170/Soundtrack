@@ -326,6 +326,10 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_FADE_DURATION = "Duración del fundido"
 	SOUNDTRACK_FADE_DURATION_TIP =
 		"Cuánto tiempo (en segundos) duran el desvanecimiento de salida y entrada al cambiar entre pistas."
+
+	SOUNDTRACK_UI_THEME = "Tema de color de la interfaz"
+	SOUNDTRACK_UI_THEME_TIP =
+		"Cambia el esquema de color de acento de la interfaz de Soundtrack. 'Color de clase' usa el color de clase de tu personaje. El cambio surte efecto de inmediato."
 end
 
 local function LoadSpanish()

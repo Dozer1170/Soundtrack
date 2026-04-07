@@ -97,6 +97,8 @@ function SoundtrackAddon:OnInitialize()
 
 				YourEnemyLevelOnly = false,
 				k = true,
+
+				UITheme = "Cosmic Blue",
 			},
 		},
 	}, true)
@@ -117,6 +119,7 @@ function SoundtrackAddon:PLAYER_ENTERING_WORLD()
 		Soundtrack.Chat.InitDebugChatFrame()
 		SoundtrackMinimap_Initialize()
 		Soundtrack.MigrateFromOldSavedVariables()
+		SoundtrackTheme.ApplyFromSettings()
 		Soundtrack.LoadTracks()
 		Soundtrack.DanceEvents.Initialize()
 		Soundtrack.PetBattleEvents.Initialize()

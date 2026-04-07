@@ -34,6 +34,7 @@ local navButtons = {}       -- all buttons keyed by id (parents and children)
 local expandedState = {}    -- tracks which parents are expanded, keyed by parent id
 local childButtons = {}     -- child buttons grouped by parent id for show/hide
 local sidebarFrameRef = nil -- stored reference for relayout
+local sectionHeaders = {}   -- section header FontStrings keyed by section name (for theme refresh)
 
 -- Iterator that yields every item (parents and children) in display order
 local function FlatIterator()
@@ -254,6 +255,7 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 			local th = SoundtrackTheme.Colors.textHeader
 			header:SetText("|cFF" .. string.format("%02x%02x%02x", th.r * 255, th.g * 255, th.b * 255) .. section .. "|r")
 			header:SetJustifyH("LEFT")
+			sectionHeaders[section] = header
 		end
 
 		local btn = CreateNavButton(sidebarFrame, item, isChild, parentId)
@@ -284,6 +286,9 @@ function SoundtrackNav.BuildSidebar(sidebarFrame)
 
 	SoundtrackNav.RelayoutSidebar()
 	SoundtrackNav.RefreshHighlight()
+
+	-- Register a theme-change callback so the nav re-colors on theme switch.
+	SoundtrackTheme.RegisterRefreshCallback(SoundtrackNav.RefreshTheme)
 end
 
 -- Reposition all buttons based on current expanded/collapsed state
@@ -346,7 +351,7 @@ function SoundtrackNav.RefreshHighlight()
 		elseif isActiveParent then
 			btn._selectedBg:Show()
 			btn._activeBar:Hide()
-			btn._label:SetTextColor(0.6, 0.8, 0.9)
+			btn._label:SetTextColor(ta.r, ta.g, ta.b)
 		else
 			btn._selectedBg:Hide()
 			btn._activeBar:Hide()
@@ -357,4 +362,28 @@ function SoundtrackNav.RefreshHighlight()
 			end
 		end
 	end
+end
+
+-- Re-apply accent texture colors to all nav buttons (called on theme change).
+function SoundtrackNav.RefreshTheme()
+	if not next(navButtons) then return end
+
+	-- Re-color section header text
+	local th = SoundtrackTheme.Colors.textHeader
+	local hexColor = string.format("%02x%02x%02x", th.r * 255, th.g * 255, th.b * 255)
+	for section, header in pairs(sectionHeaders) do
+		header:SetText("|cFF" .. hexColor .. section .. "|r")
+	end
+
+	local ac = SoundtrackTheme.Colors.accent
+	local as = SoundtrackTheme.Colors.accentSubtle
+	for _, btn in pairs(navButtons) do
+		if btn._activeBar then
+			btn._activeBar:SetColorTexture(ac.r, ac.g, ac.b, 1.0)
+		end
+		if btn._selectedBg then
+			btn._selectedBg:SetColorTexture(as.r, as.g, as.b, as.a or 0.15)
+		end
+	end
+	SoundtrackNav.RefreshHighlight()
 end

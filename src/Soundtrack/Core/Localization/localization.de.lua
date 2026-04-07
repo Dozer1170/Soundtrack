@@ -325,6 +325,10 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_FADE_DURATION = "Überblendungsdauer"
 	SOUNDTRACK_FADE_DURATION_TIP =
 		"Wie lange (in Sekunden) das Aus- und Einblenden beim Übergang zwischen Titeln dauert."
+
+	SOUNDTRACK_UI_THEME = "UI-Farbthema"
+	SOUNDTRACK_UI_THEME_TIP =
+		"Ändert das Akzentfarbschema der Soundtrack-Benutzeroberfläche. 'Klassenfarbe' verwendet die Klassenfarbe deines Charakters. Die Änderung tritt sofort in Kraft."
 end
 
 local function LoadGerman()

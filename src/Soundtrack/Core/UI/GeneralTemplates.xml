@@ -42,11 +42,7 @@
         </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
-      <OnLoad inherit="append">
-        local h = self:GetHighlightTexture()
-        local c = SoundtrackTheme.Colors.textNormal
-        if h then h:SetVertexColor(c.r, c.g, c.b, 0.08) end
-      </OnLoad>
+      <OnLoad inherit="append">SoundtrackTheme.StyleEventButton(self)</OnLoad>
       <OnClick>SoundtrackUI.OnEventButtonClick(self, button, down)</OnClick>
     </Scripts>
     <HighlightTexture file="Interface\Buttons\WHITE8X8"/>
@@ -130,11 +126,7 @@
     </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp")</OnLoad>
-      <OnLoad inherit="append">
-        local h = self:GetHighlightTexture()
-        local c = SoundtrackTheme.Colors.accentSubtle
-        if h then h:SetVertexColor(c.r, c.g, c.b, c.a) end
-      </OnLoad>
+      <OnLoad inherit="append">SoundtrackTheme.StyleTrackButton(self)</OnLoad>
       <OnClick>SoundtrackUI.OnTrackButtonClick(self, button, down)</OnClick>
       <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
       <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
@@ -216,11 +208,7 @@
     </Frames>
     <Scripts>
       <OnLoad>self:RegisterForClicks("LeftButtonUp","RightButtonUp");</OnLoad>
-      <OnLoad inherit="append">
-        local h = self:GetHighlightTexture()
-        local c = SoundtrackTheme.Colors.accentSubtle
-        if h then h:SetVertexColor(c.r, c.g, c.b, c.a) end
-      </OnLoad>
+      <OnLoad inherit="append">SoundtrackTheme.StyleTrackButton(self)</OnLoad>
       <OnClick>SoundtrackUI.OnAssignedTrackButtonClick(self, button, down);</OnClick>
       <OnEnter>SoundtrackUI.OnTrackButtonEnter(self)</OnEnter>
       <OnLeave>SoundtrackUI.OnTrackButtonLeave()</OnLeave>
@@ -389,11 +377,7 @@
           <OnClick>
                         SoundtrackUI.OnStatusBarClick(self, button, down)
                     </OnClick>
-          <OnLoad>
-            local h = self:GetHighlightTexture()
-            local ac = SoundtrackTheme.Colors.accent
-            if h then h:SetVertexColor(ac.r, ac.g, ac.b, 0.25) end
-          </OnLoad>
+          <OnLoad>SoundtrackTheme.StyleStatusBarBorder(self)</OnLoad>
         </Scripts>
         <NormalTexture name="$parentNormal" file="Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder"/>
         <HighlightTexture name="$parentHighlight" file="Interface\Buttons\WHITE8X8">
@@ -414,16 +398,7 @@
     </Frames>
     <BarTexture name="$parentBar" file="Interface\PaperDollInfoFrame\UI-Character-Skills-Bar"/>
     <Scripts>
-      <OnLoad>
-        local c = SoundtrackTheme.Colors
-        local tex = self:GetStatusBarTexture()
-        if tex then tex:SetDesaturated(true) end
-        self:SetStatusBarColor(c.accent.r, c.accent.g, c.accent.b)
-        local fill = _G[self:GetName() .. "FillBar"]
-        if fill then fill:SetVertexColor(c.accent.r, c.accent.g, c.accent.b, 0.5) end
-        local bg = _G[self:GetName() .. "Background"]
-        if bg then bg:SetVertexColor(c.barBg.r, c.barBg.g, c.barBg.b, c.barBg.a) end
-      </OnLoad>
+      <OnLoad>SoundtrackTheme.StyleStatusBar(self)</OnLoad>
     </Scripts>
   </StatusBar>
   <!-- Playback buttons -->

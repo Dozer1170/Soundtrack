@@ -261,7 +261,36 @@
         </Layers>
         <Scripts>
           <OnLoad>OptionsTab_PlaybackButtonsLocationDropDown.Text:SetText("Playback Controls Buttons"); </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleDropDown(self)</OnLoad>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS, SOUNDTRACK_BUTTONS_PLAYBACK_CONTROLS_TIP) </OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Frame>
+      <Frame name="OptionsTab_UIThemeDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_PlaybackButtonsLocationDropDown" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-21"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="$parentLabel" inherits="GameFontHighlightSmall" text="UI Color Theme">
+              <Anchors>
+                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="16" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>OptionsTab_UIThemeDropDown.Text:SetText(SOUNDTRACK_UI_THEME); </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleDropDown(self)</OnLoad>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_UI_THEME, SOUNDTRACK_UI_THEME_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Frame>
@@ -324,6 +353,7 @@
         </Layers>
         <Scripts>
           <OnLoad>OptionsTab_BattleCooldownDropDown.Text:SetText(SOUNDTRACK_BATTLE_CD); </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleDropDown(self)</OnLoad>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_BATTLE_CD, SOUNDTRACK_BATTLE_CD_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -363,10 +393,8 @@
         </Layers>
         <Scripts>
           <OnLoad>
-            local ac = SoundtrackTheme.Colors.textNormal
-            OptionsTab_FontStringMusicOptions:SetTextColor(ac.r, ac.g, ac.b)
-            local d = SoundtrackTheme.Colors.divider
-            OptionsTab_DividerMusicOptions:SetVertexColor(d.r, d.g, d.b, d.a)
+            SoundtrackTheme.StyleSectionLabel(OptionsTab_FontStringMusicOptions)
+            SoundtrackTheme.StyleDivider(OptionsTab_DividerMusicOptions)
           </OnLoad>
         </Scripts>
       </Frame>
@@ -411,6 +439,7 @@
         </Layers>
         <Scripts>
           <OnLoad> OptionsTab_SilenceDropDown.Text:SetText(SOUNDTRACK_MAX_SILENCE); </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleDropDown(self)</OnLoad>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_MAX_SILENCE, SOUNDTRACK_MAX_SILENCE_TIP)
                     </OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
@@ -455,6 +484,7 @@
         </Layers>
         <Scripts>
           <OnLoad>OptionsTab_FadeTransitionDurationDropDown.Text:SetText(SOUNDTRACK_FADE_DURATION); </OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleDropDown(self)</OnLoad>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_FADE_DURATION, SOUNDTRACK_FADE_DURATION_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
@@ -552,16 +582,14 @@
     </Frames>
     <Scripts>
       <OnLoad>
-        local ac = SoundtrackTheme.Colors.textNormal
-        OptionsTab_FontStringUIOptions:SetTextColor(ac.r, ac.g, ac.b)
-        OptionsTab_FontStringEventOptions:SetTextColor(ac.r, ac.g, ac.b)
-        OptionsTab_FontStringEnableEventsOptions:SetTextColor(ac.r, ac.g, ac.b)
-        OptionsTab_FontStringDebugOptions:SetTextColor(ac.r, ac.g, ac.b)
-        local d = SoundtrackTheme.Colors.divider
-        OptionsTab_DividerUIOptions:SetVertexColor(d.r, d.g, d.b, d.a)
-        OptionsTab_DividerEventOptions:SetVertexColor(d.r, d.g, d.b, d.a)
-        OptionsTab_DividerEnableEvents:SetVertexColor(d.r, d.g, d.b, d.a)
-        OptionsTab_DividerDebugOptions:SetVertexColor(d.r, d.g, d.b, d.a)
+        SoundtrackTheme.StyleSectionLabel(OptionsTab_FontStringUIOptions)
+        SoundtrackTheme.StyleSectionLabel(OptionsTab_FontStringEventOptions)
+        SoundtrackTheme.StyleSectionLabel(OptionsTab_FontStringEnableEventsOptions)
+        SoundtrackTheme.StyleSectionLabel(OptionsTab_FontStringDebugOptions)
+        SoundtrackTheme.StyleDivider(OptionsTab_DividerUIOptions)
+        SoundtrackTheme.StyleDivider(OptionsTab_DividerEventOptions)
+        SoundtrackTheme.StyleDivider(OptionsTab_DividerEnableEvents)
+        SoundtrackTheme.StyleDivider(OptionsTab_DividerDebugOptions)
       </OnLoad>
       <OnShow>Soundtrack.OptionsTab.Refresh()</OnShow>
     </Scripts>

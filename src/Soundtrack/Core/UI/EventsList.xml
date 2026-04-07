@@ -489,6 +489,7 @@
                           UIDropDownMenu_SetButtonWidth(self, 24);
                           UIDropDownMenu_JustifyText(self, "LEFT")
                       </OnLoad>
+                      <OnLoad inherit="append">SoundtrackTheme.StyleDropDown(self)</OnLoad>
                       <OnShow>
                           UIDropDownMenu_Initialize(self, SoundtrackUI.InitializeColumnHeaderNameDropDown);
                           UIDropDownMenu_SetSelectedID(SoundtrackFrame_ColumnHeaderNameDropDown, 1);
