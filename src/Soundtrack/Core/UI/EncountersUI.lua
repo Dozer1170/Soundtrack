@@ -25,3 +25,21 @@ function SoundtrackUI.OnRemoveEncounterButtonClick()
 	}
 	StaticPopup_Show("SOUNDTRACK_REMOVE_ENCOUNTER_POPUP")
 end
+
+local function ToggleEncounterExpansion(expanded)
+	for _, eventNode in pairs(SoundtrackAddon.db.profile.events[ST_ENCOUNTER]) do
+		eventNode.expanded = expanded
+	end
+	Soundtrack.OnEventTreeChanged(ST_ENCOUNTER)
+	SoundtrackUI.UpdateEventsUI()
+end
+
+function SoundtrackUI.OnCollapseAllEncounterButtonClick()
+	Soundtrack.Chat.TraceFrame("Collapsing all encounter events")
+	ToggleEncounterExpansion(false)
+end
+
+function SoundtrackUI.OnExpandAllEncounterButtonClick()
+	Soundtrack.Chat.TraceFrame("Expanding all encounter events")
+	ToggleEncounterExpansion(true)
+end

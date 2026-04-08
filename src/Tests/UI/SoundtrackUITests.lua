@@ -80,6 +80,8 @@ end
 
 local function SetupEventFrameButtons()
 	MockFrame("SoundtrackFrameRemoveEncounterButton")
+	MockFrame("SoundtrackFrameCollapseAllEncounterButton")
+	MockFrame("SoundtrackFrameExpandAllEncounterButton")
 	MockFrame("SoundtrackFrameAddZoneButton")
 	MockFrame("SoundtrackFrameRemoveZoneButton")
 	MockFrame("SoundtrackFrameCollapseAllZoneButton")

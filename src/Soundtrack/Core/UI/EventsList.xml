@@ -367,6 +367,34 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </Button>
+      <Button name="SoundtrackFrameExpandAllEncounterButton" inherits="SoundtrackButtonTemplate" text="Expand All">
+        <Size>
+          <AbsDimension x="95" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="SoundtrackFrameRemoveEncounterButton"/>
+        </Anchors>
+        <Scripts>
+          <OnLoad inherit="append">self:SetText(SOUNDTRACK_EXPAND_ALL_BUTTON)</OnLoad>
+          <OnClick>SoundtrackUI.OnExpandAllEncounterButtonClick()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_EXPAND_ALL_BUTTON, SOUNDTRACK_EXPAND_ALL_ENCOUNTER_TIP)</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
+      <Button name="SoundtrackFrameCollapseAllEncounterButton" inherits="SoundtrackButtonTemplate" text="Collapse All">
+        <Size>
+          <AbsDimension x="95" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="SoundtrackFrameExpandAllEncounterButton"/>
+        </Anchors>
+        <Scripts>
+          <OnLoad inherit="append">self:SetText(SOUNDTRACK_COLLAPSE_ALL_BUTTON)</OnLoad>
+          <OnClick>SoundtrackUI.OnCollapseAllEncounterButtonClick()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_COLLAPSE_ALL_BUTTON, SOUNDTRACK_COLLAPSE_ALL_ENCOUNTER_TIP)</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </Button>
       <Button name="SoundtrackFrameAddPetBattlesTargetButton" inherits="SoundtrackButtonTemplate" text="Add Target">
         <Size>
           <AbsDimension x="95" y="22"/>

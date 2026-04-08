@@ -96,6 +96,9 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_COLLAPSE_ALL_ZONE_TIP = "Collapses all collapsable zone nodes."
 	SOUNDTRACK_EXPAND_ALL_ZONE_TIP = "Expands all expandable zone nodes."
 
+	SOUNDTRACK_COLLAPSE_ALL_ENCOUNTER_TIP = "Collapses all collapsable encounter nodes."
+	SOUNDTRACK_EXPAND_ALL_ENCOUNTER_TIP = "Expands all expandable encounter nodes."
+
 	SOUNDTRACK_INSTANCES = "Instances"
 	SOUNDTRACK_PVP = "PvP"
 	SOUNDTRACK_UNCATEGORIZED = "Uncategorized"

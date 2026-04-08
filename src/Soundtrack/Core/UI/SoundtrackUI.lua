@@ -56,8 +56,12 @@ local function TabChanged()
 
 	if SoundtrackUI.SelectedEventsTable == ST_ENCOUNTER then
 		SoundtrackFrameRemoveEncounterButton:Show()
+		SoundtrackFrameCollapseAllEncounterButton:Show()
+		SoundtrackFrameExpandAllEncounterButton:Show()
 	else
 		SoundtrackFrameRemoveEncounterButton:Hide()
+		SoundtrackFrameCollapseAllEncounterButton:Hide()
+		SoundtrackFrameExpandAllEncounterButton:Hide()
 	end
 
 	if SoundtrackUI.SelectedEventsTable == ST_ZONE then
