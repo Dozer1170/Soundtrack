@@ -208,9 +208,13 @@ SoundtrackTheme._styledCloseButtons     = {}
 local function _applyCloseButtonStyle(btn)
 	local ac = SoundtrackTheme.Colors.accent
 	local n = btn:GetNormalTexture()
-	if n then n:SetDesaturated(true); n:SetVertexColor(ac.r, ac.g, ac.b) end
+	if n then
+		n:SetDesaturated(true); n:SetVertexColor(ac.r, ac.g, ac.b)
+	end
 	local p = btn:GetPushedTexture()
-	if p then p:SetDesaturated(true); p:SetVertexColor(ac.r * 0.7, ac.g * 0.7, ac.b * 0.7) end
+	if p then
+		p:SetDesaturated(true); p:SetVertexColor(ac.r * 0.7, ac.g * 0.7, ac.b * 0.7)
+	end
 	local h = btn:GetHighlightTexture()
 	if h then h:SetVertexColor(ac.r, ac.g, ac.b, 0.25) end
 end
