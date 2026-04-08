@@ -237,7 +237,7 @@ local function _applyButtonStyle(btn)
 end
 
 local function _applyScrollArrowStyle(scrollFrame)
-	local ac = SoundtrackTheme.Colors.accentDim
+	local ac = SoundtrackTheme.Colors.accent
 	local function StyleArrow(btn, up)
 		btn:SetNormalTexture("Interface/Buttons/Arrow-Up-Up")
 		btn:SetPushedTexture("Interface/Buttons/Arrow-Up-Down")
@@ -300,7 +300,7 @@ local function _applyDividerStyle(texture)
 end
 
 local function _applyDropDownStyle(frame)
-	local ac = SoundtrackTheme.Colors.accentDim
+	local ac = SoundtrackTheme.Colors.accent
 	local function tintTex(tex)
 		if tex then
 			tex:SetDesaturated(true)
