@@ -204,6 +204,7 @@ SoundtrackTheme._styledSectionLabels    = {}
 SoundtrackTheme._styledDividers         = {}
 SoundtrackTheme._styledDropDowns        = {}
 SoundtrackTheme._styledCloseButtons     = {}
+SoundtrackTheme._styledMinimapBorders   = {}
 
 local function _applyCloseButtonStyle(btn)
 	local ac = SoundtrackTheme.Colors.accent
@@ -401,6 +402,18 @@ function SoundtrackTheme.StyleCloseButton(btn)
 	table.insert(SoundtrackTheme._styledCloseButtons, btn)
 end
 
+local function _applyMinimapBorderStyle(tex)
+	local ac = SoundtrackTheme.Colors.accent
+	tex:SetDesaturated(true)
+	tex:SetVertexColor(ac.r, ac.g, ac.b)
+	tex:Show()
+end
+
+function SoundtrackTheme.StyleMinimapBorder(tex)
+	_applyMinimapBorderStyle(tex)
+	table.insert(SoundtrackTheme._styledMinimapBorders, tex)
+end
+
 -- Re-applies styles to all elements previously passed through StyleXxx.
 -- Called automatically by SetTheme before firing registered callbacks.
 function SoundtrackTheme.RefreshStyledElements()
@@ -436,6 +449,9 @@ function SoundtrackTheme.RefreshStyledElements()
 	end
 	for _, btn in ipairs(SoundtrackTheme._styledCloseButtons) do
 		pcall(_applyCloseButtonStyle, btn)
+	end
+	for _, tex in ipairs(SoundtrackTheme._styledMinimapBorders) do
+		pcall(_applyMinimapBorderStyle, tex)
 	end
 end
 

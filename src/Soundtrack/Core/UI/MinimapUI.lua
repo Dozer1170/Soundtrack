@@ -25,12 +25,12 @@ function SoundtrackMinimap_Initialize()
 	})
 
 	icon:Register("SoundtrackAddon", soundtrackMinimapLDB, SoundtrackAddon.db.profile.minimap)
-	-- Hide the default yellow tracking-border overlay that LibDBIcon applies
+	-- Replace the default yellow tracking-border with a themed circle border
 	local btn = icon.objects and icon.objects["SoundtrackAddon"]
 	if btn then
 		for _, child in next, { btn:GetRegions() } do
 			if child.GetTexture and child:GetTexture() == 136430 then
-				child:SetTexture(nil)
+				SoundtrackTheme.StyleMinimapBorder(child)
 				break
 			end
 		end
