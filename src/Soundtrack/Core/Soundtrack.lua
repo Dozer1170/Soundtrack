@@ -98,7 +98,7 @@ function SoundtrackAddon:OnInitialize()
 				YourEnemyLevelOnly = false,
 				k = true,
 
-				UITheme = "Cosmic Blue",
+				UITheme = "Gold",
 			},
 		},
 	}, true)

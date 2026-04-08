@@ -223,7 +223,6 @@ function Soundtrack.OptionsTab.BattleCooldownDropDown_OnClick(self)
 	SoundtrackAddon.db.profile.settings.BattleCooldown = cooldowns[SoundtrackUI.selectedCooldown]
 end
 
-
 -- Silence dropdown
 
 local silences = { 0, 5, 10, 20, 30, 40, 60, 90, 120, 300 }
@@ -347,7 +346,7 @@ function Soundtrack.OptionsTab.FadeTransitionDurationDropDown_LoadDurations(dura
 			UIDropDownMenu_SetText(OptionsTab_FadeTransitionDurationDropDown, durationText)
 		end
 
-		info = {}
+		info         = {}
 		info.text    = durationText
 		info.func    = Soundtrack.OptionsTab.FadeTransitionDurationDropDown_OnClick
 		info.checked = checked
@@ -383,7 +382,8 @@ function Soundtrack.OptionsTab.ToggleEnableMiscMusic()
 end
 
 function Soundtrack.OptionsTab.ToggleLockNowPlayingFrame()
-	SoundtrackAddon.db.profile.settings.LockNowPlayingFrame = not SoundtrackAddon.db.profile.settings.LockNowPlayingFrame
+	SoundtrackAddon.db.profile.settings.LockNowPlayingFrame = not SoundtrackAddon.db.profile.settings
+	.LockNowPlayingFrame
 end
 
 function Soundtrack.OptionsTab.ToggleLockPlaybackControls()
@@ -403,7 +403,7 @@ local function GetCurrentUIThemeIndex()
 	if SoundtrackAddon == nil or SoundtrackAddon.db == nil then
 		return 1
 	end
-	local savedTheme = SoundtrackAddon.db.profile.settings.UITheme or "Cosmic Blue"
+	local savedTheme = SoundtrackAddon.db.profile.settings.UITheme or "Gold"
 	for i, name in ipairs(SoundtrackTheme.ThemeNames) do
 		if name == savedTheme then
 			return i

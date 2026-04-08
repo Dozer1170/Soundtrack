@@ -6,13 +6,12 @@ SoundtrackTheme = {}
 
 -- ── Available theme names (ordered for the dropdown) ─────────────────
 SoundtrackTheme.ThemeNames = {
+	"Gold",
 	"Cosmic Blue",
 	"Class Color",
 	"Forest",
 	"Crimson",
 	"Arcane",
-	"Gold",
-	"Blizzard",
 }
 
 -- ── Theme accent definitions ──────────────────────────────────────────
@@ -73,17 +72,6 @@ local THEME_DEFS = {
 		btnBorder      = { r = 0.74, g = 0.56, b = 0.10, a = 0.80 },
 		btnHoverBg     = { r = 0.28, g = 0.22, b = 0.06, a = 0.95 },
 		btnHoverBorder = { r = 1.00, g = 0.80, b = 0.10, a = 1.00 },
-	},
-	["Blizzard"] = {
-		accent         = { r = 1.00, g = 0.82, b = 0.00 },
-		accentDim      = { r = 1.00, g = 0.72, b = 0.10 },
-		accentSubtle   = { r = 1.00, g = 0.80, b = 0.00, a = 0.15 },
-		textActive     = { r = 1.00, g = 0.90, b = 0.30 },
-		barFill        = { r = 0.70, g = 0.50, b = 0.00 },
-		btnBg          = { r = 0.16, g = 0.12, b = 0.05, a = 0.92 },
-		btnBorder      = { r = 0.78, g = 0.61, b = 0.22, a = 0.80 },
-		btnHoverBg     = { r = 0.26, g = 0.19, b = 0.07, a = 0.95 },
-		btnHoverBorder = { r = 1.00, g = 0.82, b = 0.00, a = 1.00 },
 	},
 }
 
@@ -490,9 +478,9 @@ end
 
 -- Apply the theme stored in the addon DB. Call this before the UI is built.
 function SoundtrackTheme.ApplyFromSettings()
-	local themeName = "Cosmic Blue"
+	local themeName = "Gold"
 	if SoundtrackAddon and SoundtrackAddon.db then
-		themeName = SoundtrackAddon.db.profile.settings.UITheme or "Cosmic Blue"
+		themeName = SoundtrackAddon.db.profile.settings.UITheme or "Gold"
 	end
 	if themeName == "Class Color" then
 		SoundtrackTheme.BuildClassColorTheme()
