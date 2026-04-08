@@ -69,12 +69,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            local t = self:GetNormalTexture()
-            if t then t:SetVertexColor(1, 1, 1) end
-            local p = self:GetPushedTexture()
-            if p then p:SetVertexColor(0.7, 0.7, 0.7) end
-            local h = self:GetHighlightTexture()
-            if h then h:SetVertexColor(0.30, 0.70, 1.00) end
+            SoundtrackTheme.StyleCloseButton(self)
           </OnLoad>
           <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_CLOSE, SOUNDTRACK_CLOSE_TIP)</OnEnter>
           <OnLeave>Soundtrack.HideTip()</OnLeave>

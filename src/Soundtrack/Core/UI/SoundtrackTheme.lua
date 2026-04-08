@@ -203,6 +203,17 @@ SoundtrackTheme._styledStatusBars       = {}
 SoundtrackTheme._styledSectionLabels    = {}
 SoundtrackTheme._styledDividers         = {}
 SoundtrackTheme._styledDropDowns        = {}
+SoundtrackTheme._styledCloseButtons     = {}
+
+local function _applyCloseButtonStyle(btn)
+	local ac = SoundtrackTheme.Colors.accent
+	local n = btn:GetNormalTexture()
+	if n then n:SetDesaturated(true); n:SetVertexColor(ac.r, ac.g, ac.b) end
+	local p = btn:GetPushedTexture()
+	if p then p:SetDesaturated(true); p:SetVertexColor(ac.r * 0.7, ac.g * 0.7, ac.b * 0.7) end
+	local h = btn:GetHighlightTexture()
+	if h then h:SetVertexColor(ac.r, ac.g, ac.b, 0.25) end
+end
 
 -- Internal apply helpers (no tracking side-effect, safe to call on refresh).
 local function _applyCheckBoxStyle(checkBtn)
@@ -381,6 +392,11 @@ function SoundtrackTheme.StyleDropDown(frame)
 	table.insert(SoundtrackTheme._styledDropDowns, frame)
 end
 
+function SoundtrackTheme.StyleCloseButton(btn)
+	_applyCloseButtonStyle(btn)
+	table.insert(SoundtrackTheme._styledCloseButtons, btn)
+end
+
 -- Re-applies styles to all elements previously passed through StyleXxx.
 -- Called automatically by SetTheme before firing registered callbacks.
 function SoundtrackTheme.RefreshStyledElements()
@@ -413,6 +429,9 @@ function SoundtrackTheme.RefreshStyledElements()
 	end
 	for _, dd in ipairs(SoundtrackTheme._styledDropDowns) do
 		pcall(_applyDropDownStyle, dd)
+	end
+	for _, btn in ipairs(SoundtrackTheme._styledCloseButtons) do
+		pcall(_applyCloseButtonStyle, btn)
 	end
 end
 

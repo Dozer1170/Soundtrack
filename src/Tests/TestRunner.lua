@@ -555,7 +555,7 @@ local function SetupSoundtrack()
         return "Soundtrack"
       end
       if field == "Version" then
-        return "6.3.0"
+        return "6.4.0"
       end
       return nil
     end
