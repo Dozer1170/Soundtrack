@@ -135,6 +135,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
+          <OnLoad>SoundtrackTheme.StyleCloseButton(self)</OnLoad>
           <OnClick>Soundtrack.ExportImportDialog.Close()</OnClick>
         </Scripts>
       </Button>
