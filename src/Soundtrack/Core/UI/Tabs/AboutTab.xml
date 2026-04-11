@@ -111,6 +111,11 @@
             <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits10" relativePoint="BOTTOMLEFT"/>
           </Anchors>
         </FontString>
+        <FontString name="SoundtrackFrame_FontStringCredits12" inherits="GameFontHighlight" text="Terrell Smith (NeoFireFly) - Boss music strategy for Midnight API restrictions">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="SoundtrackFrame_FontStringCredits11" relativePoint="BOTTOMLEFT"/>
+          </Anchors>
+        </FontString>
         <!-- SLASH COMMANDS -->
         <FontString name="SoundtrackFrame_FontStringSlash1" inherits="GameFontHighlight" text="Slash commands: ">
           <Anchors>
