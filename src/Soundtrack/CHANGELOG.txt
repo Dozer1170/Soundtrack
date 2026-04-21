@@ -1,3 +1,6 @@
+6.5.0
+- Compatibility with 12.0.5
+
 6.4.0
 - New themed UI with customizable color themes (Gold, Cosmic Blue, Class Color, Forest, Crimson, Arcane). Change your theme in the Options tab.
 - New Encounters tab replaces Boss Zones. Encounters are automatically added when you enter a boss fight, and you can assign custom music to each one. Use the new Collapse All / Expand All buttons to manage the list.
