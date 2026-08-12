@@ -25,12 +25,12 @@ end
 function Soundtrack.Auras.UpdateActiveAuras()
 	Soundtrack.Auras.ActiveAuras = {}
 	for i = 1, 40 do
-		local buff = C_UnitAuras.GetBuffDataByIndex("player", i)
-		if buff ~= nil and not issecretvalue(buff.spellId) then
+		local ok, buff = pcall(C_UnitAuras.GetBuffDataByIndex, "player", i)
+		if ok and buff ~= nil and not issecretvalue(buff.spellId) then
 			Soundtrack.Auras.ActiveAuras[buff.spellId] = buff.spellId
 		end
-		local debuff = C_UnitAuras.GetDebuffDataByIndex("player", i)
-		if debuff ~= nil and not issecretvalue(debuff.spellId) then
+		local ok2, debuff = pcall(C_UnitAuras.GetDebuffDataByIndex, "player", i)
+		if ok2 and debuff ~= nil and not issecretvalue(debuff.spellId) then
 			Soundtrack.Auras.ActiveAuras[debuff.spellId] = debuff.spellId
 		end
 	end
