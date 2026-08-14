@@ -1,6 +1,12 @@
 #!/usr/bin/env lua
 -- Standalone test runner with custom harness (no external dependency)
 
+-- Lua 5.1's load() only accepts a reader function; loading a string chunk
+-- requires the separate loadstring(). Lua 5.2+ merged that behavior into
+-- load() itself and dropped loadstring(). Prefer loadstring when present so
+-- this harness runs under the same Lua 5.1 the addon itself targets.
+local load = loadstring or load
+
 local pathSep = package.config:sub(1, 1)
 
 local function JoinPath(...)
@@ -52,14 +58,25 @@ end
 
 initCoverage()
 
+-- ResetState() re-executes every source file before each test to reset
+-- addon state, but the file *content* never changes mid-run. Caching it
+-- avoids re-reading ~40 files from disk per test (thousands of redundant
+-- io.open calls over a full run), which is painfully slow on network/VM
+-- filesystem mounts (e.g. WSL's /mnt/c).
+local sourceFileCache = {}
+
 local function LoadSourceFile(filepath)
-  local file = io.open(RootPath(filepath), "r")
-  if not file then
-    print("Error: could not open source file " .. filepath)
-    return
+  local content = sourceFileCache[filepath]
+  if not content then
+    local file = io.open(RootPath(filepath), "r")
+    if not file then
+      print("Error: could not open source file " .. filepath)
+      return
+    end
+    content = file:read("*a")
+    file:close()
+    sourceFileCache[filepath] = content
   end
-  local content = file:read("*a")
-  file:close()
 
   local chunkName = ToChunkName(filepath)
   local fn, err = load(content, chunkName)

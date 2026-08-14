@@ -12,3 +12,4 @@ MyTracks.lua
 luacov.report.out
 luacov.stats.out
 coverage/
+.opencode

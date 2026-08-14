@@ -1,0 +1,11 @@
+# Normalize all text files to LF in the repository, regardless of what
+# line endings an editor/OS on checkout writes them with locally.
+* text=auto eol=lf
+
+*.mp3 binary
+*.ogg binary
+*.tga binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
