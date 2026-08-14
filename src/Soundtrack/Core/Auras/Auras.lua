@@ -22,7 +22,32 @@ function Soundtrack.Auras.OnEvent(_, event, ...)
 	end
 end
 
+-- Reading aura data while these restrictions are active can hit secret
+-- (hidden) auras, which errors and logs a taint violation even inside pcall.
+local RESTRICTED_AURA_ACCESS_TYPES = IsRetail and C_RestrictedActions and {
+	Enum.AddOnRestrictionType.Combat,
+	Enum.AddOnRestrictionType.Encounter,
+	Enum.AddOnRestrictionType.ChallengeMode,
+	Enum.AddOnRestrictionType.PvPMatch,
+}
+
+local function IsAuraAccessRestricted()
+	if not RESTRICTED_AURA_ACCESS_TYPES then
+		return false
+	end
+	for _, restrictionType in ipairs(RESTRICTED_AURA_ACCESS_TYPES) do
+		if C_RestrictedActions.IsAddOnRestrictionActive(restrictionType) then
+			return true
+		end
+	end
+	return false
+end
+
 function Soundtrack.Auras.UpdateActiveAuras()
+	if IsAuraAccessRestricted() then
+		return
+	end
+
 	Soundtrack.Auras.ActiveAuras = {}
 	for i = 1, 40 do
 		local ok, buff = pcall(C_UnitAuras.GetBuffDataByIndex, "player", i)

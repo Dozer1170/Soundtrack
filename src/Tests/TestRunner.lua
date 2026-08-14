@@ -425,6 +425,12 @@ local function SetWoWGlobals()
     end,
   }
 
+  _G.C_RestrictedActions = {
+    IsAddOnRestrictionActive = function()
+      return false
+    end,
+  }
+
   _G.GetItemInfo = function()
     return nil, nil, 0, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil
   end
@@ -605,7 +611,8 @@ local function SetupSoundtrack()
   _G.tremove = table.remove
   _G.Enum = {
     MapCanvasPosition = { None = 0, BottomLeft = 1, BottomRight = 2, TopLeft = 3, TopRight = 4 },
-    UIMapType = { World = 0, Continent = 1, Zone = 3, Dungeon = 4, Micro = 5, Orphan = 6 }
+    UIMapType = { World = 0, Continent = 1, Zone = 3, Dungeon = 4, Micro = 5, Orphan = 6 },
+    AddOnRestrictionType = { Combat = 0, Encounter = 1, ChallengeMode = 2, PvPMatch = 3, Map = 4 },
   }
   _G.C_Map = _G.C_Map or {
     GetMapInfo = function() return { mapType = Enum.UIMapType.Zone } end,
