@@ -32,8 +32,11 @@ python3 scripts/package.py
 python3 scripts/package.py --install --flavor retail   # or --flavor classic / classic-era
 python3 scripts/package.py --skip-tests --skip-localization --install --flavor retail  # fast local iteration
 
-# Publish to CurseForge (needs CF_API_TOKEN or --cf-token)
-python3 scripts/package.py --publish --release-type release --changelog "..."
+# Publish to CurseForge (needs CF_API_TOKEN or --cf-token). The release notes
+# default to the in-game What's New popup text, parsed out of the
+# CHANGELOG_BODY block in Core/UI/ChangelogDialogUI.lua, so the popup and the
+# CurseForge notes stay in sync; --changelog "..." overrides it.
+python3 scripts/package.py --publish --release-type release
 ```
 
 There is no `npm test`-style single-test filter — `src/Tests/TestRunner.lua` is a hand-rolled harness (no Busted/luaunit) that loads a fixed list of test files (see the `testFiles` table near the bottom of that file) and runs every function beginning with an uppercase letter inside each `Tests(...)` block. To run just one suite, temporarily trim that `testFiles` list, or add `os.exit()` after the suite of interest.

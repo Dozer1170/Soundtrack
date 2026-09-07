@@ -16,7 +16,9 @@ Options:
     --publish               Upload the zip to CurseForge.
     --cf-token TOKEN        CurseForge API token (or set CF_API_TOKEN env var).
     --release-type TYPE     CurseForge release type: release (default), beta, alpha.
-    --changelog TEXT        Changelog text included in the CurseForge upload.
+    --changelog TEXT        Changelog for the CurseForge upload. Defaults to the
+                            in-game What's New popup text, read out of
+                            Core/UI/ChangelogDialogUI.lua.
     --skip-tests            Skip running the unit test suite.
     --skip-localization     Skip the localization consistency check.
 """
@@ -42,6 +44,7 @@ SRC = ROOT / "src"
 SOUNDTRACK_SRC = SRC / "Soundtrack"
 TOC_FILE = SOUNDTRACK_SRC / "Soundtrack-Mainline.toc"
 LOCALIZATION_DIR = SOUNDTRACK_SRC / "Core" / "Localization"
+CHANGELOG_FILE = SOUNDTRACK_SRC / "Core" / "UI" / "ChangelogDialogUI.lua"
 REFERENCE_LOCALE = LOCALIZATION_DIR / "Localization.en.lua"
 TEST_SCRIPT      = ROOT / "scripts" / "test.py"
 
@@ -150,6 +153,37 @@ def read_version() -> str:
         if line.startswith("## Version:"):
             return line.split(":", 1)[1].strip()
     sys.exit("ERROR: Version not found in TOC file.")
+
+
+# ---------------------------------------------------------------------------
+# Changelog
+# ---------------------------------------------------------------------------
+
+CHANGELOG_BODY_RE = re.compile(
+    r"^local CHANGELOG_BODY = \[\[\n(.*?)^\]\]", re.DOTALL | re.MULTILINE)
+
+
+def read_changelog(version: str) -> str:
+    """Return the release notes shown by the in-game What's New popup.
+
+    The popup is the single source of truth, so the notes on the CurseForge
+    file are the same words a player sees on first login after upgrading.
+    """
+    if not CHANGELOG_FILE.exists():
+        sys.exit(f"ERROR: Changelog file not found: {CHANGELOG_FILE}")
+    match = CHANGELOG_BODY_RE.search(CHANGELOG_FILE.read_text(encoding="utf-8"))
+    if not match:
+        sys.exit(
+            f"ERROR: No CHANGELOG_BODY = [[ ... ]] block found in {CHANGELOG_FILE}.\n"
+            "Pass --changelog to supply the release notes directly."
+        )
+    body = match.group(1).strip()
+    if not body:
+        sys.exit(
+            f"ERROR: CHANGELOG_BODY in {CHANGELOG_FILE} is empty — "
+            f"write the {version} release notes before publishing."
+        )
+    return f"What's new in {version}:\n\n{body}\n"
 
 
 # ---------------------------------------------------------------------------
@@ -309,7 +343,8 @@ def main() -> None:
     parser.add_argument("--release-type", choices=["release", "beta", "alpha"], default="release",
                         help="CurseForge release type (default: release).")
     parser.add_argument("--changelog", default="",
-                        help="Changelog text for the CurseForge upload.")
+                        help="Changelog text for the CurseForge upload "
+                             "(defaults to the in-game What's New popup text).")
     parser.add_argument("--skip-tests", action="store_true",
                         help="Skip running the unit test suite.")
     parser.add_argument("--skip-localization", action="store_true",
@@ -357,8 +392,15 @@ def main() -> None:
         token = args.cf_token or os.environ.get("CF_API_TOKEN")
         if not token:
             sys.exit("ERROR: CurseForge API token required. Pass --cf-token or set CF_API_TOKEN.")
+        changelog = args.changelog
+        if not changelog:
+            changelog = read_changelog(version)
+            print(f"Using the in-game What's New text from {CHANGELOG_FILE.name} "
+                  "as the changelog:")
+            for line in changelog.rstrip().splitlines():
+                print(f"  | {line}")
         print()
-        publish(zip_path, args.flavor, CF_PROJECT_ID, token, args.release_type, args.changelog)
+        publish(zip_path, args.flavor, CF_PROJECT_ID, token, args.release_type, changelog)
 
 
 if __name__ == "__main__":
