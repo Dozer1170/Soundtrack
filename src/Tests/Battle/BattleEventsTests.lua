@@ -944,3 +944,54 @@ function Tests:BattleEvents_EncounterStart_FallsBackToDefaultBossWhenNoTracks()
 	AreEqual(ST_BATTLE, playedTable, "Battle table should be used when no tracks exist")
 	AreEqual(SOUNDTRACK_BOSS_BATTLE, playedEvent, "Default boss battle should play as fallback")
 end
+
+function Tests:GetEncounterZonePrefix_OutsideAnyZone_ReturnsNil()
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return {}
+	end)
+
+	AreEqual(nil, Soundtrack.BattleEvents.GetEncounterZonePrefix(), "No zone path should yield no instance prefix")
+end
+
+function Tests:RegisterEncounterKey_WithoutZone_UsesBareEncounterName()
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return {}
+	end)
+
+	local key = Soundtrack.BattleEvents.RegisterEncounterKey("Doomwalker")
+
+	AreEqual("Doomwalker", key, "An encounter outside any instance should key on its own name")
+	IsTrue(Soundtrack.Events.EventExists(ST_ENCOUNTER, "Doomwalker"), "The encounter event should be registered")
+end
+
+function Tests:RegisterEncounterKey_EmptyName_ReturnsNil()
+	AreEqual(nil, Soundtrack.BattleEvents.RegisterEncounterKey(nil), "A missing encounter name has no key")
+end
+
+function Tests:PlayEncounterEvent_EmptyKey_PlaysNothing()
+	local played = false
+	Replace(Soundtrack, "PlayEvent", function()
+		played = true
+	end)
+
+	Soundtrack.BattleEvents.PlayEncounterEvent(nil)
+
+	IsFalse(played, "An empty encounter key should not play anything")
+end
+
+function Tests:BattleEvents_EncounterStart_WithoutName_IsIgnored()
+	SoundtrackAddon.db.profile.settings.EnableBattleMusic = true
+	Replace(Soundtrack.ZoneEvents, "GetCurrentZonePaths", function()
+		return { "Instances/The Deadmines", "Instances" }
+	end)
+
+	local played = false
+	Replace(Soundtrack, "PlayEvent", function()
+		played = true
+	end)
+
+	Soundtrack.BattleEvents.OnEvent(nil, "ENCOUNTER_START", nil, nil)
+
+	IsFalse(played, "An encounter with no name should not start any music")
+	AreEqual(nil, Soundtrack.BattleEvents.GetCurrentEncounterKey(), "No encounter key should be tracked")
+end

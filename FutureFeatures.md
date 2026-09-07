@@ -29,4 +29,5 @@
 
 - **Solo vs. group battle distinction** — Play a different event when soloing vs. in a party (group size is already available in `GetGroupEnemyClassification`).
 - **PvP-specific zone music** — Separate music for *being in a PvP zone* at peace (Wintergrasp, Tol Barad) vs. *actively fighting* there.
-- **Boss phase music** — Detect meaningful HP thresholds on boss units (e.g., 50%, 30%) to trigger escalating music phases mid-fight.
+- **HP-threshold phases without a boss mod** — Boss phases come from DBM/BigWigs (`Core/Encounters/BossPhaseEvents.lua`). For fights with no boss mod scripted, or users who run neither addon, fall back to detecting meaningful HP thresholds on boss units (e.g., 50%, 30%) to trigger escalating music mid-fight.
+- **Pre-create stage slots** — Neither DBM nor BigWigs stores a stage *count* anywhere (stages are imperative `SetStage(n)` calls inside each encounter script), so stage nodes can only appear once a phase is actually reached in combat. Optionally pre-create `Stage 1`–`Stage N` nodes under an encounter the first time it is discovered, so users can configure phases before ever seeing them. Downside: clutters the tree for single-phase bosses, so it would need an option.

@@ -77,6 +77,7 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_BOSS_BATTLE = "Combat Boss"
 	SOUNDTRACK_ENCOUNTER_REMOVE = "Supprimer rencontre"
 	SOUNDTRACK_ENCOUNTER_REMOVE_TIP = "Supprime la rencontre sélectionnée de la liste."
+	SOUNDTRACK_BOSS_STAGE = "Phase"
 	SOUNDTRACK_PVP_BATTLE = "Combat PvP"
 
 	SOUNDTRACK_REMOVE_BATTLE = "Supprimer l'evenement de bataille"

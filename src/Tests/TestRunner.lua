@@ -757,6 +757,7 @@ local function ResetState()
 
   LoadSourceFile("src/Soundtrack/Core/Auras/Auras.lua")
   LoadSourceFile("src/Soundtrack/Core/Battle/BattleEvents.lua")
+  LoadSourceFile("src/Soundtrack/Core/Encounters/BossPhaseEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/Dance/DanceEvents.lua")
   LoadSourceFile("src/Soundtrack/Core/MiscEvents/MiscEvents.lua")
 
@@ -922,6 +923,7 @@ local testFiles = {
   "UI/ProfilesTabUITests.lua",
   "UI/MovingTitleUITests.lua",
   "UI/SoundtrackNavigationTests.lua",
+  "Encounters/BossPhaseEventsTests.lua",
   "Zones/ZoneEventsTests.lua",
 }
 

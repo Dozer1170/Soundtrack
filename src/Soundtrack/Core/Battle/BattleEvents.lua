@@ -165,6 +165,75 @@ end
 local currentBattleTypeIndex = 0 -- Used to determine battle priorities and escalations
 local currentEncounterName = nil -- Set by ENCOUNTER_START, cleared by ENCOUNTER_END
 
+-- Returns the instance name used to prefix encounter keys, e.g. "The Nexus" from
+-- the zone path "Instances/The Nexus/The Nexus Point". Returns nil outside instances.
+function Soundtrack.BattleEvents.GetEncounterZonePrefix()
+	local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
+	local zonePath = zonePaths and zonePaths[1] or nil
+	if not zonePath then
+		return nil
+	end
+	return zonePath:match("^[^/]+/([^/]+)") or zonePath
+end
+
+-- Builds the zone-prefixed event key for an encounter and makes sure every
+-- ancestor node exists, so the Encounters tree renders the entry correctly.
+-- Ancestors must be registered before their children (see AddEventNode in Sorting.lua).
+function Soundtrack.BattleEvents.RegisterEncounterKey(encounterName, ...)
+	if IsNullOrEmpty(encounterName) then
+		return nil
+	end
+
+	local fullKey = encounterName
+	local zonePrefix = Soundtrack.BattleEvents.GetEncounterZonePrefix()
+	if zonePrefix then
+		Soundtrack.AddEvent(ST_ENCOUNTER, zonePrefix, ST_BOSS_LVL, true)
+		fullKey = zonePrefix .. "/" .. encounterName
+	end
+	Soundtrack.AddEvent(ST_ENCOUNTER, fullKey, ST_BOSS_LVL, true)
+
+	-- Optional trailing path segments (e.g. a boss phase) nested under the encounter
+	for _, segment in ipairs({ ... }) do
+		fullKey = fullKey .. "/" .. segment
+		Soundtrack.AddEvent(ST_ENCOUNTER, fullKey, ST_BOSS_LVL, true)
+	end
+
+	return fullKey
+end
+
+-- Plays the most specific encounter event that actually has tracks assigned,
+-- walking up the key's path ("Zone/Boss/Stage 2" -> "Zone/Boss" -> "Zone") and
+-- finally falling back to the generic boss battle event.
+function Soundtrack.BattleEvents.PlayEncounterEvent(fullKey)
+	if IsNullOrEmpty(fullKey) then
+		return
+	end
+
+	-- A boss phase outranks the encounter it belongs to. Boss mods can report
+	-- stage 1 before ENCOUNTER_START arrives, so redirect rather than relying on
+	-- the two events arriving in a particular order.
+	local stageKey = Soundtrack.BossPhases.GetCurrentStageKey()
+	if stageKey and stageKey:sub(1, #fullKey + 1) == fullKey .. "/" then
+		fullKey = stageKey
+	end
+
+	local key = fullKey
+	while key do
+		if Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, key) then
+			Soundtrack.PlayEvent(ST_ENCOUNTER, key)
+			return
+		end
+		key = key:match("^(.*)/[^/]*$")
+	end
+
+	Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE)
+end
+
+-- The encounter key currently set by ENCOUNTER_START, or nil when not in an encounter.
+function Soundtrack.BattleEvents.GetCurrentEncounterKey()
+	return currentEncounterName
+end
+
 local function StartVictoryMusic()
 	if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
 		if not UnitIsDeadOrGhost("player") then
@@ -314,34 +383,21 @@ function Soundtrack.BattleEvents.OnEvent(_, event, ...)
 	elseif event == "ENCOUNTER_START" then
 		local _, encounterName = ...
 		-- Build zone-prefixed key using only the instance name (e.g. "The Nexus/Anomalus" from path "Instances/The Nexus/The Nexus Point")
-		local zonePaths = Soundtrack.ZoneEvents.GetCurrentZonePaths()
-		local zonePath = zonePaths and zonePaths[1] or nil
-		local zonePrefix = zonePath and (zonePath:match("^[^/]+/([^/]+)") or zonePath) or nil
-		local fullKey
-		if zonePrefix then
-			-- Ensure the zone ancestor node exists so the tree renders correctly
-			Soundtrack.AddEvent(ST_ENCOUNTER, zonePrefix, ST_BOSS_LVL, true)
-			fullKey = zonePrefix .. "/" .. encounterName
-		else
-			fullKey = encounterName
+		local fullKey = Soundtrack.BattleEvents.RegisterEncounterKey(encounterName)
+		if not fullKey then
+			return
 		end
 		currentEncounterName = fullKey
 		Soundtrack.Chat.TraceBattle("Encounter started: " .. tostring(encounterName) .. " (" .. fullKey .. ")")
-		Soundtrack.AddEvent(ST_ENCOUNTER, fullKey, ST_BOSS_LVL, true)
 		if SoundtrackAddon.db.profile.settings.EnableBattleMusic then
-			if Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, fullKey) then
-				Soundtrack.PlayEvent(ST_ENCOUNTER, fullKey)
-			elseif zonePrefix and Soundtrack.Events.EventHasTracks(ST_ENCOUNTER, zonePrefix) then
-				Soundtrack.PlayEvent(ST_ENCOUNTER, zonePrefix)
-			else
-				Soundtrack.PlayEvent(ST_BATTLE, SOUNDTRACK_BOSS_BATTLE)
-			end
+			Soundtrack.BattleEvents.PlayEncounterEvent(fullKey)
 			currentBattleTypeIndex = IndexOf(battleEvents, SOUNDTRACK_BOSS_BATTLE)
 		end
 	elseif event == "ENCOUNTER_END" then
 		local _, encounterName = ...
 		Soundtrack.Chat.TraceBattle("Encounter ended: " .. tostring(encounterName))
 		currentEncounterName = nil
+		Soundtrack.BossPhases.Reset()
 		StopCombatMusic()
 	end
 end
