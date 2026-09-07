@@ -18,6 +18,7 @@ Ever get tired of World of Warcraft's default music? Wish you could inject a lit
 - Play your own mp3s inside the game.
 - Assign music to entire zones or specific sub zones. The default music still plays in zones for which you do not assign music.
 - Assign music when battling various types of mobs. 
+- Assign music to individual boss encounters, and to each phase of a boss fight. Boss phase support requires either [Deadly Boss Mods](https://www.curseforge.com/wow/addons/deadly-boss-mods) or [BigWigs](https://www.curseforge.com/wow/addons/big-wigs) to be installed — see Optional Dependencies below.
 - Assign music to your pet battles based on battle type, continent, and enemy player or NPC name.
 - A plethora of events that you can assign music: Victory, Flight, Dance, Stealth, Swimming, Level Up, etc.
 - Expose the full World of Warcraft score in your library to assign Blizzard's music to your own events.
@@ -32,6 +33,14 @@ Soundtrack requires extra installation steps to gather your music information, s
 2. Get some MP3s: You can copy your mp3s to Interface\Addons\SoundtrackMusic. You can put your mp3s into subdirectories or subfolders for organization.
 3. Generate your library. Follow the instructions in the Interface\Addons\Soundtrack\README.txt.  Keep MyTracks.lua in the SoundtrackMusic folder. You used to have to move it back to Soundtrack DO NOT DO THIS.
 4. Play World of Warcraft: Start up World of Warcraft. When you go to the character screen, open up the Addons and make sure that Soundtrack is checked.
+
+## Optional Dependencies
+
+Soundtrack works on its own. One feature needs a second addon:
+
+- **Boss phase music** requires either [Deadly Boss Mods](https://www.curseforge.com/wow/addons/deadly-boss-mods) or [BigWigs](https://www.curseforge.com/wow/addons/big-wigs). World of Warcraft tells addons when an encounter starts and ends, but never that a boss has moved from one phase to the next — only a boss mod knows that, because each of its encounter scripts tracks the fight and broadcasts the stage. Soundtrack listens for that broadcast. If you have both installed, Deadly Boss Mods is used.
+
+  Phases appear on the Encounters tab underneath the boss they belong to, named "Stage 1", "Stage 2" and so on (halves such as "Stage 1.5" are intermissions, matching how boss mods number them). A phase only shows up after it has been reached at least once in combat, since neither boss mod publishes a list of how many phases a fight has. Any phase you leave without tracks falls back to the boss's own music, so nothing changes until you assign tracks to one.
 
 ## Known Issues
 
