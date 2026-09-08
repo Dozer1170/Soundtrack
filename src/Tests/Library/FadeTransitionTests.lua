@@ -55,6 +55,37 @@ local function MakeFadeHelpers(overrides)
 	}
 end
 
+-- Like MakeFadeHelpers, but the Sound_MusicVolume CVar actually behaves like a
+-- CVar: what the addon writes is what it reads back. That round trip is what
+-- makes the "reference volume ratchets down" bug reproducible.
+local function MakeLiveVolumeHelpers(startVolume)
+	local currentTime = 0
+	local volume      = startVolume or 1
+	local stackLevel  = 1
+
+	Replace("GetTime", function() return currentTime end)
+	Replace("PlayMusic", function() end)
+	Replace("StopMusic", function() end)
+	Replace("GetCVar", function(key)
+		if key == "Sound_MusicVolume" then return tostring(volume) end
+		return "0"
+	end)
+	Replace("SetCVar", function(key, value)
+		if key == "Sound_MusicVolume" then volume = tonumber(value) end
+	end)
+	Replace(Soundtrack.Events, "GetCurrentStackLevel", function() return stackLevel end)
+	Replace(Soundtrack.Events, "GetCurrentEvent", function() return { continuous = false } end)
+	Replace(Soundtrack.Timers, "Remove", function() end)
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+
+	return {
+		SetTime       = function(t) currentTime = t end,
+		Volume        = function() return volume end,
+		SetVolume     = function(v) volume = v end,
+		SetStackLevel = function(l) stackLevel = l end,
+	}
+end
+
 -- ---------------------------------------------------------------------------
 -- Tests: fade disabled (default in test harness)
 -- ---------------------------------------------------------------------------
@@ -487,4 +518,175 @@ function Tests:FadeEnabled_StopTrackDuringFadeOut_DoesNotRestartFade()
 	Soundtrack.Library.OnUpdate()
 	local lastVolume = volumeHistory[#volumeHistory]
 	AreEqual(0.8, lastVolume, "Volume must restore to 0.8 (original) after fade-out completes")
+end
+
+-- ---------------------------------------------------------------------------
+-- Tests: the user's music volume must survive abandoned/interrupted fades
+--
+-- Regression for the bug where Sound_MusicVolume ended up stuck at a few
+-- percent: a fade was abandoned with the CVar still turned down, and the next
+-- fade then read that faded level back out of the CVar as "the user's volume",
+-- lowering the reference a little further on every cycle.
+-- ---------------------------------------------------------------------------
+
+local function SetupThreeTracks()
+	Soundtrack_Tracks = {
+		["TrackA"]  = { length = 180, title = "A", mp3 = true },
+		["TrackB"]  = { length = 180, title = "B", mp3 = true },
+		["Preview"] = { length = 180, title = "Preview", mp3 = true },
+	}
+end
+
+function Tests:FadeEnabled_PreviewDuringFade_HandsTheUsersVolumeBack()
+	EnableFade(2)
+	SetupThreeTracks()
+	local h = MakeLiveVolumeHelpers(1.0)
+	Soundtrack.Library.CurrentlyPlayingTrack = "TrackA"
+
+	-- Zone change starts a fade-out from the user's 100%
+	Soundtrack.Library.PlayTrack("TrackB")
+	h.SetTime(1) -- halfway through the fade-out
+	Soundtrack.Library.OnUpdate()
+	IsTrue(h.Volume() < 0.9, "Sanity: the volume should be turned down mid-fade")
+
+	-- The user clicks a track in the library to preview it while the fade runs.
+	-- Previews skip fading, so the fade is abandoned here.
+	h.SetStackLevel(ST_PREVIEW_LVL)
+	Soundtrack.Library.PlayTrack("Preview")
+
+	AreEqual(1, h.Volume(), "Abandoning a fade for a preview must put the user's volume back")
+end
+
+function Tests:FadeEnabled_RepeatedInterruptedFades_DoNotRatchetVolumeDown()
+	EnableFade(2)
+	SetupThreeTracks()
+	local h = MakeLiveVolumeHelpers(1.0)
+	Soundtrack.Library.CurrentlyPlayingTrack = "TrackA"
+
+	-- Five rounds of "start a fade, interrupt it with a preview". Each round
+	-- used to leave the volume where the fade had got to and then adopt it as
+	-- the reference level, so the user's 100% decayed towards a few percent.
+	local currentTime = 0
+	for _ = 1, 5 do
+		Soundtrack.Library.PlayTrack("TrackB") -- fade-out starts
+		currentTime = currentTime + 1
+		h.SetTime(currentTime)
+		Soundtrack.Library.OnUpdate()       -- mid fade-out; volume turned down
+
+		h.SetStackLevel(ST_PREVIEW_LVL)
+		Soundtrack.Library.PlayTrack("Preview") -- preview interrupts the fade
+		h.SetStackLevel(1)
+		Soundtrack.Library.PlayTrack("TrackA") -- back to normal playback
+
+		currentTime = currentTime + 1
+		h.SetTime(currentTime)
+		Soundtrack.Library.OnUpdate()
+	end
+
+	AreEqual(1, h.Volume(), "The user's volume must still be 100% after repeated interrupted fades")
+	AreEqual(1, SoundtrackAddon.db.global.UserMusicVolume,
+		"The remembered user volume must not drift down across interrupted fades")
+end
+
+function Tests:FadeTurnedOffMidFade_StopTrack_RestoresVolume()
+	EnableFade(2)
+	SetupThreeTracks()
+	local h = MakeLiveVolumeHelpers(1.0)
+	Soundtrack.Library.CurrentlyPlayingTrack = "TrackA"
+
+	Soundtrack.Library.PlayTrack("TrackB")
+	h.SetTime(1)
+	Soundtrack.Library.OnUpdate()
+	IsTrue(h.Volume() < 0.9, "Sanity: the volume should be turned down mid-fade")
+
+	-- The user turns fade transitions off while a fade is running
+	SoundtrackAddon.db.profile.settings.FadeTransition = false
+	Soundtrack.Library.StopTrack()
+
+	AreEqual(1, h.Volume(), "Switching to instant stops mid-fade must put the user's volume back")
+end
+
+function Tests:CompletedFadeCycle_LeavesVolumeExactlyAtTheUsersLevel()
+	EnableFade(2)
+	SetupThreeTracks()
+	local h = MakeLiveVolumeHelpers(0.75)
+	Soundtrack.Library.CurrentlyPlayingTrack = "TrackA"
+
+	Soundtrack.Library.PlayTrack("TrackB")
+	h.SetTime(2) -- fade-out completes, TrackB starts, fade-in begins
+	Soundtrack.Library.OnUpdate()
+	h.SetTime(4) -- fade-in completes
+	Soundtrack.Library.OnUpdate()
+
+	AreEqual(0.75, h.Volume(), "A completed fade cycle must end exactly at the user's volume")
+	IsFalse(SoundtrackAddon.db.global.MusicVolumeIsFaded,
+		"The persisted faded flag must be cleared once the volume is back")
+end
+
+function Tests:OnMusicVolumeCVarChanged_LateEchoOfOurOwnFadeWrite_IsIgnored()
+	EnableFade(2)
+	SetupThreeTracks()
+	local h = MakeLiveVolumeHelpers(1.0)
+	Soundtrack.Library.CurrentlyPlayingTrack = "TrackA"
+
+	Soundtrack.Library.PlayTrack("TrackB")
+	h.SetTime(2)
+	Soundtrack.Library.OnUpdate() -- fade-out done, fade-in starts
+	h.SetTime(4)
+	Soundtrack.Library.OnUpdate() -- fade-in done, back to idle at 1.0
+
+	-- The client delivers CVAR_UPDATE asynchronously, so the echo of a fade
+	-- tick's own write can land after the fade has already finished.
+	Soundtrack.Library.OnMusicVolumeCVarChanged(0.05)
+
+	AreEqual(1, SoundtrackAddon.db.global.UserMusicVolume,
+		"A late echo of our own fade write must not become the user's volume")
+
+	-- A genuine change, well clear of our own writes, is still respected.
+	h.SetTime(20)
+	Soundtrack.Library.OnMusicVolumeCVarChanged(0.4)
+	AreEqual(0.4, SoundtrackAddon.db.global.UserMusicVolume,
+		"A real volume change while idle must be adopted")
+end
+
+function Tests:InterruptedFadeFromPreviousSession_IsUndoneAtLogin()
+	-- Last session was disconnected mid fade-out: the CVar is stranded at 5%
+	local h = MakeLiveVolumeHelpers(0.05)
+	SoundtrackAddon.db.global.UserMusicVolume = 1
+	SoundtrackAddon.db.global.MusicVolumeIsFaded = true
+
+	Soundtrack.Library.RestoreVolumeAfterInterruptedFade()
+
+	AreEqual(1, h.Volume(), "A fade interrupted by a crash/disconnect/reload must be undone at login")
+	IsFalse(SoundtrackAddon.db.global.MusicVolumeIsFaded, "The faded flag must be cleared after restoring")
+end
+
+function Tests:CleanPreviousSession_LoginDoesNotOverwriteTheUsersVolume()
+	-- No fade was in progress last session; the user simply plays at 40%
+	local h = MakeLiveVolumeHelpers(0.4)
+	SoundtrackAddon.db.global.UserMusicVolume = 1
+	SoundtrackAddon.db.global.MusicVolumeIsFaded = false
+
+	Soundtrack.Library.RestoreVolumeAfterInterruptedFade()
+
+	AreEqual(0.4, h.Volume(), "Login must not raise a volume the user themselves lowered")
+	AreEqual(0.4, SoundtrackAddon.db.global.UserMusicVolume,
+		"The user's current volume becomes the remembered reference level")
+end
+
+function Tests:PlayerLogoutDuringFade_RestoresVolumeBeforeExit()
+	EnableFade(2)
+	SetupThreeTracks()
+	local h = MakeLiveVolumeHelpers(1.0)
+	Soundtrack.Library.CurrentlyPlayingTrack = "TrackA"
+
+	Soundtrack.Library.PlayTrack("TrackB")
+	h.SetTime(1)
+	Soundtrack.Library.OnUpdate()
+	IsTrue(SoundtrackAddon.db.global.MusicVolumeIsFaded, "Mid-fade the faded flag must be persisted")
+
+	SoundtrackAddon:PLAYER_LOGOUT()
+
+	AreEqual(1, h.Volume(), "Logging out mid-fade must put the user's volume back")
+	IsFalse(SoundtrackAddon.db.global.MusicVolumeIsFaded, "The faded flag must be cleared on logout")
 end

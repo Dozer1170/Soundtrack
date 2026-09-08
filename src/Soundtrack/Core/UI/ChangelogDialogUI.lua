@@ -21,6 +21,12 @@ local CHANGELOG_BODY = [[
 - Phases you leave empty fall back to the boss's own music, so
   nothing changes until you assign tracks to one.
 
+- Fixed fade transitions leaving your music volume turned down.
+  A fade that got interrupted - by a track preview, a disconnect,
+  or a reload - could leave the game's music volume low, and the
+  next fade would then treat that low level as your volume, so it
+  crept down towards a few percent over time.
+
 - Added support for the latest version of World of Warcraft.
 ]]
 

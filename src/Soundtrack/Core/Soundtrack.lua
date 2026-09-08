@@ -62,6 +62,10 @@ function SoundtrackAddon:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SoundtrackDB", {
 		global = {
 			LastSeenVersion = "",
+			-- The player's own music volume, remembered across sessions so a
+			-- fade interrupted by a disconnect/crash/reload can be undone.
+			UserMusicVolume = 1,
+			MusicVolumeIsFaded = false,
 		},
 		profile = {
 			minimap = { hide = false },
@@ -103,7 +107,12 @@ function SoundtrackAddon:OnInitialize()
 		},
 	}, true)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("PLAYER_LOGOUT")
 	self:RegisterEvent("CVAR_UPDATE")
+
+	-- Before anything can start a fade (and capture the CVar as the reference
+	-- volume), undo a fade the previous session never got to finish.
+	Soundtrack.Library.RestoreVolumeAfterInterruptedFade()
 
 	-- Ensure event sub-tables exist immediately so any early zone/battle events
 	-- (which also fire on PLAYER_ENTERING_WORLD) can access them before LoadTracks runs.
@@ -134,6 +143,11 @@ function SoundtrackAddon:PLAYER_ENTERING_WORLD()
 		Soundtrack.Cleanup.CleanupOldEvents()
 		Soundtrack.ChangelogDialog.CheckAndShow()
 	end
+end
+
+function SoundtrackAddon:PLAYER_LOGOUT()
+	-- Never leave the music volume turned down behind us on a clean exit.
+	Soundtrack.Library.RestoreVolumeOnLogout()
 end
 
 function SoundtrackAddon:CVAR_UPDATE(cvarName, value)
