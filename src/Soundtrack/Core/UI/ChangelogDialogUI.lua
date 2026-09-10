@@ -2,6 +2,11 @@ Soundtrack.ChangelogDialog = {}
 
 local CURRENT_VERSION = C_AddOns.GetAddOnMetadata("Soundtrack", "Version")
 
+-- The release the notes below were written for. scripts/package.py refuses to
+-- publish when this is not the version being uploaded, so a version bump cannot
+-- ship the previous release's notes. Bump it in the same edit as the notes.
+local CHANGELOG_VERSION = "7.0.1"
+
 -- The single source of truth for this release's notes: scripts/package.py reads
 -- this block straight out of this file and uploads it as the CurseForge
 -- changelog, so the popup and the CurseForge release notes cannot drift apart.
@@ -17,7 +22,10 @@ local CHANGELOG_BODY = [[
   entry is skipped instead of erroring.
 ]]
 
-local CHANGELOG_TEXT = "What's new in " .. CURRENT_VERSION .. ":\n\n" .. CHANGELOG_BODY
+-- Headed with the version the notes are for rather than the version installed:
+-- the two only differ on a working copy mid-bump, and there the notes' own
+-- version is the honest label.
+local CHANGELOG_TEXT = "What's new in " .. CHANGELOG_VERSION .. ":\n\n" .. CHANGELOG_BODY
 
 function Soundtrack.ChangelogDialog.CheckAndShow()
     local lastSeen = SoundtrackAddon.db.global.LastSeenVersion or ""

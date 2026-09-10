@@ -18,7 +18,10 @@ Options:
     --release-type TYPE     CurseForge release type: release (default), beta, alpha.
     --changelog TEXT        Changelog for the CurseForge upload. Defaults to the
                             in-game What's New popup text, read out of
-                            Core/UI/ChangelogDialogUI.lua.
+                            Core/UI/ChangelogDialogUI.lua. Publishing is refused
+                            unless that file's CHANGELOG_VERSION is the version
+                            being uploaded, so a bump cannot ship the previous
+                            release's notes.
     --skip-tests            Skip running the unit test suite.
     --skip-localization     Skip the localization consistency check.
 """
@@ -146,13 +149,31 @@ def check_localization() -> bool:
 # Version
 # ---------------------------------------------------------------------------
 
-def read_version() -> str:
-    if not TOC_FILE.exists():
-        sys.exit(f"ERROR: TOC file not found: {TOC_FILE}")
-    for line in TOC_FILE.read_text(encoding="utf-8").splitlines():
+def _read_toc_version(toc: Path) -> str:
+    if not toc.exists():
+        sys.exit(f"ERROR: TOC file not found: {toc}")
+    for line in toc.read_text(encoding="utf-8").splitlines():
         if line.startswith("## Version:"):
             return line.split(":", 1)[1].strip()
-    sys.exit("ERROR: Version not found in TOC file.")
+    sys.exit(f"ERROR: Version not found in {toc.name}.")
+
+
+def read_version() -> str:
+    """The version being packaged.
+
+    One zip carries every flavor's TOC, so they all have to name the same
+    version — otherwise a file uploaded as 7.0.1 installs as 7.0.0 on the
+    flavor whose TOC was missed.
+    """
+    version = _read_toc_version(TOC_FILE)
+    for toc in sorted(set(FLAVOR_TOC.values()), key=lambda p: p.name):
+        other = _read_toc_version(toc)
+        if other != version:
+            sys.exit(
+                f"ERROR: {toc.name} says version {other} but {TOC_FILE.name} says "
+                f"{version}.\nOne zip carries both, so bump every TOC together."
+            )
+    return version
 
 
 # ---------------------------------------------------------------------------
@@ -161,6 +182,8 @@ def read_version() -> str:
 
 CHANGELOG_BODY_RE = re.compile(
     r"^local CHANGELOG_BODY = \[\[\n(.*?)^\]\]", re.DOTALL | re.MULTILINE)
+CHANGELOG_VERSION_RE = re.compile(
+    r'^local CHANGELOG_VERSION = "([^"]*)"', re.MULTILINE)
 
 
 def read_changelog(version: str) -> str:
@@ -168,10 +191,18 @@ def read_changelog(version: str) -> str:
 
     The popup is the single source of truth, so the notes on the CurseForge
     file are the same words a player sees on first login after upgrading.
+
+    The notes carry the release they were written for, and this refuses to
+    publish unless that is the release being uploaded. Bumping the version and
+    shipping the previous release's notes is the mistake worth catching here:
+    nothing else about a stale changelog looks wrong, and by the time anyone
+    notices the file is already on CurseForge.
     """
     if not CHANGELOG_FILE.exists():
         sys.exit(f"ERROR: Changelog file not found: {CHANGELOG_FILE}")
-    match = CHANGELOG_BODY_RE.search(CHANGELOG_FILE.read_text(encoding="utf-8"))
+    source = CHANGELOG_FILE.read_text(encoding="utf-8")
+
+    match = CHANGELOG_BODY_RE.search(source)
     if not match:
         sys.exit(
             f"ERROR: No CHANGELOG_BODY = [[ ... ]] block found in {CHANGELOG_FILE}.\n"
@@ -183,6 +214,24 @@ def read_changelog(version: str) -> str:
             f"ERROR: CHANGELOG_BODY in {CHANGELOG_FILE} is empty — "
             f"write the {version} release notes before publishing."
         )
+
+    version_match = CHANGELOG_VERSION_RE.search(source)
+    if not version_match:
+        sys.exit(
+            f'ERROR: No CHANGELOG_VERSION = "..." line found in {CHANGELOG_FILE}.\n'
+            "It says which release the notes below it are for, so that a version\n"
+            "bump cannot ship the previous release's notes. Add one saying "
+            f'"{version}".'
+        )
+    notes_version = version_match.group(1).strip()
+    if notes_version != version:
+        sys.exit(
+            f"ERROR: {CHANGELOG_FILE.name} holds the {notes_version} release notes, "
+            f"but {version} is what is being uploaded.\n"
+            f"Write the {version} notes in CHANGELOG_BODY and set CHANGELOG_VERSION "
+            f'to "{version}" before publishing.'
+        )
+
     return f"What's new in {version}:\n\n{body}\n"
 
 
@@ -392,7 +441,12 @@ def main() -> None:
         token = args.cf_token or os.environ.get("CF_API_TOKEN")
         if not token:
             sys.exit("ERROR: CurseForge API token required. Pass --cf-token or set CF_API_TOKEN.")
-        changelog = args.changelog
+        changelog = args.changelog.strip()
+        if args.changelog and not changelog:
+            sys.exit(
+                "ERROR: --changelog is blank — supply the release notes for "
+                f"{version}, or drop the flag to use the in-game What's New text."
+            )
         if not changelog:
             changelog = read_changelog(version)
             print(f"Using the in-game What's New text from {CHANGELOG_FILE.name} "

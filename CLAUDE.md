@@ -39,6 +39,14 @@ python3 scripts/package.py --skip-tests --skip-localization --install --flavor r
 python3 scripts/package.py --publish --release-type release
 ```
 
+Publishing refuses to upload notes that are not this release's. Beside
+`CHANGELOG_BODY` sits `CHANGELOG_VERSION`, the release those notes were written
+for, and `read_changelog` exits unless it equals the version in the TOC — so a
+version bump cannot ship the previous release's notes. Bump the version and
+rewrite both in one edit. `read_version` likewise requires every flavor's TOC to
+name the same version, since one zip carries them all. A `--changelog` that is
+blank or whitespace is rejected rather than uploaded as empty notes.
+
 There is no `npm test`-style single-test filter — `src/Tests/TestRunner.lua` is a hand-rolled harness (no Busted/luaunit) that loads a fixed list of test files (see the `testFiles` table near the bottom of that file) and runs every function beginning with an uppercase letter inside each `Tests(...)` block. To run just one suite, temporarily trim that `testFiles` list, or add `os.exit()` after the suite of interest.
 
 `package.py --install` fully deletes and re-extracts the `Soundtrack` (and `BlizzardInterfaceCode`) folder under the target `Interface/Addons`, so it's safe/idempotent but will wipe anything hand-edited directly in the installed copy.
