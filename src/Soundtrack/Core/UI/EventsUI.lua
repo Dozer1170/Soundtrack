@@ -48,8 +48,11 @@ function SoundtrackUI.UpdateEventsUI()
 
 	for i, eventNode in ipairs(flatEventsTable) do
 		local eventName = eventNode.tag or error("nil event!")
+		-- The tree can outlive the events behind it (an event removed without a
+		-- re-sort). Skip the node rather than erroring the whole list out.
+		local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][eventName]
 
-		if i > listOffset and i < listOffset + EVENTS_TO_DISPLAY then
+		if event and i > listOffset and i < listOffset + EVENTS_TO_DISPLAY then
 			buttonIndex = i - listOffset
 			if buttonIndex <= EVENTS_TO_DISPLAY then
 				button = _G["SoundtrackFrameEventButton" .. buttonIndex]
@@ -81,7 +84,6 @@ function SoundtrackUI.UpdateEventsUI()
 				collapserTexture:SetPoint("TOPLEFT", expandTextureIndent, 0)
 				expanderTexture:SetPoint("TOPLEFT", expandTextureIndent, 0)
 
-				local event = SoundtrackAddon.db.profile.events[SoundtrackUI.SelectedEventsTable][eventName]
 				local expandable = eventNode.nodes and #eventNode.nodes >= 1
 				if expandable then
 					local ac = SoundtrackTheme.Colors.accent

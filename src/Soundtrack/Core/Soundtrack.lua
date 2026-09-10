@@ -36,9 +36,11 @@ local function GetFlattenedEventNodes(eventTableName, rootNode, list)
 
 	-- if expandable
 	if table.getn(rootNode.nodes) >= 1 then
+		-- The tree can outlive the events behind it. A missing event means this
+		-- branch simply has nothing left to expand.
 		local event = SoundtrackAddon.db.profile.events[eventTableName][rootNode.tag]
-			or error("Cannot locate event " .. rootNode.name)
 		if not event then
+			Soundtrack.Chat.TraceFrame("Cannot locate event " .. tostring(rootNode.name))
 			return
 		end
 

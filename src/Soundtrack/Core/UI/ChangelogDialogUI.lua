@@ -8,26 +8,13 @@ local CURRENT_VERSION = C_AddOns.GetAddOnMetadata("Soundtrack", "Version")
 -- Keep the lines hard-wrapped to about 60 characters, which is what fits the
 -- popup frame.
 local CHANGELOG_BODY = [[
-- Boss phase music! You can now assign a different track to
-  each phase of a boss fight. Phases show up under the boss on
-  the Encounters tab as "Stage 1", "Stage 2", and so on, once
-  that phase has been reached in combat.
-
-- This needs either Deadly Boss Mods or BigWigs installed. World
-  of Warcraft never tells addons when a boss changes phase, so
-  the phase has to come from a boss mod. If you run both, Deadly
-  Boss Mods is used.
-
-- Phases you leave empty fall back to the boss's own music, so
-  nothing changes until you assign tracks to one.
-
-- Fixed fade transitions leaving your music volume turned down.
-  A fade that got interrupted - by a track preview, a disconnect,
-  or a reload - could leave the game's music volume low, and the
-  next fade would then treat that low level as your volume, so it
-  crept down towards a few percent over time.
-
-- Added support for the latest version of World of Warcraft.
+- Fixed the error you got opening Soundtrack for the first time
+  after updating ("attempt to index local 'event'"). When the
+  addon retired an event your saved data still had, it removed
+  the event but left it in the list the window draws from, so the
+  window hit an entry with nothing behind it. The list is now
+  rebuilt whenever an old event is cleared out, and a leftover
+  entry is skipped instead of erroring.
 ]]
 
 local CHANGELOG_TEXT = "What's new in " .. CURRENT_VERSION .. ":\n\n" .. CHANGELOG_BODY

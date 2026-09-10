@@ -1,12 +1,15 @@
 Soundtrack.Cleanup = {}
 
 local function CleanupTableEvents(savedEventTable, liveEventTable)
+	local removedAny = false
 	for key, _ in pairs(savedEventTable) do
 		if liveEventTable[key] == nil and key ~= "Preview" then
 			savedEventTable[key] = nil
+			removedAny = true
 			Soundtrack.Chat.Message("Found obsolete event " .. key .. " removing from saved data.")
 		end
 	end
+	return removedAny
 end
 
 local function PurgeOldTracksFromTable(eventTableName)
@@ -87,15 +90,27 @@ StaticPopupDialogs["SOUNDTRACK_PURGE_POPUP"] = {
 }
 
 function Soundtrack.Cleanup.CleanupOldEvents()
+	local cleanedTables = {}
+
 	-- Iterate through all event tables in the profile
 	for tableName, savedEventTable in pairs(SoundtrackAddon.db.profile.events) do
 		-- Zone and encounter entries are player-learned and should never be purged automatically
 		if tableName ~= ST_ZONE and tableName ~= ST_ENCOUNTER then
 			local liveEventTable = Soundtrack.RegisteredEvents[tableName]
 			if liveEventTable then
-				CleanupTableEvents(savedEventTable, liveEventTable)
+				if CleanupTableEvents(savedEventTable, liveEventTable) then
+					table.insert(cleanedTables, tableName)
+				end
 			end
 		end
+	end
+
+	-- Soundtrack_FlatEvents/Soundtrack_EventNodes still hold nodes tagged with the
+	-- keys just removed, and the events UI indexes an event by that tag. Rebuild
+	-- the tree for every table that lost something, the way every other removal
+	-- path does.
+	for _, tableName in ipairs(cleanedTables) do
+		Soundtrack.SortEvents(tableName)
 	end
 
 	SoundtrackUI.UpdateEventsUI()

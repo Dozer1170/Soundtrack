@@ -259,3 +259,68 @@ function Tests:OnEventButtonClick_PlaylistsRightClickPlaysEvent()
 	AreEqual("Playlists:Playlist1", played)
 	IsFalse(eventTable["Playlist1"].expanded)
 end
+
+function Tests:UpdateEventsUI_SkipsNodesWhoseEventIsGone()
+	-- A stale flat node (its event deleted without a re-sort) must not error.
+	SoundtrackUI.SelectedEventsTable = ST_MISC
+	SoundtrackUI.SelectedEvent = "Event1"
+	SoundtrackFrame:Show()
+	EVENTS_TO_DISPLAY = 3
+	EVENTS_ITEM_HEIGHT = 16
+	SetupEventListButtons(EVENTS_TO_DISPLAY)
+	MockFrame("SoundtrackFrameEventScrollFrame")
+	MockEditBox("SoundtrackFrame_EventName")
+	MockCheckButton("SoundtrackFrame_RandomCheckButton")
+	MockCheckButton("SoundtrackFrame_ContinuousCheckBox")
+	MockCheckButton("SoundtrackFrame_SoundEffectCheckBox")
+	Replace(_G, "FauxScrollFrame_GetOffset", function() return 0 end)
+	Replace(_G, "FauxScrollFrame_Update", function() end)
+	Replace(_G, "GetLeafText", function(text) return text end)
+	Replace(_G, "GetEventDepth", function() return 0 end)
+	Replace(_G, "GetFlatEventsTableForCurrentTab", function()
+		return {
+			{ tag = "Event1" },
+			{ tag = "Deleted" },
+		}
+	end)
+	Replace(SoundtrackUI, "RefreshTracks", function() end)
+
+	Soundtrack.Events.GetTable(ST_MISC)["Event1"] = { tracks = { "a" }, expanded = true }
+
+	SoundtrackUI.UpdateEventsUI()
+
+	IsTrue(_G["SoundtrackFrameEventButton1"]:IsVisible())
+	IsFalse(_G["SoundtrackFrameEventButton2"]:IsVisible())
+end
+
+function Tests:UpdateEventsUI_SkipsExpandableNodeWhoseEventIsGone()
+	SoundtrackUI.SelectedEventsTable = ST_MISC
+	SoundtrackUI.SelectedEvent = "Event1"
+	SoundtrackFrame:Show()
+	EVENTS_TO_DISPLAY = 3
+	EVENTS_ITEM_HEIGHT = 16
+	SetupEventListButtons(EVENTS_TO_DISPLAY)
+	MockFrame("SoundtrackFrameEventScrollFrame")
+	MockEditBox("SoundtrackFrame_EventName")
+	MockCheckButton("SoundtrackFrame_RandomCheckButton")
+	MockCheckButton("SoundtrackFrame_ContinuousCheckBox")
+	MockCheckButton("SoundtrackFrame_SoundEffectCheckBox")
+	Replace(_G, "FauxScrollFrame_GetOffset", function() return 0 end)
+	Replace(_G, "FauxScrollFrame_Update", function() end)
+	Replace(_G, "GetLeafText", function(text) return text end)
+	Replace(_G, "GetEventDepth", function() return 0 end)
+	Replace(_G, "GetFlatEventsTableForCurrentTab", function()
+		return {
+			{ tag = "Deleted", nodes = { { tag = "Deleted/Child" } } },
+			{ tag = "Event1" },
+		}
+	end)
+	Replace(SoundtrackUI, "RefreshTracks", function() end)
+
+	Soundtrack.Events.GetTable(ST_MISC)["Event1"] = { tracks = {}, expanded = true }
+
+	SoundtrackUI.UpdateEventsUI()
+
+	IsFalse(_G["SoundtrackFrameEventButton1"]:IsVisible())
+	IsTrue(_G["SoundtrackFrameEventButton2"]:IsVisible())
+end

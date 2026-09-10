@@ -325,3 +325,50 @@ function Tests:CleanupOldEvents_DoesNotTouchZoneEvents()
 	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ZoneOne ~= nil, "Existing zone kept")
 	IsTrue(SoundtrackAddon.db.profile.events[ST_ZONE].ZoneTwo ~= nil, "Additional zones kept")
 end
+
+function Tests:CleanupOldEvents_RebuildsEventTreeAfterRemoval()
+	-- A removed event must not survive in the flattened tree the UI walks.
+	Soundtrack.RegisteredEvents[ST_BATTLE] = { ValidEvent = true }
+
+	SoundtrackAddon.db.profile.events[ST_BATTLE] = {
+		ValidEvent = { tracks = {}, expanded = true },
+		ObsoleteEvent = { tracks = {}, expanded = true },
+	}
+
+	Replace(SoundtrackUI, "UpdateEventsUI", function() end)
+
+	-- Build the tree while both events still exist, as startup does.
+	Soundtrack.SortEvents(ST_BATTLE)
+	AreEqual(2, #Soundtrack_FlatEvents[ST_BATTLE])
+
+	Soundtrack.Cleanup.CleanupOldEvents()
+
+	for _, node in ipairs(Soundtrack_FlatEvents[ST_BATTLE]) do
+		IsTrue(
+			SoundtrackAddon.db.profile.events[ST_BATTLE][node.tag] ~= nil,
+			"Flat event node " .. tostring(node.tag) .. " has no event behind it"
+		)
+	end
+	AreEqual(1, #Soundtrack_FlatEvents[ST_BATTLE])
+end
+
+function Tests:CleanupOldEvents_LeavesTreeAloneWhenNothingRemoved()
+	Soundtrack.RegisteredEvents[ST_BATTLE] = { ValidEvent = true }
+	SoundtrackAddon.db.profile.events[ST_BATTLE] = {
+		ValidEvent = { tracks = {}, expanded = true },
+	}
+
+	Replace(SoundtrackUI, "UpdateEventsUI", function() end)
+	Soundtrack.SortEvents(ST_BATTLE)
+
+	local sorted = 0
+	local realSort = Soundtrack.SortEvents
+	Replace(Soundtrack, "SortEvents", function(tableName)
+		sorted = sorted + 1
+		return realSort(tableName)
+	end)
+
+	Soundtrack.Cleanup.CleanupOldEvents()
+
+	AreEqual(0, sorted)
+end
