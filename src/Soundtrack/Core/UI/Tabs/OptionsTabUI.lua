@@ -16,6 +16,7 @@ function Soundtrack.OptionsTab.Refresh()
 	OptionsTab_ShowTrackInformation:SetChecked(s.ShowTrackInformation)
 	OptionsTab_LockNowPlayingFrame:SetChecked(s.LockNowPlayingFrame)
 	OptionsTab_ShowDefaultMusic:SetChecked(s.ShowDefaultMusic)
+	OptionsTab_ShowLoginMessage:SetChecked(s.ShowLoginMessage)
 	OptionsTab_ShowPlaybackControls:SetChecked(s.ShowPlaybackControls)
 	OptionsTab_LockPlaybackControls:SetChecked(s.LockPlaybackControls)
 	OptionsTab_ShowEventStack:SetChecked(s.ShowEventStack)
@@ -70,6 +71,11 @@ end
 function Soundtrack.OptionsTab.ToggleShowTrackInformation()
 	SoundtrackAddon.db.profile.settings.ShowTrackInformation =
 		not SoundtrackAddon.db.profile.settings.ShowTrackInformation
+end
+
+function Soundtrack.OptionsTab.ToggleShowLoginMessage()
+	SoundtrackAddon.db.profile.settings.ShowLoginMessage =
+		not SoundtrackAddon.db.profile.settings.ShowLoginMessage
 end
 
 function Soundtrack.OptionsTab.ToggleShowEventStack()

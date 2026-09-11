@@ -76,6 +76,7 @@ function SoundtrackAddon:OnInitialize()
 				MinimapIconPos = 45,
 				EnableMinimapButton = true,
 				ShowTrackInformation = true,
+				ShowLoginMessage = true,
 				ShowDefaultMusic = false,
 				ShowEventStack = false,
 				ShowPlaybackControls = false,
@@ -191,7 +192,9 @@ function Soundtrack.LoadTracks()
 	SetUserEventsToCorrectLevel()
 
 	local numTracks = getn(Soundtrack_SortedTracks)
-	Soundtrack.Chat.Message("Soundtrack: Loaded with " .. numTracks .. " track(s) in library.")
+	if SoundtrackAddon.db.profile.settings.ShowLoginMessage then
+		Soundtrack.Chat.Message("Loaded with " .. numTracks .. " track(s) in library.")
+	end
 
 	SoundtrackFrame_RefreshPlaybackControls()
 end

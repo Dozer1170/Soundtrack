@@ -250,6 +250,10 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP =
 		"Agrega todas las pistas de musica disponibles se incluye con el juego en tu coleccion de musica."
 
+	SOUNDTRACK_SHOW_LOGIN_MESSAGE = "Mostrar mensaje de inicio"
+	SOUNDTRACK_SHOW_LOGIN_MESSAGE_TIP =
+		"Muestra en el chat cuantas pistas se cargaron al iniciar sesion o recargar la interfaz."
+
 	SOUNDTRACK_LOCK_NOW_PLAYING = "Bloquear Track Info. Frame"
 	SOUNDTRACK_LOCK_NOW_PLAYING_TIP =
 		"Bloquea el marco de informacion de la pista por lo que no se pueden mover o hacer clic."

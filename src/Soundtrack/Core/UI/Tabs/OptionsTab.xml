@@ -217,9 +217,21 @@
           <OnLeave>Soundtrack.HideTip()</OnLeave>
         </Scripts>
       </CheckButton>
+      <CheckButton name="OptionsTab_ShowLoginMessage" inherits="UICheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_ShowDefaultMusic" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnLoad>OptionsTab_ShowLoginMessage.Text:SetText(SOUNDTRACK_SHOW_LOGIN_MESSAGE)</OnLoad>
+          <OnLoad inherit="append">SoundtrackTheme.StyleCheckBox(self)</OnLoad>
+          <OnClick>Soundtrack.OptionsTab.ToggleShowLoginMessage()</OnClick>
+          <OnEnter>Soundtrack.ShowTip(self, SOUNDTRACK_SHOW_LOGIN_MESSAGE, SOUNDTRACK_SHOW_LOGIN_MESSAGE_TIP)</OnEnter>
+          <OnLeave>Soundtrack.HideTip()</OnLeave>
+        </Scripts>
+      </CheckButton>
       <CheckButton name="OptionsTab_HidePlaybackButtons" inherits="UICheckButtonTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="OptionsTab_ShowDefaultMusic" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="OptionsTab_ShowLoginMessage" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="-10"/>
             </Offset>

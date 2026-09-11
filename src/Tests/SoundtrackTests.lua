@@ -250,6 +250,44 @@ function Tests:LoadTracks_SetUserEventsToCorrectLevel_SetsPriority()
 	AreEqual(ST_PLAYLIST_LVL, playlists.TestPlaylist.priority)
 end
 
+-- Stubs everything LoadTracks touches besides the chat line, and returns that line
+local function LoadTracksCapturingMessage(trackCount)
+	SoundtrackAddon.db.profile.settings.UseDefaultLoadMyTracks = true
+	Soundtrack_LoadDefaultTracks = function() end
+	Soundtrack_LoadMyTracks = nil
+	Soundtrack_SortedTracks = {}
+	for i = 1, trackCount do
+		Soundtrack_SortedTracks[i] = "track" .. i .. ".mp3"
+	end
+	Replace(Soundtrack.Timers, "AddTimer", function() end)
+	Replace(Soundtrack, "SortAllEvents", function() end)
+	Replace(Soundtrack, "SortTracks", function() end)
+	Replace(_G, "SoundtrackFrame_RefreshPlaybackControls", function() end)
+	Replace(Soundtrack.Events, "GetTable", function()
+		return {}
+	end)
+	local message
+	Replace(Soundtrack.Chat, "Message", function(text)
+		message = text
+	end)
+
+	Soundtrack.LoadTracks()
+
+	return message
+end
+
+function Tests:LoadTracks_LoginMessageOn_PrintsTrackCount()
+	SoundtrackAddon.db.profile.settings.ShowLoginMessage = true
+
+	AreEqual("Loaded with 2 track(s) in library.", LoadTracksCapturingMessage(2))
+end
+
+function Tests:LoadTracks_LoginMessageOff_PrintsNothing()
+	SoundtrackAddon.db.profile.settings.ShowLoginMessage = false
+
+	AreEqual(nil, LoadTracksCapturingMessage(2))
+end
+
 function Tests:OnEventTreeChanged_EventMissing_ReturnsEarly()
 	SoundtrackAddon.db.profile.events = {
 		ZONE = {}

@@ -246,6 +246,10 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP =
 		"Ajoute tous les morceaux de musique disponibles inclus avec le jeu a votre bibliotheque musicale."
 
+	SOUNDTRACK_SHOW_LOGIN_MESSAGE = "Aff. message connexion"
+	SOUNDTRACK_SHOW_LOGIN_MESSAGE_TIP =
+		"Affiche dans le chat le nombre de pistes chargees a la connexion ou au rechargement de l'interface."
+
 	SOUNDTRACK_LOCK_NOW_PLAYING = "Verr. Infos Piste"
 	SOUNDTRACK_LOCK_NOW_PLAYING_TIP = "Verrouille la trame d' informations sur la piste."
 

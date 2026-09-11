@@ -74,6 +74,24 @@ function Tests:ToggleShowTrackInformation_TogglesSettingToFalse()
 	IsFalse(GetSetting("ShowTrackInformation"), "ShowTrackInformation toggled to false")
 end
 
+-- ToggleShowLoginMessage Tests
+
+function Tests:ToggleShowLoginMessage_TogglesSettingToFalse()
+	SoundtrackAddon.db.profile.settings.ShowLoginMessage = true
+
+	Soundtrack.OptionsTab.ToggleShowLoginMessage()
+
+	IsFalse(GetSetting("ShowLoginMessage"), "ShowLoginMessage toggled to false")
+end
+
+function Tests:ToggleShowLoginMessage_TogglesSettingToTrue()
+	SoundtrackAddon.db.profile.settings.ShowLoginMessage = false
+
+	Soundtrack.OptionsTab.ToggleShowLoginMessage()
+
+	IsTrue(GetSetting("ShowLoginMessage"), "ShowLoginMessage toggled to true")
+end
+
 -- ToggleShowEventStack Tests
 
 function Tests:ToggleShowEventStack_TogglesSettingToTrue()

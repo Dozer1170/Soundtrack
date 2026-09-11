@@ -489,6 +489,7 @@ local defaultSettings = {
   Silence = 5,
   EscalateBattleMusic = true,
   AutoAddZones = true,
+  ShowLoginMessage = true,
   FadeTransition = false, -- keep fade off so existing tests use instant switching
   FadeTransitionDuration = 2,
 }

@@ -248,6 +248,10 @@ local function RegisterGeneralStrings()
 	SOUNDTRACK_SHOW_DEFAULT_MUSIC_TIP =
 		"Adds all the available music tracks included with the game to your music library."
 
+	SOUNDTRACK_SHOW_LOGIN_MESSAGE = "Show Login Message"
+	SOUNDTRACK_SHOW_LOGIN_MESSAGE_TIP =
+		"Prints how many tracks were loaded to the chat window when you log in or reload the UI."
+
 	SOUNDTRACK_LOCK_NOW_PLAYING = "Lock Track Info. Frame"
 	SOUNDTRACK_LOCK_NOW_PLAYING_TIP = "Locks the track information frame so it cannot be moved or clicked."
 
