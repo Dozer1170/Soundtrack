@@ -20,6 +20,20 @@ local CHANGELOG_BODY = [[
   window hit an entry with nothing behind it. The list is now
   rebuilt whenever an old event is cleared out, and a leftover
   entry is skipped instead of erroring.
+- Fixed fading between tracks sometimes lowering the game's
+  music volume. A fade cut short partway left the volume
+  where it had got to, and the next fade took that as your
+  volume, so it could creep down over time. If yours ended
+  up low, turn it back up once in the game's Sound settings
+  and it will stay there.
+- Music assigned to a dungeon now starts once a Mythic+ key
+  begins, instead of waiting until you walk into a subzone or
+  pull a boss. Zone music now catches up within a couple of
+  seconds whenever the game settles on where you are without
+  telling the addon.
+- New "Show Login Message" option on the Options tab turns off
+  the "Loaded with N track(s)" line Soundtrack prints to chat
+  when you log in or reload the UI.
 ]]
 
 -- Headed with the version the notes are for rather than the version installed:
