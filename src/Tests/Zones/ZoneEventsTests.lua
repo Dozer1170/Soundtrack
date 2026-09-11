@@ -447,3 +447,109 @@ function Tests:DeleteZone_ExactPrefixMatch_DoesNotRemoveSimilarNames()
 
 	IsTrue(Soundtrack.Events.GetTable(ST_ZONE)["Eastern KingdomsExtra"] ~= nil, "Similar-named zone preserved")
 end
+
+-- Zone drift tests: the poll re-applies a zone the events left stale
+
+local ARA_KARA = "Ara-Kara, City of Echoes"
+
+-- Puts the player in a dungeon whose zone texts the test can change as it goes
+local function MockDungeon(zoneName)
+	local location = { zone = zoneName, subZone = "", minimapZone = "" }
+	Replace("IsInInstance", function()
+		return true, "party"
+	end)
+	Replace("GetRealZoneText", function()
+		return location.zone
+	end)
+	Replace("GetSubZoneText", function()
+		return location.subZone
+	end)
+	Replace("GetMinimapZoneText", function()
+		return location.minimapZone
+	end)
+	return location
+end
+
+-- Lets a test step the one-second OnUpdate poll forward
+local function MockClock()
+	local clock = { now = 0 }
+	Replace("GetTime", function()
+		return clock.now
+	end)
+	return clock
+end
+
+local function PollAt(clock, seconds)
+	clock.now = seconds
+	Soundtrack.ZoneEvents.OnUpdate()
+end
+
+function Tests:OnUpdate_ZoneSettlesWithoutAnEvent_ReappliesZone()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	local location = MockDungeon(ARA_KARA)
+	local clock = MockClock()
+	PollAt(clock, 0)
+
+	-- An event lands while the client has no zone name for us, and nothing
+	-- fires once the name comes back
+	location.zone = ""
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED_INDOORS")
+	AreEqual(nil, Soundtrack.Events.GetEventAtStackLevel(ST_ZONE_LVL))
+	location.zone = ARA_KARA
+
+	PollAt(clock, 1)
+	PollAt(clock, 2)
+
+	AreEqual(SOUNDTRACK_INSTANCES .. "/" .. ARA_KARA, Soundtrack.Events.GetEventAtStackLevel(ST_ZONE_LVL))
+end
+
+function Tests:OnUpdate_ZoneReadingDiffersForOnePoll_IsIgnored()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	local location = MockDungeon(ARA_KARA)
+	local clock = MockClock()
+	PollAt(clock, 0)
+	local reapplied = false
+	Replace(Soundtrack, "PlayEvent", function()
+		reapplied = true
+	end)
+
+	location.zone = ""
+	PollAt(clock, 1)
+	location.zone = ARA_KARA
+	PollAt(clock, 2)
+
+	IsFalse(reapplied, "a reading that did not hold for a full poll should not be applied")
+end
+
+function Tests:OnUpdate_ZoneUnchanged_DoesNotReapply()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	MockDungeon(ARA_KARA)
+	local clock = MockClock()
+	PollAt(clock, 0)
+	local reapplied = false
+	Replace(Soundtrack, "PlayEvent", function()
+		reapplied = true
+	end)
+
+	PollAt(clock, 1)
+	PollAt(clock, 2)
+
+	IsFalse(reapplied, "an unchanged zone should not be re-applied")
+end
+
+function Tests:OnUpdate_ZoneMusicDisabled_DoesNotReapplyDriftedZone()
+	local location = MockDungeon(ARA_KARA)
+	local clock = MockClock()
+	PollAt(clock, 0)
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = false
+	local reapplied = false
+	Replace(Soundtrack, "PlayEvent", function()
+		reapplied = true
+	end)
+
+	location.zone = "The Stonevault"
+	PollAt(clock, 1)
+	PollAt(clock, 2)
+
+	IsFalse(reapplied, "zone music is disabled")
+end

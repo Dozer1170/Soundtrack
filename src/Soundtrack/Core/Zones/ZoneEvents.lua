@@ -4,6 +4,10 @@ local nextUpdateTime = 0
 local updateInterval = 1
 local zoneType = nil
 local pendingZoneChangeTimer = nil
+-- The most specific zone path OnZoneChanged last put on the stack, and a
+-- different path the previous poll saw that is waiting to be confirmed
+local appliedZonePath = nil
+local driftedZonePath = nil
 
 local function FindContinentByZone()
 	local inInstance, instanceType = IsInInstance()
@@ -53,10 +57,14 @@ local function AssignPriority(tableName, eventName, priority)
 	end
 end
 
-function Soundtrack.ZoneEvents.GetCurrentZonePaths()
+-- Where the player is, as one zone text per stack level: [1] continent,
+-- [2] zone, [3] subzone, [4] minimap zone, nil for any level this location
+-- lacks, and `path` the most specific of them. Nil while the client has no
+-- zone text to give.
+local function GetZoneTexts()
 	local zoneText = GetRealZoneText()
 	if zoneText == nil then
-		return {}
+		return nil
 	end
 
 	local continentName, zoneName = FindContinentByZone()
@@ -96,18 +104,21 @@ function Soundtrack.ZoneEvents.GetCurrentZonePaths()
 		zonePath = zoneText4
 	end
 
+	return { zoneText1, zoneText2, zoneText3, zoneText4, path = zonePath }
+end
+
+function Soundtrack.ZoneEvents.GetCurrentZonePaths()
+	local zoneTexts = GetZoneTexts()
+	if zoneTexts == nil then
+		return {}
+	end
+
+	-- Most specific first
 	local results = {}
-	if zoneText4 then
-		table.insert(results, zoneText4)
-	end
-	if zoneText3 then
-		table.insert(results, zoneText3)
-	end
-	if zoneText2 then
-		table.insert(results, zoneText2)
-	end
-	if zoneText1 then
-		table.insert(results, zoneText1)
+	for i = 4, 1, -1 do
+		if zoneTexts[i] then
+			table.insert(results, zoneTexts[i])
+		end
 	end
 
 	return results
@@ -150,49 +161,15 @@ function Soundtrack.ZoneEvents.DeleteZone(eventName)
 end
 
 local function OnZoneChanged()
-	local zoneText = GetRealZoneText()
-	if zoneText == nil then
+	local zoneTexts = GetZoneTexts()
+	if zoneTexts == nil then
 		return
 	end
+	local zoneText1, zoneText2, zoneText3, zoneText4 = zoneTexts[1], zoneTexts[2], zoneTexts[3], zoneTexts[4]
+	appliedZonePath = zoneTexts.path
+	driftedZonePath = nil
 
-	local continentName, zoneName = FindContinentByZone()
-	local zoneSubText = GetSubZoneText()
-	local minimapZoneText = GetMinimapZoneText()
-	if zoneName ~= nil and zoneName ~= zoneText then
-		if zoneSubText ~= nil and zoneSubText ~= "" then
-			minimapZoneText = zoneSubText
-		end
-		if zoneText ~= nil and zoneText ~= "" then
-			zoneSubText = zoneText
-		end
-		zoneText = zoneName
-	end
-
-	-- Construct full zone path
-	local zoneText1, zoneText2, zoneText3, zoneText4
-	local zonePath
-
-	if not IsNullOrEmpty(continentName) then
-		zoneText1 = continentName
-		zonePath = continentName
-	end
-
-	if not IsNullOrEmpty(zoneText) then
-		zoneText2 = continentName .. "/" .. zoneText
-		zonePath = zoneText2
-	end
-
-	if zoneText ~= zoneSubText and not IsNullOrEmpty(zoneSubText) then
-		zoneText3 = zonePath .. "/" .. zoneSubText
-		zonePath = zoneText3
-	end
-
-	if zoneText ~= minimapZoneText and zoneSubText ~= minimapZoneText and not IsNullOrEmpty(minimapZoneText) then
-		zoneText4 = zonePath .. "/" .. minimapZoneText
-		zonePath = zoneText4
-	end
-
-	Soundtrack.Chat.TraceZones("OnZoneChanged: " .. zonePath)
+	Soundtrack.Chat.TraceZones("OnZoneChanged: " .. zoneTexts.path)
 
 	if zoneText4 then
 		if SoundtrackAddon.db.profile.settings.AutoAddZones then
@@ -278,6 +255,28 @@ function Soundtrack.ZoneEvents.OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
+-- Zone events are not a complete signal. A reading taken mid-transition (the
+-- stale data the debounce exists for, or no zone name at all) stays on the
+-- stack until a later event replaces it, and the client does not always fire
+-- one once its zone data settles -- reported as a Mythic+ dungeon's music
+-- staying silent after the key started, until the player walked into a
+-- subzone. So each poll also compares where the zone APIs say the player is
+-- with the path last applied, and re-applies once a different reading has
+-- held for a full poll interval, so a transient one is never acted on.
+local function HasZoneDrifted()
+	local zoneTexts = GetZoneTexts()
+	local zonePath = zoneTexts and zoneTexts.path
+	if zonePath == nil or zonePath == appliedZonePath then
+		driftedZonePath = nil
+		return false
+	end
+	if zonePath ~= driftedZonePath then
+		driftedZonePath = zonePath
+		return false
+	end
+	return true
+end
+
 function Soundtrack.ZoneEvents.OnUpdate()
 	local currentTime = GetTime()
 
@@ -287,6 +286,9 @@ function Soundtrack.ZoneEvents.OnUpdate()
 		local _, newZoneType = IsInInstance()
 		if newZoneType ~= zoneType then
 			zoneType = newZoneType
+			OnZoneChanged()
+		elseif SoundtrackAddon.db.profile.settings.EnableZoneMusic and HasZoneDrifted() then
+			Soundtrack.Chat.TraceZones("Zone drifted to " .. driftedZonePath)
 			OnZoneChanged()
 		end
 	end
