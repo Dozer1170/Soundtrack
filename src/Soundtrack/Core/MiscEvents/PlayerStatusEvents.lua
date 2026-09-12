@@ -345,7 +345,16 @@ function Soundtrack.PlayerStatusEvents.Register()
 		ST_SFX_LVL,
 		false,
 		function()
-			Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_START)
+			-- Starting a key is a moment that should have music, and most players
+			-- assign none of their own to it. With nothing to play here, the
+			-- dungeon's own music takes over instead of leaving the run silent --
+			-- a key start resets the instance without moving the player, so no
+			-- zone event brings it back on its own.
+			if Soundtrack.Events.EventHasTracks(ST_MISC, SOUNDTRACK_MYTHIC_PLUS_START) then
+				Soundtrack.Misc.PlayEvent(SOUNDTRACK_MYTHIC_PLUS_START)
+			else
+				Soundtrack.ZoneEvents.PlayZoneMusic()
+			end
 		end,
 		false
 	)

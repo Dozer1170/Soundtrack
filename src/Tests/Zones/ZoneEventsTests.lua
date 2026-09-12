@@ -553,3 +553,89 @@ function Tests:OnUpdate_ZoneMusicDisabled_DoesNotReapplyDriftedZone()
 
 	IsFalse(reapplied, "zone music is disabled")
 end
+
+-- PlayZoneMusic: the zone music starting on demand, with no zone event behind it
+
+local function GiveZoneTracks(zonePath, trackName)
+	Soundtrack_Tracks[trackName] = { filePath = trackName, mp3 = true }
+	Soundtrack.AddEvent(ST_ZONE, zonePath, ST_ZONE_LVL, true)
+	Soundtrack.Events.GetTable(ST_ZONE)[zonePath].tracks = { trackName }
+end
+
+function Tests:PlayZoneMusic_ZoneAlreadyApplied_RestartsIt()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	MockDungeon(ARA_KARA)
+	local zonePath = SOUNDTRACK_INSTANCES .. "/" .. ARA_KARA
+	GiveZoneTracks(zonePath, "arakara.mp3")
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED_INDOORS")
+
+	local played = 0
+	Replace(Soundtrack.Library, "PlayTrack", function()
+		played = played + 1
+	end)
+
+	Soundtrack.ZoneEvents.PlayZoneMusic()
+
+	AreEqual(zonePath, Soundtrack.Events.GetEventAtStackLevel(ST_ZONE_LVL))
+	AreEqual(1, played)
+end
+
+function Tests:PlayZoneMusic_ZoneNotOnTheStack_AppliesAndPlaysIt()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	MockDungeon(ARA_KARA)
+	local zonePath = SOUNDTRACK_INSTANCES .. "/" .. ARA_KARA
+	GiveZoneTracks(zonePath, "arakara.mp3")
+
+	local played = 0
+	Replace(Soundtrack.Library, "PlayTrack", function()
+		played = played + 1
+	end)
+
+	Soundtrack.ZoneEvents.PlayZoneMusic()
+
+	AreEqual(zonePath, Soundtrack.Events.GetEventAtStackLevel(ST_ZONE_LVL))
+	AreEqual(1, played)
+end
+
+function Tests:PlayZoneMusic_ZoneMusicDisabled_PlaysNothing()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = false
+	MockDungeon(ARA_KARA)
+	GiveZoneTracks(SOUNDTRACK_INSTANCES .. "/" .. ARA_KARA, "arakara.mp3")
+	local applied = false
+	Replace(Soundtrack, "PlayEvent", function()
+		applied = true
+	end)
+	local played = false
+	Replace(Soundtrack.Library, "PlayTrack", function()
+		played = true
+	end)
+
+	Soundtrack.ZoneEvents.PlayZoneMusic()
+
+	IsFalse(applied, "zone music is disabled")
+	IsFalse(played, "zone music is disabled")
+end
+
+function Tests:PlayZoneMusic_HigherPriorityEventWins_DoesNotRestartIt()
+	SoundtrackAddon.db.profile.settings.EnableZoneMusic = true
+	MockDungeon(ARA_KARA)
+	local zonePath = SOUNDTRACK_INSTANCES .. "/" .. ARA_KARA
+	GiveZoneTracks(zonePath, "arakara.mp3")
+	Soundtrack.ZoneEvents.OnEvent(nil, "ZONE_CHANGED_INDOORS")
+
+	-- A boss fight outranks the zone, and must not be cut off by it
+	Soundtrack_Tracks["boss.mp3"] = { filePath = "boss.mp3", mp3 = true }
+	Soundtrack.AddEvent(ST_ENCOUNTER, "Boss", ST_BOSS_LVL, true)
+	Soundtrack.Events.GetTable(ST_ENCOUNTER)["Boss"].tracks = { "boss.mp3" }
+	Soundtrack.PlayEvent(ST_ENCOUNTER, "Boss", false)
+
+	local played = 0
+	Replace(Soundtrack.Library, "PlayTrack", function()
+		played = played + 1
+	end)
+
+	Soundtrack.ZoneEvents.PlayZoneMusic()
+
+	AreEqual(0, played)
+	AreEqual("Boss", Soundtrack.Events.GetEventAtStackLevel(ST_BOSS_LVL))
+end

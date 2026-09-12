@@ -706,6 +706,39 @@ function Tests:PlayerStatusEvents_MythicPlusCompletionBranches()
   AreEqual(SOUNDTRACK_MYTHIC_PLUS_COMPLETE_OVER_TIME, Soundtrack.Misc.PlayedEvents[#Soundtrack.Misc.PlayedEvents])
 end
 
+function Tests:PlayerStatusEvents_MythicPlusStartWithoutTracks_PlaysZoneMusic()
+  ResetMisc()
+
+  local zoneMusicPlayed = false
+  Replace(Soundtrack.ZoneEvents, "PlayZoneMusic", function()
+    zoneMusicPlayed = true
+  end)
+
+  Soundtrack.PlayerStatusEvents.Register()
+  Soundtrack.Misc.OnEvent(nil, "CHALLENGE_MODE_START")
+
+  IsTrue(zoneMusicPlayed, "with no Mythic+ music the dungeon's own music should take over")
+  IsFalse(ListContains(Soundtrack.Misc.PlayedEvents, SOUNDTRACK_MYTHIC_PLUS_START))
+end
+
+function Tests:PlayerStatusEvents_MythicPlusStartWithTracks_PlaysMythicPlusMusic()
+  ResetMisc()
+
+  Replace(Soundtrack.Events, "EventHasTracks", function()
+    return true
+  end)
+  local zoneMusicPlayed = false
+  Replace(Soundtrack.ZoneEvents, "PlayZoneMusic", function()
+    zoneMusicPlayed = true
+  end)
+
+  Soundtrack.PlayerStatusEvents.Register()
+  Soundtrack.Misc.OnEvent(nil, "CHALLENGE_MODE_START")
+
+  IsTrue(ListContains(Soundtrack.Misc.PlayedEvents, SOUNDTRACK_MYTHIC_PLUS_START))
+  IsFalse(zoneMusicPlayed, "the player's own Mythic+ music should play instead of the zone's")
+end
+
 function Tests:StealthEvents_Register_SetsUpdateScripts()
   ResetMisc()
 

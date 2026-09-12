@@ -248,6 +248,41 @@ local function ScheduleZoneChange()
 	end)
 end
 
+-- Plays the zone music for where the player is now, whether or not the client
+-- has told us anything changed. Zone music otherwise only starts on a zone
+-- event or when the poll notices the zone has drifted, so a moment that should
+-- begin it on its own -- a Mythic+ key starting, which resets the instance
+-- without necessarily moving the player -- has nothing to go on: the zone is
+-- already on the stack, and re-applying the same zone is a no-op even when
+-- nothing is playing any more. So the zone the stack holds is restarted
+-- outright, but only once re-applying has turned out to change nothing (a
+-- change plays the zone by itself, and restarting on top of that would cut the
+-- track it just started), and only while a zone level is what the stack is
+-- playing, so a boss or battle track that outranks the zone is never cut off.
+function Soundtrack.ZoneEvents.PlayZoneMusic()
+	if not SoundtrackAddon.db.profile.settings.EnableZoneMusic then
+		return
+	end
+
+	local appliedEvents = {}
+	for level = ST_CONTINENT_LVL, ST_MINIMAP_LVL do
+		appliedEvents[level] = Soundtrack.Events.GetEventAtStackLevel(level)
+	end
+
+	OnZoneChanged()
+
+	for level = ST_CONTINENT_LVL, ST_MINIMAP_LVL do
+		if appliedEvents[level] ~= Soundtrack.Events.GetEventAtStackLevel(level) then
+			return
+		end
+	end
+
+	local stackLevel = Soundtrack.Events.GetCurrentStackLevel()
+	if stackLevel > 0 and stackLevel <= ST_MINIMAP_LVL then
+		Soundtrack.Events.RestartLastEvent()
+	end
+end
+
 function Soundtrack.ZoneEvents.OnLoad(self)
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	self:RegisterEvent("ZONE_CHANGED")
