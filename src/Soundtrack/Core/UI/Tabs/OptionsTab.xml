@@ -376,9 +376,11 @@
           <AbsDimension x="175" y="20"/>
         </Size>
         <Anchors>
+          <!-- Dropdowns sit 16px left of their column (see the x="-16" on the
+               dropdown anchors), so step back in to line up with Event Options -->
           <Anchor point="TOPLEFT" relativeTo="OptionsTab_BattleCooldownDropDown" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="0" y="-30"/>
+              <AbsDimension x="16" y="-30"/>
             </Offset>
           </Anchor>
         </Anchors>
