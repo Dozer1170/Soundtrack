@@ -221,7 +221,15 @@ def find_genhtml() -> tuple[str, bool]:
 
 
 def run_genhtml(lcov_file: Path, output_dir: Path) -> int:
-    genhtml_path, needs_perl = find_genhtml()
+    # The HTML report is a convenience, not a check: a machine without lcov
+    # (a fresh WSL, say) must still be able to run the tests and package, so
+    # a missing genhtml skips the report instead of failing the run.
+    try:
+        genhtml_path, needs_perl = find_genhtml()
+    except RuntimeError as e:
+        print(f"Skipping HTML report: {e}")
+        print(f"Coverage data is still in {lcov_file.relative_to(ROOT)}.")
+        return 0
     output_dir.mkdir(parents=True, exist_ok=True)
 
     cmd: list
