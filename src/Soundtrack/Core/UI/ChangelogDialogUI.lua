@@ -5,7 +5,7 @@ local CURRENT_VERSION = C_AddOns.GetAddOnMetadata("Soundtrack", "Version")
 -- The release the notes below were written for. scripts/package.py refuses to
 -- publish when this is not the version being uploaded, so a version bump cannot
 -- ship the previous release's notes. Bump it in the same edit as the notes.
-local CHANGELOG_VERSION = "7.0.1"
+local CHANGELOG_VERSION = "7.1.0"
 
 -- The single source of truth for this release's notes: scripts/package.py reads
 -- this block straight out of this file and uploads it as the CurseForge
@@ -13,27 +13,13 @@ local CHANGELOG_VERSION = "7.0.1"
 -- Keep the lines hard-wrapped to about 60 characters, which is what fits the
 -- popup frame.
 local CHANGELOG_BODY = [[
-- Fixed the error you got opening Soundtrack for the first time
-  after updating ("attempt to index local 'event'"). When the
-  addon retired an event your saved data still had, it removed
-  the event but left it in the list the window draws from, so the
-  window hit an entry with nothing behind it. The list is now
-  rebuilt whenever an old event is cleared out, and a leftover
-  entry is skipped instead of erroring.
-- Fixed fading between tracks sometimes lowering the game's
-  music volume. A fade cut short partway left the volume
-  where it had got to, and the next fade took that as your
-  volume, so it could creep down over time. If yours ended
-  up low, turn it back up once in the game's Sound settings
-  and it will stay there.
-- Music assigned to a dungeon now starts once a Mythic+ key
-  begins, instead of waiting until you walk into a subzone or
-  pull a boss. Zone music now catches up within a couple of
-  seconds whenever the game settles on where you are without
-  telling the addon.
-- New "Show Login Message" option on the Options tab turns off
-  the "Loaded with N track(s)" line Soundtrack prints to chat
-  when you log in or reload the UI.
+- Soundtrack now runs on WoW Forever. Copy your SoundtrackMusic
+  folder into the Forever AddOns folder to bring your music
+  library along.
+- Loot sounds no longer error on Forever, where the game no
+  longer offers the old way of looking up an item's quality.
+- The minimap button on Forever now sits centred in its ring
+  like it does on retail, instead of being offset to one side.
 ]]
 
 -- Headed with the version the notes are for rather than the version installed:
