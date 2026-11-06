@@ -451,6 +451,7 @@ local function SetWoWGlobals()
   -- Unset so each test starts on the legacy global; tests that model
   -- Forever/retail install their own C_Item.
   _G.C_Item = nil
+  _G.SoundtrackFrame_FontStringAbout3a = nil
 
   _G.GetItemInfo = function()
     return nil, nil, 0, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil

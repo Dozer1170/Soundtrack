@@ -112,6 +112,34 @@ function Tests:Initialize_CallsOptionsTabInitialize()
 	IsTrue(called, "OptionsTab.Initialize should be called")
 end
 
+function Tests:UpdateAboutVersion_ShowsTocVersion()
+	local text
+	Replace("SoundtrackFrame_FontStringAbout3a", {
+		SetText = function(_, value)
+			text = value
+		end,
+	})
+	Replace("C_AddOns", {
+		GetAddOnMetadata = function(_, field)
+			if field == "Version" then
+				return "9.8.7"
+			end
+		end,
+	})
+
+	SoundtrackUI.UpdateAboutVersion()
+
+	AreEqual("Version: 9.8.7", text, "About tab shows the TOC version")
+end
+
+function Tests:UpdateAboutVersion_SkipsMissingLabel()
+	Replace("SoundtrackFrame_FontStringAbout3a", nil)
+
+	SoundtrackUI.UpdateAboutVersion()
+
+	IsTrue(true, "no error when the About label does not exist")
+end
+
 function Tests:ShowAssignedTracksSubFrame_ShowsAssignedTracksAndRefreshes()
 	SetupEventFrameButtons()
 

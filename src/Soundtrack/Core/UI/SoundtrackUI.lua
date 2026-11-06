@@ -221,8 +221,19 @@ local function ClearEvent(eventToClear)
 	SoundtrackUI.UpdateEventsUI()
 end
 
+-- The About tab's version line is filled in from the TOC rather than written
+-- into AboutTab.xml, where it went stale on every release.
+function SoundtrackUI.UpdateAboutVersion()
+	local label = _G.SoundtrackFrame_FontStringAbout3a
+	if label then
+		local version = C_AddOns.GetAddOnMetadata("Soundtrack", "Version") or ""
+		label:SetText("Version: " .. version)
+	end
+end
+
 function SoundtrackUI.Initialize()
 	Soundtrack.OptionsTab.Initialize()
+	SoundtrackUI.UpdateAboutVersion()
 
 	-- Register a theme-change callback to re-apply all baked-in frame colors.
 	SoundtrackTheme.RegisterRefreshCallback(function()
