@@ -7,7 +7,7 @@ Usage:
 
 Options:
     --install               Extract the zip into the WoW AddOns directory.
-    --flavor FLAVOR         WoW flavor: retail (default), classic, classic-era.
+    --flavor FLAVOR         WoW flavor: retail (default), classic, classic-era, forever.
     --wow-path PATH         Path to the WoW root directory.
                             Auto-detected from the platform when omitted:
                               macOS   → /Applications/World of Warcraft
@@ -55,12 +55,16 @@ FLAVOR_FOLDERS = {
     "retail":      "_retail_",
     "classic":     "_classic_",
     "classic-era": "_classic_era_",
+    "forever":     "_forever_",
 }
 
 FLAVOR_TOC = {
     "retail":      SOUNDTRACK_SRC / "Soundtrack-Mainline.toc",
     "classic":     SOUNDTRACK_SRC / "Soundtrack-Classic.toc",
     "classic-era": SOUNDTRACK_SRC / "Soundtrack-Classic.toc",
+    # Forever runs the modern Mainline API and loads _Mainline.toc as its
+    # family fallback, so it shares the retail TOC (interface 16001 is listed there).
+    "forever":     SOUNDTRACK_SRC / "Soundtrack-Mainline.toc",
 }
 
 DEFAULT_WOW_PATH = {

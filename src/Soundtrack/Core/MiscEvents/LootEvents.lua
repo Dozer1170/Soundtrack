@@ -60,7 +60,10 @@ function Soundtrack.LootEvents.OnEvent(eventName, lootString, player)
 	end
 
 	local itemString = string.match(itemLink, "item[%-?%d:]+")
-	local _, _, quality, _, _, _, _, _, _, _, _, _, _ = GetItemInfo(itemString)
+	-- WoW Forever removed the global GetItemInfo; C_Item.GetItemInfo exists on
+	-- every flavor that has it, so prefer it and keep the global as a fallback.
+	local getItemInfo = (C_Item and C_Item.GetItemInfo) or GetItemInfo
+	local _, _, quality = getItemInfo(itemString)
 
 	if string.find(player, playerName) then
 		if quality == 0 then

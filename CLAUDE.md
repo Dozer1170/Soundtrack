@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Soundtrack is a World of Warcraft addon (Lua 5.1, Ace3 framework) that lets players assign custom MP3 music/SFX to almost any in-game event (death, mounting, leveling, stealth, combat types, zone changes, pet battles, etc.) and doubles as a standalone media player with playlists.
 
-- Two TOC targets built from the same `src/Soundtrack/` tree: `Soundtrack-Mainline.toc` (Retail, interface 120100/...) and `Soundtrack-Classic.toc` (interface 11505). Files differ per-flavor only via `Core/Retail.lua` vs `Core/Classic.lua` (sets global `IsRetail`) and `TabTemplateRetail.xml` vs `TabTemplateClassic.xml`.
+- Two TOC targets built from the same `src/Soundtrack/` tree: `Soundtrack-Mainline.toc` (Retail, interface 120100/..., plus WoW Forever's 16001: Forever uses the Mainline API and loads `_Mainline.toc` as its family fallback, installed under `_forever_`) and `Soundtrack-Classic.toc` (interface 11505). Files differ per-flavor only via `Core/Retail.lua` vs `Core/Classic.lua` (sets global `IsRetail`) and `TabTemplateRetail.xml` vs `TabTemplateClassic.xml`.
 - `src/BlizzardInterfaceCode` is a submodule of Blizzard's own addon source, vendored for reference/hooking. It can lag behind the live client — a brand-new API missing from it doesn't mean it doesn't exist in-game, only that the submodule pin is stale (`git submodule update --init` to refresh, or check the generated API docs under `Blizzard_APIDocumentationGenerated/` there for namespaces like `C_RestrictedActions`/`C_Secrets`).
 
 ## Commands
@@ -29,7 +29,7 @@ python3 scripts/package.py
 
 # Build, then install into a local WoW install (auto-detects WoW root per-OS;
 # Linux/WSL default is /mnt/c/World of Warcraft — override with --wow-path)
-python3 scripts/package.py --install --flavor retail   # or --flavor classic / classic-era
+python3 scripts/package.py --install --flavor retail   # or --flavor classic / classic-era / forever
 python3 scripts/package.py --skip-tests --skip-localization --install --flavor retail  # fast local iteration
 
 # Publish to CurseForge (needs CF_API_TOKEN or --cf-token). The release notes

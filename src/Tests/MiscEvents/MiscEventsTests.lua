@@ -311,6 +311,32 @@ function Tests:LootEvents_OnEvent_QueuesPlayEvent()
   AreEqual(SOUNDTRACK_ITEM_GET_UNCOMMON, Soundtrack.Misc.PlayedEvents[#Soundtrack.Misc.PlayedEvents])
 end
 
+function Tests:LootEvents_OnEvent_PrefersCItemGetItemInfo()
+  ResetMisc()
+
+  Replace("UnitName", function() return "Player" end)
+  Replace("issecretvalue", function() return false end)
+  -- WoW Forever has no global GetItemInfo, only C_Item.GetItemInfo.
+  Replace("GetItemInfo", nil)
+  Replace("C_Item", {
+    GetItemInfo = function()
+      return nil, nil, 4
+    end,
+  })
+
+  local now = 0
+  Replace("GetTime", function()
+    now = now + 1
+    return now
+  end)
+
+  local lootString = "You receive loot: |cffffffff|Hitem:12345:0:0:0:0:0:0:0|h[Test Item]|h|r"
+  Soundtrack.LootEvents.OnEvent("CHAT_MSG_LOOT", lootString, "Player")
+  Soundtrack.LootEvents.OnUpdate()
+
+  AreEqual(SOUNDTRACK_ITEM_GET_EPIC, Soundtrack.Misc.PlayedEvents[#Soundtrack.Misc.PlayedEvents])
+end
+
 function Tests:LootEvents_OnEvent_IgnoresNonLootEvent()
   ResetMisc()
 
