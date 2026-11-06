@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(lua -v)",
+      "Bash(luarocks --version)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git diff *)",
+      "Bash(git submodule *)",
+      "WebSearch",
+      "WebFetch(domain:warcraft.wiki.gg)"
+    ]
+  }
+}

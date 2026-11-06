@@ -13,3 +13,4 @@ luacov.report.out
 luacov.stats.out
 coverage/
 .opencode
+.claude/settings.local.json
