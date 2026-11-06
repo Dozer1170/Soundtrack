@@ -1,4 +1,8 @@
+7.1.1
+- Support for patch 12.1.5 (interface 120105).
+
 7.1.0
+- Fix the About tab always showing version 7.0.0; it now shows the installed version.
 - Support for WoW Forever. Copy your SoundtrackMusic folder into the Forever AddOns folder to bring your music library along.
 - Fix loot sounds erroring on WoW Forever, which no longer has the global GetItemInfo.
 - Fix the minimap button sitting offset inside its ring on WoW Forever.

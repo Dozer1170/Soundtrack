@@ -1,6 +1,6 @@
-## Interface: 120100, 120001, 120000, 120005, 16001
+## Interface: 120105, 120100, 120001, 120000, 120005, 16001
 ## Title: Soundtrack
-## Version: 7.1.0
+## Version: 7.1.1
 ## Author: Anthony Brien, Katherine Beegle, FluffyBearLina, CSCIguy, Sciz, Dozer1170/Gart
 ## Notes: Music customization system.
 ## RequiredDeps: 

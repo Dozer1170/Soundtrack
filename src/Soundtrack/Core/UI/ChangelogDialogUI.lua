@@ -5,7 +5,7 @@ local CURRENT_VERSION = C_AddOns.GetAddOnMetadata("Soundtrack", "Version")
 -- The release the notes below were written for. scripts/package.py refuses to
 -- publish when this is not the version being uploaded, so a version bump cannot
 -- ship the previous release's notes. Bump it in the same edit as the notes.
-local CHANGELOG_VERSION = "7.1.0"
+local CHANGELOG_VERSION = "7.1.1"
 
 -- The single source of truth for this release's notes: scripts/package.py reads
 -- this block straight out of this file and uploads it as the CurseForge
@@ -13,6 +13,9 @@ local CHANGELOG_VERSION = "7.1.0"
 -- Keep the lines hard-wrapped to about 60 characters, which is what fits the
 -- popup frame.
 local CHANGELOG_BODY = [[
+- Marked as compatible with retail patch 12.1.5.
+- The About tab now shows the version you have installed
+  instead of always saying 7.0.0.
 - Soundtrack now runs on WoW Forever. Copy your SoundtrackMusic
   folder into the Forever AddOns folder to bring your music
   library along.
